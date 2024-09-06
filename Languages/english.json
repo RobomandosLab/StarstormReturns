@@ -1,0 +1,38 @@
+{
+	"survivor" : {
+		"executioner" : {
+			"name" : "Executioner",
+			"name_upper" : "EXECUTIONER",
+			"description": "The <y>Executioner<w> kills <y>aliens<w> and doesn't afraid of <y>anything<w>."
+		}
+	},
+	"item" : {
+		"armedBackpack" : {
+			"name" : "Armed Backpack",
+			"pickup": "Chance of firing a bullet behind you.",
+			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on hit of <y>firing a bullet</c> behind you for <y>150% damage</c>.",
+			"destination": "832B,\nHautenuit,\nEarth",
+			"date": "11/7/2056",
+			"story": "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
+			"priority" : "Standard"
+		},
+		"dormantFungus" : {
+			"name" : "Dormant Fungus",
+			"pickup" : "Regenerate health while moving.",
+			"description": "Regenerates <g>2%</c> <c_stack>(+2% per stack)</c> of your health every second while <g>moving</c>.",
+			"destination": "Gate 1,\nModule 13,\nGea Station",
+			"date": "11/01/2056",
+			"story" : "When you commanded me to explore the fungal caves all I expected to find was.. well, fungi, of course. Though I wasn't excited by any means, this specimen caught my eye.\nIt seems to only grow around flowing water, and ever since I collected and contained this sample, both the colouration and the smell faded out quickly.\n\nI hope you can study it further.",
+			"priority" : "Standard"
+		},
+		"fork" : {
+			"name" : "Fork",
+			"pickup" : "Deal more damage.",
+			"description": "Increases your <y>base damage<w> by <y>3<w> <c_stack>(+3 per stack)</c>.",
+			"destination": "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
+			"date": "09/24/2056",
+			"story" : "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
+			"priority" : "Standard"
+		}
+	}
+}
