@@ -1,4 +1,6 @@
 SURVIVORS
+- move to rorr modding toolkit setup (maybe wait for update?)
+
 - Executioner
 	- is entirely broken and thus disabled
 	- all skills :(
@@ -13,7 +15,8 @@ SURVIVORS
 
 - Items
 	- figure out armed backpack tracer
-	- brass knuckles circle breaks all rendering - why?
+	- add meter for watch metronome
+	- watch metronome may have occasionally broken behavior? unable to replicate atm
 	- ADD MORE MUAHAHAHAHA
 
 - Try adding an unlockable?

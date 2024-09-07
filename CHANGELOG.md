@@ -1,5 +1,8 @@
 Turn and face the strange:
 
+### 0.0.3
+- Added items: Brass Knuckles, Detritive Trematode, Wonder Herb, Watch Metronome
+
 ### 0.0.2
 - First closed alpha :)
 - Restructured project to have individual content classes, proper lang loading, overall better organization.

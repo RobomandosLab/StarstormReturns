@@ -16,6 +16,24 @@
 			"story": "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
 			"priority" : "Standard"
 		},
+		"brassKnuckles" : {
+			"name": "Brass Knuckles",
+			"pickup" : "Deal extra damage at close range.",
+			"description": "Deal <y>35% extra damage</c> to enemies within <y>5m</c> <c_stack>(+2.5 per stack)</c>.",
+			"destination": "UESPD,\nE42,\nUES Halberd B2",
+			"date": "03/01/2056",
+			"story" : "We found this at the crime scene. We need to check for DNA against the rest of the evidence. I still cant believe they got away.\nThe back has some kind of symbol, maybe that could give us a clue. I'll be heading to the west of [REDACTED], I know someone who can help us solve the case.",
+			"priority" : "Standard"
+		},
+			"detritiveTrematode" : {
+			"name": "Detritive Trematode",
+			"pickup" : "Low health enemies receive damage over time.",
+			"description": "Enemies with <y>5.5% health</c> <c_stack>(+2.75% per stack)</c> become <y>infected</c>, receiving <y>4% of max health</c> damage per second.",
+			"destination": "112,\nNeaus 2,\nMars",
+			"date": "03/11/2057",
+			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
+			"priority" : "<g>Priority/Biological</c>"
+		},
 		"dormantFungus" : {
 			"name" : "Dormant Fungus",
 			"pickup" : "Regenerate health while moving.",
@@ -32,6 +50,24 @@
 			"destination": "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
 			"date": "09/24/2056",
 			"story" : "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
+			"priority" : "Standard"
+		},
+		"watchMetronome" : {
+			"name" : "Watch Metronome",
+			"pickup" : "Standing still charges speed for your next movement.",
+			"description": "Standing still charges a <b>speed boost</c> that decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>",
+			"destination": "Cage 1,\nG-44 (Underground),\nEarth",
+			"date": "09/05/2056",
+			"story" : "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",
+			"priority" : "Standard"
+		},
+		"wonderHerbs" : {
+			"name" : "Wonder Herbs",
+			"pickup" : "Slightly increase all healing effects.",
+			"description": "Increases <g>healing</c> from all sources by <g>12%</c> <c_stack>(+12% per stack)</c>.",
+			"destination": "2342,\nPlot 3,\nEarth",
+			"date": "11/07/2056",
+			"story" : "Rikka! I heard you're working with the EC on making a new recipe. Here at the farm we've been growing some special herbs which we think may come handy. They're known for being very, very useful for treating physical and emotional wounds.\nIf you need some more don't hesitate to call me! XOXO\n- Eden",
 			"priority" : "Standard"
 		}
 	}

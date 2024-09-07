@@ -1,6 +1,6 @@
 -- starstorm returns
 -- ssr team
-log.info("[STARSTORM RETURNS] : Loading ".._ENV["!guid"]..".")
+log.info("Loading ".._ENV["!guid"]..".")
 survivor_setup = require("./survivor_setup")
 mods.on_all_mods_loaded(function() for _, m in pairs(mods) do if type(m) == "table" and m.RoRR_Modding_Toolkit then Actor = m.Actor Alarm = m.Alarm Buff = m.Buff Callback = m.Callback Class = m.Class Color = m.Color Equipment = m.Equipment Helper = m.Helper Instance = m.Instance Item = m.Item Net = m.Net Object = m.Object Player = m.Player Resources = m.Resources Skill = m.Skill Survivor = m.Survivor break end end end)
 
