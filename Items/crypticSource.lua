@@ -7,19 +7,19 @@ Item.set_loot_tags(item, Item.LOOT_TAG.category_utility)
 
 Item.add_callback(item, "onStep", function(actor, stack)
     if stack > 0 then
-        if not actor.lastxscale then actor.lastxscale = actor.xscale end
+        if not actor.ssr_lastxscale then actor.ssr_lastxscale = actor.xscale end
 
-        if not actor.cscd then
-			if actor.lastxscale == actor.xscale * -1 then
+        if not actor.ssr_cscd then
+			if actor.ssr_lastxscale == actor.xscale * -1 then
 				log.info("Crypitc Source triggered!!")
-                actor.cscd = 10
-                actor.lastxscale = actor.xscale
+                actor.ssr_cscd = 10
+                actor.ssr_lastxscale = actor.xscale
 			end
 		else
-			if actor.cscd > 0 then
-				actor.cscd = actor.cscd - 1
+			if actor.ssr_cscd > 0 then
+				actor.ssr_cscd = actor.ssr_cscd - 1
 			else
-				actor.cscd = nil
+				actor.ssr_cscd = nil
 			end
 		end
         
