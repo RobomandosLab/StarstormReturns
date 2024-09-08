@@ -1,4 +1,5 @@
 local sprite = Resources.sprite_load(PATH.."Sprites/Items/brassKnuckles.png", 1, false, false, 15, 12)
+local sound = Resources.sfx_load(PATH.."Sounds/brassKnuckles.ogg")
 
 local item = Item.create("starstorm", "brassKnuckles")
 Item.set_sprite(item, sprite)
@@ -12,6 +13,7 @@ Item.add_callback(item, "onHit", function(actor, victim, damager, stack)
 		dy = victim.y - actor.y
 		if (dx * dx + dy * dy) <= (dis * dis) then
 			Actor.damage(victim, actor, damager.damage * 0.35, victim.x + 20, victim.y - 35, 12632256, false)
+			gm.sound_play_at(sound, 1.0, 1.0, victim.x + 20, victim.y - 35, 1.0)
 		end
 	end
 end)

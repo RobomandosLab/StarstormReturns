@@ -25,8 +25,8 @@ Item.add_callback(item, "onStep", function(actor, stack)
 		if not actor.starstorm_lastChronoCharge then actor.starstorm_lastChronoCharge = 0 end
 		if not actor.starstorm_chronoCharge then actor.starstorm_chronoCharge = 0 end
 
-		log.info("chronoCharge"..actor.starstorm_chronoCharge)
-		log.info("lastChrono"..actor.starstorm_lastChronoCharge)
+		--log.info("chronoCharge"..actor.starstorm_chronoCharge)
+		--log.info("lastChrono"..actor.starstorm_lastChronoCharge)
 
 		if actor.pHspeed == 0 or (actor.ropeUp == 0 and actor.ropeDown == 0) then
 			actor.starstorm_chronoCharge = math.min(actor.starstorm_chronoCharge + 0.01, 2.4)
@@ -41,8 +41,8 @@ Item.add_callback(item, "onStep", function(actor, stack)
 		if actor.starstorm_chronoCharge ~= actor.starstorm_lastChronoCharge then
 			local dif = actor.starstorm_chronoCharge - actor.starstorm_lastChronoCharge
 			actor.pHmax = actor.pHmax + dif
-			log.info("pHmax"..actor.pHmax)
-			log.info("dif"..dif)
+			--log.info("pHmax"..actor.pHmax)
+			--log.info("dif"..dif)
 			actor.starstorm_lastChronoCharge = actor.starstorm_chronoCharge
 		end
 	end
