@@ -19,8 +19,10 @@ Buff.set_property(buff, Buff.PROPERTY.icon_stack_subimage, false)
 
 Buff.add_callback(buff, "onApply", function(actor, stack)
     actor.pHmax_base = actor.pHmax_base + increase
+    -- TODO: Do I need to do attack speed I forget....
 end)
 
 Buff.add_callback(buff, "onRemove", function(actor, stack)
     actor.pHmax_base = actor.pHmax_base - increase
+    -- TODO: Do I need to do attack speed I forget....
 end)
