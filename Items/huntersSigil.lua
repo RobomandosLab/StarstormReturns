@@ -2,7 +2,7 @@ local sprite = Resources.sprite_load(PATH.."Sprites/Items/HuntersSigil/huntersSi
 
 local item = Item.create("starstorm", "huntersSigil")
 Item.set_sprite(item, sprite)
-Item.set_tier(item, Item.TIER.common)
+Item.set_tier(item, Item.TIER.uncommon)
 Item.set_loot_tags(item, Item.LOOT_TAG.category_healing)
 
 local hsigil_stand_window = 5
