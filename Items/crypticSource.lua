@@ -14,6 +14,13 @@ Item.add_callback(item, "onStep", function(actor, stack)
 				log.info("Crypitc Source triggered!!")
                 actor.ssr_cscd = 10
                 actor.ssr_lastxscale = actor.xscale
+				
+				-- TODO: Clean up this code
+				local t = gm.instance_create(actor.x, actor.y, gm.constants.oChainLightning)
+				t.parent = actor
+				t.team = actor.team
+				t.damage = 5 --damage / 3 * (critical + 1)
+				--t.critical = critical
 			end
 		else
 			if actor.ssr_cscd > 0 then
