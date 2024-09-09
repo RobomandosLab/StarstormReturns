@@ -11,10 +11,17 @@ Item.add_callback(item, "onHit", function(actor, victim, damager, stack)
             log.info("Molten Coin triggered!!")
             --[[ TODO: Play a sound effect here, and grant money
             ]]
-			Buff.apply(victim, Buff.find("hot"), (4 * stack))
+			local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
+            dot.target = victim -- maybe needs to be victim.id
+            dot.parent = actor
+            dot.damage= 1 -- use actual damage
+            dot.ticks= 5
+            dot.team= actor.team
+            --dot.textColor = gm.constants.C_ORANGE
+            dot.sprite_index = gm.constants.sSparks9
 
-            -- Idk if this is gonna work
-            gm.drop_gold_and_exp(actor.x, actor.y, 500)
+            -- Idk if this is gonna work but cant seem to find a way to add gold, maybe its an instance variable on actor?
+            gm.drop_gold_and_exp(actor.x, actor.y, 2)
 		end
 	end
 end)
