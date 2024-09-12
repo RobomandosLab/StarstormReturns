@@ -10,11 +10,16 @@ local cooldownReduction = 0.10
 Item.add_callback(item, "onPickup", function(actor, stack)
 	--[[ TODO: Lower secondary skill cooldown]]
     log.info("X4 onPickup triggered!!")
-    gm.array_get(actor.skills, 1).active_skill.cooldown = 1
+    local prev_cooldown_base = gm.array_get(actor.skills, 1).active_skill.cooldown_base
+    local new_cooldown_base = prev_cooldown_base - (prev_cooldown_base * cooldownReduction)
+
+    gm.array_get(actor.skills, 1).active_skill.cooldown_base = new_cooldown_base
 end)
 
 Item.add_callback(item, "onRemove", function(actor, stack)
-	--[[ TODO: Undo changes to secondary skill cooldown]]
     log.info("X4 onRemove triggered!!")
-    gm.array_get(actor.skills, 1).active_skill.cooldown = 1
+	local prev_cooldown_base = gm.array_get(actor.skills, 1).active_skill.cooldown_base
+    local new_cooldown_base = prev_cooldown_base + (prev_cooldown_base * cooldownReduction)
+
+    gm.array_get(actor.skills, 1).active_skill.cooldown_base = new_cooldown_base
 end)

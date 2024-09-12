@@ -35,6 +35,28 @@ Item.add_callback(item, "onPickup", function (actor)
     log.info("Starstorm poison elite item onPickup triggered!!")
 end)
 
+Item.add_callback(item, "onStep", function (actor, stack)
+    if stack > 0 then
+        if not actor.ssr_poison_cooldown then
+            log.info("Poison triggered!!")
+            actor.ssr_poison_cooldown = 10
+            
+            -- TODO: Clean up this code
+            local t = gm.instance_create(actor.x, actor.y, gm.constants.oMushDust)
+            t.parent = actor
+            t.team = actor.team
+            t.damage = 5 --damage / 3 * (critical + 1)
+            --t.critical = critical
+		else
+			if actor.ssr_poison_cooldown > 0 then
+				actor.ssr_poison_cooldown = actor.ssr_poison_cooldown - 1
+			else
+				actor.ssr_poison_cooldown = nil
+			end
+		end
+        
+    end
+end)
 
 local id = Item.find("starstorm", "poisonEliteItem")
 Callback.add("onEliteInit", "starstorm.elite_init", function (actor)
