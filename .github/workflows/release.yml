@@ -1,0 +1,41 @@
+name: Create Release and Zip
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Create ZIP archive excluding specific files
+      run: |
+        mkdir release
+        zip -r release/StarstormReturns.zip . \
+        -x "*.py" \
+        -x ".gitignore" \
+        -x ".github/*"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: StarstormReturns.zip
+        path: release/StarstormReturns.zip
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Automated release for version ${{ github.ref }}.
+        files: release/StarstormReturns.zip
+        draft: false
+        prerelease: false
