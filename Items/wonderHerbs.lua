@@ -21,8 +21,8 @@
 -- 	end
 -- end)
 
--- Item.add_callback(item, "onHeal", function(actor, amount, stack)
--- 	if stack > 0 then
--- 		amount = amount * 9999
--- 	end
--- end)
+--[[ Item.add_callback(item, "onHeal", function(actor, amount, stack)
+	if stack > 0 then
+		amount = amount * 9999
+	end
+end) ]]
