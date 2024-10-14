@@ -8,7 +8,9 @@ PATH = _ENV["!plugins_mod_folder_path"].."\\"
 
 function __initialize()
 	gm.translate_load_file(gm.variable_global_get("_language_map"), PATH.."Languages\\english.json")
-	
+
+	gm.sprite_replace(gm.constants.sTitle, path.combine(PATH, "Sprites/Menu/title.png"), 1, false, false, 692/2, 163/2)
+
 	local folders = {
 		--"Survivors",
 		"Items",
