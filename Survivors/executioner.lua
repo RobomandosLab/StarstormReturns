@@ -1,4 +1,3 @@
-
 local SPRITE_PATH = path.combine(PATH, "Sprites/Executioner")
 local SOUND_PATH = path.combine(PATH, "Sounds/Executioner")
 
@@ -74,6 +73,7 @@ executionerX.max_stock = 10
 executionerX.auto_restock = false
 executionerX.start_with_stock = false
 executionerX.does_change_activity_state = true
+executionerX.use_delay = 30
 
 executionerC.sprite = sprite_skills
 executionerC.subimage = 6
@@ -166,7 +166,7 @@ stateX:onStep(function(actor, data)
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks2, 9)
-				attack:set_stun(0.5)
+				attack:set_stun(1.0)
 				attack.climb = i * 8
 			end
 		end
@@ -259,7 +259,7 @@ stateV:onStep(function(actor, data)
 	if actor.image_index >= 7 then
 		actor.pVspeed = math.min(actor.pVspeed + 5.0 * actor.attack_speed, 80)
 	else
-		actor.pVspeed = math.min(actor.pVspeed + 0.1 * actor.attack_speed, -actor.pGravity1)
+		actor.pVspeed = math.min(actor.pVspeed + 0.1 * actor.attack_speed * actor.attack_speed, -actor.pGravity1)
 	end
 
 	if actor.image_index >= 7 and (actor.free == 0.0 or actor.free == false) and data.smited == 0 then
@@ -273,6 +273,7 @@ stateV:onStep(function(actor, data)
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack = actor:fire_explosion(actor.x, actor.y, 200, 100, damage)
 				attack.climb = i * 8
+				attack.execution = 1
 			end
 		end
 	end
@@ -281,4 +282,12 @@ stateV:onStep(function(actor, data)
 		actor.image_index = 10
 	end
 	actor:skill_util_exit_state_on_anim_end()
+end)
+
+Callback.add("onAttackHandleEnd", "SSExecution", function(self, other, result, args)
+	local attack = args[2].value
+	if attack.execution == 1 then
+		local kill_count = attack.kill_number
+		GM.actor_skill_reset_cooldowns(attack.parent, -60 * kill_count, true)
+	end
 end)
