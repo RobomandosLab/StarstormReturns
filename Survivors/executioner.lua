@@ -1,390 +1,278 @@
--- -- executioner
--- log.info("[STARSTORM RETURNS] : Loading ".._ENV["!guid"]..".")
-
--- EXESPRITEPATH = path.combine(_ENV["!plugins_mod_folder_path"], "Sprites\\Executioner")
-
--- -- define sprites
--- -- to-do: do these paths NEED to be saved separate? can they not be loaded directly into the sprites? test that.
--- local portrait_path = path.combine(EXESPRITEPATH, "portraitSmall.png")
--- local portraitsmall_path = path.combine(EXESPRITEPATH, "portrait.png")
-
--- local skills_path = path.combine(EXESPRITEPATH, "skillsLoadout.png")
--- local loadout_path = path.combine(EXESPRITEPATH, "select.png")
--- local idle_path = path.combine(EXESPRITEPATH, "idle.png")
--- local walk_path = path.combine(EXESPRITEPATH, "walk.png")
--- local death_path = path.combine(EXESPRITEPATH, "death.png")
--- local jump_path = path.combine(EXESPRITEPATH, "jump.png")
--- local climb_path = path.combine(EXESPRITEPATH, "climb.png")
--- local hit_path = path.combine(EXESPRITEPATH, "decoy.png")
-
--- local shoot1_path = path.combine(EXESPRITEPATH, "shoot1.png")
-
--- local portrait_sprite = gm.sprite_add(portrait_path, 1, false, false, 0, 0)
--- local portraitsmall_sprite = gm.sprite_add(portraitsmall_path, 1, false, false, 0, 0)
-
--- local palette_path = path.combine(EXESPRITEPATH, "palette.png")
-
--- local skills_sprite = gm.sprite_add(skills_path, 4, false, false, 0, 0)
--- local loadout_sprite = gm.sprite_add(loadout_path, 17, false, false, 28, 5)
--- local idle_sprite = gm.sprite_add(idle_path, 1, false, false, 13, 16)
--- local walk_sprite = gm.sprite_add(walk_path, 8, false, false, 13, 16)
--- local death_sprite = gm.sprite_add(death_path, 5, false, false, 13, 16)
--- local jump_sprite = gm.sprite_add(jump_path, 1, false, false, 13, 16)
--- local climb_sprite = gm.sprite_add(climb_path, 2, false, false, 13, 16)
--- local hit_sprite = gm.sprite_add(hit_path, 1, false, false, 13, 16)
-
--- local shoot1_sprite = gm.sprite_add(shoot1_path, 4, false, false, 13, 16)
-
--- local palette_sprite = gm.sprite_add(palette_path, 1, false, false, 0, 0)
-
--- local executioner_id = -1
--- local executioner = nil
-
--- -- survivor setup
--- local function create_survivor()
---     executioner_id = gm.survivor_create("swuff", "executioner")
---     executioner = survivor_setup.Survivor(executioner_id)
---     local commando_survivor_id = 0
---     local vanilla_survivor = survivor_setup.Survivor(commando_survivor_id)
-
---     --executioner.token_name = "Executioner"
---     --executioner.token_name_upper = "EXECUTIONER"
---     --executioner.token_description = "The <y>Executioner<w> kills <y>aliens<w> and doesn't afraid of <y>anything<w>."
---     --executioner.token_end_quote = "..and so he left, bloodlust unfulfilled."
-
---     executioner.sprite_loadout = loadout_sprite
---     executioner.sprite_title = walk_sprite
---     executioner.sprite_idle = idle_sprite
---     executioner.sprite_portrait = portrait_sprite
---     executioner.sprite_portrait_small = portraitsmall_sprite
---     executioner.sprite_palette = palette_sprite
---     executioner.sprite_portrait_palette = palette_sprite
---     executioner.sprite_loadout_palette = palette_sprite
---     executioner.sprite_credits = walk_sprite
---     executioner.primary_color = gm.make_colour_rgb(175, 113, 126)
-	
--- 	executioner.on_init = vanilla_survivor.on_init
---     executioner.on_step = vanilla_survivor.on_step
---     executioner.on_remove = vanilla_survivor.on_remove
-
---     executioner.cape_offset = vanilla_survivor.cape_offset
-
--- -- primary skill
-
---     local skill_primary = executioner.skill_family_z[0]
-    
---     skill_primary.token_name = "Service Pistol"
---     skill_primary.token_description = "Shoot enemies for <y>100%<w> damage."
-
---     skill_primary.sprite = skills_sprite
---     skill_primary.subimage = 0
-
---     skill_primary.cooldown = 0
---     skill_primary.damage = 1.0
---     skill_primary.required_stock = 0
---     skill_primary.require_key_press = false
---     skill_primary.use_delay = 0
---     skill_primary.is_primary = true
-
---     skill_primary.does_change_activity_state = true
---     skill_primary.on_can_activate = vanilla_survivor.skill_family_z[0].on_can_activate
---     skill_primary.on_activate = vanilla_survivor.skill_family_z[0].on_activate
-
--- -- secondary skill
-
---     local skill_secondary = executioner.skill_family_x[0]
-
---     skill_secondary.token_name = "Ion Burst"
---     skill_secondary.token_description = "Bang bang bang bang"
-
---     skill_secondary.sprite = skills_sprite
---     skill_secondary.subimage = 1
-
---     skill_secondary.cooldown = -1
---     skill_secondary.damage = 2.4
---     skill_secondary.required_stock = 1
---     skill_secondary.require_key_press = false
---     skill_secondary.max_stock = 10
---     skill_secondary.auto_restock = false
---     skill_secondary.start_with_stock = 0
---     skill_secondary.use_delay = 0
-
---     skill_secondary.does_change_activity_state = true
-
---     skill_secondary.on_can_activate = vanilla_survivor.skill_family_x[0].on_can_activate
---     skill_secondary.on_activate = vanilla_survivor.skill_family_x[0].on_activate
-    
--- -- utility skill
-
---     local skill_utility = executioner.skill_family_c[0]
-
---     skill_utility.token_name = "Crowd Dispersion"
---     skill_utility.token_description = "SCARY"
---     skill_utility.sprite = skills_sprite
---     skill_utility.subimage = 2
-
---     skill_utility.cooldown = 240
---     skill_utility.max_stock = 4
---     skill_utility.start_with_stock = 4
---     skill_utility.auto_restock = true
---     skill_utility.required_stock = 1
---     skill_utility.require_key_press = true
---     skill_utility.use_delay = 30
---     skill_utility.is_utility = true
-    
---     skill_utility.on_can_activate = vanilla_survivor.skill_family_c[0].on_can_activate
---     skill_utility.on_activate = vanilla_survivor.skill_family_c[0].on_activate
-    
--- -- special skill
-	
---     local skill_special = executioner.skill_family_v[0]
-
---     skill_special.token_name = "Execution"
---     skill_special.token_description = "DIE DIE DIE"
-
---     skill_special.sprite = skills_sprite
---     skill_special.subimage = 3
-
---     skill_special.cooldown = 480
---     skill_special.required_stock = 1
---     skill_special.require_key_press = true
---     skill_special.use_delay = 0
-
---     skill_special.does_change_activity_state = true
-    
---     skill_special.on_can_activate = vanilla_survivor.skill_family_v[0].on_can_activate
---     skill_special.on_activate = vanilla_survivor.skill_family_v[0].on_activate
--- end
-
--- -- feed movement sprites to body
-
--- local function setup_sprites(self)
---     local survivors = gm.variable_global_get("class_survivor")
-
---     if not survivors or self.class ~= executioner_id then return end
-
---     self.sprite_idle = idle_sprite
---     self.sprite_walk = walk_sprite
---     self.sprite_jump = jump_sprite
---     self.sprite_jump_peak = jump_sprite
---     self.sprite_fall = jump_sprite
---     self.sprite_climb = climb_sprite
---     self.sprite_death = death_sprite
---     self.sprite_decoy = hit_sprite
--- end
-
--- -- primary skill state
--- -- to-do: how the FUCK does this work? i think there must be a better system akin to entitystates rather than hooking when the buttons pressed and acting 'appropriately'.
-
--- local function skill_primary_on_activation(self, actor_skill, skill_index)
---     if self.class ~= executioner_id then return end -- hate this
-
---     gm._mod_actor_setActivity(self, 92, 1, true, nil)
---     self.image_speed = 0.2
-
---     if self.pVspeed == 0.0 then self.pHspeed = self.pHspeed * 0.2 end
-
---     gm._mod_sprite_set_speed(shoot1_sprite, 1)
---     gm._mod_instance_set_sprite(self, shoot1_sprite)
-
---     local direction = gm.actor_get_facing_direction(self)
---     local orig_x = self.x - 1.8
---     local orig_y = self.y
-
---     gm._mod_attack_fire_bullet(
---         self,
---         orig_x,
---         orig_y,
---         65,
---         direction,
---         self.skills[1].active_skill.damage,
---         gm.constants.sSparks1,
---         false,
---         true
---     )
--- end
-
--- -- secondary skill state
--- -- non-primary skills are duplicates for time being
-
--- local function skill_secondary_on_activation(self, actor_skill, skill_index)
---     if self.class ~= executioner_id then return end -- hate this
-
---     gm._mod_actor_setActivity(self, 92, 1, true, nil)
---     self.image_speed = 0.2
-
---     if self.pVspeed == 0.0 then self.pHspeed = self.pHspeed * 0.2 end
-
---     gm._mod_sprite_set_speed(shoot1_sprite, 1)
---     gm._mod_instance_set_sprite(self, shoot1_sprite)
-
---     local direction = gm.actor_get_facing_direction(self)
---     local orig_x = self.x - 1.8
---     local orig_y = self.y
-
---     gm._mod_attack_fire_bullet(
---         self,
---         orig_x,
---         orig_y,
---         65,
---         direction,
---         self.skills[1].active_skill.damage,
---         gm.constants.sSparks1,
---         false,
---         true
---     )
--- end
-
--- -- utility skill state
-
--- local function skill_utility_on_activation(self, actor_skill, skill_index)
---     if self.class ~= executioner_id then return end -- hate this
-
---     gm._mod_actor_setActivity(self, 92, 1, true, nil)
---     self.image_speed = 0.2
-
---     if self.pVspeed == 0.0 then self.pHspeed = self.pHspeed * 0.2 end
-
---     gm._mod_sprite_set_speed(shoot1_sprite, 1)
---     gm._mod_instance_set_sprite(self, shoot1_sprite)
-
---     local direction = gm.actor_get_facing_direction(self)
---     local orig_x = self.x - 1.8
---     local orig_y = self.y
-
---     gm._mod_attack_fire_bullet(
---         self,
---         orig_x,
---         orig_y,
---         65,
---         direction,
---         self.skills[1].active_skill.damage,
---         gm.constants.sSparks1,
---         false,
---         true
---     )
--- end
-
--- -- special skill state
-
--- local function skill_special_on_activation(self, actor_skill, skill_index)
---     if self.class ~= executioner_id then return end -- hate this
-
---     gm._mod_actor_setActivity(self, 92, 1, true, nil)
---     self.image_speed = 0.2
-
---     if self.pVspeed == 0.0 then self.pHspeed = self.pHspeed * 0.2 end
-
---     gm._mod_sprite_set_speed(shoot1_sprite, 1)
---     gm._mod_instance_set_sprite(self, shoot1_sprite)
-
---     local direction = gm.actor_get_facing_direction(self)
---     local orig_x = self.x - 1.8
---     local orig_y = self.y
-
---     gm._mod_attack_fire_bullet(
---         self,
---         orig_x,
---         orig_y,
---         65,
---         direction,
---         self.skills[1].active_skill.damage,
---         gm.constants.sSparks1,
---         false,
---         true
---     )
--- end
-
--- -- there's no way this can be good, but candyman said it's ok.
--- -- iterates through every callback and gets the required ones based on name ig.
-
--- local callback_names = gm.variable_global_get("callback_names")
--- local on_player_init_callback_id = 0
--- local on_player_step_callback_id = 0
--- for i = 1, #callback_names do
---     local callback_name = callback_names[i]
---     if callback_name:match("onPlayerInit") then
---         on_player_init_callback_id = i - 1
---     end
-
---     if callback_name:match("onPlayerStep") then
---         on_player_step_callback_id = i - 1
---     end
--- end
-
--- local pre_hooks = {}
--- gm.pre_script_hook(gm.constants.callback_execute, function(self, other, result, args)
---     if self.class ~= executioner_id then return end
-
---     local callback_id = args[1].value
---     if pre_hooks[callback_id] then
---         return pre_hooks[callback_id](self, other, result, args)
---     end
-
---     return true
--- end)
-
--- local post_hooks = {}
--- gm.post_script_hook(gm.constants.callback_execute, function(self, other, result, args)
---     if self.class ~= executioner_id then return end
-
---     local callback_id = args[1].value
---     if post_hooks[callback_id] then
---         post_hooks[callback_id](self, other, result, args)
---     end
--- end)
-
--- post_hooks[on_player_init_callback_id] = function(self, other, result, args)
---     setup_sprites(self)
-
---     setup_skills_callbacks()
--- end
-
--- local function setup_skills_callbacks()
---     local primary = executioner.skill_family_z[0]
---     local secondary = executioner.skill_family_x[0]
---     local utility = executioner.skill_family_c[0]
---     local special = executioner.skill_family_v[0]
-
---     if not pre_hooks[primary.on_activate] then
---         pre_hooks[primary.on_activate] = function(self, other, result, args)
---             skill_primary_on_activation(self)
---             return false
---         end
---     end
-
---     if not pre_hooks[secondary.on_activate] then
---         pre_hooks[secondary.on_activate] = function(self, other, result, args)
---             skill_secondary_on_activation(self)
---             return false
---         end
---     end
-
---     if not pre_hooks[utility.on_activate] then
---         pre_hooks[utility.on_activate] = function(self, other, result, args)
---             skill_utility_on_activation(self)
---             return false
---         end
---     end
-
---     if not pre_hooks[special.on_activate] then
---         pre_hooks[special.on_activate] = function(self, other, result, args)
---             skill_special_on_activation(self)
---             return false
---         end
---     end
--- end
-
-
--- local hooks = {}
--- hooks["gml_Object_oStartMenu_Step_2"] = function()
---     hooks["gml_Object_oStartMenu_Step_2"] = nil
-
---     create_survivor()
--- end
-
--- gm.pre_code_execute(function(self, other, code, result, flags)
---     if hooks[code.name] then
---         hooks[code.name](self)
---     end
--- end)
+local SPRITE_PATH = path.combine(PATH, "Sprites/Executioner")
+local SOUND_PATH = path.combine(PATH, "Sounds/Executioner")
+
+local sprite_loadout = Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 17, 28, 5)
+local sprite_portrait = Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"))
+local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills = Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
+
+local sprite_shoot1 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
+local sprite_shoot2 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 4, 10, 20)
+local sprite_shoot3 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 44, 40)
+local sprite_shoot4 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 14, 32, 69)
+
+local sound_shoot1 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
+local sound_shoot2 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot3 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
+local sound_shoot4a = Resources.sfx_load(NAMESPACE, "ExecutionerShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
+local sound_shoot4b = Resources.sfx_load(NAMESPACE, "ExecutionerShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+
+local executioner = Survivor.new(NAMESPACE, "executioner")
+local executioner_id = executioner.value
+
+executioner:set_stats_base({
+	maxhp = 95,
+	damage = 14,
+	regen = 0.008,
+})
+executioner:set_stats_level({
+	maxhp = 24,
+	damage = 3,
+	regen = 0.0012,
+	armor = 2,
+})
+
+executioner:set_animations( {
+	idle = Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17),
+	walk = Resources.sprite_load(NAMESPACE, "ExecutionerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 14, 18),
+	jump = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
+	jump_peak = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
+	fall = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
+	climb = Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18),
+} )
+
+executioner.sprite_loadout = sprite_loadout
+executioner.sprite_portrait = sprite_portrait
+executioner.sprite_portrait_small = sprite_portrait_small
+
+local executionerZ = executioner:get_primary()
+local executionerX = executioner:get_secondary()
+local executionerC = executioner:get_utility()
+local executionerV = executioner:get_special()
+
+executionerZ.sprite = sprite_skills
+executionerZ.subimage = 0
+
+executionerZ.cooldown = 5
+executionerZ.damage = 1.0
+executionerZ.require_key_press = false
+executionerZ.is_primary = true
+executionerZ.does_change_activity_state = true
+executionerZ.hold_facing_direction = true
+
+executionerX.sprite = sprite_skills
+executionerX.subimage = 2
+executionerX.cooldown = -1
+executionerX.damage = 3.2
+executionerX.max_stock = 10
+executionerX.auto_restock = false
+executionerX.start_with_stock = false
+executionerX.does_change_activity_state = true
+
+executionerC.sprite = sprite_skills
+executionerC.subimage = 6
+executionerC.cooldown = 4 * 60
+executionerC.is_utility = true
+executionerC.override_strafe_direction = true
+executionerC.ignore_aim_direction = true
+
+executionerV.sprite = sprite_skills
+executionerV.subimage = 7
+executionerV.cooldown = 8 * 60
+executionerV.damage = 10
+
+-- service pistol
+local stateZ = State.new(NAMESPACE, "executionerZ")
+executionerZ:clear_callbacks()
+executionerZ:onActivate(function(actor)
+	actor:enter_state(stateZ)
+end)
+
+stateZ:clear_callbacks()
+stateZ:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0 -- gamemaker bools are a pain to deal with in lua, so just use numbers instead
+
+	actor:skill_util_strafe_and_slide_init()
+end)
+stateZ:onStep(function(actor, data)
+	actor:actor_animation_set(sprite_shoot1, 0.25)
+	actor:skill_util_strafe_and_slide(0.45)
+
+	if data.fired == 0 then
+		data.fired = 1
+
+		GM.sound_play_at(sound_shoot1, 1.0, 1.0, actor.x, actor.y)
+
+		local damage = actor:skill_get_damage(executionerZ)
+		local dir = actor:skill_util_facing_direction()
+
+		if actor:is_authority() then
+			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, 8)
+					attack.climb = i * 8
+				end
+			end
+		end
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+stateZ:onExit(function(actor, data)
+	--actor:skill_util_strafe_exit() -- throws up errors, maybe only to be used for regular non-slide strafing?
+end)
+
+-- bang bang bang bang
+local stateX = State.new(NAMESPACE, "executionerX")
+
+executionerX:clear_callbacks()
+executionerX:onActivate(function(actor)
+	actor:enter_state(stateX)
+end)
+stateX:clear_callbacks()
+stateX:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.ion_rounds = actor.skills[2].active_skill.stock + 1 -- how many to fire. compensates for first stock being decremented already
+	data.shoot = 1 -- tracks if a shot should be fired
+	data.first = 1 -- if it was the first -- subsequent shots manually decrement skill stocks
+end)
+stateX:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot2, 0.33)
+
+	if data.ion_rounds > 0 and actor.image_index >= 2 then
+		actor.image_index = 0
+		data.shoot = 1
+	end
+	if data.shoot == 1 then
+		data.ion_rounds = data.ion_rounds - 1
+		data.shoot = 0
+
+		GM.sound_play_at(sound_shoot2, 1.0, 1.0, actor.x, actor.y)
+		GM._mod_game_shakeScreen_global(2)
+
+		local damage = actor:skill_get_damage(executionerX)
+		local dir = actor:skill_util_facing_direction()
+
+		if actor:is_authority() then
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks2, 9)
+				attack:set_stun(0.5)
+				attack.climb = i * 8
+			end
+		end
+
+		if data.first == 0 then
+			local skill = actor.skills[2].active_skill
+			skill.stock = skill.stock - 1
+		else
+			data.first = 0
+		end
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
+	local killer = Instance.wrap(args[3].value)
+	if killer.object_index == gm.constants.oP and killer.class == executioner_id then
+		GM.actor_skill_add_stock(killer, 1)
+	end
+end)
+
+-- scary
+local stateC = State.new(NAMESPACE, "executionerC")
+stateC.activity_flags = 1
+
+executionerC:clear_callbacks()
+executionerC:onActivate(function(actor)
+	actor:enter_state(stateC)
+end)
+stateC:clear_callbacks()
+stateC:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.scary = 0
+end)
+stateC:onStep(function(actor, data)
+	actor.sprite_index = sprite_shoot3
+	actor.image_speed = 0.25
+
+	actor.pHspeed = actor.pHmax * 2.2 * actor.image_xscale
+
+	if data.scary == 0 then
+		data.scary = 1
+
+		GM.sound_play_at(sound_shoot3, 1.0, 1.0, actor.x, actor.y)
+		actor:set_immune(30)
+
+		local cx, cy = actor.x, actor.y
+		local fear = Buff.find("ror", "fear")
+		local victims = List.new()
+		actor:collision_rectangle_list(cx - 100, cy - 50, cx + 100, cy + 50, gm.constants.pActor, false, true, victims, false)
+
+		for _, victim in ipairs(victims) do
+			if victim.team ~= actor.team then
+				victim:buff_apply(fear, 2 * 60)
+			end
+		end
+
+		victims:destroy()
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+-- die die die
+local stateV = State.new(NAMESPACE, "executionerV")
+
+executionerV:clear_callbacks()
+executionerV:onActivate(function(actor)
+	actor:enter_state(stateV)
+end)
+stateV:clear_callbacks()
+stateV:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.yeet = 0 -- have we launched up?
+	data.smited = 0 -- have we landed?
+end)
+stateV:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot4, 0.25)
+
+	-- this is all a bit of a mess
+	-- experimenting with having exe actually take time to land rather than teleporting instantly like in ss1
+	if data.yeet == 0 then
+		actor.pVspeed = (actor.pVmax * -2) * actor.attack_speed
+		data.yeet = 1
+		GM.sound_play_at(sound_shoot4a, 1.0, 1.0, actor.x, actor.y)
+	end
+	actor:set_immune(8)
+	if actor.image_index >= 8 then
+		actor.pVspeed = math.min(actor.pVspeed + 1.5 * actor.attack_speed, 30)
+	else
+		actor.pVspeed = math.min(actor.pVspeed + 0.1 * actor.attack_speed, -actor.pGravity1)
+	end
+
+	if actor.image_index >= 8 and (actor.free == 0.0 or actor.free == false) and data.smited == 0 then
+		data.smited = 1
+		GM.sound_play_at(sound_shoot4b, 1.0, 1.0, actor.x, actor.y)
+		GM._mod_game_shakeScreen_global(15)
+
+		if actor:is_authority() then
+		local damage = actor:skill_get_damage(executionerV)
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local attack = actor:fire_explosion(actor.x, actor.y, 200, 100, damage)
+				attack.climb = i * 8
+			end
+		end
+	end
+
+	if data.smited == 0 and actor.image_index >= 10 then
+		actor.image_index = 10
+	end
+	actor:skill_util_exit_state_on_anim_end()
+end)
