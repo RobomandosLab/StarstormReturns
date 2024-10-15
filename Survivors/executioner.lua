@@ -1,3 +1,4 @@
+
 local SPRITE_PATH = path.combine(PATH, "Sprites/Executioner")
 local SOUND_PATH = path.combine(PATH, "Sounds/Executioner")
 
@@ -32,18 +33,23 @@ executioner:set_stats_level({
 	armor = 2,
 })
 
-executioner:set_animations( {
+local anims = {
 	idle = Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17),
 	walk = Resources.sprite_load(NAMESPACE, "ExecutionerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 14, 18),
 	jump = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
 	jump_peak = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
 	fall = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 18),
 	climb = Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18),
-} )
+}
+
+executioner:set_animations(anims)
+
+executioner:set_cape_offset(0, -8, 0, -12)
 
 executioner.sprite_loadout = sprite_loadout
 executioner.sprite_portrait = sprite_portrait
 executioner.sprite_portrait_small = sprite_portrait_small
+executioner.sprite_title = anims.walk
 
 local executionerZ = executioner:get_primary()
 local executionerX = executioner:get_secondary()
@@ -250,13 +256,13 @@ stateV:onStep(function(actor, data)
 		GM.sound_play_at(sound_shoot4a, 1.0, 1.0, actor.x, actor.y)
 	end
 	actor:set_immune(8)
-	if actor.image_index >= 8 then
-		actor.pVspeed = math.min(actor.pVspeed + 1.5 * actor.attack_speed, 30)
+	if actor.image_index >= 7 then
+		actor.pVspeed = math.min(actor.pVspeed + 5.0 * actor.attack_speed, 80)
 	else
 		actor.pVspeed = math.min(actor.pVspeed + 0.1 * actor.attack_speed, -actor.pGravity1)
 	end
 
-	if actor.image_index >= 8 and (actor.free == 0.0 or actor.free == false) and data.smited == 0 then
+	if actor.image_index >= 7 and (actor.free == 0.0 or actor.free == false) and data.smited == 0 then
 		data.smited = 1
 		GM.sound_play_at(sound_shoot4b, 1.0, 1.0, actor.x, actor.y)
 		GM._mod_game_shakeScreen_global(15)
