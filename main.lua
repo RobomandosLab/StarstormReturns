@@ -2,7 +2,7 @@
 -- ssr team
 mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto()
 
-PATH = _ENV["!plugins_mod_folder_path"].."\\"
+PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
 
 Initialize(function()
@@ -13,7 +13,7 @@ Initialize(function()
 		"Items",
 	}
 	for _, folder in ipairs(folders) do
-		local names = path.get_files(PATH..folder)
+		local names = path.get_files(path.combine(PATH, folder))
 		for _, name in ipairs(names) do require(name) end
 	end
 end)
