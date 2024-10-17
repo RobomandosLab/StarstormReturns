@@ -2,9 +2,8 @@ SURVIVORS
 
 - Executioner
 	- polish and stuff
-		- strafing on primary
-		- fix special gaining height with attack speed
 		- custom tracers? mando's fmj doesn't fit
+			- this is a non-trivial issue due to networking shenanigans
 	- how to register palettes?
 	- how to register logbook?
 	- should he be an unlock? if so - how?
