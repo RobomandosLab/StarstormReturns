@@ -89,38 +89,38 @@ executioner:onInit(function(actor)
 	actor:survivor_util_init_half_sprites()
 end)
 
-local executionerZ = executioner:get_primary()
-local executionerX = executioner:get_secondary()
-local executionerC = executioner:get_utility()
-local executionerV = executioner:get_special()
+local executionerPrimary = executioner:get_primary()
+local executionerSecondary = executioner:get_secondary()
+local executionerUtility = executioner:get_utility()
+local executionerSpecial = executioner:get_special()
 
--- service pistol
-executionerZ.sprite = sprite_skills
-executionerZ.subimage = 0
+-- Service Pistol
+executionerPrimary.sprite = sprite_skills
+executionerPrimary.subimage = 0
 
-executionerZ.cooldown = 5
-executionerZ.damage = 1.0
-executionerZ.require_key_press = false
-executionerZ.is_primary = true
-executionerZ.does_change_activity_state = true
-executionerZ.hold_facing_direction = true
+executionerPrimary.cooldown = 5
+executionerPrimary.damage = 1.0
+executionerPrimary.require_key_press = false
+executionerPrimary.is_primary = true
+executionerPrimary.does_change_activity_state = true
+executionerPrimary.hold_facing_direction = true
 
-local stateZ = State.new(NAMESPACE, "executionerZ")
+local stateExecutionerPrimary = State.new(NAMESPACE, "executionerPrimary")
 
-executionerZ:clear_callbacks()
-executionerZ:onActivate(function(actor)
-	actor:enter_state(stateZ)
+executionerPrimary:clear_callbacks()
+executionerPrimary:onActivate(function(actor)
+	actor:enter_state(stateExecutionerPrimary)
 end)
 
-stateZ:clear_callbacks()
-stateZ:onEnter(function(actor, data)
+stateExecutionerPrimary:clear_callbacks()
+stateExecutionerPrimary:onEnter(function(actor, data)
 	actor.image_index2 = 0
 	data.fired = 0 -- gamemaker bools are a pain to deal with in lua, so just use numbers instead
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
 end)
-stateZ:onStep(function(actor, data)
+stateExecutionerPrimary:onStep(function(actor, data)
 	--actor:actor_animation_set(sprite_shoot1, 0.25)
 	actor.sprite_index2 = sprite_shoot1_half
 
@@ -146,7 +146,7 @@ stateZ:onStep(function(actor, data)
 		GM.sound_play_at(sound_shoot1, 1, 0.9 + math.random() * 0.2, actor.x, actor.y)
 
 		if actor:is_authority() then
-			local damage = actor:skill_get_damage(executionerZ)
+			local damage = actor:skill_get_damage(executionerPrimary)
 			local dir = actor:skill_util_facing_direction()
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
@@ -164,52 +164,51 @@ stateZ:onStep(function(actor, data)
 	end
 	--actor:skill_util_exit_state_on_anim_end() -- do not use in strafing states with half-sprites
 end)
-stateZ:onExit(function(actor, data)
+stateExecutionerPrimary:onExit(function(actor, data)
 	actor:skill_util_strafe_exit()
 end)
 
--- bang bang bang bang
+-- Ion Burst
+executionerSecondary.sprite = sprite_skills
+executionerSecondary.subimage = 2
+executionerSecondary.cooldown = -1
+executionerSecondary.damage = 3.2
+executionerSecondary.max_stock = 10
+executionerSecondary.auto_restock = false
+executionerSecondary.start_with_stock = false
+executionerSecondary.does_change_activity_state = true
+executionerSecondary.use_delay = 30
 
-executionerX.sprite = sprite_skills
-executionerX.subimage = 2
-executionerX.cooldown = -1
-executionerX.damage = 3.2
-executionerX.max_stock = 10
-executionerX.auto_restock = false
-executionerX.start_with_stock = false
-executionerX.does_change_activity_state = true
-executionerX.use_delay = 30
+local stateExecutionerSecondary = State.new(NAMESPACE, "executionerSecondary")
 
-local stateX = State.new(NAMESPACE, "executionerX")
-
-executionerX:clear_callbacks()
-executionerX:onActivate(function(actor, skill)
-	actor:enter_state(stateX)
+executionerSecondary:clear_callbacks()
+executionerSecondary:onActivate(function(actor, skill)
+	actor:enter_state(stateExecutionerSecondary)
 end)
-stateX:clear_callbacks()
-stateX:onEnter(function(actor, data)
+stateExecutionerSecondary:clear_callbacks()
+stateExecutionerSecondary:onEnter(function(actor, data)
 	actor.image_index = 0
-	data.ion_rounds = actor.skills[2].active_skill.stock + 1 -- how many to fire. compensates for first stock being decremented already
-	data.shoot = 1 -- tracks if a shot should be fired
-	data.first = 1 -- if it was the first -- subsequent shots manually decrement skill stocks
+	data.ion_rounds = actor.skills[2].active_skill.stock + 1 -- compensate for first stock being decremented already
+	data.should_fire = 1
+	data.is_first_shot = 1
 end)
-stateX:onStep(function(actor, data)
+stateExecutionerSecondary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot2, 0.33)
 
 	if data.ion_rounds > 0 and actor.image_index >= 2 then
 		actor.image_index = 0
-		data.shoot = 1
+		data.should_fire = 1
 	end
-	if data.shoot == 1 then
+	if data.should_fire == 1 then
 		data.ion_rounds = data.ion_rounds - 1
-		data.shoot = 0
+		data.should_fire = 0
 
 		GM.sound_play_at(sound_shoot2, 1.0, 0.9 + (data.ion_rounds * 0.02) + math.random() * 0.2, actor.x, actor.y)
 		GM._mod_game_shakeScreen_global(2)
 
 		if actor:is_authority() then
-			local damage = actor:skill_get_damage(executionerX)
+			local damage = actor:skill_get_damage(executionerSecondary)
 			local dir = actor:skill_util_facing_direction()
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
@@ -220,11 +219,11 @@ stateX:onStep(function(actor, data)
 			end
 		end
 
-		if data.first == 0 then
+		if data.is_first_shot == 0 then
 			local skill = actor.skills[2].active_skill
 			skill.stock = skill.stock - 1
 		else
-			data.first = 0
+			data.is_first_shot = 0
 		end
 	end
 
@@ -238,35 +237,35 @@ Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
 	end
 end)
 
--- scary
-executionerC.sprite = sprite_skills
-executionerC.subimage = 6
-executionerC.cooldown = 7 * 60
-executionerC.is_utility = true
-executionerC.override_strafe_direction = true
-executionerC.ignore_aim_direction = true
+-- Crowd Dispersion
+executionerUtility.sprite = sprite_skills
+executionerUtility.subimage = 6
+executionerUtility.cooldown = 7 * 60
+executionerUtility.is_utility = true
+executionerUtility.override_strafe_direction = true
+executionerUtility.ignore_aim_direction = true
 
-local stateC = State.new(NAMESPACE, "executionerC")
-stateC.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
+local stateExecutionerUtility = State.new(NAMESPACE, "executionerUtility")
+stateExecutionerUtility.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
 
-executionerC:clear_callbacks()
-executionerC:onActivate(function(actor)
-	actor:enter_state(stateC)
+executionerUtility:clear_callbacks()
+executionerUtility:onActivate(function(actor)
+	actor:enter_state(stateExecutionerUtility)
 end)
-stateC:clear_callbacks()
-stateC:onEnter(function(actor, data)
+stateExecutionerUtility:clear_callbacks()
+stateExecutionerUtility:onEnter(function(actor, data)
 	actor.image_index = 0
-	data.scary = 0
+	data.feared = 0
 end)
-stateC:onStep(function(actor, data)
+stateExecutionerUtility:onStep(function(actor, data)
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = 0.25
 
 	actor.pHspeed = actor.pHmax * 2.2 * actor.image_xscale
 	actor:set_immune(8)
 
-	if data.scary == 0 then
-		data.scary = 1
+	if data.feared == 0 then
+		data.feared = 1
 
 		GM.sound_play_at(sound_shoot3, 1.0, 1.0, actor.x, actor.y)
 
@@ -294,42 +293,43 @@ stateC:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
--- die die die
-executionerV.sprite = sprite_skills
-executionerV.subimage = 7
-executionerV.cooldown = 8 * 60
-executionerV.damage = 10
+-- Execution
+executionerSpecial.sprite = sprite_skills
+executionerSpecial.subimage = 7
+executionerSpecial.cooldown = 8 * 60
+executionerSpecial.damage = 10
 
--- scepter'd version
-local executionerVBoosted = Skill.new(NAMESPACE, "executionerVBoosted")
-executionerV:set_skill_upgrade(executionerVBoosted)
+-- Crowd Execution
+local executionerSpecialScepter = Skill.new(NAMESPACE, "executionerVBoosted")
+executionerSpecial:set_skill_upgrade(executionerSpecialScepter)
 
-executionerVBoosted.sprite = sprite_skills
-executionerVBoosted.subimage = 8
-executionerVBoosted.cooldown = 8 * 60
-executionerVBoosted.damage = 15
+executionerSpecialScepter.sprite = sprite_skills
+executionerSpecialScepter.subimage = 8
+executionerSpecialScepter.cooldown = 8 * 60
+executionerSpecialScepter.damage = 15
 
-local stateV = State.new(NAMESPACE, "executionerV")
+local stateExecutionerSpecial = State.new(NAMESPACE, "executionerSpecial")
 
-executionerV:clear_callbacks()
-executionerV:onActivate(function(actor)
-	actor:enter_state(stateV)
+executionerSpecial:clear_callbacks()
+executionerSpecial:onActivate(function(actor)
+	actor:enter_state(stateExecutionerSpecial)
 end)
-executionerVBoosted:clear_callbacks()
-executionerVBoosted:onActivate(function(actor)
-	actor:enter_state(stateV)
+executionerSpecialScepter:clear_callbacks()
+executionerSpecialScepter:onActivate(function(actor)
+	actor:enter_state(stateExecutionerSpecial)
 end)
 
-stateV:clear_callbacks()
-stateV:onEnter(function(actor, data)
+stateExecutionerSpecial:clear_callbacks()
+stateExecutionerSpecial:onEnter(function(actor, data)
 	actor.image_index = 0
 	actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
-	data.con = 0 -- keeps track of which part of the state we're in
-	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter")) -- easier to do this rather than making a whole new state that does almost the same thing
-	data.exheight = 0 -- how much to expand the aoe upwards
-	data.recoveries = 0 -- how many times exe has retried to slam after being interrupted -- gives up after 3
+
+	data.substate = 0
+	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+	data.aoe_height = 0
+	data.recovery_attempts = 0
 end)
-stateV:onStep(function(actor, data)
+stateExecutionerSpecial:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	local animation = sprite_shoot4
 	if data.scepter > 0 then
@@ -337,46 +337,46 @@ stateV:onStep(function(actor, data)
 	end
 	actor:actor_animation_set(animation, 0.25)
 
-	if data.con == 0 then -- leaping into the air
+	if data.substate == 0 then -- leaping into the air
 		actor.pVspeed = (actor.pVmax * -2) * actor.attack_speed
-		data.con = 1
+		data.substate = 1
 		GM.sound_play_at(sound_shoot4a, 1.0, 1.0, actor.x, actor.y)
-	elseif data.con == 1 then -- decelerating, hanging in the air
+	elseif data.substate == 1 then -- decelerating, hanging in the air
 		local deceleration = 0.5 * actor.attack_speed * actor.attack_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
 
 		if actor.image_index >= 7 then
 			if actor.pVspeed >= 0 then
-				data.con = 2
+				data.substate = 2
 				actor.pVspeed = (actor.pVmax * -1.5) * actor.attack_speed
 			else
 				actor.image_index = 7
 			end
 		end
-	elseif data.con == 2 then -- winding up
+	elseif data.substate == 2 then -- winding up
 		if actor.image_index >= 9 then
 			actor.pVspeed = 30 * actor.attack_speed
-			data.con = 3
-			data.exheight = 0
+			data.substate = 3
+			data.aoe_height = 0
 		end
-	elseif data.con == 3 then -- coming down
-		data.exheight = data.exheight + actor.pVspeed
+	elseif data.substate == 3 then -- coming down
+		data.aoe_height = data.aoe_height + actor.pVspeed
 		actor.image_index = 10
 
-		if actor.pVspeed < 0 then -- something launched us -- go back and retry slam
-			data.recoveries = data.recoveries + 1
-			if data.recoveries > 3 then
-				actor:skill_util_reset_activity_state() -- too many interruptions -- give up so we're not perma immune lmao
-			else
+		if actor.pVspeed < 0 then -- something launched us up, handle this interruption
+			data.recovery_attempts = data.recovery_attempts + 1
+			if data.recovery_attempts <= 3 then
 				actor.image_index = 0
-				data.con = 1
+				data.substate = 1 -- go back and try again
+			else
+				actor:skill_util_reset_activity_state() -- too many interruptions -- give up so we're not perma immune lmao
 			end
 		else
 			actor.pVspeed = 30 * actor.attack_speed -- water slows exe down and without gravity he's left stuck, so always force to max speed'
 
 			-- ugly check for having landed -- gamemaker bools suck
 			if (actor.free == 0.0 or actor.free == false) then
-				data.con = 4
+				data.substate = 4
 				actor.activity_type = 1 -- return to standard state physics
 
 				GM.sound_play_at(sound_shoot4b, 1.0, 1.0, actor.x, actor.y)
@@ -384,16 +384,16 @@ stateV:onStep(function(actor, data)
 
 				if actor:is_authority() then
 					local ax = actor.x + 32 * actor.image_xscale
-					local ay = actor.y + 24 - data.exheight * 0.5
+					local ay = actor.y + 24 - data.aoe_height * 0.5
 
-					local damage = actor:skill_get_damage(executionerV)
+					local damage = actor:skill_get_damage(executionerSpecial)
 					if data.scepter > 0 then
-						damage = actor:skill_get_damage(executionerVBoosted)
+						damage = actor:skill_get_damage(executionerSpecialScepter)
 					end
 
 					local buff_shadow_clone = Buff.find("ror", "shadowClone")
 					for i=0, actor:buff_stack_count(buff_shadow_clone) do
-						local attack = actor:fire_explosion(ax, ay, 160, 32 + data.exheight, damage)
+						local attack = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage)
 						attack.climb = i * 8
 						attack.y = actor.y
 						attack.execution = 1
@@ -417,7 +417,7 @@ stateV:onStep(function(actor, data)
 		end
 	end
 
-	if data.con < 4 then
+	if data.substate < 4 then
 		actor:set_immune(8)
 	end
 	actor:skill_util_exit_state_on_anim_end()
