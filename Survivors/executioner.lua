@@ -59,7 +59,7 @@ executioner:set_animations({
 })
 
 executioner:set_cape_offset(0, -8, 0, -12)
-executioner:set_primary_color(175, 113, 126)
+executioner:set_primary_color(Color.from_rgb(175, 113, 126))
 
 executioner.sprite_loadout = sprite_loadout
 executioner.sprite_portrait = sprite_portrait
@@ -247,7 +247,7 @@ executionerC.override_strafe_direction = true
 executionerC.ignore_aim_direction = true
 
 local stateC = State.new(NAMESPACE, "executionerC")
-stateC.activity_flags = 1 -- can be cancelled into climbing
+stateC.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
 
 executionerC:clear_callbacks()
 executionerC:onActivate(function(actor)
@@ -263,19 +263,19 @@ stateC:onStep(function(actor, data)
 	actor.image_speed = 0.25
 
 	actor.pHspeed = actor.pHmax * 2.2 * actor.image_xscale
+	actor:set_immune(8)
 
 	if data.scary == 0 then
 		data.scary = 1
 
 		GM.sound_play_at(sound_shoot3, 1.0, 1.0, actor.x, actor.y)
-		actor:set_immune(30)
 
 		if actor:is_authority() then
 			-- fear rectangle gets expanded in the direction that exe is dashing
 			local left, right = actor.x - 100, actor.x + 100
 			local bias = 1.1 * actor.pHspeed * 30 -- extrapolate distance in 0.5 sec, 1.1x multiplier to account for momentum
-			left = math.min(left, left + actor.pHspeed * 30)
-			right = math.max(right, right + actor.pHspeed * 30)
+			left = math.min(left, left + bias)
+			right = math.max(right, right + bias)
 
 			local fear = Buff.find("ror", "fear")
 			local victims = List.new()
@@ -362,6 +362,7 @@ stateV:onStep(function(actor, data)
 	elseif data.con == 3 then -- coming down
 		data.exheight = data.exheight + actor.pVspeed
 		actor.image_index = 10
+
 		if actor.pVspeed < 0 then -- something launched us -- go back and retry slam
 			data.recoveries = data.recoveries + 1
 			if data.recoveries > 3 then
@@ -422,7 +423,7 @@ stateV:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-Callback.add("onAttackHandleEnd", "SSExecution", function(self, other, result, args)
+Callback.add("onAttackHandleEnd", "SSExecutionCDR", function(self, other, result, args)
 	local attack = args[2].value
 	if attack.execution == 1 then
 		local kill_count = attack.kill_number
