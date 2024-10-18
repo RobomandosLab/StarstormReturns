@@ -2,9 +2,32 @@
 	"survivor" : {
 		"executioner" : {
 			"name" : "Executioner",
-			"name_upper" : "EXECUTIONER",
-			"description": "The <y>Executioner<w> kills <y>aliens<w> and doesn't afraid of <y>anything<w>."
+			"nameUpper" : "EXECUTIONER",
+			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
+			"endQuote": "..and so he left, bloodlust unfulfilled.",
 		}
+	},
+	"skill" : {
+		"executionerZ": {
+			"name": "Service Pistol",
+			"description": "Shoot for <y>100% damage.</c>"
+		},
+		"executionerX": {
+			"name": "Ion Burst",
+			"description": "Rapidly shoot ionized bullets for <y>320% damage</c> each.\nGain bullets by slaying enemies."
+		},
+		"executionerC": {
+			"name": "Crowd Dispersion",
+			"description": "<y>Dash forward</c>, <y>fearing nearby enemies</c>.\nYou <b>cannot be hit</c> while dashing."
+		},
+		"executionerV": {
+			"name": "Execution",
+			"description": "Launch into the air, and slam down with a projected axe for <y>1000% damage.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"executionerVBoosted": {
+			"name": "Crowd Execution",
+			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
 	},
 	"item" : {
 		"armedBackpack" : {

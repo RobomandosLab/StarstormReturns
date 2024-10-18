@@ -1,11 +1,9 @@
 SURVIVORS
-- move to rorr modding toolkit setup (maybe wait for update?)
 
 - Executioner
-	- is entirely broken and thus disabled
-	- all skills :(
-		- figure out walking + shooting anims for primary
-		- figure out how skill states work even jfc
+	- polish and stuff
+		- custom tracers? mando's fmj doesn't fit
+			- this is a non-trivial issue due to networking shenanigans
 	- how to register palettes?
 	- how to register logbook?
 	- should he be an unlock? if so - how?
