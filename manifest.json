@@ -4,7 +4,7 @@
 	"website_url": "https://www.youtube.com/watch?v=wBW4LtSi2QE",
 	"description": "Content mod that currently adds 1 item, 1 survivor.",
 	"dependencies": [
-		"ReturnOfModding-ReturnOfModding-1.0.41",
-		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.0.18"
+		"ReturnOfModding-ReturnOfModding-1.0.42",
+		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.0.20"
 	]
 }

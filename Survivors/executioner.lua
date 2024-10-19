@@ -104,6 +104,7 @@ executionerPrimary.require_key_press = false
 executionerPrimary.is_primary = true
 executionerPrimary.does_change_activity_state = true
 executionerPrimary.hold_facing_direction = true
+executionerPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
 local stateExecutionerPrimary = State.new(NAMESPACE, "executionerPrimary")
 
@@ -167,6 +168,13 @@ end)
 stateExecutionerPrimary:onExit(function(actor, data)
 	actor:skill_util_strafe_exit()
 end)
+stateExecutionerPrimary:onGetInterruptPriority(function(actor, data)
+	if actor.image_index2 > 2 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+	else
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+	end
+end)
 
 -- Ion Burst
 executionerSecondary.sprite = sprite_skills
@@ -178,6 +186,7 @@ executionerSecondary.auto_restock = false
 executionerSecondary.start_with_stock = false
 executionerSecondary.does_change_activity_state = true
 executionerSecondary.use_delay = 30
+executionerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateExecutionerSecondary = State.new(NAMESPACE, "executionerSecondary")
 
@@ -228,6 +237,13 @@ stateExecutionerSecondary:onStep(function(actor, data)
 	end
 
 	actor:skill_util_exit_state_on_anim_end()
+end)
+stateExecutionerSecondary:onGetInterruptPriority(function(actor, data)
+	if actor.image_index > 3 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+	else
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+	end
 end)
 
 Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
@@ -298,6 +314,7 @@ executionerSpecial.sprite = sprite_skills
 executionerSpecial.subimage = 7
 executionerSpecial.cooldown = 8 * 60
 executionerSpecial.damage = 10
+executionerSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 -- Crowd Execution
 local executionerSpecialScepter = Skill.new(NAMESPACE, "executionerVBoosted")
@@ -307,6 +324,7 @@ executionerSpecialScepter.sprite = sprite_skills
 executionerSpecialScepter.subimage = 8
 executionerSpecialScepter.cooldown = 8 * 60
 executionerSpecialScepter.damage = 15
+executionerSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateExecutionerSpecial = State.new(NAMESPACE, "executionerSpecial")
 
