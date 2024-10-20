@@ -1,5 +1,5 @@
-local SPRITE_PATH = path.combine(PATH, "Sprites/Executioner")
-local SOUND_PATH = path.combine(PATH, "Sounds/Executioner")
+local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Executioner")
+local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- assets.
 local sprite_loadout = Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 1, 28, 0)
