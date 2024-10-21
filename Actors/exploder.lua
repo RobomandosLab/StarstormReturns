@@ -8,9 +8,7 @@ local sprite_idle = Resources.sprite_load(NAMESPACE, "ExploderIdle", path.combin
 local sprite_walk = Resources.sprite_load(NAMESPACE, "ExploderWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 15, 15)
 local sprite_jump = Resources.sprite_load(NAMESPACE, "ExploderJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 14)
 local sprite_death = Resources.sprite_load(NAMESPACE, "ExploderDeath", path.combine(SPRITE_PATH, "death.png"), 7, 32, 55, nil, -16, -16, 16, 10)
--- attack animation
-local sprite_shoot1a = Resources.sprite_load(NAMESPACE, "ExploderShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 15, 32, 55)
-local sprite_shoot1b = Resources.sprite_load(NAMESPACE, "ExploderShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 5, 32, 55, nil, -16, -16, 16, 10)
+local sprite_shoot1 = Resources.sprite_load(NAMESPACE, "ExploderShoot1a", path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55, nil, -16, -16, 16, 10)
 
 GM.elite_generate_palettes(sprite_palette)
 
@@ -64,7 +62,7 @@ stateExploderPrimary:onEnter(function(actor, data)
 end)
 stateExploderPrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot1a, 0.25)
+	actor:actor_animation_set(sprite_shoot1, 0.25)
 
 	if data.exploded == 0 and actor.image_index >= 14 then
 		data.exploded = 1
@@ -86,9 +84,10 @@ Callback.add("postStep", "SSDestroyExploders", function()
 		if actor.actor_state_current_data_table.exploded == 1 then
 			-- manually create a corpse. plays the remainder of the explosion animation
 			local body = GM.instance_create(actor.x, actor.y, gm.constants.oBody)
-			body.sprite_index = sprite_shoot1b
+			body.sprite_index = actor.sprite_index
 			body.image_xscale = actor.image_xscale
-			body.image_speed = 0.25 * actor.attack_speed
+			body.image_index = actor.image_index
+			body.image_speed = actor.image_speed
 			body.image_blend = actor.image_blend
 			body.sprite_palette = actor.sprite_palette
 			body.elite_type = actor.elite_type
