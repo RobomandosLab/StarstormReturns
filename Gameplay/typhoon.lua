@@ -7,20 +7,19 @@ local typhoon = Difficulty.new(NAMESPACE, "typhoon")
 typhoon:set_sprite(sprite_small, sprite_large)
 typhoon:set_primary_color(Color.from_rgb(195, 28, 124))
 
--- TODO: balance this. this is all directly copying the official Typhoon implementation ... which absolutely bloody sucks lmao
-typhoon:set_scaling(0.3, 4.0, 3.0) --`diff_scale`, `general_scale`, `point_scale`
+typhoon:set_scaling(0.2, 4.0, 1.7) --`diff_scale`, `general_scale`, `point_scale`
 typhoon:set_monsoon_or_higher(true)
 typhoon:set_allow_blight_spawns(true)
 
 Callback.add("onGameStart", "SSTyphoonStart", function(self, other, result, args)
+	-- self is oDirectorControl
 	if typhoon:is_active() then
-		self.enemy_buff = self.enemy_buff + 1.5
+		self.enemy_buff = self.enemy_buff + 0.5
 		self.elite_spawn_chance = 0.8
 	end
 end)
 
 Callback.add("onDirectorPopulateSpawnArrays", "SSTyphoonPreLoopMonsters", function(self, other, result, args)
-	-- self is oDirectorControl
 	if self.loops == 0 and typhoon:is_active() then
 		-- add loop-exclusive spawns to before loop
 		local director_spawn_array = Array.wrap(self.monster_spawn_array)
