@@ -1,41 +1,35 @@
-name: Create Release and Zip
+name: Zip Repository
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build:
+  zip:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Create ZIP archive excluding specific files
+    - name: Create zip archive
+      shell: bash
+      env:
+        ORG_NAME: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        ZIP_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}.zip
       run: |
-        mkdir release
-        zip -r release/StarstormReturns.zip . \
-        -x "*.py" \
-        -x ".gitignore" \
-        -x ".github/*"
+        echo "Organization Name: $ORG_NAME"
+        echo "Repository Name: $REPO_NAME"
+        echo "Zip File Name: $ZIP_NAME"
 
-    - name: Upload artifact
+        # Exclude .py files and other specified patterns
+        zip -r "$ZIP_NAME" ./* -x "*.py" -x "path/to/exclude/*" -x "*.md"
+
+    - name: Upload zip artifact
       uses: actions/upload-artifact@v3
       with:
-        name: StarstormReturns.zip
-        path: release/StarstormReturns.zip
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          Automated release for version ${{ github.ref }}.
-        files: release/StarstormReturns.zip
-        draft: false
-        prerelease: false
+        name: ${{ env.ZIP_NAME }}
+        path: ${{ env.ZIP_NAME }}
