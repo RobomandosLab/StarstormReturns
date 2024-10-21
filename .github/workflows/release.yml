@@ -6,21 +6,24 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write  # Necessary permission to create releases and upload assets
+
 jobs:
-  zip:
+  zip_and_release:
     runs-on: ubuntu-latest
+    env:
+      ORG_NAME: ${{ github.repository_owner }}
+      REPO_NAME: ${{ github.event.repository.name }}
+      ZIP_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}.zip
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Create zip archive
-      id: create_zip  # Assign an ID to reference this step
       shell: bash
       run: |
-        ORG_NAME="${{ github.repository_owner }}"
-        REPO_NAME="${{ github.event.repository.name }}"
-        ZIP_NAME="${ORG_NAME}-${REPO_NAME}.zip"
         echo "Organization Name: $ORG_NAME"
         echo "Repository Name: $REPO_NAME"
         echo "Zip File Name: $ZIP_NAME"
@@ -28,11 +31,13 @@ jobs:
         # Exclude .py files and other specified patterns
         zip -r "$ZIP_NAME" ./* -x "*.py" -x "path/to/exclude/*" -x "*.md"
 
-        # Set output variable
-        echo "zip_name=$ZIP_NAME" >> $GITHUB_OUTPUT
-
-    - name: Upload zip artifact
-      uses: actions/upload-artifact@v3
+    - name: Create Release and Upload Zip
+      uses: ncipollo/release-action@v1
       with:
-        name: ${{ steps.create_zip.outputs.zip_name }}
-        path: ${{ steps.create_zip.outputs.zip_name }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: v${{ github.run_number }}
+        releaseName: "Release v${{ github.run_number }}"
+        artifacts: ${{ env.ZIP_NAME }}
+        artifactContentType: application/zip
+        draft: false
+        prerelease: false
