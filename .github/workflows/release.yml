@@ -15,12 +15,12 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Create zip archive
+      id: create_zip  # Assign an ID to reference this step
       shell: bash
-      env:
-        ORG_NAME: ${{ github.repository_owner }}
-        REPO_NAME: ${{ github.event.repository.name }}
-        ZIP_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}.zip
       run: |
+        ORG_NAME="${{ github.repository_owner }}"
+        REPO_NAME="${{ github.event.repository.name }}"
+        ZIP_NAME="${ORG_NAME}-${REPO_NAME}.zip"
         echo "Organization Name: $ORG_NAME"
         echo "Repository Name: $REPO_NAME"
         echo "Zip File Name: $ZIP_NAME"
@@ -28,8 +28,11 @@ jobs:
         # Exclude .py files and other specified patterns
         zip -r "$ZIP_NAME" ./* -x "*.py" -x "path/to/exclude/*" -x "*.md"
 
+        # Set output variable
+        echo "zip_name=$ZIP_NAME" >> $GITHUB_OUTPUT
+
     - name: Upload zip artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.ZIP_NAME }}
-        path: ${{ env.ZIP_NAME }}
+        name: ${{ steps.create_zip.outputs.zip_name }}
+        path: ${{ steps.create_zip.outputs.zip_name }}
