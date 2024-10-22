@@ -12,3 +12,21 @@
 -- Item.add_callback(item, "onRemove", function(actor, stack)
 -- 	actor.damage_base = actor.damage_base - 3
 -- end)
+ local sprite = Resources.sprite_load("starstormreturns", "item/fork", PATH.."Sprites/Items/fork.png", 1, 16, 16)
+
+
+    local item = Item.new("starstormreturns", "fork")
+    item:set_sprite(sprite)
+    item:set_tier(Item.TIER.common)
+    item:set_loot_tags(Item.LOOT_TAG.category_damage)
+        
+
+
+    item:onPostStatRecalc(function(actor)
+    actor.damage = actor.damage + 5
+    end)
+
+    item:onRemove(actor, stack_count)
+    item:onPostStatRecalc(function(actor)
+    actor.damage = actor.damage + 5
+    end)
