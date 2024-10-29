@@ -23,7 +23,7 @@ Initialize(function()
     Resources.sprite_load(NAMESPACE, "LandCloud5WhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloud5WhistlingBasin.png"), 1, 0, 0)
 
     --Menu Resources
-    local EnvironmentWhistlingBasin = Resources.sprite_load(NAMESPACE, "EnvironmentWhistlingBasin", path.combine(PATH.."/Sprites/Stages/Sprites/Stages/WhistlingBasin", "EnvironmentWhistlingBasin.png"))
+    local EnvironmentWhistlingBasin = Resources.sprite_load(NAMESPACE, "EnvironmentWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "EnvironmentWhistlingBasin.png"))
     local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "GroundStripWhistlingBasin.png"))
 
     --Stage
@@ -110,4 +110,3 @@ Initialize(function()
     outlands_stage:set_log_icon(EnvPlaceholder)
     ]]
 end)
-
