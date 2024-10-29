@@ -120,5 +120,12 @@
 			"story" : "Hey! Uh, I'm sorry, I'm really sorry.. I know you really wanted me to keep this coin but I can't take the responsibility any more..\nSee, I accidentally put the coin at the edge of a plasma furnace so.. well.. it's a bit burnt on the side, please don't get mad at me..",
 			"priority" : "Standard"
 		}
-	}
+	},
+	"stage" : {
+		"whistlingBasin" : {
+			"name" : "Whistling Basin",
+			"subname" : "Dwindling Oasis",
+			"story": "write some cool lore here please"
+		}
+	},
 }
