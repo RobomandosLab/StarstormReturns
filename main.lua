@@ -1,5 +1,8 @@
 -- starstorm returns
 -- ssr team
+
+require("stageLoader")
+
 mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto()
 
 PATH = _ENV["!plugins_mod_folder_path"]
