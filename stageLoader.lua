@@ -39,6 +39,7 @@ Initialize(function()
     basin_stage:add_room(path.combine(PATH.."/Stages", "whistlingBasin3.rorlvl"))
     basin_stage:add_room(path.combine(PATH.."/Stages", "whistlingBasin4.rorlvl"))
     basin_stage:add_room(path.combine(PATH.."/Stages", "whistlingBasin5.rorlvl"))
+    basin_stage:add_room(path.combine(PATH.."/Stages", "whistlingBasin6.rorlvl"))
 
     --Spawn list
     basin_stage:add_monster({
