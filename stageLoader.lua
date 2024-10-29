@@ -7,7 +7,7 @@ NAMESPACE = "ssr"
 
 
 Initialize(function()
-    local EnvPlaceholder = Resources.sprite_load(NAMESPACE, "EnvPlaceholder", path.combine(PATH, "EnvironmentPlaceholder.png"))
+    --local EnvPlaceholder = Resources.sprite_load(NAMESPACE, "EnvPlaceholder", path.combine(PATH, "EnvironmentPlaceholder.png"))
 
     --- WHISTLING BASIN ---
 
