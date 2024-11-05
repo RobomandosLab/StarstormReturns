@@ -5,7 +5,7 @@ mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto()
 PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
 
-Initialize(function()
+local init = function()
 	gm.sprite_replace(gm.constants.sTitle, path.combine(PATH, "Sprites/Menu/title.png"), 1, false, false, 692/2, 163/2)
 
 	local folders = {
@@ -18,4 +18,10 @@ Initialize(function()
 		local names = path.get_files(path.combine(PATH, folder))
 		for _, name in ipairs(names) do require(name) end
 	end
-end)
+end
+Initialize(init)
+
+if hotload then
+	init()
+end
+hotload = true
