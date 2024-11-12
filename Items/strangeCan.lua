@@ -1,4 +1,4 @@
--- local sprite = Resources.sprite_load(PATH.."Sprites/Items/fork.png", 1, false, false, 16, 16)
+--local sprite = Resources.sprite_load(PATH.."Sprites/Items/fork.png", 1, false, false, 16, 16)
 
 -- local item = Item.create("starstorm", "strangeCan")
 -- Item.set_sprite(item, sprite)

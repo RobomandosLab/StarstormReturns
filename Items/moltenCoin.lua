@@ -1,27 +1,30 @@
--- local sprite = Resources.sprite_load(PATH.."Sprites/Items/moltenCoin.png", 1, false, false, 16, 16)
+local sprite = Resources.sprite_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 16, 16)
+local sound = Resources.sfx_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sounds/moltenCoin.ogg"))
 
--- local item = Item.create("starstorm", "moltenCoin")
--- Item.set_sprite(item, sprite)
--- Item.set_tier(item, Item.TIER.common)
--- Item.set_loot_tags(item, Item.LOOT_TAG.category_damage)
+local moltenCoin = Item.new(NAMESPACE, "moltenCoin")
 
--- Item.add_callback(item, "onHit", function(actor, victim, damager, stack)
--- 	if stack > 0 then
--- 		if Helper.chance(0.06) then
---             log.info("Molten Coin triggered!!")
---             --[[ TODO: Play a sound effect here, and grant money
---             ]]
--- 			local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
---             dot.target = victim -- maybe needs to be victim.id
---             dot.parent = actor
---             dot.damage= 1 -- use actual damage
---             dot.ticks= 5
---             dot.team= actor.team
---             --dot.textColor = gm.constants.C_ORANGE
---             dot.sprite_index = gm.constants.sSparks9
+moltenCoin:set_sprite(sprite)
+moltenCoin:set_tier(Item.TIER.common)
+moltenCoin:set_loot_tags(Item.LOOT_TAG.category_damage)
 
---             -- Idk if this is gonna work but cant seem to find a way to add gold, maybe its an instance variable on actor?
---             gm.drop_gold_and_exp(actor.x, actor.y, 2)
--- 		end
--- 	end
--- end)
+moltenCoin:clear_callbacks()
+moltenCoin:onHit(function(actor, victim, damager, stack)
+	local force_proc = damager.attack_flags & (1 << 29) ~= 0
+	if math.random() <= 0.06 or force_proc then
+		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
+		dot.target = victim.value -- unwrap the Instance
+		dot.parent = actor.value
+		dot.damage = damager.damage * 0.2
+		dot.ticks = 2 + stack * 4
+		dot.team = actor.team
+		dot.textColor = 4235519
+		dot.sprite_index = gm.constants.sSparks9
+
+		actor:sound_play(sound, 1.0, 0.9 + math.random() * 0.2)
+
+		local g = gm.instance_create(victim.x, victim.y, gm.constants.oEfGold)
+		g.hspeed = -4 + math.random() * 8
+		g.vspeed = -4 + math.random() * 8
+		g.value = stack
+	end
+end)
