@@ -1,5 +1,5 @@
 local sprite = Resources.sprite_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sprites/Items/brassKnuckles.png"), 1, 15, 12)
-local sound = Resources.sfx_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sounds/brassKnuckles.ogg"))
+local sound = Resources.sfx_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sounds/Items/brassKnuckles.ogg"))
 
 local brassKnuckles = Item.new(NAMESPACE, "brassKnuckles")
 brassKnuckles:set_sprite(sprite)

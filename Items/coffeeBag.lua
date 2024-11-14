@@ -18,6 +18,6 @@ coffeeBuff.icon_frame_speed = 0.2
 
 coffeeBuff:clear_callbacks()
 coffeeBuff:onStatRecalc(function(actor, stack)
-	actor.pHmax = actor.pHmax + 0.21
+	actor.pHmax = actor.pHmax + 0.6
 	actor.attack_speed = actor.attack_speed + 0.22
 end)

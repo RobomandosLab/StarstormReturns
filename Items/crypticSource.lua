@@ -11,17 +11,21 @@ crypticSource:onStep(function(actor, stack)
 
 	local actor_data = actor:get_data()
 
-	local true_xscale = actor.image_xscale
+	local true_direction = actor.image_xscale
 	if actor.object_index == gm.constants.oEngiTurret then
-		true_xscale = actor.image_xscale2
+		true_direction = actor.image_xscale2
 	end
 
-	if not actor_data.last_xscale then actor_data.last_xscale = true_xscale end
+	if actor.pHspeed ~= 0 then
+		true_direction = gm.sign(actor.pHspeed)
+	end
+
+	if not actor_data.last_direction then actor_data.last_direction = true_direction end
 
 	if not actor_data.cryptic_source_cd then
-		if actor_data.last_xscale == true_xscale * -1 then
+		if actor_data.last_direction == true_direction * -1 then
 			actor_data.cryptic_source_cd = 10
-			actor_data.last_xscale = true_xscale
+			actor_data.last_direction = true_direction
 
 			local t = gm.instance_create(actor.x, actor.y, gm.constants.oChainLightning)
 			t.parent = actor.value

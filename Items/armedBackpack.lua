@@ -1,5 +1,5 @@
 local sprite = Resources.sprite_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sprites/Items/armedBackpack.png"), 1, 16, 16)
-local sound = Resources.sfx_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sounds/armedBackpack.ogg"))
+local sound = Resources.sfx_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sounds/Items/armedBackpack.ogg"))
 
 local tracer = CustomTracer.new(function(x1, y1, x2, y2)
 	local offset = -1 + math.random() * 3
