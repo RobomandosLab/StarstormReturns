@@ -303,7 +303,17 @@ end)
 Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
 	local killer = Instance.wrap(args[3].value)
 	if killer.object_index == gm.constants.oP and killer.class == executioner_id then
-		GM.actor_skill_add_stock_networked(killer, 1)
+		local victim = Instance.wrap(args[2].value)
+		local charges = 1
+		if GM.actor_is_elite(victim) then
+			charges = charges * 2
+		end
+		if GM.actor_is_boss(victim) then
+			charges = charges * 5
+		end
+		for i=1, charges do
+			GM.actor_skill_add_stock_networked(killer, 1)
+		end
 	end
 end)
 
