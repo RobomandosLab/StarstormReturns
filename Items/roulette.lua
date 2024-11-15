@@ -1,6 +1,8 @@
-local item_sprite = Resources.sprite_load(NAMESPACE, "Roulette", path.combine(PATH, "Sprites/Items/roulette.png"), 1, 16, 16)
-local sound = Resources.sfx_load(NAMESPACE, "Roulette", path.combine(PATH, "Sounds/Items/roulette.ogg"))
+local item_sprite = Resources.sprite_load(NAMESPACE, "Roulette", path.combine(PATH, "Sprites/Items/roulette.png"), 1, 16, 11)
 local wheel_sprite = Resources.sprite_load(NAMESPACE, "RouletteWheel", path.combine(PATH, "Sprites/Items/Effects/rouletteWheel.png"), 8, 40, 40)
+local buffs_sprite = Resources.sprite_load(NAMESPACE, "RouletteBuffs", path.combine(PATH, "Sprites/Buffs/roulette.png"), 7, 8, 8)
+
+local sound = Resources.sfx_load(NAMESPACE, "Roulette", path.combine(PATH, "Sounds/Items/roulette.ogg"))
 
 local roulette = Item.new(NAMESPACE, "roulette")
 roulette:set_sprite(item_sprite)
@@ -9,50 +11,70 @@ roulette:set_loot_tags(	Item.LOOT_TAG.category_healing,
 						Item.LOOT_TAG.category_damage,
 						Item.LOOT_TAG.category_utility)
 
+local buffMaxHP			= Buff.new(NAMESPACE, "rouletteMaxHP")
+local buffRegen			= Buff.new(NAMESPACE, "rouletteRegen")
+local buffDamage		= Buff.new(NAMESPACE, "rouletteDamage")
+local buffAttackSpeed	= Buff.new(NAMESPACE, "rouletteAttackSpeed")
+local buffCritChance	= Buff.new(NAMESPACE, "rouletteCritChance")
+local buffMoveSpeed		= Buff.new(NAMESPACE, "rouletteMoveSpeed")
+local buffArmor			= Buff.new(NAMESPACE, "rouletteArmor")
+
 local roulette_buffs = {
-	{variable = "maxhp",			value = 60,		stack = 24},
-	{variable = "hp_regen",			value = 0.06,	stack = 0.03},
-	{variable = "damage",			value = 14,		stack = 5},
-	{variable = "attack_speed",		value = 0.35,	stack = 0.155},
-	{variable = "critical_chance",	value = 22,		stack = 9},
-	{variable = "pHmax",			value = 0.52,	stack = 0.2},
-	{variable = "armor",			value = 34,		stack = 13},
+	buffMaxHP,
+	buffRegen,
+	buffDamage,
+	buffAttackSpeed,
+	buffCritChance,
+	buffMoveSpeed,
+	buffArmor,
 }
 
 local rouletteObject = Object.new(NAMESPACE, "RouletteWheel")
+local packetRoulette = Packet.new()
 
 local function roulette_roll(actor)
 	if gm._mod_net_isClient() then return end
 
 	local buff_index = math.random(#roulette_buffs)
 
-	local obj = rouletteObject:create(actor.x, actor.bbox_top - 80)
+	local obj = rouletteObject:create(actor.x, actor.bbox_top - 40)
 	obj.buff_index = buff_index
 	obj.parent = actor
+
+	if gm._mod_net_isOnline() then
+		local msg = packetRoulette:message_begin()
+		msg:write_instance(actor)
+		msg:write_byte(buff_index)
+		msg:send_to_all()
+	end
 end
+
+local function roulette_clear_buffs(actor)
+	for _, buff in ipairs(roulette_buffs) do
+		if actor:buff_stack_count(buff) > 0 then
+			actor:buff_remove(buff)
+		end
+	end
+end
+
+packetRoulette:onReceived(function(msg)
+	local actor = msg:read_instance()
+	local buff_index = msg:read_byte()
+
+	local obj = rouletteObject:create(actor.x, actor.bbox_top - 40)
+	obj.buff_index = buff_index
+	obj.parent = actor
+end)
 
 roulette:clear_callbacks()
 roulette:onPickup(function(actor, stack)
-	local data = actor:get_data()
-	if not data.roulette_buff_index then
-		data.roulette_buff_index = 0
-
+	if stack == 1 then
 		roulette_roll(actor)
 	end
 end)
 roulette:onRemove(function(actor, stack)
 	if stack == 1 then
-		actor:get_data().roulette_buff_index = nil
-	end
-end)
-
-roulette:onStatRecalc(function(actor, stack)
-	local index = actor:get_data().roulette_buff_index
-	local buff = roulette_buffs[index]
-
-	if buff then
-		local increase = buff.value + buff.stack * (stack - 1)
-		actor[buff.variable] = actor[buff.variable] + increase
+		roulette_clear_buffs(actor)
 	end
 end)
 
@@ -62,9 +84,11 @@ Callback.add("onMinute", "SSRouletteReroll", function()
 	local actors = Instance.find_all(gm.constants.pActor)
 
 	for _, actor in ipairs(actors) do
-		local stack = actor:item_stack_count(roulette)
-		if stack > 0 then
-			roulette_roll(actor)
+		if GM.actor_is_alive(actor) then
+			local stack = actor:item_stack_count(roulette)
+			if stack > 0 then
+				roulette_roll(actor)
+			end
 		end
 	end
 end)
@@ -93,7 +117,7 @@ rouletteObject:onStep(function(self)
 
 	self.timer = self.timer + 1
 
-	if self.timer < 40 then
+	if self.timer < 45 then
 		self.rspeed = self.rspeed * 1.1
 		self.image_angle = self.image_angle + self.rspeed
 	else
@@ -103,8 +127,14 @@ rouletteObject:onStep(function(self)
 			self.image_index = self.buff_index
 			self.vspeed = -0.1
 
-			self.parent:get_data().roulette_buff_index = self.buff_index
-			self.parent:recalculate_stats()
+			if gm._mod_net_isHost() then
+				roulette_clear_buffs(self.parent)
+
+				local new_buff = roulette_buffs[self.buff_index]
+				if new_buff then
+					self.parent:buff_apply(new_buff, 60 * 60)
+				end
+			end
 		end
 		self.image_alpha = self.image_alpha - 0.01
 
@@ -112,5 +142,55 @@ rouletteObject:onStep(function(self)
 			self:destroy()
 		end
 	end
+end)
 
+for i, buff in ipairs(roulette_buffs) do
+	buff.icon_sprite = buffs_sprite
+	buff.icon_subimage = i-1
+	buff:clear_callbacks()
+end
+
+local maxhp_old
+local hp_old
+gm.pre_script_hook(gm.constants.recalculate_stats, function(self, other, result, args)
+	maxhp_old = self.maxhp
+	hp_old = self.hp
+end)
+
+buffMaxHP:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.maxhp = actor.maxhp + 60 * (0.6 + 0.4 * stack)
+
+	local hp_restore = hp_old - actor.hp
+	actor.hp = math.min(actor.maxhp, actor.hp + math.max(0, actor.maxhp - maxhp_old + hp_restore))
+end)
+
+buffRegen:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.hp_regen = actor.hp_regen + 0.06 * (0.6 + 0.4 * stack)
+end)
+
+buffDamage:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.damage = actor.damage + 14 * (0.6 + 0.4 * stack)
+end)
+
+buffAttackSpeed:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.attack_speed = actor.attack_speed + 0.35 * (0.6 + 0.4 * stack)
+end)
+
+buffCritChance:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.critical_chance = actor.critical_chance + 25 * (0.6 + 0.4 * stack)
+end)
+
+buffMoveSpeed:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.pHmax = actor.pHmax + 0.52 * (0.6 + 0.4 * stack)
+end)
+
+buffArmor:onStatRecalc(function(actor)
+	local stack = actor:item_stack_count(roulette)
+	actor.armor = actor.armor + 35 * (0.6 + 0.4 * stack)
 end)

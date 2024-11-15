@@ -11,6 +11,8 @@ moltenCoin:clear_callbacks()
 moltenCoin:onHit(function(actor, victim, damager, stack)
 	local force_proc = damager.attack_flags & (1 << 29) ~= 0
 	if math.random() <= 0.06 or force_proc then
+		--print("molten coin proc")
+
 		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
 		dot.target = victim.value -- unwrap the Instance
 		dot.parent = actor.value

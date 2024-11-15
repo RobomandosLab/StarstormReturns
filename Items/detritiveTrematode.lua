@@ -1,7 +1,6 @@
 local item_sprite = Resources.sprite_load(NAMESPACE, "DetritiveTrematode", path.combine(PATH, "Sprites/Items/detritiveTrematode.png"), 1, 16, 20)
 local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffDisease", path.combine(PATH, "Sprites/Buffs/disease.png"), 1, 8, 8)
 
-
 local detritiveTrematode = Item.new(NAMESPACE, "detritiveTrematode")
 detritiveTrematode:set_sprite(item_sprite)
 detritiveTrematode:set_tier(Item.TIER.common)
