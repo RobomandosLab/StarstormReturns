@@ -19,10 +19,11 @@ local init = function()
 		local names = path.get_files(path.combine(PATH, folder))
 		for _, name in ipairs(names) do require(name) end
 	end
+
+	HOTLOADING = true
 end
 Initialize(init)
 
 if HOTLOADING then
 	init()
 end
-HOTLOADING = true
