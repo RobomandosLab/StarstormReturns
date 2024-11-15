@@ -9,6 +9,7 @@ local init = function()
 	gm.sprite_replace(gm.constants.sTitle, path.combine(PATH, "Sprites/Menu/title.png"), 1, false, false, 692/2, 163/2)
 
 	local folders = {
+		"Misc",
 		"Actors",
 		"Gameplay",
 		"Survivors",
@@ -21,7 +22,7 @@ local init = function()
 end
 Initialize(init)
 
-if hotload then
+if HOTLOADING then
 	init()
 end
-hotload = true
+HOTLOADING = true

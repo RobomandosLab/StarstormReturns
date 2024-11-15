@@ -26,7 +26,8 @@ local sprite_shoot3 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path
 local sprite_shoot4 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 14, 32, 69)
 local sprite_shoot5 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 14, 32, 69)
 
-local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ExecutionerSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 14, 11)
+local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
+local sprite_tracer2 = Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
 
 local sound_shoot1 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
@@ -157,25 +158,24 @@ stateExecutionerPrimary:onStep(function(actor, data)
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, 8)
+					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Damager.TRACER.commando1)
 					attack.climb = i * 8
 				end
 			end
 		end
 	end
 
-	if actor.image_index2 >= 5 then
+	if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) then
 		actor:skill_util_reset_activity_state()
 	end
-	--actor:skill_util_exit_state_on_anim_end() -- do not use in strafing states with half-sprites
 end)
 stateExecutionerPrimary:onExit(function(actor, data)
 	actor:skill_util_strafe_exit()
 end)
 stateExecutionerPrimary:onGetInterruptPriority(function(actor, data)
 	-- enables extremely high attack rates -- allow interrupting if the next frame is calculated to reach the end of the anim
-	-- FIXME: breaks strafe turn updating
-	if actor.image_index2 + 0.33 * actor.attack_speed >= 5 then
+	-- FIXME: breaks strafe turn queuing
+	if actor.image_index2 + 0.33 * actor.attack_speed >= gm.sprite_get_number(actor.sprite_index2)+1 then
 		return State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 	end
 	if actor.image_index2 > 2 then
@@ -197,6 +197,44 @@ executionerSecondary.does_change_activity_state = true
 executionerSecondary.use_delay = 30
 executionerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
+local pWispGTracer = gm.variable_global_get("pWispGTracer")
+local tracer2_color = Color.from_rgb(110, 129, 195)
+local ion_tracer = CustomTracer.new(function(x1, y1, x2, y2)
+	if x1 < x2 then x1 = x1 + 16 else x1 = x1 - 16 end
+
+	y1 = y1 - 5
+	y2 = y2 - 5
+
+	-- line tracer
+	local tracer = gm.instance_create(x1, y1, gm.constants.oEfLineTracer)
+
+	tracer.xend = x2
+	tracer.yend = y2
+	tracer.sprite_index = sprite_tracer2
+	tracer.image_speed = 1
+	tracer.rate = 0.1
+	tracer.blend_1 = Color.from_rgb(255, 255, 255)
+	tracer.blend_2 = tracer2_color
+	tracer.blend_rate = 0.2
+	tracer.image_alpha = 1.5
+	tracer.bm = 1
+	tracer.width = 3
+
+	-- particles
+	local dist = gm.point_distance(x1, y1, x2, y2)
+	local dir = gm.point_direction(x1, y1, x2, y2)
+
+	gm.part_type_direction(pWispGTracer, dir, dir, 0, 0)
+
+	local px = x1
+	local i = 0
+	while i < dist do
+		gm.part_particles_create_colour(1, px, y1 + gm.random_range(-8, 8), pWispGTracer, tracer2_color, 1)
+		px = px + gm.lengthdir_x(20, dir)
+		i = i + 20
+	end
+end)
+
 local stateExecutionerSecondary = State.new(NAMESPACE, "executionerSecondary")
 
 executionerSecondary:clear_callbacks()
@@ -215,7 +253,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(data.sprite, 0.33)
 
-	if data.ion_rounds > 0 and actor.image_index + 0.33 * actor.attack_speed > 2 then
+	if data.ion_rounds > 0 and actor.image_index >= 2 then
 		actor.image_index = 0
 		data.should_fire = 1
 
@@ -238,7 +276,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks13, 9)
+				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_sparks2, ion_tracer)
 				attack:set_stun(1.0)
 				attack.climb = i * 8
 			end

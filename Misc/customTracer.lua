@@ -18,15 +18,15 @@ CustomTracer.make_sprite_tiling = function(sprite)
 	GM.sprite_set_nineslice(sprite, nine)
 end
 
-local function CreateTracer(id, x1, y1, x2, y2)
+CustomTracer.create_tracer = function(id, x1, y1, x2, y2)
 	local fn = funcs[id]
 	if fn then
 		fn(x1, y1, x2, y2)
 	end
 end
 
-local function NetworkedTracer(id, x1, y1, x2, y2)
-	CreateTracer(id, x1, y1, x2, y2)
+CustomTracer.create_tracer_networked = function(id, x1, y1, x2, y2)
+	CustomTracer.create_tracer(id, x1, y1, x2, y2)
 
 	if gm._mod_net_isOnline() then
 		local msg = TracerPacket:message_begin()
@@ -51,7 +51,7 @@ TracerPacket:onReceived(function(msg, player)
 	local x2 = msg:read_int()
 	local y2 = msg:read_int()
 
-	CreateTracer(id, x1, y1, x2, y2)
+	CustomTracer.create_tracer(id, x1, y1, x2, y2)
 
 	if gm._mod_net_isHost() then -- relay to clients except the one who sent you it
 		local msg = TracerPacket:message_begin()
@@ -74,7 +74,7 @@ gm.pre_code_execute("gml_Object_oBulletAttack_Step_1", function(self, other)
 end)
 gm.post_code_execute("gml_Object_oBulletAttack_Step_1", function(self, other)
 	if custom_id then
-		NetworkedTracer(custom_id, bx, by, self.x, self.y)
+		CustomTracer.create_tracer_networked(custom_id, bx, by, self.x, self.y)
 		custom_id = nil
 	end
 end)
