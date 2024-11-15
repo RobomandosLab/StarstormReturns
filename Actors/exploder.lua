@@ -88,7 +88,12 @@ end)
 Callback.add("postStep", "SSDestroyExploders", function()
 	local exploders = Instance.find_all(exploder)
 	for _, actor in ipairs(exploders) do
-		if actor.actor_state_current_data_table.exploded == 1 then
+		local state_data = actor.actor_state_current_data_table
+
+		-- do this to delay the deletion by a frame. this allows the attack's procs and game report ("Killed by" info) to work
+		if state_data.exploded == 1 then
+			state_data.exploded = 2
+		elseif state_data.exploded == 2 then
 			-- manually create a corpse. plays the remainder of the explosion animation
 			local body = GM.instance_create(actor.x, actor.y, gm.constants.oBody)
 			body.sprite_index = actor.sprite_index
@@ -108,6 +113,7 @@ local monsterCardExploder = Monster_Card.new(NAMESPACE, "exploder")
 monsterCardExploder.object_id = exploder_id
 monsterCardExploder.spawn_cost = 18
 monsterCardExploder.spawn_type = Monster_Card.SPAWN_TYPE.classic
+monsterCardExploder.can_be_blighted = false -- HELL no
 
 -- TODO: evaluate a better approach for populating stages..
 local stages = {
@@ -116,6 +122,8 @@ local stages = {
 	"ror-hiveCluster",
 	"ror-riskOfRain",
 }
+
+if HOTLOADING then return end
 
 for _, s in ipairs(stages) do
 	local stage = Stage.find(s)
