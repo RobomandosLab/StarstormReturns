@@ -31,7 +31,7 @@ crypticSource:onStep(function(actor, stack)
 			t.parent = actor.value
 			t.team = actor.team
 			t.damage = math.ceil(actor.damage * (0.15 + (0.55 * stack)))
-			t.blend = 0x57F2D3
+			t.blend = Color.from_rgb(211, 242, 87)
 			t.bounce = 2
 
 			actor:sound_play_networked(gm.constants.wLightning, 0.25, 3.4 + math.random() * 0.3, actor.x, actor.y)

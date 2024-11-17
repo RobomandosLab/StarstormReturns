@@ -20,7 +20,7 @@ gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, ar
 
 		local diff = amount - args[2].value
 
-		if not gm.bool(args[3].value) then
+		if not gm.bool(args[3].value) then -- "is passive"
 			gm.draw_damage(actor.x-12, actor.bbox_top+2, diff, 0, color_herbs, actor.team, 0)
 		end
 	end

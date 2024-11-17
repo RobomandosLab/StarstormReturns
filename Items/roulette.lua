@@ -150,6 +150,8 @@ for i, buff in ipairs(roulette_buffs) do
 	buff:clear_callbacks()
 end
 
+-- adjust hp value so the player doesn't have missing hp after the buff
+-- TODO: this should really be the toolkit's problem, not ours.
 local maxhp_old
 local hp_old
 gm.pre_script_hook(gm.constants.recalculate_stats, function(self, other, result, args)

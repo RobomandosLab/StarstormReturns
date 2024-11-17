@@ -10,11 +10,9 @@ local buffDisease = Buff.new(NAMESPACE, "disease")
 
 detritiveTrematode:clear_callbacks()
 detritiveTrematode:onHit(function(actor, victim, damager, stack)
-	if victim.parent then victim = victim.parent end -- account for brambles and other such sillies
+	victim = GM.attack_collision_resolve(victim)
 
-	if not victim.maxhp then -- ran into this error once but couldn't replicate it -- i wanna catch it next time
-		error("victim has no maxhp?? name: "..victim.value.object_name)
-	end
+	if not Instance.exists(victim) then return end
 
 	local threshold = ((0.9 + stack / 1.2) * 0.033)
 	threshold = victim.maxhp * threshold
@@ -23,20 +21,19 @@ detritiveTrematode:onHit(function(actor, victim, damager, stack)
 	end
 end, true)
 
+local effect_blend_color = Color.from_rgb(128, 128, 0)
 detritiveTrematode:onDraw(function(actor, stack)
 	local preserve_alpha, preserve_blend = actor.image_alpha, actor.image_blend
 
 	actor.image_alpha = 0.25
-	actor.image_blend = 32896
-	gm.actor_drawscript_call(actor.value, actor.x, actor.y, 0, 0)
+	actor.image_blend = effect_blend_color
+	gm.actor_drawscript_call(actor.value, actor.ghost_x, actor.ghost_y, 0, 0)
 
 	actor.image_alpha = preserve_alpha
 	actor.image_blend = preserve_blend
 end)
 
 buffDisease.icon_sprite = buff_sprite
-buffDisease.icon_stack_subimage = false
-buffDisease.draw_stack_number = false
 buffDisease.is_debuff = true
 
 local disease_damage_color = Color.from_rgb(187, 211, 91)

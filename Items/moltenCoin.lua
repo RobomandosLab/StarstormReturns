@@ -12,8 +12,7 @@ moltenCoin:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 moltenCoin:clear_callbacks()
 moltenCoin:onHit(function(actor, victim, damager, stack)
-	local force_proc = damager.attack_flags & (1 << 29) ~= 0
-	if math.random() <= 0.06 or force_proc then
+	if math.random() <= 0.06 or damager.attack_flags & Damager.ATTACK_FLAG.force_proc ~= 0 then
 		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
 		dot.target = victim.value -- unwrap the Instance
 		dot.parent = actor.value
@@ -48,7 +47,7 @@ packetMoltenCoinProc:onReceived(function(msg)
 
 	gm.sound_play_at(sound, 1.0, 0.9 + math.random() * 0.2, x, y)
 
-	local g = gm.instance_create(victim.x, victim.y, gm.constants.oEfGold)
+	local g = gm.instance_create(x, y, gm.constants.oEfGold)
 	g.hspeed = -4 + math.random() * 8
 	g.vspeed = -4 + math.random() * 8
 	g.sprite_index = coin_sprite

@@ -12,8 +12,7 @@ local buffIntoxication = Buff.new(NAMESPACE, "intoxication")
 
 strangeCan:clear_callbacks()
 strangeCan:onHit(function(actor, victim, damager, stack)
-	local force_proc = damager.attack_flags & (1 << 29) ~= 0
-	if math.random() <= 0.035 + (0.05 * stack) or force_proc then
+	if math.random() <= 0.035 + (0.05 * stack) or damager.attack_flags & Damager.ATTACK_FLAG.force_proc ~= 0 then
 		gm.sound_play_networked(sound, 1, 1, victim.x, victim.y)
 		victim:buff_apply(buffIntoxication, 7 * 60)
 	end
