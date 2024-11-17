@@ -24,7 +24,6 @@ detritiveTrematode:onHit(function(actor, victim, damager, stack)
 end, true)
 
 detritiveTrematode:onDraw(function(actor, stack)
-	if actor.visible == 0.0 then return end
 	local preserve_alpha, preserve_blend = actor.image_alpha, actor.image_blend
 
 	actor.image_alpha = 0.25

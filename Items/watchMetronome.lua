@@ -1,4 +1,6 @@
 local sprite = Resources.sprite_load(NAMESPACE, "WatchMetronome", path.combine(PATH, "Sprites/Items/watchMetronome.png"), 1, 15, 12)
+local bar_sprite = Resources.sprite_load(NAMESPACE, "MetronomeBar", path.combine(PATH, "Sprites/Items/Effects/metronomeBar.png"), 1, 25, 5)
+--local bar_sprite_big = Resources.sprite_load(NAMESPACE, "MetronomeBarBig", path.combine(PATH, "Sprites/Items/Effects/metronomeBarBig.png"), 1, 2, 8)
 
 local MAX_CHARGE = 2.4
 
@@ -55,28 +57,34 @@ watchMetronome:onStep(function(actor, stack)
 	data.chrono_charge_last = new_charge
 end)
 
-local color_bar = Color.from_rgb(0, 127, 255)
+local color_bar = Color.from_rgb(130, 157, 255)
+local color_outline = Color.from_rgb(64, 64, 64)
 
 watchMetronome:onDraw(function(actor, stack)
 	local data = actor:get_data()
 
-	local x, y = actor.x, actor.bbox_bottom + 8
-	local bar_left		= x - 20
+	local x, y = actor.x, actor.bbox_bottom + 8 --actor.y - gm.sprite_get_yoffset(actor.sprite_idle) - 12
+	local bar_left		= x - 21
 	local bar_right		= x + 20
-	local bar_top		= y - 1
-	local bar_bottom	= y + 1
+	local bar_top		= y - 2
+	local bar_bottom	= y + 2
 
 	local fraction = data.chrono_charge / MAX_CHARGE
 
+	--[[
 	gm.draw_set_alpha(fraction * 0.65)
 
-	gm.draw_set_colour(4210752)
-	gm.draw_rectangle(bar_left-1, bar_top-1, bar_right+1, bar_bottom+1, true)
+	gm.draw_set_colour(color_outline)
+	gm.draw_rectangle(bar_left, bar_top, bar_right, bar_bottom, true)
 	gm.draw_set_colour(0)
 	gm.draw_rectangle(bar_left, bar_top, bar_right, bar_bottom, false)
 
 	gm.draw_set_colour(color_bar)
 	gm.draw_rectangle(bar_left, bar_top, gm.lerp(bar_left, bar_right, fraction), bar_bottom, false)
-
+	]]--
 	gm.draw_set_alpha(1.0)
+	gm.draw_set_colour(color_bar)
+	gm.draw_rectangle(bar_left, bar_top, gm.lerp(bar_left, bar_right, fraction), bar_bottom, false)
+
+	gm.draw_sprite(bar_sprite, 0, x, y)
 end)

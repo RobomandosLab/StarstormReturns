@@ -8,8 +8,6 @@ brassKnuckles:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 brassKnuckles:clear_callbacks()
 brassKnuckles:onDraw(function(actor, stack)
-	if actor.visible == 0.0 then return end -- remove once the toolkit handles this correctly
-
 	local radius = 30 + stack * 30
 	gm.draw_set_alpha(0.185)
 	gm.draw_set_colour(0)
@@ -36,9 +34,10 @@ Callback.add("onAttackHit", "SSBrassKnuckles", function(self, other, result, arg
 		local dy = victim.y - actor.y
 		if (dx * dx + dy * dy) <= (radius * radius) then
 			hit_info.damage = hit_info.damage * 1.35
-			actor:sound_play_networked(sound, 0.55, 0.8 + math.random() * 0.4, actor.x, actor.y)
+			gm.sound_play_networked(sound, 0.55, 0.8 + math.random() * 0.4, actor.x, actor.y)
 
-			gm.draw_damage_networked(victim.x, victim.bbox_top+2, math.ceil(attack_info.damage*0.35), attack_info.critical, 12632256, attack_info.team, attack_info.climb)
+			gm.draw_damage_networked(victim.x, victim.bbox_top+2, math.ceil(attack_info.damage*0.35), attack_info.critical, Color.from_rgb(192, 192, 192), attack_info.team, attack_info.climb)
 		end
 	end
 end)
+

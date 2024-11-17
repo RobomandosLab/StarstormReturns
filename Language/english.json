@@ -85,7 +85,7 @@
 		"watchMetronome" : {
 			"name" : "Watch Metronome",
 			"pickup" : "Standing still charges speed for your next movement.",
-			"description": "Standing still <b>increases movement speed</c> by up to <b>+85.5%</c>. Decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>.",
+			"description": "Standing still <b>increases movement speed</c> by up to <b>+85%</c>. Decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>.",
 			"destination": "Cage 1,\nG-44 (Underground),\nEarth",
 			"date": "09/05/2056",
 			"story" : "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",

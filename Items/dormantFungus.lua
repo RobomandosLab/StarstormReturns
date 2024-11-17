@@ -22,7 +22,7 @@ dormantFungus:onStep(function(actor, stack)
 
 				local regen = math.ceil(actor.maxhp * (1 - 1 / (0.02 * stack + 1)))
 				actor:heal(regen)
-				actor:sound_play(sound, 1, (0.9 + math.random() * 0.2))
+				gm.sound_play_networked(sound, 1, (0.9 + math.random() * 0.2), actor.x, actor.y)
 			else
 				actor_data.dungusTimer = actor_data.dungusTimer - 1
 			end

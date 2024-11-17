@@ -68,12 +68,12 @@ end)
 
 roulette:clear_callbacks()
 roulette:onPickup(function(actor, stack)
-	if stack == 1 then
+	if stack == 1 then -- first stack gained
 		roulette_roll(actor)
 	end
 end)
 roulette:onRemove(function(actor, stack)
-	if stack == 1 then
+	if stack == 1 then -- final stack lost
 		roulette_clear_buffs(actor)
 	end
 end)
@@ -127,7 +127,7 @@ rouletteObject:onStep(function(self)
 			self.image_index = self.buff_index
 			self.vspeed = -0.1
 
-			if gm._mod_net_isHost() then
+			if gm._mod_net_isHost() and self.parent:item_stack_count(roulette) > 0 then
 				roulette_clear_buffs(self.parent)
 
 				local new_buff = roulette_buffs[self.buff_index]
