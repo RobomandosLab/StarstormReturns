@@ -75,6 +75,7 @@ stateExploderPrimary:onStep(function(actor, data)
 
 	if data.exploded == 0 and actor.image_index >= 14 then
 		data.exploded = 1
+		actor.intangible = true -- make the exploder untouchable, so it can't be hit after it has exploded but before it's deleted
 
 		actor:sound_play(sound_shoot1b, 1.0, (0.9 + math.random() * 0.2) * actor.attack_speed)
 		actor:screen_shake(2)
@@ -84,18 +85,16 @@ stateExploderPrimary:onStep(function(actor, data)
 	end
 end)
 
--- destroying an actor anywhere in its state code causes an error. do this in a separate pass
+-- destroying an actor anywhere in its state or step code causes errors in certain cases. do this in a separate pass
 Callback.add("postStep", "SSDestroyExploders", function()
 	local exploders = Instance.find_all(exploder)
 	for _, actor in ipairs(exploders) do
 		local state_data = actor.actor_state_current_data_table
 
-		-- do this to delay the deletion by a frame. this allows the attack's procs and game report ("Killed by" info) to work
-		if state_data.exploded == 1 then
-			state_data.exploded = 2
-		elseif state_data.exploded == 2 then
+		-- check that it's advanced to the next frame. this gives time for the attack's procs and game report ("Killed by" info) to work
+		if state_data.exploded == 1 and actor.image_index >= 15 then
 			-- manually create a corpse. plays the remainder of the explosion animation
-			local body = GM.instance_create(actor.x, actor.y, gm.constants.oBody)
+			local body = gm.instance_create(actor.x, actor.y, gm.constants.oBody)
 			body.sprite_index = actor.sprite_index
 			body.image_xscale = actor.image_xscale
 			body.image_index = actor.image_index
@@ -115,6 +114,8 @@ monsterCardExploder.spawn_cost = 18
 monsterCardExploder.spawn_type = Monster_Card.SPAWN_TYPE.classic
 monsterCardExploder.can_be_blighted = false -- HELL no
 
+if HOTLOADING then return end
+
 -- TODO: evaluate a better approach for populating stages..
 local stages = {
 	"ror-dampCaverns",
@@ -122,8 +123,6 @@ local stages = {
 	"ror-hiveCluster",
 	"ror-riskOfRain",
 }
-
-if HOTLOADING then return end
 
 for _, s in ipairs(stages) do
 	local stage = Stage.find(s)
