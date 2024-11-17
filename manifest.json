@@ -2,9 +2,9 @@
 	"name": "Starstorm Returns",
 	"version_number": "0.0.3",
 	"website_url": "https://www.youtube.com/watch?v=wBW4LtSi2QE",
-	"description": "Content mod that currently adds 1 item, 1 survivor.",
+	"description": "Content mod featuring survivors, enemies, items, stages, and more!",
 	"dependencies": [
 		"ReturnOfModding-ReturnOfModding-1.0.49",
-		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.1.25"
+		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.1.31"
 	]
 }
