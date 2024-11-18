@@ -1,29 +1,23 @@
--- local sprite = Resources.sprite_load(PATH.."Sprites/Items/CoffeeBag/coffeeBag.png", 1, false, false, 16, 16)
+local item_sprite = Resources.sprite_load(NAMESPACE, "CoffeeBag", path.combine(PATH, "Sprites/Items/coffeeBag.png"), 1, 16, 16)
+local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffCoffee", path.combine(PATH, "Sprites/Buffs/coffeeBuff.png"), 8, 7, 7)
 
--- -- Item 
--- local item = Item.create("starstorm", "coffeeBag")
--- Item.set_sprite(item, sprite)
--- Item.set_tier(item, Item.TIER.common)
--- Item.set_loot_tags(item, Item.LOOT_TAG.category_utility)
+local coffeeBuff = Buff.new(NAMESPACE, "coffeeBuff")
 
--- Item.add_callback(item, "onInteract", function(actor, interactable, stack)
---     Buff.apply(actor, Buff.find("starstorm-coffeeBuff"), (8 + stack))
--- end)
+local coffeeBag = Item.new(NAMESPACE, "coffeeBag")
+coffeeBag:set_sprite(item_sprite)
+coffeeBag:set_tier(Item.TIER.common)
+coffeeBag:set_loot_tags(Item.LOOT_TAG.category_utility)
 
--- -- Buff
--- local moveSpeedIncrease = 0.21
--- local attackSpeedIncrease = 0.22
+coffeeBag:clear_callbacks()
+coffeeBag:onInteract(function(actor, interactable, stack)
+    actor:buff_apply(coffeeBuff, 60 * (5 + stack * 5))
+end)
 
--- local buff = Buff.create("starstorm", "coffeeBuff")
--- Buff.set_property(buff, Buff.PROPERTY.icon_sprite, sprite)
--- Buff.set_property(buff, Buff.PROPERTY.icon_stack_subimage, false)
+coffeeBuff.icon_sprite = buff_sprite
+coffeeBuff.icon_frame_speed = 0.2
 
--- Buff.add_callback(buff, "onApply", function(actor, stack)
---     actor.pHmax_base = actor.pHmax_base + moveSpeedIncrease
---     actor.attack_speed = actor.attack_speed + attackSpeedIncrease
--- end)
-
--- Buff.add_callback(buff, "onRemove", function(actor, stack)
---     actor.pHmax_base = actor.pHmax_base - moveSpeedIncrease
---     actor.attack_speed = actor.attack_speed - attackSpeedIncrease
--- end)
+coffeeBuff:clear_callbacks()
+coffeeBuff:onStatRecalc(function(actor, stack)
+	actor.pHmax = actor.pHmax + 0.6
+	actor.attack_speed = actor.attack_speed + 0.22
+end)

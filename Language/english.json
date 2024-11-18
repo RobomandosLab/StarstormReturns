@@ -1,4 +1,9 @@
 {
+	"difficulty" : {
+		"typhoon.name" : "Typhoon",
+		"typhoon.description" : "The maximum challenge.\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
+	},
+
 	"survivor" : {
 		"executioner" : {
 			"name" : "Executioner",
@@ -7,6 +12,7 @@
 			"endQuote": "..and so he left, bloodlust unfulfilled.",
 		}
 	},
+
 	"skill" : {
 		"executionerZ": {
 			"name": "Service Pistol",
@@ -18,7 +24,7 @@
 		},
 		"executionerC": {
 			"name": "Crowd Dispersion",
-			"description": "<y>Dash forward</c>, <y>fearing nearby enemies</c>.\nYou <b>cannot be hit</c> while dashing."
+			"description": "<y>Dash forward, fearing nearby enemies</c>.\nYou <b>cannot be hit</c> while dashing."
 		},
 		"executionerV": {
 			"name": "Execution",
@@ -29,29 +35,30 @@
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 	},
+
 	"item" : {
 		"armedBackpack" : {
 			"name" : "Armed Backpack",
 			"pickup": "Chance of firing a bullet behind you.",
-			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on hit of <y>firing a bullet</c> behind you for <y>150% damage</c>.",
+			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack of <y>firing a bullet</c> behind you for <y>150% damage</c>.",
 			"destination": "832B,\nHautenuit,\nEarth",
 			"date": "11/7/2056",
 			"story": "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
-			"priority" : "Standard"
+			"priority": "Standard"
 		},
 		"brassKnuckles" : {
 			"name": "Brass Knuckles",
 			"pickup" : "Deal extra damage at close range.",
-			"description": "Deal <y>35% extra damage</c> to enemies within <y>5m</c> <c_stack>(+2.5 per stack)</c>.",
+			"description": "Deal <y>+35% damage</c> to enemies within <y>5m</c> <c_stack>(+2.5 per stack)</c>.",
 			"destination": "UESPD,\nE42,\nUES Halberd B2",
 			"date": "03/01/2056",
 			"story" : "We found this at the crime scene. We need to check for DNA against the rest of the evidence. I still cant believe they got away.\nThe back has some kind of symbol, maybe that could give us a clue. I'll be heading to the west of [REDACTED], I know someone who can help us solve the case.",
-			"priority" : "Standard"
+			"priority": "<y>Standard/Biological</c>"
 		},
-			"detritiveTrematode" : {
+		"detritiveTrematode" : {
 			"name": "Detritive Trematode",
 			"pickup" : "Low health enemies receive damage over time.",
-			"description": "Enemies with <y>5.5% health</c> <c_stack>(+2.75% per stack)</c> become <y>infected</c>, receiving <y>4% of max health</c> damage per second.",
+			"description": "Enemies <y>below 5.5% health</c> <c_stack>(+2.75% per stack)</c> become <y>infected</c>, receiving <y>4% of max health</c> damage per second.",
 			"destination": "112,\nNeaus 2,\nMars",
 			"date": "03/11/2057",
 			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
@@ -60,29 +67,29 @@
 		"dormantFungus" : {
 			"name" : "Dormant Fungus",
 			"pickup" : "Regenerate health while moving.",
-			"description": "Regenerates <g>2%</c> <c_stack>(+2% per stack)</c> of your health every second while <g>moving</c>.",
+			"description": "Regenerates <g>2%</c> <c_stack>(+2% per stack)</c> of your health every two seconds while <g>moving</c>.",
 			"destination": "Gate 1,\nModule 13,\nGea Station",
 			"date": "11/01/2056",
 			"story" : "When you commanded me to explore the fungal caves all I expected to find was.. well, fungi, of course. Though I wasn't excited by any means, this specimen caught my eye.\nIt seems to only grow around flowing water, and ever since I collected and contained this sample, both the colouration and the smell faded out quickly.\n\nI hope you can study it further.",
-			"priority" : "Standard"
+			"priority": "Standard"
 		},
 		"fork" : {
 			"name" : "Fork",
 			"pickup" : "Deal more damage.",
-			"description": "Increases your <y>base damage<w> by <y>3<w> <c_stack>(+3 per stack)</c>.",
+			"description": "Increases <y>base damage<w> by <y>3<w> <c_stack>(+3 per stack)</c>.",
 			"destination": "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
 			"date": "09/24/2056",
 			"story" : "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
-			"priority" : "Standard"
+			"priority": "Standard"
 		},
 		"watchMetronome" : {
 			"name" : "Watch Metronome",
 			"pickup" : "Standing still charges speed for your next movement.",
-			"description": "Standing still charges a <b>speed boost</c> that decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>",
+			"description": "Standing still <b>increases movement speed</c> by up to <b>+85%</c>. Decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>.",
 			"destination": "Cage 1,\nG-44 (Underground),\nEarth",
 			"date": "09/05/2056",
 			"story" : "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",
-			"priority" : "Standard"
+			"priority": "<g>Priority</c>"
 		},
 		"wonderHerbs" : {
 			"name" : "Wonder Herbs",
@@ -91,34 +98,72 @@
 			"destination": "2342,\nPlot 3,\nEarth",
 			"date": "11/07/2056",
 			"story" : "Rikka! I heard you're working with the EC on making a new recipe. Here at the farm we've been growing some special herbs which we think may come handy. They're known for being very, very useful for treating physical and emotional wounds.\nIf you need some more don't hesitate to call me! XOXO\n- Eden",
-			"priority" : "Standard"
+			"priority": "Standard"
 		},
 		"coffeeBag" : {
 			"name" : "Coffee Bag",
-			"pickup" : "Gain a boost to movement and attack speed on interactable use.",
-			"description": "",
+			"pickup" : "Activating an interactable boosts movement and attack speed.",
+			"description": "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 seconds <c_stack>(+5 per stack)</c>.",
 			"destination": "n1,\nThe Capital,\nUES PRIME",
 			"date": "05/22/2056",
 			"story" : "Sleeeeeeeeeeepyheaaaaaaaaaaaaaaad idk why u say u dont like coffee its so gooooood for staying up. ik ik theres other other ways to get hyped but oh boy i think u will dig this one, its my favorite!!! give it a try before yelling at me mmkay?",
-			"priority" : "Standard"
 		},
 		"x4Stimulant" : {
 			"name" : "X4 Stimulant",
-			"pickup" : "Reduces secondary skill cooldown.",
-			"description": "&y&Reduces your secondary skill's cooldown by 10%&!&.",
+			"pickup" : "Decrease secondary skill cooldown.",
+			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>.",
 			"destination": "Romeo 33,\nBatang Ai National Park,\nEarth",
 			"date": "4/12/2057",
 			"story" : "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers.",
-			"priority" : "Standard"
 		},
 		"moltenCoin" : {
 			"name" : "Molten Coin",
 			"pickup" : "Chance to ignite enemies on hit and gain gold",
-			"description": "&y&6% chance on hit to incinerate enemies&!& for 6 seconds, &y&earning $1&!&.",
+			"description": "<y>6%</c> chance on hit to <y>incinerate enemies for 6 seconds, dropping $1 <c_stack>(+$1 per stack)<y> gold</c>.",
 			"destination": "Toera 2,\nB44,\nMother Station",
 			"date": "05/22/2056",
 			"story" : "Hey! Uh, I'm sorry, I'm really sorry.. I know you really wanted me to keep this coin but I can't take the responsibility any more..\nSee, I accidentally put the coin at the edge of a plasma furnace so.. well.. it's a bit burnt on the side, please don't get mad at me..",
-			"priority" : "Standard"
+			"priority": "Standard"
+		},
+		"crypticSource" : {
+			"name": "Cryptic Source",
+			"pickup" : "Changing direction creates bursts of energy.",
+			"description": "Changing movement direction fires <y>chain lightning</c> for <y>70% damage <c_stack>(+55% per stack)</c> on up to <y>2</c> targets.",
+			"destination" : "O32,\nLow End,\nEarth",
+			"date" : "03/30/2058",
+			"story" : "From atoms to sentient beings, everything comes from energy. However, this rather cryptic object seems to emanate energy on its own. High amounts of friction seem to trigger a chain reaction which makes it highly unstable. However, it may also be a manipulable source of (infinite?) energy. Whether this will lead us to the utopian future we crave for is completely uncertain, but this completely changes our previous thoughts about the universe.",
+			"priority" : "<r>Volatile</c>"
+		},
+		"huntersSigil" : {
+			"name": "Hunter's Sigil",
+			"pickup" : "Standing still increases armor and critical strike chance.",
+			"description": "After standing still for 1 second, gain <b>15 armor <c_stack>(+10 per stack)</c> and <y>25% critical strike chance <c_stack>(+20% per stack)</c>.",
+			"destination" : "2East,\nBeckham Building,\nEarth",
+			"date" : "02/02/2056",
+			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
+			"priority": "<g>Priority</c>"
+		},
+		"strangeCan" : {
+			"name": "Strange Can",
+			"pickup" : "Chance to intoxicate enemies.",
+			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health as damage over time</c>.",
+			"destination" : "1530,\n563,\nA-LC12",
+			"date" : "05/22/2056",
+			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
+			"priority": "<g>Priority</c>"
+		},
+		"roulette" : {
+			"name": "Roulette",
+			"pickup" : "Roll a random buff every minute.",
+			"description": "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n-Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n-Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n-Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n-Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n-Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n-Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n-Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
+			"destination" : "PRoom 3.1,\nSecva Casino,\nEarth",
+			"date" : "7/17/2057",
+			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
+			"priority": "<g>Priority</c>"
 		}
-	}
+	},
+
+	"actor" : {
+		"Exploder.name" : "Exploder",
+	},
 }

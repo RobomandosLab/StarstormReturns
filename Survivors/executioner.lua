@@ -1,5 +1,5 @@
-local SPRITE_PATH = path.combine(PATH, "Sprites/Executioner")
-local SOUND_PATH = path.combine(PATH, "Sounds/Executioner")
+local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Executioner")
+local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- assets.
 local sprite_loadout = Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 1, 28, 0)
@@ -20,10 +20,14 @@ local sprite_decoy = Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.c
 
 local sprite_shoot1 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half = Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
-local sprite_shoot2 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 4, 10, 20)
+local sprite_shoot2a = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 6, 12, 25)
+local sprite_shoot2b = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 6, 12, 25)
 local sprite_shoot3 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 44, 40)
 local sprite_shoot4 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 14, 32, 69)
 local sprite_shoot5 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 14, 32, 69)
+
+local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
+local sprite_tracer2 = Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
 
 local sound_shoot1 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
@@ -104,6 +108,7 @@ executionerPrimary.require_key_press = false
 executionerPrimary.is_primary = true
 executionerPrimary.does_change_activity_state = true
 executionerPrimary.hold_facing_direction = true
+executionerPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
 local stateExecutionerPrimary = State.new(NAMESPACE, "executionerPrimary")
 
@@ -120,30 +125,31 @@ stateExecutionerPrimary:onEnter(function(actor, data)
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
 end)
+
 stateExecutionerPrimary:onStep(function(actor, data)
-	--actor:actor_animation_set(sprite_shoot1, 0.25)
 	actor.sprite_index2 = sprite_shoot1_half
 
-	actor:skill_util_strafe_update(0.33 * actor.attack_speed, 0.5)
-	actor:skill_util_step_strafe_sprites()
-	actor:skill_util_strafe_turn_update()
-
 	-- manually update half sprite offset because we cant do it how rorr does it sobs
-	local walk_half = actor.sprite_walk_half
+	local walk_half_array = actor.sprite_walk_half
 	local walk_offset = 0
 	local leg_frame = math.floor(actor.image_index)
 
+	-- upper body bobs up and down depending on the leg animation
 	if leg_frame == 1 or leg_frame == 5 then
 		walk_offset = 1
 	elseif leg_frame == 3 or leg_frame == 7 then
 		walk_offset = -1
 	end
-	walk_half[3] = walk_offset
+	walk_half_array[3] = walk_offset -- 3 is the vertical offset
+
+	actor:skill_util_strafe_update(0.33 * actor.attack_speed, 0.5)
+	actor:skill_util_step_strafe_sprites()
+	actor:skill_util_strafe_turn_update()
 
 	if data.fired == 0 then
 		data.fired = 1
 
-		GM.sound_play_at(sound_shoot1, 1, 0.9 + math.random() * 0.2, actor.x, actor.y)
+		actor:sound_play(sound_shoot1, 1, 0.9 + math.random() * 0.2)
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(executionerPrimary)
@@ -152,20 +158,31 @@ stateExecutionerPrimary:onStep(function(actor, data)
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, 8)
+					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Damager.TRACER.commando1)
 					attack.climb = i * 8
 				end
 			end
 		end
 	end
 
-	if actor.image_index2 >= 5 then
+	if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) then
 		actor:skill_util_reset_activity_state()
 	end
-	--actor:skill_util_exit_state_on_anim_end() -- do not use in strafing states with half-sprites
 end)
 stateExecutionerPrimary:onExit(function(actor, data)
 	actor:skill_util_strafe_exit()
+end)
+stateExecutionerPrimary:onGetInterruptPriority(function(actor, data)
+	-- enables extremely high attack rates -- allow interrupting if the next frame is calculated to reach the end of the anim
+	-- FIXME: breaks strafe turn queuing
+	if actor.image_index2 + 0.33 * actor.attack_speed >= gm.sprite_get_number(actor.sprite_index2)+1 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+	end
+	if actor.image_index2 > 2 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+	else
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+	end
 end)
 
 -- Ion Burst
@@ -178,6 +195,45 @@ executionerSecondary.auto_restock = false
 executionerSecondary.start_with_stock = false
 executionerSecondary.does_change_activity_state = true
 executionerSecondary.use_delay = 30
+executionerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+local pWispGTracer = gm.variable_global_get("pWispGTracer")
+local tracer2_color = Color.from_rgb(110, 129, 195)
+local ion_tracer = CustomTracer.new(function(x1, y1, x2, y2)
+	if x1 < x2 then x1 = x1 + 16 else x1 = x1 - 16 end
+
+	y1 = y1 - 5
+	y2 = y2 - 5
+
+	-- line tracer
+	local tracer = gm.instance_create(x1, y1, gm.constants.oEfLineTracer)
+
+	tracer.xend = x2
+	tracer.yend = y2
+	tracer.sprite_index = sprite_tracer2
+	tracer.image_speed = 1
+	tracer.rate = 0.1
+	tracer.blend_1 = Color.from_rgb(255, 255, 255)
+	tracer.blend_2 = tracer2_color
+	tracer.blend_rate = 0.2
+	tracer.image_alpha = 1.5
+	tracer.bm = 1
+	tracer.width = 3
+
+	-- particles
+	local dist = gm.point_distance(x1, y1, x2, y2)
+	local dir = gm.point_direction(x1, y1, x2, y2)
+
+	gm.part_type_direction(pWispGTracer, dir, dir, 0, 0)
+
+	local px = x1
+	local i = 0
+	while i < dist do
+		gm.part_particles_create_colour(1, px, y1 + gm.random_range(-8, 8), pWispGTracer, tracer2_color, 1)
+		px = px + gm.lengthdir_x(20, dir)
+		i = i + 20
+	end
+end)
 
 local stateExecutionerSecondary = State.new(NAMESPACE, "executionerSecondary")
 
@@ -191,21 +247,28 @@ stateExecutionerSecondary:onEnter(function(actor, data)
 	data.ion_rounds = actor.skills[2].active_skill.stock + 1 -- compensate for first stock being decremented already
 	data.should_fire = 1
 	data.is_first_shot = 1
+	data.sprite = sprite_shoot2a
 end)
 stateExecutionerSecondary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot2, 0.33)
+	actor:actor_animation_set(data.sprite, 0.33)
 
 	if data.ion_rounds > 0 and actor.image_index >= 2 then
 		actor.image_index = 0
 		data.should_fire = 1
+
+		if data.sprite == sprite_shoot2a then
+			data.sprite = sprite_shoot2b
+		else
+			data.sprite = sprite_shoot2a
+		end
 	end
 	if data.should_fire == 1 then
 		data.ion_rounds = data.ion_rounds - 1
 		data.should_fire = 0
 
-		GM.sound_play_at(sound_shoot2, 1.0, 0.9 + (data.ion_rounds * 0.02) + math.random() * 0.2, actor.x, actor.y)
-		GM._mod_game_shakeScreen_global(2)
+		actor:sound_play(sound_shoot2, 1.0, 0.9 + (data.ion_rounds * 0.02) + math.random() * 0.2)
+		actor:screen_shake(2)
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(executionerSecondary)
@@ -213,7 +276,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks2, 9)
+				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_sparks2, ion_tracer)
 				attack:set_stun(1.0)
 				attack.climb = i * 8
 			end
@@ -229,11 +292,28 @@ stateExecutionerSecondary:onStep(function(actor, data)
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
+stateExecutionerSecondary:onGetInterruptPriority(function(actor, data)
+	if actor.image_index > 3 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+	else
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+	end
+end)
 
 Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
 	local killer = Instance.wrap(args[3].value)
 	if killer.object_index == gm.constants.oP and killer.class == executioner_id then
-		GM.actor_skill_add_stock(killer, 1)
+		local victim = Instance.wrap(args[2].value)
+		local charges = 1
+		if GM.actor_is_elite(victim) then
+			charges = charges * 2
+		end
+		if GM.actor_is_boss(victim) then
+			charges = charges * 5
+		end
+		for i=1, charges do
+			GM.actor_skill_add_stock_networked(killer, 1)
+		end
 	end
 end)
 
@@ -267,9 +347,10 @@ stateExecutionerUtility:onStep(function(actor, data)
 	if data.feared == 0 then
 		data.feared = 1
 
-		GM.sound_play_at(sound_shoot3, 1.0, 1.0, actor.x, actor.y)
+		actor:sound_play(sound_shoot3, 1.0, 1.0)
 
-		if actor:is_authority() then
+		-- buff application is host-side
+		if not GM._mod_net_isClient() then
 			-- fear rectangle gets expanded in the direction that exe is dashing
 			local left, right = actor.x - 100, actor.x + 100
 			local bias = 1.1 * actor.pHspeed * 30 -- extrapolate distance in 0.5 sec, 1.1x multiplier to account for momentum
@@ -298,6 +379,8 @@ executionerSpecial.sprite = sprite_skills
 executionerSpecial.subimage = 7
 executionerSpecial.cooldown = 8 * 60
 executionerSpecial.damage = 10
+executionerSpecial.require_key_press = true
+executionerSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 -- Crowd Execution
 local executionerSpecialScepter = Skill.new(NAMESPACE, "executionerVBoosted")
@@ -307,6 +390,8 @@ executionerSpecialScepter.sprite = sprite_skills
 executionerSpecialScepter.subimage = 8
 executionerSpecialScepter.cooldown = 8 * 60
 executionerSpecialScepter.damage = 15
+executionerSpecialScepter.require_key_press = true
+executionerSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateExecutionerSpecial = State.new(NAMESPACE, "executionerSpecial")
 
@@ -340,7 +425,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 	if data.substate == 0 then -- leaping into the air
 		actor.pVspeed = (actor.pVmax * -2) * actor.attack_speed
 		data.substate = 1
-		GM.sound_play_at(sound_shoot4a, 1.0, 1.0, actor.x, actor.y)
+		actor:sound_play(sound_shoot4a, 1.0, 1.0)
 	elseif data.substate == 1 then -- decelerating, hanging in the air
 		local deceleration = 0.5 * actor.attack_speed * actor.attack_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
@@ -368,6 +453,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 			if data.recovery_attempts <= 3 then
 				actor.image_index = 0
 				data.substate = 1 -- go back and try again
+				actor:sound_play(sound_shoot4a, 1.0, 1.0)
 			else
 				actor:skill_util_reset_activity_state() -- too many interruptions -- give up so we're not perma immune lmao
 			end
@@ -379,10 +465,12 @@ stateExecutionerSpecial:onStep(function(actor, data)
 				data.substate = 4
 				actor.activity_type = 1 -- return to standard state physics
 
-				GM.sound_play_at(sound_shoot4b, 1.0, 1.0, actor.x, actor.y)
-				GM._mod_game_shakeScreen_global(15)
+				actor:sound_play(sound_shoot4b, 1.0, 1.0)
+				actor:screen_shake(15)
 
-				if actor:is_authority() then
+				-- this makes me sad, but execution's damage has to be host-side in order for the cdr to work
+				-- because onAttackHandleEnd and its related callbacks only run host-side, and the host confirms kills
+				if not GM._mod_net_isClient() then
 					local ax = actor.x + 32 * actor.image_xscale
 					local ay = actor.y + 24 - data.aoe_height * 0.5
 
@@ -427,6 +515,6 @@ Callback.add("onAttackHandleEnd", "SSExecutionCDR", function(self, other, result
 	local attack = args[2].value
 	if attack.execution == 1 then
 		local kill_count = attack.kill_number
-		GM.actor_skill_reset_cooldowns(attack.parent, -60 * kill_count, true)
+		GM.actor_skill_reset_cooldowns(attack.parent, -60 * kill_count, true, false, true)
 	end
 end)

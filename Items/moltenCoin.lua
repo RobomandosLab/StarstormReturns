@@ -1,27 +1,55 @@
--- local sprite = Resources.sprite_load(PATH.."Sprites/Items/moltenCoin.png", 1, false, false, 16, 16)
+local item_sprite = Resources.sprite_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 16, 16)
+local coin_sprite = Resources.sprite_load(NAMESPACE, "EfGoldMoltenCoin", path.combine(PATH, "Sprites/Items/Effects/moltenCoin.png"), 6, 5, 5)
+local sound = Resources.sfx_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sounds/Items/moltenCoin.ogg"))
 
--- local item = Item.create("starstorm", "moltenCoin")
--- Item.set_sprite(item, sprite)
--- Item.set_tier(item, Item.TIER.common)
--- Item.set_loot_tags(item, Item.LOOT_TAG.category_damage)
+local moltenCoin = Item.new(NAMESPACE, "moltenCoin")
 
--- Item.add_callback(item, "onHit", function(actor, victim, damager, stack)
--- 	if stack > 0 then
--- 		if Helper.chance(0.06) then
---             log.info("Molten Coin triggered!!")
---             --[[ TODO: Play a sound effect here, and grant money
---             ]]
--- 			local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
---             dot.target = victim -- maybe needs to be victim.id
---             dot.parent = actor
---             dot.damage= 1 -- use actual damage
---             dot.ticks= 5
---             dot.team= actor.team
---             --dot.textColor = gm.constants.C_ORANGE
---             dot.sprite_index = gm.constants.sSparks9
+local packetMoltenCoinProc = Packet.new()
 
---             -- Idk if this is gonna work but cant seem to find a way to add gold, maybe its an instance variable on actor?
---             gm.drop_gold_and_exp(actor.x, actor.y, 2)
--- 		end
--- 	end
--- end)
+moltenCoin:set_sprite(item_sprite)
+moltenCoin:set_tier(Item.TIER.common)
+moltenCoin:set_loot_tags(Item.LOOT_TAG.category_damage)
+
+moltenCoin:clear_callbacks()
+moltenCoin:onHit(function(actor, victim, damager, stack)
+	if math.random() <= 0.06 or damager.attack_flags & Damager.ATTACK_FLAG.force_proc ~= 0 then
+		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
+		dot.target = victim.value -- unwrap the Instance
+		dot.parent = actor.value
+		dot.damage = damager.damage * 0.2
+		dot.ticks = 2 + stack * 4
+		dot.team = actor.team
+		dot.textColor = 4235519
+		dot.sprite_index = gm.constants.sSparks9
+
+		victim:sound_play(sound, 1.0, 0.9 + math.random() * 0.2)
+
+		local g = gm.instance_create(victim.x, victim.y, gm.constants.oEfGold)
+		g.hspeed = -4 + math.random() * 8
+		g.vspeed = -4 + math.random() * 8
+		g.sprite_index = coin_sprite
+		g.value = stack
+
+		if gm._mod_net_isOnline() then
+			local msg = packetMoltenCoinProc:message_begin()
+			msg:write_int(victim.x)
+			msg:write_int(victim.y)
+			msg:write_uint(stack)
+			msg:send_to_all()
+		end
+	end
+end)
+
+packetMoltenCoinProc:onReceived(function(msg)
+	local x = msg:read_int()
+	local y = msg:read_int()
+	local stack = msg:read_uint()
+
+	gm.sound_play_at(sound, 1.0, 0.9 + math.random() * 0.2, x, y)
+
+	local g = gm.instance_create(x, y, gm.constants.oEfGold)
+	g.hspeed = -4 + math.random() * 8
+	g.vspeed = -4 + math.random() * 8
+	g.sprite_index = coin_sprite
+	g.value = stack
+end)

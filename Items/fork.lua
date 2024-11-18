@@ -1,14 +1,11 @@
--- local sprite = Resources.sprite_load(PATH.."Sprites/Items/fork.png", 1, false, false, 16, 16)
+local sprite_fork = Resources.sprite_load(NAMESPACE, "Fork", path.combine(PATH, "Sprites/Items/fork.png"), 1, 16, 16)
 
--- local item = Item.create("starstorm", "fork")
--- Item.set_sprite(item, sprite)
--- Item.set_tier(item, Item.TIER.common)
--- Item.set_loot_tags(item, Item.LOOT_TAG.category_damage)
+local fork = Item.new(NAMESPACE, "fork")
+fork:set_sprite(sprite_fork)
+fork:set_tier(Item.TIER.common)
+fork:set_loot_tags(Item.LOOT_TAG.category_damage)
 
--- Item.add_callback(item, "onPickup", function(actor, stack)
--- 	actor.damage_base = actor.damage_base + 3
--- end)
-
--- Item.add_callback(item, "onRemove", function(actor, stack)
--- 	actor.damage_base = actor.damage_base - 3
--- end)
+fork:clear_callbacks()
+fork:onStatRecalc(function(actor, stack)
+	actor.damage = actor.damage + 3 * stack
+end)
