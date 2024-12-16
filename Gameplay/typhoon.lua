@@ -1,5 +1,5 @@
-local SPRITE_PATH =  path.combine(PATH, "Sprites/Menu")
-local SOUND_PATH =  path.combine(PATH, "Sounds/Menu")
+local SPRITE_PATH = path.combine(PATH, "Sprites/Menu")
+local SOUND_PATH = path.combine(PATH, "Sounds/Menu")
 
 local sprite_small = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon", path.combine(SPRITE_PATH, "DifficultyTyphoon.png"), 5, 11, 9)
 local sprite_large = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon2X", path.combine(SPRITE_PATH, "DifficultyTyphoon_2x.png"), 4, 22, 20)
@@ -10,22 +10,22 @@ local typhoon = Difficulty.new(NAMESPACE, "typhoon")
 typhoon:set_sprite(sprite_small, sprite_large)
 typhoon:set_primary_color(Color.from_rgb(195, 28, 124))
 typhoon:set_sound(sound_select)
-
-typhoon:set_scaling(0.2, 4.0, 1.7) --`diff_scale`, `general_scale`, `point_scale`
+					-- `diff_scale`, `general_scale`, `point_scale`
+typhoon:set_scaling(0.2, 4.0, 1.7)
 typhoon:set_monsoon_or_higher(true)
-typhoon:set_allow_blight_spawns(true)
+typhoon:set_allow_blight_spawns(false)
 
 Callback.add("onGameStart", "SSTyphoonStart", function(self, other, result, args)
 	-- self is oDirectorControl
 	if typhoon:is_active() then
-		self.enemy_buff = self.enemy_buff + 0.5
-		self.elite_spawn_chance = 0.8
+		--self.enemy_buff = self.enemy_buff + 0.5 -- this is dogshit lol
+		self.elite_spawn_chance = 0.4 --0.8
 	end
 end)
 
 Callback.add("onDirectorPopulateSpawnArrays", "SSTyphoonPreLoopMonsters", function(self, other, result, args)
 	if self.loops == 0 and typhoon:is_active() then
-		-- add loop-exclusive spawns to before loop
+		-- add loop-exclusive spawns to pre-loop
 		local director_spawn_array = Array.wrap(self.monster_spawn_array)
 		local current_stage = Stage.wrap(GM._mod_game_getCurrentStage())
 
@@ -39,10 +39,22 @@ end)
 
 gm.post_script_hook(gm.constants.recalculate_stats, function(self, other, result, args)
 	if self.team == 2.0 and typhoon:is_active() then
-		self.attack_speed = self.attack_speed * 1.15
-		self.cdr = 1-((1-self.cdr)*0.85)
-		self.pHmax_raw = self.pHmax_raw * 1.15
-		self.pHmax = self.pHmax * 1.15
+		local actor = Instance.wrap(self)
+		actor.damage = actor.damage + actor.damage_base * 0.15
+		actor.attack_speed = actor.attack_speed + actor.attack_speed_base * 0.15
+		actor.pHmax_raw = actor.pHmax_raw + actor.pHmax_base * 0.15
+		actor.pHmax = actor.pHmax + actor.pHmax_base * 0.15
+
+		-- the cdr variable does nothing at this point. handle skill cdr manually.
+		local skills = {
+			actor:get_active_skill(Skill.SLOT.primary),
+			actor:get_active_skill(Skill.SLOT.secondary),
+			actor:get_active_skill(Skill.SLOT.utility),
+			actor:get_active_skill(Skill.SLOT.special),
+		}
+		for _, skill in ipairs(skills) do
+			skill.cooldown = math.ceil(skill.cooldown * 0.85)
+		end
 	end
 end)
 
