@@ -10,7 +10,7 @@ local sprite_jump		= Resources.sprite_load(NAMESPACE, "ExploderJump",		path.comb
 local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "ExploderJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 24, 16)
 local sprite_fall		= Resources.sprite_load(NAMESPACE, "ExploderFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 24, 16)
 local sprite_death		= Resources.sprite_load(NAMESPACE, "ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
-local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "ExploderShoot1a",	path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55, nil, -16, -16, 16, 10)
+local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "ExploderShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55, nil, -16, -16, 16, 10)
 
 GM.elite_generate_palettes(sprite_palette)
 
