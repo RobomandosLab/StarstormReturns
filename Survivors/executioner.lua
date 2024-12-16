@@ -158,7 +158,7 @@ stateExecutionerPrimary:onStep(function(actor, data)
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Damager.TRACER.commando1)
+					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Attack_Info.TRACER.commando1)
 					attack.climb = i * 8
 				end
 			end
@@ -276,9 +276,9 @@ stateExecutionerSecondary:onStep(function(actor, data)
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_sparks2, ion_tracer)
-				attack:set_stun(1.0)
-				attack.climb = i * 8
+				local attack_info = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_sparks2, ion_tracer).attack_info
+				attack_info:set_stun(1.0)
+				attack_info.climb = i * 8
 			end
 		end
 
@@ -420,27 +420,31 @@ stateExecutionerSpecial:onStep(function(actor, data)
 	if data.scepter > 0 then
 		animation = sprite_shoot5
 	end
-	actor:actor_animation_set(animation, 0.25)
+	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
+
+	--actor:actor_animation_set(animation, 0.25)
+	actor.sprite_index = animation
+	actor.image_speed = 0.25 * true_speed
 
 	if data.substate == 0 then -- leaping into the air
-		actor.pVspeed = (actor.pVmax * -2) * actor.attack_speed
+		actor.pVspeed = (actor.pVmax * -2) * true_speed
 		data.substate = 1
 		actor:sound_play(sound_shoot4a, 1.0, 1.0)
 	elseif data.substate == 1 then -- decelerating, hanging in the air
-		local deceleration = 0.5 * actor.attack_speed * actor.attack_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
+		local deceleration = 0.5 * true_speed * true_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
 
 		if actor.image_index >= 7 then
 			if actor.pVspeed >= 0 then
 				data.substate = 2
-				actor.pVspeed = (actor.pVmax * -1.5) * actor.attack_speed
+				actor.pVspeed = (actor.pVmax * -1.5) * true_speed
 			else
 				actor.image_index = 7
 			end
 		end
 	elseif data.substate == 2 then -- winding up
 		if actor.image_index >= 9 then
-			actor.pVspeed = 30 * actor.attack_speed
+			actor.pVspeed = 30 * true_speed
 			data.substate = 3
 			data.aoe_height = 0
 		end
@@ -458,7 +462,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 				actor:skill_util_reset_activity_state() -- too many interruptions -- give up so we're not perma immune lmao
 			end
 		else
-			actor.pVspeed = 30 * actor.attack_speed -- water slows exe down and without gravity he's left stuck, so always force to max speed'
+			actor.pVspeed = 30 * true_speed -- water slows exe down and without gravity he's left stuck, so always force to max speed'
 
 			-- ugly check for having landed -- gamemaker bools suck
 			if (actor.free == 0.0 or actor.free == false) then
@@ -481,10 +485,10 @@ stateExecutionerSpecial:onStep(function(actor, data)
 
 					local buff_shadow_clone = Buff.find("ror", "shadowClone")
 					for i=0, actor:buff_stack_count(buff_shadow_clone) do
-						local attack = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage)
-						attack.climb = i * 8
-						attack.y = actor.y
-						attack.execution = 1
+						local attack_info = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage).attack_info
+						attack_info.climb = i * 8
+						attack_info.y = actor.y
+						attack_info.execution = 1
 					end
 
 					if data.scepter > 0 then
@@ -512,9 +516,9 @@ stateExecutionerSpecial:onStep(function(actor, data)
 end)
 
 Callback.add("onAttackHandleEnd", "SSExecutionCDR", function(self, other, result, args)
-	local attack = args[2].value
-	if attack.execution == 1 then
-		local kill_count = attack.kill_number
-		GM.actor_skill_reset_cooldowns(attack.parent, -60 * kill_count, true, false, true)
+	local attack_info = args[2].value
+	if attack_info.execution == 1 then
+		local kill_count = attack_info.kill_number
+		GM.actor_skill_reset_cooldowns(attack_info.parent, -60 * kill_count, true, false, true)
 	end
 end)
