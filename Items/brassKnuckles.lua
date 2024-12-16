@@ -7,7 +7,7 @@ brassKnuckles:set_tier(Item.TIER.common)
 brassKnuckles:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 brassKnuckles:clear_callbacks()
-brassKnuckles:onHit(function(actor, victim, attack_info, stack, hit_info)
+brassKnuckles:onAttackHit(function(actor, victim, stack, hit_info)
 	local radius = 35 + stack * 30
 	local dx = victim.x - actor.x
 	local dy = victim.y - actor.y
@@ -15,12 +15,13 @@ brassKnuckles:onHit(function(actor, victim, attack_info, stack, hit_info)
 		hit_info.damage = hit_info.damage * 1.35
 		gm.sound_play_networked(sound, 0.55, 0.8 + math.random() * 0.4, actor.x, actor.y)
 
+		local attack_info = hit_info.attack_info
 		gm.draw_damage_networked(victim.x, victim.bbox_top+2, math.ceil(attack_info.damage*0.35), attack_info.critical, damage_color, attack_info.team, attack_info.climb)
 	end
-end, true) -- "all_damage" ..
+end)
 
 damage_color = Color.from_rgb(192, 192, 192)
-brassKnuckles:onDraw(function(actor, stack)
+brassKnuckles:onPostDraw(function(actor, stack)
 	local radius = 30 + stack * 30
 	gm.draw_set_alpha(0.2)
 	gm.draw_set_colour(0)

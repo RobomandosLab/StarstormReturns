@@ -67,7 +67,7 @@ packetRoulette:onReceived(function(msg)
 end)
 
 roulette:clear_callbacks()
-roulette:onPickup(function(actor, stack)
+roulette:onAcquire(function(actor, stack)
 	if stack == 1 then -- first stack gained
 		roulette_roll(actor)
 	end

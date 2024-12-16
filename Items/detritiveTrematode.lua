@@ -9,20 +9,20 @@ detritiveTrematode:set_loot_tags(Item.LOOT_TAG.category_damage)
 local buffDisease = Buff.new(NAMESPACE, "disease")
 
 detritiveTrematode:clear_callbacks()
-detritiveTrematode:onHit(function(actor, victim, damager, stack)
+detritiveTrematode:onAttackHit(function(actor, victim, stack, hit_info)
 	victim = GM.attack_collision_resolve(victim)
 
 	if not Instance.exists(victim) then return end
 
 	local threshold = ((0.9 + stack / 1.2) * 0.033)
 	threshold = victim.maxhp * threshold
-	if victim.hp - damager.damage < threshold then
+	if victim.hp - hit_info.damage < threshold then
 		victim:buff_apply(buffDisease, 7 * 60)
 	end
-end, true)
+end)
 
 local effect_blend_color = Color.from_rgb(128, 128, 0)
-detritiveTrematode:onDraw(function(actor, stack)
+detritiveTrematode:onPostDraw(function(actor, stack)
 	local preserve_alpha, preserve_blend = actor.image_alpha, actor.image_blend
 
 	actor.image_alpha = 0.25
@@ -42,7 +42,7 @@ buffDisease:clear_callbacks()
 buffDisease:onApply(function(actor, stack)
 	actor:get_data().disease_timer = 0
 end)
-buffDisease:onStep(function(actor, stack)
+buffDisease:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 
 	local data = actor:get_data()

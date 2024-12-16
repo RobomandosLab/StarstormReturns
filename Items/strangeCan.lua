@@ -11,8 +11,8 @@ strangeCan:set_loot_tags(Item.LOOT_TAG.category_damage)
 local buffIntoxication = Buff.new(NAMESPACE, "intoxication")
 
 strangeCan:clear_callbacks()
-strangeCan:onHit(function(actor, victim, damager, stack)
-	if math.random() <= 0.035 + (0.05 * stack) or damager.attack_flags & Damager.ATTACK_FLAG.force_proc ~= 0 then
+strangeCan:onHitProc(function(actor, victim, stack, hit_info)
+	if math.random() <= 0.035 + (0.05 * stack) or hit_info.attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.force_proc) then
 		gm.sound_play_networked(sound, 1, 1, victim.x, victim.y)
 		victim:buff_apply(buffIntoxication, 7 * 60)
 	end
@@ -28,7 +28,7 @@ buffIntoxication:clear_callbacks()
 buffIntoxication:onApply(function(actor, stack)
 	actor:get_data().intoxication_timer = 0
 end)
-buffIntoxication:onStep(function(actor, stack)
+buffIntoxication:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 
 	local data = actor:get_data()

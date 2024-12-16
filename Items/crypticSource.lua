@@ -6,7 +6,7 @@ crypticSource:set_tier(Item.TIER.uncommon)
 crypticSource:set_loot_tags(Item.LOOT_TAG.category_utility)
 
 crypticSource:clear_callbacks()
-crypticSource:onStep(function(actor, stack)
+crypticSource:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 
 	local actor_data = actor:get_data()
