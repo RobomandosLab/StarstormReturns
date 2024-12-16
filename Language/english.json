@@ -40,7 +40,7 @@
 		"armedBackpack" : {
 			"name" : "Armed Backpack",
 			"pickup": "Chance of firing a bullet behind you.",
-			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack of <y>firing a bullet</c> behind you for <y>150% damage</c>.",
+			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack to <y>fire a bullet</c> behind you for <y>150% damage</c>.",
 			"destination": "832B,\nHautenuit,\nEarth",
 			"date": "11/7/2056",
 			"story": "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
@@ -76,7 +76,7 @@
 		"fork" : {
 			"name" : "Fork",
 			"pickup" : "Deal more damage.",
-			"description": "Increases <y>base damage<w> by <y>3<w> <c_stack>(+3 per stack)</c>.",
+			"description": "Increases <y>base damage<w> by <y>3 <c_stack>(+3 per stack)</c>.",
 			"destination": "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
 			"date": "09/24/2056",
 			"story" : "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
@@ -128,7 +128,7 @@
 		"crypticSource" : {
 			"name": "Cryptic Source",
 			"pickup" : "Changing direction creates bursts of energy.",
-			"description": "Changing movement direction fires <y>chain lightning</c> for <y>70% damage <c_stack>(+55% per stack)</c> on up to <y>2</c> targets.",
+			"description": "Changing movement direction fires <y>chain lightning</c> for <y>70% <c_stack>(+55% per stack)<y> damage</c> on up to <y>2</c> targets.",
 			"destination" : "O32,\nLow End,\nEarth",
 			"date" : "03/30/2058",
 			"story" : "From atoms to sentient beings, everything comes from energy. However, this rather cryptic object seems to emanate energy on its own. High amounts of friction seem to trigger a chain reaction which makes it highly unstable. However, it may also be a manipulable source of (infinite?) energy. Whether this will lead us to the utopian future we crave for is completely uncertain, but this completely changes our previous thoughts about the universe.",
@@ -137,7 +137,7 @@
 		"huntersSigil" : {
 			"name": "Hunter's Sigil",
 			"pickup" : "Standing still increases armor and critical strike chance.",
-			"description": "After standing still for 1 second, gain <b>15 armor <c_stack>(+10 per stack)</c> and <y>25% critical strike chance <c_stack>(+20% per stack)</c>.",
+			"description": "After standing still for 1 second, gain <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
 			"destination" : "2East,\nBeckham Building,\nEarth",
 			"date" : "02/02/2056",
 			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
@@ -146,7 +146,7 @@
 		"strangeCan" : {
 			"name": "Strange Can",
 			"pickup" : "Chance to intoxicate enemies.",
-			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health as damage over time</c>.",
+			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
 			"destination" : "1530,\n563,\nA-LC12",
 			"date" : "05/22/2056",
 			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
@@ -165,5 +165,6 @@
 
 	"actor" : {
 		"Exploder.name" : "Exploder",
+		"Mimic.name" : "Security Chest",
 	},
 }
