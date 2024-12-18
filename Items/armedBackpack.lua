@@ -1,6 +1,7 @@
 local sprite_item = Resources.sprite_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sprites/Items/armedBackpack.png"), 1, 16, 16)
 local sprite_sparks1 = Resources.sprite_load(NAMESPACE, "ArmedBackpackSpark1", path.combine(PATH, "Sprites/Items/Effects/armedBackpack1.png"), 3, 0, 10)
 local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ArmedBackpackSpark2", path.combine(PATH, "Sprites/Items/Effects/armedBackpack2.png"), 4, 16, 16)
+
 local sound = Resources.sfx_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sounds/Items/armedBackpack.ogg"))
 
 local tracer = CustomTracer.new(function(x1, y1, x2, y2)
@@ -28,7 +29,7 @@ armedBackpack:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 armedBackpack:clear_callbacks()
 armedBackpack:onAttackCreateProc(function(actor, stack, attack_info)
-	local force_proc = attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.force_proc)
+	local force_proc = damager.attack_flags & (1 << 29) ~= 0
 	if math.random() <= 0.12 + (0.065 * stack) or force_proc then
 		local dir = actor:skill_util_facing_direction() + 180
 

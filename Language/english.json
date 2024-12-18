@@ -164,7 +164,6 @@
 	},
 
 	"actor" : {
-		"Exploder.name" : "Exploder",
-		"Mimic.name" : "Security Chest",
+		"Exploder.name" : "Exploder"
 	},
 }

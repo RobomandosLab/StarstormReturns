@@ -22,6 +22,7 @@ end)
 
 damage_color = Color.from_rgb(192, 192, 192)
 brassKnuckles:onPostDraw(function(actor, stack)
+
 	local radius = 30 + stack * 30
 	gm.draw_set_alpha(0.2)
 	gm.draw_set_colour(0)

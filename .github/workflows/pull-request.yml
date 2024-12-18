@@ -1,43 +1,46 @@
-name: Zip Repository
+name: Zip Repository on Pull Request
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write  # Necessary permission to create releases and upload assets
 
 jobs:
-  zip_and_release:
+  zip_and_prerelease:
     runs-on: ubuntu-latest
     env:
       ORG_NAME: ${{ github.repository_owner }}
       REPO_NAME: ${{ github.event.repository.name }}
       ZIP_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}.zip
+      PR_NUMBER: ${{ github.event.number }}
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Create zip archive
       shell: bash
       run: |
         echo "Organization Name: $ORG_NAME"
         echo "Repository Name: $REPO_NAME"
+        echo "Pull Request Number: $PR_NUMBER"
         echo "Zip File Name: $ZIP_NAME"
 
         # Exclude .py files and other specified patterns
         zip -r "$ZIP_NAME" ./* -x "*.py" -x "path/to/exclude/*" -x "*.md"
 
-    - name: Create Release and Upload Zip
+    - name: Create Prerelease and Upload Zip
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: v${{ github.run_number }}
-        releaseName: "Release v${{ github.run_number }}"
+        tag: "pr-${{ env.PR_NUMBER }}-${{ github.sha }}"
+        releaseName: "Prerelease PR #${{ env.PR_NUMBER }}"
         artifacts: ${{ env.ZIP_NAME }}
         artifactContentType: application/zip
         draft: false
-        prerelease: false
+        prerelease: true
+        overwrite: true  # Overwrite release if it already exists

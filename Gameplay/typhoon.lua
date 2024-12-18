@@ -10,10 +10,8 @@ local typhoon = Difficulty.new(NAMESPACE, "typhoon")
 typhoon:set_sprite(sprite_small, sprite_large)
 typhoon:set_primary_color(Color.from_rgb(195, 28, 124))
 typhoon:set_sound(sound_select)
-					-- `diff_scale`, `general_scale`, `point_scale`
 typhoon:set_scaling(0.2, 4.0, 1.7)
 typhoon:set_monsoon_or_higher(true)
-typhoon:set_allow_blight_spawns(false)
 
 Callback.add("onGameStart", "SSTyphoonStart", function(self, other, result, args)
 	-- self is oDirectorControl
