@@ -14,8 +14,9 @@ detritiveTrematode:onAttackHit(function(actor, victim, stack, hit_info)
 
 	if not Instance.exists(victim) then return end
 
-	local threshold = ((0.9 + stack / 1.2) * 0.033)
-	threshold = victim.maxhp * threshold
+	--local threshold = ((0.9 + stack / 1.2) * 0.033)
+	threshold = 0.05 + 0.05 * stack
+	threshold = GM.actor_get_maxhp_total(victim) * threshold
 	if victim.hp - hit_info.damage < threshold then
 		victim:buff_apply(buffDisease, 7 * 60)
 	end
@@ -46,9 +47,9 @@ buffDisease:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 
 	local data = actor:get_data()
-	if data.disease_timer >= 60 then
+	if data.disease_timer >= 30 then
 		data.disease_timer = 0
-		local dmg = actor.maxhp * 0.04
+		local dmg = actor.maxhp * 0.01
 		actor:damage_inflict(actor, dmg, 0, -4, actor.x, actor.y, dmg, 1, disease_damage_color)
 	else
 		data.disease_timer = data.disease_timer + 1

@@ -58,7 +58,7 @@
 		"detritiveTrematode" : {
 			"name": "Detritive Trematode",
 			"pickup" : "Low health enemies receive damage over time.",
-			"description": "Enemies <y>below 5.5% health</c> <c_stack>(+2.75% per stack)</c> become <y>infected</c>, receiving <y>4% of max health</c> damage per second.",
+			"description": "Enemies <y>below 10% </c> <c_stack>(+5% per stack) <y>health</c> become <y>infected</c>, receiving <y>2% of max health</c> damage per second.",
 			"destination": "112,\nNeaus 2,\nMars",
 			"date": "03/11/2057",
 			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
@@ -103,15 +103,15 @@
 		"coffeeBag" : {
 			"name" : "Coffee Bag",
 			"pickup" : "Activating an interactable boosts movement and attack speed.",
-			"description": "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 seconds <c_stack>(+5 per stack)</c>.",
+			"description": "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 <c_stack>(+5 per stack) <b>seconds</c>.",
 			"destination": "n1,\nThe Capital,\nUES PRIME",
 			"date": "05/22/2056",
 			"story" : "Sleeeeeeeeeeepyheaaaaaaaaaaaaaaad idk why u say u dont like coffee its so gooooood for staying up. ik ik theres other other ways to get hyped but oh boy i think u will dig this one, its my favorite!!! give it a try before yelling at me mmkay?",
 		},
 		"x4Stimulant" : {
 			"name" : "X4 Stimulant",
-			"pickup" : "Decrease secondary skill cooldown.",
-			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>.",
+			"pickup" : "Decrease secondary skill cooldown, and heal slightly when using it.",
+			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>. Using your secondary skill increases <g>health regeneration</c> by <g>2 <c_stack>(+1 per stack) <g>hp </c>per second for 3 seconds.",
 			"destination": "Romeo 33,\nBatang Ai National Park,\nEarth",
 			"date": "4/12/2057",
 			"story" : "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers.",

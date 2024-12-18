@@ -7,27 +7,36 @@ wonderHerbs:set_loot_tags(Item.LOOT_TAG.category_healing)
 
 local color_herbs = Color.from_rgb(143, 255, 38)
 
+-- doesn't use onHeal due to its implementation not sufficiently covering every source of healing
+
 local preserve_number
 gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
 	local actor = Instance.wrap(args[1].value)
 	local stack = actor:item_stack_count(wonderHerbs)
 	if stack > 0 then
-		local amount = args[2].value
-		preserve_number = amount
+		local in_amount = args[2].value
+		local is_passive = args[3].value
+		preserve_number = in_amount
 
 		local mult = 1 + stack * 0.12
-		args[2].value = amount * mult
 
-		local diff = amount - args[2].value
+		local new_amount = in_amount * mult
+		if not is_passive then
+			-- non-regen healing will always be increased by atleast 1
+			new_amount = math.max(new_amount, in_amount + 1)
 
-		if not gm.bool(args[3].value) then -- "is passive"
-			gm.draw_damage(actor.x-12, actor.bbox_top+2, diff, 0, color_herbs, actor.team, 0)
+			local diff = new_amount - in_amount
+			gm.draw_damage(actor.x, actor.bbox_top+2, diff, 0, color_herbs, actor.team, 0)
 		end
+
+		args[2].value = new_amount
 	end
 end)
+-- the argument is set back to its unmodified value to avoid weird inconsistencies where some cases end up modifying the vanilla healing number and others don't
+-- it's weird and annoying and stupid and i hate it, but it is what it is
 gm.post_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
 	if preserve_number then
-		args[2].value = preserve_number -- this is necessary because leeching seed's healing number changes for some reason when you change args[2]. nightmare!!!!!
+		args[2].value = preserve_number
 		preserve_number = nil
 	end
 end)

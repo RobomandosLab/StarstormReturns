@@ -29,12 +29,12 @@ armedBackpack:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 armedBackpack:clear_callbacks()
 armedBackpack:onAttackCreateProc(function(actor, stack, attack_info)
-	local force_proc = damager.attack_flags & (1 << 29) ~= 0
-	if math.random() <= 0.12 + (0.065 * stack) or force_proc then
+	if math.random() <= 0.12 + (0.065 * stack) then
 		local dir = actor:skill_util_facing_direction() + 180
 
 		-- infer the direction from the attack direction if its horizontal enough
 		-- this improves many cases like huntress autoaim, suppressive fire, engi turrets, etc.
+		-- though it also has issues in other cases, hm.
 		local attack_xvector = gm.lengthdir_x(1, attack_info.direction)
 		if attack_xvector > 0.5 then
 			dir = 180
