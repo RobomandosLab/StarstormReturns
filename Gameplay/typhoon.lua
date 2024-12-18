@@ -38,7 +38,7 @@ end)
 gm.post_script_hook(gm.constants.recalculate_stats, function(self, other, result, args)
 	if self.team == 2.0 and typhoon:is_active() then
 		local actor = Instance.wrap(self)
-		actor.damage = actor.damage + actor.damage_base * 0.15
+		--actor.damage = actor.damage + actor.damage_base * 0.15 -- excessive
 		actor.attack_speed = actor.attack_speed + actor.attack_speed_base * 0.15
 		actor.pHmax_raw = actor.pHmax_raw + actor.pHmax_base * 0.15
 		actor.pHmax = actor.pHmax + actor.pHmax_base * 0.15
