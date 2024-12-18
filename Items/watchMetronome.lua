@@ -10,14 +10,14 @@ watchMetronome:set_tier(Item.TIER.uncommon)
 watchMetronome:set_loot_tags(Item.LOOT_TAG.category_utility, Item.LOOT_TAG.item_blacklist_engi_turrets)
 
 watchMetronome:clear_callbacks()
-watchMetronome:onPickup(function(actor, stack)
+watchMetronome:onAcquire(function(actor, stack)
 	local data = actor:get_data()
 	if not data.chrono_charge then
 		data.chrono_charge_last = 0
 		data.chrono_charge = MAX_CHARGE * 0.5
 	end
 end)
-watchMetronome:onNewStage(function(actor, stack)
+watchMetronome:onStageStart(function(actor, stack)
 	local data = actor:get_data()
 	data.chrono_charge = MAX_CHARGE
 end)
@@ -36,7 +36,7 @@ end)
 
 local stateClimbID = State.find("ror", "climb").value
 
-watchMetronome:onStep(function(actor, stack)
+watchMetronome:onPostStep(function(actor, stack)
 	local data = actor:get_data()
 	local new_charge = data.chrono_charge
 
@@ -62,7 +62,7 @@ local color_bar = Color.from_rgb(130, 157, 255)
 
 local drifter_id = Survivor.find("ror", "drifter").value
 
-watchMetronome:onDraw(function(actor, stack)
+watchMetronome:onPostDraw(function(actor, stack)
 	local data = actor:get_data()
 
 	local x = actor.ghost_x + 1

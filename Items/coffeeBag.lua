@@ -9,7 +9,7 @@ coffeeBag:set_tier(Item.TIER.common)
 coffeeBag:set_loot_tags(Item.LOOT_TAG.category_utility)
 
 coffeeBag:clear_callbacks()
-coffeeBag:onInteract(function(actor, interactable, stack)
+coffeeBag:onInteractableActivate(function(actor, stack, interactable)
     actor:buff_apply(coffeeBuff, 60 * (5 + stack * 5))
 end)
 

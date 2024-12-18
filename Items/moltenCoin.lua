@@ -11,12 +11,12 @@ moltenCoin:set_tier(Item.TIER.common)
 moltenCoin:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 moltenCoin:clear_callbacks()
-moltenCoin:onHit(function(actor, victim, damager, stack)
-	if math.random() <= 0.06 or damager.attack_flags & Damager.ATTACK_FLAG.force_proc ~= 0 then
+moltenCoin:onHitProc(function(actor, victim, stack, hit_info)
+	if math.random() <= 0.06 or hit_info.attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.force_proc) then
 		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
 		dot.target = victim.value -- unwrap the Instance
 		dot.parent = actor.value
-		dot.damage = damager.damage * 0.2
+		dot.damage = hit_info.damage * 0.2
 		dot.ticks = 2 + stack * 4
 		dot.team = actor.team
 		dot.textColor = 4235519

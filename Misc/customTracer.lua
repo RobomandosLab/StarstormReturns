@@ -1,6 +1,6 @@
 CustomTracer = {}
 
-local current_id = Damager.TRACER.player_drone + 1
+local current_id = Attack_Info.TRACER.player_drone + 1
 local funcs = {}
 
 CustomTracer.new = function(func)

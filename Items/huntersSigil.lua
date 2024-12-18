@@ -10,7 +10,7 @@ huntersSigil:set_tier(Item.TIER.uncommon)
 huntersSigil:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 huntersSigil:clear_callbacks()
-huntersSigil:onPickup(function(actor, stack)
+huntersSigil:onAcquire(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 	local data = actor:get_data()
 	if not data.sigil_timer then
@@ -24,7 +24,7 @@ huntersSigil:onRemove(function(actor, stack)
 	end
 end)
 
-huntersSigil:onStep(function(actor, stack)
+huntersSigil:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 	local data = actor:get_data()
 
