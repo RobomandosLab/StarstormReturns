@@ -1,80 +1,76 @@
+-- CUSTOM TRACER SYSTEM
+-- this aims to seamlessly extend the game's tracer system, with all the capabilities of vanilla tracers
+-- attack networking transmits tracer IDs in a byte, which means there can be up to 255 fully working tracers, including vanilla ones
+-- past ID 255, tracers will work locally, but will appear incorrect to other players in netplay
+
+-- TracerKindInfo struct fields:
+-- `consistent_sparks_flip`				-- if true, disables horizontal flipping of sparks on missed bullets
+-- `show_sparks_if_miss`				-- if false, sparks won't appear when the bullet doesn't hit anything
+-- `sparks_offset_y`					-- vertical offset for hitsparks using this tracer.
+-- `show_end_sparks_on_piercing_hit`	-- if false, bullets that pierced wont show sparks on their endpoint
+-- `override_sparks_miss`				-- spark sprite to use instead when missing, or -1
+-- `override_sparks_solid`				-- spark sprite to use instead when hitting a solid, or -1
+-- `draw_tracer`						-- if the bullet_draw_tracer function should be called
+
 CustomTracer = {}
 
-local current_id = Attack_Info.TRACER.player_drone + 1
+local last_vanilla_id = Attack_Info.TRACER.player_drone
+local free_id = last_vanilla_id + 1
 local funcs = {}
 
+--- allocates a custom tracer, returning its ID and TracerKindInfo struct. this ID can be passed to bullet attacks, which automatically handles networking
 CustomTracer.new = function(func)
-	local id = current_id
+	if free_id > 255 then
+		log.warning("CustomTracer.new(): Allocated tracer IDs have exceeded 255. This will cause problems in netplay. Yell at Kris about this!")
+	end
+
+	local id = free_id
 	funcs[id] = func
 
-	current_id = current_id + 1
-	return id
+	free_id = free_id + 1
+
+	local tracer_kind_info = gm["@@NewGMLObject@@"](gm.constants.TracerKindInfo)
+	gm.array_set(gm.variable_global_get("tracer_info"), id, tracer_kind_info)
+	return id, tracer_kind_info
 end
 
-CustomTracer.make_sprite_tiling = function(sprite)
-	local nine = GM.sprite_nineslice_create()
-	GM.variable_struct_set(nine, "enabled", true)
-	GM.variable_struct_set(nine, "tilemode", GM.array_create(5, 1))
-	GM.sprite_set_nineslice(sprite, nine)
-end
-
-CustomTracer.create_tracer = function(id, x1, y1, x2, y2)
+--- calls the handler function for the given tracer ID, if one exists
+--- mostly only for internal use.
+CustomTracer.draw_tracer = function(id, x1, y1, x2, y2, col)
 	local fn = funcs[id]
 	if fn then
-		fn(x1, y1, x2, y2)
+		fn(x1, y1, x2, y2, col)
 	end
 end
 
-CustomTracer.create_tracer_networked = function(id, x1, y1, x2, y2)
-	CustomTracer.create_tracer(id, x1, y1, x2, y2)
-
-	if gm._mod_net_isOnline() then
-		local msg = TracerPacket:message_begin()
-		msg:write_byte(id)
-		msg:write_int(x1)
-		msg:write_int(y1)
-		msg:write_int(x2)
-		msg:write_int(y2)
-		if gm._mod_net_isHost() then
-			msg:send_to_all()
-		else
-			msg:send_to_host()
-		end
-	end
+--- utility function that takes a given sprite ID and configures it to not stretch when used in a line tracer.
+CustomTracer.make_sprite_tiling = function(sprite)
+	local nine = gm.sprite_nineslice_create()
+	gm.variable_struct_set(nine, "enabled", true)
+	gm.variable_struct_set(nine, "tilemode", gm.array_create(5, 1))
+	gm.sprite_set_nineslice(sprite, nine)
 end
 
-TracerPacket = Packet.new()
-TracerPacket:onReceived(function(msg, player)
-	local id = msg:read_byte()
-	local x1 = msg:read_int()
-	local y1 = msg:read_int()
-	local x2 = msg:read_int()
-	local y2 = msg:read_int()
+gm.post_script_hook(gm.constants.bullet_draw_tracer, function(self, other, result, args)
+	local kind = args[1].value
+	if kind <= last_vanilla_id then return end
 
-	CustomTracer.create_tracer(id, x1, y1, x2, y2)
+	local col = args[2].value
+	local x1, y1, x2, y2 = args[3].value, args[4].value, args[5].value, args[6].value
 
-	if gm._mod_net_isHost() then -- relay to clients except the one who sent you it
-		local msg = TracerPacket:message_begin()
-		msg:write_byte(id)
-		msg:write_int(x1)
-		msg:write_int(y1)
-		msg:write_int(x2)
-		msg:write_int(y2)
-		msg:send_exclude(player)
+	CustomTracer.draw_tracer(kind, x1, y1, x2, y2, col)
+end)
+gm.post_script_hook(gm.constants.bullet_draw_tracer_networked, function(self, other, result, args)
+	if args[1].value > 63 then
+		log.warning("CustomTracer: bullet_draw_tracer_networked can't transmit tracer IDs above 63. consult Kris if this is an issue for you.")
 	end
 end)
 
-local bx, by, custom_id
-gm.pre_code_execute("gml_Object_oBulletAttack_Step_1", function(self, other)
-	if funcs[self.attack_info.tracer_kind] then
-		bx, by = self.x, self.y
-		custom_id = self.attack_info.tracer_kind
-		self.attack_info.tracer_kind = 0
-	end
-end)
-gm.post_code_execute("gml_Object_oBulletAttack_Step_1", function(self, other)
-	if custom_id then
-		CustomTracer.create_tracer_networked(custom_id, bx, by, self.x, self.y)
-		custom_id = nil
-	end
-end)
+-- for future reference.
+-- these are the functions used by bullet_draw_tracer_networked to encode and decode tracers
+-- supposedly, tracer IDs are encoded into 6 bits -- this is only true for bullet_draw_tracer_networked -- standard attacks encode the ID in 8 bits.
+-- bullet_draw_tracer_networked is only used by one thing in the vanilla game -- sniper's alt utility skill
+-- so it's not really worth the time to rewrite it to extend the range ..
+
+--local net_packet_vfx_tracer_write = gm.constants.__net_packet_vfx_tracer_write___anon__30474_gml_GlobalScript_scr_network_packets_objects
+--local net_packet_vfx_tracer_read = gm.constants.__net_packet_vfx_tracer_read___anon__30474_gml_GlobalScript_scr_network_packets_objects

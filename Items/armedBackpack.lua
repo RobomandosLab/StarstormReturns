@@ -4,12 +4,14 @@ local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ArmedBackpackSpark2", p
 
 local sound = Resources.sfx_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sounds/Items/armedBackpack.ogg"))
 
-local tracer = CustomTracer.new(function(x1, y1, x2, y2)
-	local offset = -1 + math.random() * 3
+local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
+	local offset = -7 + math.random() * 3
+	y1 = y1 + offset
+	y2 = y2 + offset
 
-	local tr = gm.instance_create(x1, y1 + offset, gm.constants.oEfLineTracer)
+	local tr = gm.instance_create(x1, y1, gm.constants.oEfLineTracer)
 	tr.xend = x2
-	tr.yend = y2 + offset
+	tr.yend = y2
 	tr.sprite_index = gm.constants.sPilotShoo1BTracer
 	tr.image_speed = 2
 	tr.rate = 0.125
@@ -21,6 +23,7 @@ local tracer = CustomTracer.new(function(x1, y1, x2, y2)
 	ef.image_angle = gm.point_direction(x1, y1, x2, y2)
 	ef.image_speed = 0.4
 end)
+tracer_info.sparks_offset_y = -5
 
 local armedBackpack = Item.new(NAMESPACE, "armedBackpack")
 armedBackpack:set_sprite(sprite_item)
@@ -42,7 +45,7 @@ armedBackpack:onAttackCreateProc(function(actor, stack, attack_info)
 			dir = 0
 		end
 
-		local attack = actor:fire_bullet(actor.x - gm.sign(attack_xvector) * 5, actor.y-4, 500, dir, 1.5, nil, sprite_sparks2, tracer, false)
+		local attack = actor:fire_bullet(actor.x - gm.sign(attack_xvector) * 5, actor.y, 500, dir, 1.5, nil, sprite_sparks2, tracer, false)
 		actor:sound_play_networked(sound, 0.8, 1 + math.random() * 0.2, actor.x, actor.y)
 	end
 end)

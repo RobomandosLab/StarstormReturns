@@ -197,9 +197,9 @@ executionerSecondary.does_change_activity_state = true
 executionerSecondary.use_delay = 30
 executionerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local pWispGTracer = gm.variable_global_get("pWispGTracer")
-local tracer2_color = Color.from_rgb(110, 129, 195)
-local ion_tracer = CustomTracer.new(function(x1, y1, x2, y2)
+local tracer_particle = Particle.find("ror", "WispGTracer")
+local tracer_color = Color.from_rgb(110, 129, 195)
+local ion_tracer, ion_tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
 	if x1 < x2 then x1 = x1 + 16 else x1 = x1 - 16 end
 
 	y1 = y1 - 5
@@ -214,7 +214,7 @@ local ion_tracer = CustomTracer.new(function(x1, y1, x2, y2)
 	tracer.image_speed = 1
 	tracer.rate = 0.1
 	tracer.blend_1 = Color.from_rgb(255, 255, 255)
-	tracer.blend_2 = tracer2_color
+	tracer.blend_2 = tracer_color
 	tracer.blend_rate = 0.2
 	tracer.image_alpha = 1.5
 	tracer.bm = 1
@@ -224,16 +224,17 @@ local ion_tracer = CustomTracer.new(function(x1, y1, x2, y2)
 	local dist = gm.point_distance(x1, y1, x2, y2)
 	local dir = gm.point_direction(x1, y1, x2, y2)
 
-	gm.part_type_direction(pWispGTracer, dir, dir, 0, 0)
+	tracer_particle:set_direction(dir, dir, 0, 0)
 
 	local px = x1
 	local i = 0
 	while i < dist do
-		gm.part_particles_create_colour(1, px, y1 + gm.random_range(-8, 8), pWispGTracer, tracer2_color, 1)
+		tracer_particle:create_colour(px, y1 + gm.random_range(-8, 8), tracer_color, 1)
 		px = px + gm.lengthdir_x(20, dir)
 		i = i + 20
 	end
 end)
+ion_tracer_info.sparks_offset_y = -5
 
 local stateExecutionerSecondary = State.new(NAMESPACE, "executionerSecondary")
 
