@@ -13,7 +13,7 @@ local sprite_death		= Resources.sprite_load(NAMESPACE, "ExploderDeath",		path.co
 
 local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "ExploderShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55, nil, -16, -16, 16, 10)
 
-GM.elite_generate_palettes(sprite_palette)
+gm.elite_generate_palettes(sprite_palette)
 
 local sound_spawn		= Resources.sfx_load(NAMESPACE, "ExploderSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit			= Resources.sfx_load(NAMESPACE, "ExploderHit",		path.combine(SOUND_PATH, "hit.ogg"))
@@ -25,7 +25,7 @@ local exploder = Object.new(NAMESPACE, "Exploder", Object.PARENT.enemyClassic)
 local exploder_id = exploder.value
 
 exploder.obj_sprite = sprite_idle
-exploder.obj_depth = 1 -- makes players and their vfx always appear above
+exploder.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 
 local exploderPrimary = Skill.new(NAMESPACE, "exploderZ")
 local stateExploderPrimary = State.new(NAMESPACE, "exploderPrimary")
@@ -43,14 +43,14 @@ exploder:onCreate(function(actor)
 
 	actor.can_jump = true
 
-	GM._mod_instance_set_mask(actor, sprite_mask)
+	actor.mask_index = sprite_mask
 
 	actor.sound_spawn = sound_spawn
 	actor.sound_hit = sound_hit
 	actor.sound_death = sound_death
 
 	actor:enemy_stats_init(17, 100, 22, 18)
-	actor.pHmax = 2.6
+	actor.pHmax_base = 2.6
 
 	actor.z_range = 28
 	actor:set_default_skill(Skill.SLOT.primary, exploderPrimary)
@@ -72,7 +72,7 @@ stateExploderPrimary:onEnter(function(actor, data)
 end)
 stateExploderPrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot1, 0.25)
+	actor:actor_animation_set(sprite_shoot1, 0.2)
 
 	if data.exploded == 0 and actor.image_index >= 14 then
 		data.exploded = 1
