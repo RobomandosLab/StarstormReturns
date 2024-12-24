@@ -1,7 +1,7 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Typhoon",
-		"typhoon.description" : "The maximum challenge.\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
+		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
 	},
 
 	"survivor" : {
@@ -155,7 +155,7 @@
 		"roulette" : {
 			"name": "Roulette",
 			"pickup" : "Roll a random buff every minute.",
-			"description": "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n-Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n-Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n-Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n-Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n-Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n-Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n-Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
+			"description": "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n<spr RouletteBuffs 1>: Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n<spr RouletteBuffs 2>: Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n<spr RouletteBuffs 3>: Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n<spr RouletteBuffs 4>: Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n<spr RouletteBuffs 5>: Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n<spr RouletteBuffs 6>: Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n<spr RouletteBuffs 7>: Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
 			"destination" : "PRoom 3.1,\nSecva Casino,\nEarth",
 			"date" : "7/17/2057",
 			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
