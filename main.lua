@@ -6,8 +6,6 @@ PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
 
 local init = function()
-	gm.sprite_replace(gm.constants.sTitle, path.combine(PATH, "Sprites/Menu/title.png"), 1, false, false, 346, 82)
-
 	local folders = {
 		"Misc", -- contains utility functions, so load first
 		"Actors",
