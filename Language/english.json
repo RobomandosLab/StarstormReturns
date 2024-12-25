@@ -1,7 +1,7 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Typhoon",
-		"typhoon.description" : "The maximum challenge.\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
+		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
 	},
 
 	"survivor" : {
@@ -40,7 +40,7 @@
 		"armedBackpack" : {
 			"name" : "Armed Backpack",
 			"pickup": "Chance of firing a bullet behind you.",
-			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack of <y>firing a bullet</c> behind you for <y>150% damage</c>.",
+			"description": "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack to <y>fire a bullet</c> behind you for <y>150% damage</c>.",
 			"destination": "832B,\nHautenuit,\nEarth",
 			"date": "11/7/2056",
 			"story": "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
@@ -58,7 +58,7 @@
 		"detritiveTrematode" : {
 			"name": "Detritive Trematode",
 			"pickup" : "Low health enemies receive damage over time.",
-			"description": "Enemies <y>below 5.5% health</c> <c_stack>(+2.75% per stack)</c> become <y>infected</c>, receiving <y>4% of max health</c> damage per second.",
+			"description": "Enemies <y>below 10% </c> <c_stack>(+5% per stack) <y>health</c> become <y>infected</c>, receiving <y>2% of max health</c> damage per second.",
 			"destination": "112,\nNeaus 2,\nMars",
 			"date": "03/11/2057",
 			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
@@ -76,7 +76,7 @@
 		"fork" : {
 			"name" : "Fork",
 			"pickup" : "Deal more damage.",
-			"description": "Increases <y>base damage<w> by <y>3<w> <c_stack>(+3 per stack)</c>.",
+			"description": "Increases <y>base damage<w> by <y>3 <c_stack>(+3 per stack)</c>.",
 			"destination": "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
 			"date": "09/24/2056",
 			"story" : "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
@@ -103,15 +103,15 @@
 		"coffeeBag" : {
 			"name" : "Coffee Bag",
 			"pickup" : "Activating an interactable boosts movement and attack speed.",
-			"description": "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 seconds <c_stack>(+5 per stack)</c>.",
+			"description": "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 <c_stack>(+5 per stack) <b>seconds</c>.",
 			"destination": "n1,\nThe Capital,\nUES PRIME",
 			"date": "05/22/2056",
 			"story" : "Sleeeeeeeeeeepyheaaaaaaaaaaaaaaad idk why u say u dont like coffee its so gooooood for staying up. ik ik theres other other ways to get hyped but oh boy i think u will dig this one, its my favorite!!! give it a try before yelling at me mmkay?",
 		},
 		"x4Stimulant" : {
 			"name" : "X4 Stimulant",
-			"pickup" : "Decrease secondary skill cooldown.",
-			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>.",
+			"pickup" : "Decrease secondary skill cooldown, and heal slightly when using it.",
+			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>. Using your secondary skill increases <g>health regeneration</c> by <g>2 <c_stack>(+1 per stack) <g>hp </c>per second for 3 seconds.",
 			"destination": "Romeo 33,\nBatang Ai National Park,\nEarth",
 			"date": "4/12/2057",
 			"story" : "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers.",
@@ -128,7 +128,7 @@
 		"crypticSource" : {
 			"name": "Cryptic Source",
 			"pickup" : "Changing direction creates bursts of energy.",
-			"description": "Changing movement direction fires <y>chain lightning</c> for <y>70% damage <c_stack>(+55% per stack)</c> on up to <y>2</c> targets.",
+			"description": "Changing movement direction fires <y>chain lightning</c> for <y>70% <c_stack>(+55% per stack)<y> damage</c> on up to <y>2</c> targets.",
 			"destination" : "O32,\nLow End,\nEarth",
 			"date" : "03/30/2058",
 			"story" : "From atoms to sentient beings, everything comes from energy. However, this rather cryptic object seems to emanate energy on its own. High amounts of friction seem to trigger a chain reaction which makes it highly unstable. However, it may also be a manipulable source of (infinite?) energy. Whether this will lead us to the utopian future we crave for is completely uncertain, but this completely changes our previous thoughts about the universe.",
@@ -137,7 +137,7 @@
 		"huntersSigil" : {
 			"name": "Hunter's Sigil",
 			"pickup" : "Standing still increases armor and critical strike chance.",
-			"description": "After standing still for 1 second, gain <b>15 armor <c_stack>(+10 per stack)</c> and <y>25% critical strike chance <c_stack>(+20% per stack)</c>.",
+			"description": "After standing still for 1 second, gain <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
 			"destination" : "2East,\nBeckham Building,\nEarth",
 			"date" : "02/02/2056",
 			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
@@ -146,7 +146,7 @@
 		"strangeCan" : {
 			"name": "Strange Can",
 			"pickup" : "Chance to intoxicate enemies.",
-			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health as damage over time</c>.",
+			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
 			"destination" : "1530,\n563,\nA-LC12",
 			"date" : "05/22/2056",
 			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
@@ -155,7 +155,7 @@
 		"roulette" : {
 			"name": "Roulette",
 			"pickup" : "Roll a random buff every minute.",
-			"description": "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n-Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n-Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n-Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n-Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n-Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n-Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n-Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
+			"description": "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n<spr RouletteBuffs 1>: Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n<spr RouletteBuffs 2>: Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n<spr RouletteBuffs 3>: Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n<spr RouletteBuffs 4>: Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n<spr RouletteBuffs 5>: Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n<spr RouletteBuffs 6>: Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n<spr RouletteBuffs 7>: Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
 			"destination" : "PRoom 3.1,\nSecva Casino,\nEarth",
 			"date" : "7/17/2057",
 			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
@@ -164,6 +164,6 @@
 	},
 
 	"actor" : {
-		"Exploder.name" : "Exploder",
+		"Exploder.name" : "Exploder"
 	},
 }

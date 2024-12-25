@@ -9,7 +9,22 @@ x4Stimulant:clear_callbacks()
 x4Stimulant:onStatRecalc(function(actor, stack)
 	local secondary = actor:get_active_skill(Skill.SLOT.secondary)
 
-	-- counts in frames. has to be rounded otherwise the cooldown timer breaks !
+	-- counts in frames. has to be rounded otherwise the cooldown stopwatch breaks !
 	local mult = 0.9 ^ stack
 	secondary.cooldown = math.ceil(secondary.cooldown * mult)
+end)
+
+local x4Buff = Buff.new(NAMESPACE, "x4Stimulant")
+x4Buff.show_icon = false
+
+x4Stimulant:onSecondaryUse(function(actor, stack)
+	actor:buff_apply(x4Buff, 60 * 3)
+end)
+
+local REGEN = 2 / 60
+local REGEN_STACK = 1 / 60
+
+x4Buff:clear_callbacks()
+x4Buff:onStatRecalc(function(actor, stack)
+	actor.hp_regen = actor.hp_regen + REGEN + REGEN_STACK * (actor:item_stack_count(x4Stimulant) - 1)
 end)

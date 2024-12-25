@@ -7,7 +7,7 @@ dormantFungus:set_tier(Item.TIER.common)
 dormantFungus:set_loot_tags(Item.LOOT_TAG.category_healing)
 
 dormantFungus:clear_callbacks()
-dormantFungus:onStep(function(actor, stack)
+dormantFungus:onPostStep(function(actor, stack)
 	if gm._mod_net_isClient() then return end
 
 	if (math.abs(actor.pHspeed) >= actor.pHmax * 0.98) or actor.pVspeed ~= 0 then
