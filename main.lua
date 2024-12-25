@@ -6,6 +6,7 @@ PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
 
 local init = function()
+	require("Stages.stageLoader") --temporary
 	local folders = {
 		"Misc", -- contains utility functions, so load first
 		"Actors",
