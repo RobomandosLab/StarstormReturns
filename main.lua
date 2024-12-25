@@ -2,7 +2,7 @@
 -- ssr team
 mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto()
 
-require("stageLoader")
+require("Stages.stageLoader")
 
 PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
