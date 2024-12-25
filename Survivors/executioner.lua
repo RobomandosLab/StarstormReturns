@@ -2,38 +2,42 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Executioner")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- assets.
-local sprite_loadout = Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 1, 28, 0)
-local sprite_portrait = Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"))
-local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills = Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
+local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 1, 28, 0)
+local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
 
-local sprite_idle = Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17)
-local sprite_idle_half = Resources.sprite_load(NAMESPACE, "ExecutionerIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 12, 17)
-local sprite_walk = Resources.sprite_load(NAMESPACE, "ExecutionerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 14, 18)
-local sprite_walk_half = Resources.sprite_load(NAMESPACE, "ExecutionerWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 14, 18)
-local sprite_jump = Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 13)
-local sprite_jump_peak = sprite_jump -- placeholder
-local sprite_fall = sprite_jump -- placeholder
-local sprite_climb = Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18)
-local sprite_death = Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 5, 14, 8)
-local sprite_decoy = Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 17, 16)
+local sprite_idle			= Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17)
+local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "ExecutionerIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 12, 17)
+local sprite_walk			= Resources.sprite_load(NAMESPACE, "ExecutionerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 14, 18)
+local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "ExecutionerWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 14, 18)
+local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "ExecutionerWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 14, 18)
+local sprite_jump			= Resources.sprite_load(NAMESPACE, "ExecutionerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 12, 15)
+local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "ExecutionerJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 12, 15)
+local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "ExecutionerJumpPeak", path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 12, 14)
+local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "ExecutionerJumpPeakHalf", path.combine(SPRITE_PATH, "jumpPeakHalf.png"), 1, 12, 14)
+local sprite_fall			= Resources.sprite_load(NAMESPACE, "ExecutionerFall", path.combine(SPRITE_PATH, "fall.png"), 1, 12, 13)
+local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "ExecutionerFallHalf", path.combine(SPRITE_PATH, "fallHalf.png"), 1, 12, 13)
+local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18)
+local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 5, 14, 8)
+local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 17, 16)
 
-local sprite_shoot1 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
-local sprite_shoot1_half = Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
-local sprite_shoot2a = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 6, 12, 25)
-local sprite_shoot2b = Resources.sprite_load(NAMESPACE, "ExecutionerShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 6, 12, 25)
-local sprite_shoot3 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 44, 40)
-local sprite_shoot4 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 14, 32, 69)
-local sprite_shoot5 = Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 14, 32, 69)
+local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
+local sprite_shoot1_half	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
+local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 6, 12, 25)
+local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 6, 12, 25)
+local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 44, 40)
+local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 22, 39, 63)
+local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4S", path.combine(SPRITE_PATH, "shoot5.png"), 22, 39, 63)
 
-local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
-local sprite_tracer2 = Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
+local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
+local sprite_tracer2		= Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
 
-local sound_shoot1 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
-local sound_shoot2 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
-local sound_shoot3 = Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
-local sound_shoot4a = Resources.sfx_load(NAMESPACE, "ExecutionerShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
-local sound_shoot4b = Resources.sfx_load(NAMESPACE, "ExecutionerShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+local sound_shoot1			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
+local sound_shoot2			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot3			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
+local sound_shoot4a			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
+local sound_shoot4b			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
 
 -- Okay, let's start Executing, some Monsters ..
 local executioner = Survivor.new(NAMESPACE, "executioner")
@@ -79,16 +83,16 @@ executioner:onInit(function(actor)
 	local jump_peak_half = Array.new()
 	local fall_half = Array.new()
 	idle_half:push(sprite_idle, sprite_idle_half, 0)
-	walk_half:push(sprite_walk, sprite_walk_half, 0)
-	jump_half:push(sprite_jump, sprite_idle_half, 0)
-	jump_peak_half:push(sprite_jump_peak, sprite_idle_half, 0)
-	fall_half:push(sprite_fall, sprite_idle_half, 0)
+	walk_half:push(sprite_walk, sprite_walk_half, 0, sprite_walk_back)
+	jump_half:push(sprite_jump, sprite_jump_half, 0)
+	jump_peak_half:push(sprite_jump_peak, sprite_jump_peak_half, 0)
+	fall_half:push(sprite_fall, sprite_fall_half, 0)
 
-	actor.sprite_idle_half = idle_half.value
-	actor.sprite_walk_half = walk_half.value
-	actor.sprite_jump_half = jump_half.value
-	actor.sprite_jump_peak_half = jump_peak_half.value
-	actor.sprite_fall_half = fall_half.value
+	actor.sprite_idle_half = idle_half
+	actor.sprite_walk_half = walk_half
+	actor.sprite_jump_half = jump_half
+	actor.sprite_jump_peak_half = jump_peak_half
+	actor.sprite_fall_half = fall_half
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -129,22 +133,21 @@ end)
 stateExecutionerPrimary:onStep(function(actor, data)
 	actor.sprite_index2 = sprite_shoot1_half
 
-	-- manually update half sprite offset because we cant do it how rorr does it sobs
-	local walk_half_array = actor.sprite_walk_half
-	local walk_offset = 0
-	local leg_frame = math.floor(actor.image_index)
-
-	-- upper body bobs up and down depending on the leg animation
-	if leg_frame == 1 or leg_frame == 5 then
-		walk_offset = 1
-	elseif leg_frame == 3 or leg_frame == 7 then
-		walk_offset = -1
-	end
-	walk_half_array[3] = walk_offset -- 3 is the vertical offset
-
 	actor:skill_util_strafe_update(0.33 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
+
+	-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
+	if actor.sprite_index == actor.sprite_walk_half[2] then
+		local walk_offset = 0
+		local leg_frame = math.floor(actor.image_index)
+		if leg_frame == 1 or leg_frame == 5 then
+			walk_offset = 1
+		elseif leg_frame == 3 or leg_frame == 7 then
+			walk_offset = -1
+		end
+		actor.ydisp = walk_offset -- ydisp controls upper body offset
+	end
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -245,7 +248,7 @@ end)
 stateExecutionerSecondary:clear_callbacks()
 stateExecutionerSecondary:onEnter(function(actor, data)
 	actor.image_index = 0
-	data.ion_rounds = actor.skills[2].active_skill.stock + 1 -- compensate for first stock being decremented already
+	data.ion_rounds = actor:get_active_skill(Skill.SLOT.secondary).stock + 1 -- compensate for first stock being decremented already
 	data.should_fire = 1
 	data.is_first_shot = 1
 	data.sprite = sprite_shoot2a
@@ -284,7 +287,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 		end
 
 		if data.is_first_shot == 0 then
-			local skill = actor.skills[2].active_skill
+			local skill = actor:get_active_skill(Skill.SLOT.secondary)
 			skill.stock = skill.stock - 1
 		else
 			data.is_first_shot = 0
@@ -408,7 +411,6 @@ end)
 stateExecutionerSpecial:clear_callbacks()
 stateExecutionerSpecial:onEnter(function(actor, data)
 	actor.image_index = 0
-	actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
 
 	data.substate = 0
 	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
@@ -421,42 +423,42 @@ stateExecutionerSpecial:onStep(function(actor, data)
 	if data.scepter > 0 then
 		animation = sprite_shoot5
 	end
+
 	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
 
-	--actor:actor_animation_set(animation, 0.25)
-	actor.sprite_index = animation
-	actor.image_speed = 0.25 * true_speed
+	actor:actor_animation_set(animation, 0.25 * true_speed, false)
 
-	if data.substate == 0 then -- leaping into the air
-		actor.pVspeed = (actor.pVmax * -2) * true_speed
-		data.substate = 1
-		actor:sound_play(sound_shoot4a, 1.0, 1.0)
+	if data.substate == 0 then
+		if actor.image_index >= 5 then
+			actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
+			actor.pVspeed = (actor.pVmax * -2) * true_speed
+			data.substate = 1
+			actor:sound_play(sound_shoot4a, 1.0, 1.0)
+		end
 	elseif data.substate == 1 then -- decelerating, hanging in the air
 		local deceleration = 0.5 * true_speed * true_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
 
-		if actor.image_index >= 7 then
-			if actor.pVspeed >= 0 then
-				data.substate = 2
-				actor.pVspeed = (actor.pVmax * -1.5) * true_speed
-			else
-				actor.image_index = 7
-			end
+		if actor.image_index >= 10 then
+			data.substate = 2
+			actor.pVspeed = (actor.pVmax * -1.5) * true_speed
 		end
 	elseif data.substate == 2 then -- winding up
-		if actor.image_index >= 9 then
+		if actor.image_index >= 12 then
 			actor.pVspeed = 30 * true_speed
 			data.substate = 3
 			data.aoe_height = 0
 		end
 	elseif data.substate == 3 then -- coming down
 		data.aoe_height = data.aoe_height + actor.pVspeed
-		actor.image_index = 10
+		if actor.image_index >= 16 then
+			actor.image_index = actor.image_index - 4
+		end
 
 		if actor.pVspeed < 0 then -- something launched us up, handle this interruption
 			data.recovery_attempts = data.recovery_attempts + 1
 			if data.recovery_attempts <= 3 then
-				actor.image_index = 0
+				actor.image_index = 5
 				data.substate = 1 -- go back and try again
 				actor:sound_play(sound_shoot4a, 1.0, 1.0)
 			else
@@ -465,16 +467,16 @@ stateExecutionerSpecial:onStep(function(actor, data)
 		else
 			actor.pVspeed = 30 * true_speed -- water slows exe down and without gravity he's left stuck, so always force to max speed'
 
-			-- ugly check for having landed -- gamemaker bools suck
-			if (actor.free == 0.0 or actor.free == false) then
+			if not gm.bool(actor.free) then
 				data.substate = 4
+				actor.image_index = 16
 				actor.activity_type = 1 -- return to standard state physics
 
 				actor:sound_play(sound_shoot4b, 1.0, 1.0)
 				actor:screen_shake(15)
 
-				-- this makes me sad, but execution's damage has to be host-side in order for the cdr to work
-				-- because onAttackHandleEnd and its related callbacks only run host-side, and the host confirms kills
+				-- usually attacks use is_authority, but in this case we have to always run it host-side
+				-- this is because onAttackHandleEnd only runs on the host, in which we check for the execution variable
 				if not GM._mod_net_isClient() then
 					local ax = actor.x + 32 * actor.image_xscale
 					local ay = actor.y + 24 - data.aoe_height * 0.5
