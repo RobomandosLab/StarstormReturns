@@ -304,10 +304,8 @@ stateExecutionerSecondary:onGetInterruptPriority(function(actor, data)
 	end
 end)
 
-Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
-	local killer = Instance.wrap(args[3].value)
+Callback.add(Callback.TYPE.onKillProc, "SSIonCharge", function(victim, killer)
 	if killer.object_index == gm.constants.oP and killer.class == executioner_id then
-		local victim = Instance.wrap(args[2].value)
 		local charges = 1
 		if GM.actor_is_elite(victim) then
 			charges = charges * 2
@@ -518,8 +516,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-Callback.add("onAttackHandleEnd", "SSExecutionCDR", function(self, other, result, args)
-	local attack_info = args[2].value
+Callback.add(Callback.TYPE.onAttackHandleEnd, "SSExecutionCDR", function(attack_info)
 	if attack_info.execution == 1 then
 		local kill_count = attack_info.kill_number
 		GM.actor_skill_reset_cooldowns(attack_info.parent, -60 * kill_count, true, false, true)
