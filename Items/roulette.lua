@@ -78,7 +78,7 @@ roulette:onRemove(function(actor, stack)
 	end
 end)
 
-Callback.add("onMinute", "SSRouletteReroll", function()
+Callback.add(Callback.TYPE.onMinute, "SSRouletteReroll", function(_, _)
 	if gm._mod_net_isClient() then return end
 
 	local actors = Instance.find_all(gm.constants.pActor)

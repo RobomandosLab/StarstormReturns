@@ -13,18 +13,18 @@ typhoon:set_sound(sound_select)
 typhoon:set_scaling(0.2, 4.0, 1.7)
 typhoon:set_monsoon_or_higher(true)
 
-Callback.add("onGameStart", "SSTyphoonStart", function(self, other, result, args)
-	-- self is oDirectorControl
+Callback.add(Callback.TYPE.onGameStart, "SSTyphoonStart", function()
 	if typhoon:is_active() then
-		--self.enemy_buff = self.enemy_buff + 0.5 -- this is dogshit lol
-		self.elite_spawn_chance = 0.4 --0.8
+		local director = GM._mod_game_getDirector()
+		director.elite_spawn_chance = 0.4
 	end
 end)
 
-Callback.add("onDirectorPopulateSpawnArrays", "SSTyphoonPreLoopMonsters", function(self, other, result, args)
-	if self.loops == 0 and typhoon:is_active() then
+Callback.add(Callback.TYPE.onDirectorPopulateSpawnArrays, "SSTyphoonPreLoopMonsters", function()
+	local director = GM._mod_game_getDirector()
+	if director.loops == 0 and typhoon:is_active() then
 		-- add loop-exclusive spawns to pre-loop
-		local director_spawn_array = Array.wrap(self.monster_spawn_array)
+		local director_spawn_array = director.monster_spawn_array
 		local current_stage = Stage.wrap(GM._mod_game_getCurrentStage())
 
 		local loop_spawns = List.wrap(current_stage.spawn_enemies_loop)
