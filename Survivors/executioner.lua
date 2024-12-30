@@ -2,10 +2,11 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Executioner")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- assets.
-local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 1, 28, 0)
+local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 22, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
+local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorExecutioner", path.combine(SPRITE_PATH, "credits.png"), 1, 6, 12)
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17)
 local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "ExecutionerIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 12, 17)
@@ -18,26 +19,52 @@ local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "ExecutionerJumpPeak"
 local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "ExecutionerJumpPeakHalf", path.combine(SPRITE_PATH, "jumpPeakHalf.png"), 1, 12, 14)
 local sprite_fall			= Resources.sprite_load(NAMESPACE, "ExecutionerFall", path.combine(SPRITE_PATH, "fall.png"), 1, 12, 13)
 local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "ExecutionerFallHalf", path.combine(SPRITE_PATH, "fallHalf.png"), 1, 12, 13)
-local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18)
-local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 5, 14, 8)
-local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 17, 16)
+local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 12, 18)
+local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 11, 38, 17)
+local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
 
 local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
 local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 6, 12, 25)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 6, 12, 25)
-local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 44, 40)
-local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 22, 39, 63)
-local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4S", path.combine(SPRITE_PATH, "shoot5.png"), 22, 39, 63)
+local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 10, 68, 82)
+
+local sprite_shoot4PreGround= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4PreGround", path.combine(SPRITE_PATH, "shoot4PreGround.png"), 5, 39, 63)
+local sprite_shoot4PreAir	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4PreAir", path.combine(SPRITE_PATH, "shoot4PreAir.png"), 5, 39, 63)
+local sprite_shoot4PreSlide	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4PreSlide", path.combine(SPRITE_PATH, "shoot4PreSlide.png"), 5, 39, 63)
+local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4",	path.combine(SPRITE_PATH, "shoot4.png"), 18, 70, 82)
+
+local sprite_shoot5PreGround= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5PreGround", path.combine(SPRITE_PATH, "shoot5PreGround.png"), 5, 39, 63)
+local sprite_shoot5PreAir	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5PreAir", path.combine(SPRITE_PATH, "shoot5PreAir.png"), 5, 39, 63)
+local sprite_shoot5PreSlide	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5PreSlide", path.combine(SPRITE_PATH, "shoot5PreSlide.png"), 5, 39, 63)
+local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 18, 70, 82)
 
 local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
 local sprite_tracer2		= Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
+local sprite_ion_particle	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticle", path.combine(SPRITE_PATH, "ionParticle.png"), 5, 8, 8)
+local sprite_ion_particleS	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticleS", path.combine(SPRITE_PATH, "ionParticleS.png"), 5, 8, 8)
 
 local sound_shoot1			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
 local sound_shoot3			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
 local sound_shoot4a			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
 local sound_shoot4b			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+
+local ionParticle = Particle.new(NAMESPACE, "ion")
+ionParticle:set_sprite(sprite_ion_particle, true, true, false)
+ionParticle:set_life(15, 60)
+ionParticle:set_orientation(0, 360, 0, 0, false)
+ionParticle:set_speed(0.2, 0.5, -0.02, 0)
+ionParticle:set_size(0.6, 1, 0, 0.01)
+ionParticle:set_direction(0, 360, 0, 0)
+
+local ionParticleS = Particle.new(NAMESPACE, "ionS")
+ionParticleS:set_sprite(sprite_ion_particleS, true, true, false)
+ionParticleS:set_life(15, 60)
+ionParticleS:set_orientation(0, 360, 0, 0, false)
+ionParticleS:set_speed(0.2, 0.5, -0.02, 0)
+ionParticleS:set_size(0.6, 1, 0, 0.01)
+ionParticleS:set_direction(0, 360, 0, 0)
 
 -- Okay, let's start Executing, some Monsters ..
 local executioner = Survivor.new(NAMESPACE, "executioner")
@@ -73,6 +100,7 @@ executioner.sprite_loadout = sprite_loadout
 executioner.sprite_portrait = sprite_portrait
 executioner.sprite_portrait_small = sprite_portrait_small
 executioner.sprite_title = sprite_walk
+executioner.sprite_credits = sprite_credits
 
 executioner:clear_callbacks()
 executioner:onInit(function(actor)
@@ -321,6 +349,28 @@ Callback.add("onKillProc", "SSIonCharge", function(self, other, result, args)
 	end
 end)
 
+-- update his secondary's subimage depending on how many ion rounds he has.
+executioner:onStep(function(actor)
+	local ion_burst = actor:get_active_skill(Skill.SLOT.secondary)
+	local ion_rounds = ion_burst.stock
+
+	local frame = 1
+
+	if ion_rounds == 0 then
+		frame = 1
+	elseif ion_rounds < 4 then
+		frame = 2
+	elseif ion_rounds < 7 then
+		frame = 3
+	elseif ion_rounds < 10 then
+		frame = 4
+	else
+		frame = 5
+	end
+
+	ion_burst.subimage = frame
+end)
+
 -- Crowd Dispersion
 executionerUtility.sprite = sprite_skills
 executionerUtility.subimage = 6
@@ -347,6 +397,10 @@ stateExecutionerUtility:onStep(function(actor, data)
 
 	actor.pHspeed = actor.pHmax * 2.2 * actor.image_xscale
 	actor:set_immune(8)
+
+	if math.random() < 0.5 then
+		ionParticle:create(actor.x - 20 + math.random() * 40, actor.y - 10 + math.random() * 20, 1, Particle.SYSTEM.below)
+	end
 
 	if data.feared == 0 then
 		data.feared = 1
@@ -397,31 +451,82 @@ executionerSpecialScepter.damage = 15
 executionerSpecialScepter.require_key_press = true
 executionerSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
+local stateExecutionerSpecialPre = State.new(NAMESPACE, "executionerSpecialPre")
 local stateExecutionerSpecial = State.new(NAMESPACE, "executionerSpecial")
 
 executionerSpecial:clear_callbacks()
 executionerSpecial:onActivate(function(actor)
-	actor:enter_state(stateExecutionerSpecial)
+	actor:enter_state(stateExecutionerSpecialPre)
 end)
 executionerSpecialScepter:clear_callbacks()
 executionerSpecialScepter:onActivate(function(actor)
-	actor:enter_state(stateExecutionerSpecial)
+	actor:enter_state(stateExecutionerSpecialPre)
+end)
+
+stateExecutionerSpecialPre:clear_callbacks()
+stateExecutionerSpecialPre:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.previous_frame = 0
+
+	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+end)
+stateExecutionerSpecialPre:onStep(function(actor, data)
+	local drifting = math.abs(actor.pHspeed) > actor.pHmax
+
+	if not drifting then
+		actor:skill_util_fix_hspeed()
+	end
+
+	local animation = {
+		ground = sprite_shoot4PreGround,
+		air = sprite_shoot4PreAir,
+		slide = sprite_shoot4PreSlide,
+	}
+
+	if data.scepter > 0 then
+		animation.ground = sprite_shoot5PreGround
+		animation.air = sprite_shoot5PreAir
+		animation.slide = sprite_shoot5PreSlide
+	end
+
+	local sprite = animation.ground
+
+	-- when `free` is true, we are in the air
+	if gm.bool(actor.free) then
+		sprite = animation.air
+	else
+		if drifting then
+			sprite = animation.slide
+		else
+			sprite = animation.ground
+		end
+	end
+
+	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
+	actor:actor_animation_set(sprite, 0.25 * true_speed, false)
+	actor:set_immune(8)
+
+	if actor.image_index + 0.25 * true_speed >= actor.image_number then
+		actor:enter_state(stateExecutionerSpecial)
+	end
 end)
 
 stateExecutionerSpecial:clear_callbacks()
 stateExecutionerSpecial:onEnter(function(actor, data)
-	actor.image_index = 0
-
 	data.substate = 0
 	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
 	data.aoe_height = 0
 	data.recovery_attempts = 0
+	actor.activity_free = 1
 end)
 stateExecutionerSpecial:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
+
 	local animation = sprite_shoot4
+	local particle = ionParticle
 	if data.scepter > 0 then
 		animation = sprite_shoot5
+		particle = ionParticleS
 	end
 
 	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
@@ -429,36 +534,41 @@ stateExecutionerSpecial:onStep(function(actor, data)
 	actor:actor_animation_set(animation, 0.25 * true_speed, false)
 
 	if data.substate == 0 then
-		if actor.image_index >= 5 then
-			actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
-			actor.pVspeed = (actor.pVmax * -2) * true_speed
-			data.substate = 1
-			actor:sound_play(sound_shoot4a, 1.0, 1.0)
-		end
+		actor.image_index = 0
+		actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
+		actor.pVspeed = (actor.pVmax * -2) * true_speed
+		data.substate = 1
+		actor:sound_play(sound_shoot4a, 1.0, 1.0)
 	elseif data.substate == 1 then -- decelerating, hanging in the air
 		local deceleration = 0.5 * true_speed * true_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
 
-		if actor.image_index >= 10 then
+		if math.random() < 0.25 then
+			particle:create(actor.x - 16 + math.random() * 32, actor.y - math.random() * 32, 1, Particle.SYSTEM.below)
+		end
+
+		if actor.image_index >= 5 then
 			data.substate = 2
 			actor.pVspeed = (actor.pVmax * -1.5) * true_speed
 		end
 	elseif data.substate == 2 then -- winding up
-		if actor.image_index >= 12 then
+		if actor.image_index >= 7 then
 			actor.pVspeed = 30 * true_speed
 			data.substate = 3
 			data.aoe_height = 0
 		end
 	elseif data.substate == 3 then -- coming down
 		data.aoe_height = data.aoe_height + actor.pVspeed
-		if actor.image_index >= 16 then
+		if actor.image_index >= 11 then
 			actor.image_index = actor.image_index - 4
 		end
+
+		particle:create(actor.x - 16 + math.random() * 32, actor.y + math.random() * 32, 1, Particle.SYSTEM.below)
 
 		if actor.pVspeed < 0 then -- something launched us up, handle this interruption
 			data.recovery_attempts = data.recovery_attempts + 1
 			if data.recovery_attempts <= 3 then
-				actor.image_index = 5
+				actor.image_index = 0
 				data.substate = 1 -- go back and try again
 				actor:sound_play(sound_shoot4a, 1.0, 1.0)
 			else
@@ -469,11 +579,15 @@ stateExecutionerSpecial:onStep(function(actor, data)
 
 			if not gm.bool(actor.free) then
 				data.substate = 4
-				actor.image_index = 16
+				actor.image_index = 11
 				actor.activity_type = 1 -- return to standard state physics
 
 				actor:sound_play(sound_shoot4b, 1.0, 1.0)
 				actor:screen_shake(15)
+
+				for i=1, 9 do
+					particle:create(actor.x - 80 + math.random() * 160, actor.y - 60 + math.random() * 80, 1, Particle.SYSTEM.below)
+				end
 
 				-- usually attacks use is_authority, but in this case we have to always run it host-side
 				-- this is because onAttackHandleEnd only runs on the host, in which we check for the execution variable
