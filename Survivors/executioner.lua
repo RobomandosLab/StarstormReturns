@@ -137,8 +137,6 @@ executionerPrimary.subimage = 0
 executionerPrimary.cooldown = 5
 executionerPrimary.damage = 1.0
 executionerPrimary.require_key_press = false
-executionerPrimary.is_primary = true
-executionerPrimary.does_change_activity_state = true
 executionerPrimary.hold_facing_direction = true
 executionerPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
@@ -224,7 +222,6 @@ executionerSecondary.damage = 3.2
 executionerSecondary.max_stock = 10
 executionerSecondary.auto_restock = false
 executionerSecondary.start_with_stock = false
-executionerSecondary.does_change_activity_state = true
 executionerSecondary.use_delay = 30
 executionerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
@@ -404,30 +401,27 @@ stateExecutionerUtility:onStep(function(actor, data)
 
 	if data.feared == 0 then
 		data.feared = 1
-
 		actor:sound_play(sound_shoot3, 1.0, 1.0)
+	end
 
-		-- buff application is host-side
-		if not GM._mod_net_isClient() then
-			-- fear rectangle gets expanded in the direction that exe is dashing
-			local left, right = actor.x - 100, actor.x + 100
-			local bias = 1.1 * actor.pHspeed * 30 -- extrapolate distance in 0.5 sec, 1.1x multiplier to account for momentum
-			left = math.min(left, left + bias)
-			right = math.max(right, right + bias)
+	local fear = Buff.find("ror", "fear")
+	local victims = List.new()
+	actor:collision_rectangle_list(actor.x - 100, actor.y - 48, actor.x + 100, actor.y + 48, gm.constants.pActor, false, true, victims, false)
 
-			local fear = Buff.find("ror", "fear")
-			local victims = List.new()
-			actor:collision_rectangle_list(left, actor.y - 48, right, actor.y + 48, gm.constants.pActor, false, true, victims, false)
-
-			for _, victim in ipairs(victims) do
-				if victim.team ~= actor.team then
-					victim:buff_apply(fear, 2 * 60)
-				end
+	for _, victim in ipairs(victims) do
+		if victim.team ~= actor.team then
+			-- buff application is host-only.
+			if victim:buff_stack_count(fear) == 0 then
+				victim:buff_apply(fear, 2 * 60)
+			else
+				-- when buffs are re-applied, their duration is extended, which gets networked
+				-- avoid clobbering the network with this special bit of code.
+				GM.set_buff_time_nosync(victim, fear, 2 * 60)
 			end
-
-			victims:destroy()
 		end
 	end
+
+	victims:destroy()
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
