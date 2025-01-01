@@ -160,6 +160,15 @@
 			"date" : "7/17/2057",
 			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
 			"priority": "<g>Priority</c>"
+		},
+		"judderingEgg" : {
+			"name": "Juddering Egg",
+			"pickup" : "Gain a little friend!",
+			"description": "Hatch <b>1 <c_stack>(+1 per stack)</c> <b>young wurm</c> who fights with you, periodically <y>attacking surrounding enemies</c> for <y>18x80% damage</c>.",
+			"destination" : "Gate B,\nLee Compound,\nEarth",
+			"date" : "11/21/2056",
+			"story" : "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
+			"priority": "<r>Fragile</c>"
 		}
 	},
 
