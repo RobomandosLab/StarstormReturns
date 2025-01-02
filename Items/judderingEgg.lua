@@ -103,6 +103,7 @@ Callback.add(Callback.TYPE.onStep, "SSJudderingEggStep", function()
 
 			-- WURM MOTION
 			-- the baby wurm's motion is based around following a target position, while avoiding being too close to it
+			-- all of this happens client-side and doesn't matter for its gameplay mechanics, so none of this is networked
 
 			local target_x = actor.x
 			local target_y = actor.y
@@ -137,9 +138,7 @@ Callback.add(Callback.TYPE.onStep, "SSJudderingEggStep", function()
 				target_direction = target_direction + steer_direction * 90 * steer_factor
 			end
 
-
 			local turn_coefficient = 0.1
-
 			if wurm.firing then
 				turn_coefficient = 0.5
 			end
@@ -147,6 +146,7 @@ Callback.add(Callback.TYPE.onStep, "SSJudderingEggStep", function()
 			head.direction = head.direction - gm.angle_difference(head.direction, target_direction) * turn_coefficient
 			head.direction = head.direction - 1 + math.random() * 2
 
+			-- using lerp smoothing is kinda iffy but ehhh good enough?
 			wurm.speed = gm.lerp(wurm.speed, target_speed, 0.01)
 			head.x = head.x + gm.lengthdir_x(wurm.speed, head.direction)
 			head.y = head.y + gm.lengthdir_y(wurm.speed, head.direction)
@@ -161,10 +161,20 @@ Callback.add(Callback.TYPE.onStep, "SSJudderingEggStep", function()
 			end
 
 			--- WURM ATTACK
+			-- every interval, the wurm looks for a valid target.
+			-- if it finds one, it will lock onto it and fire until it either runs out of shots or the target dies
+			-- if the current target is gone for any reason (died, ceased to exist, etc.), the wurm tries to find a new target
+			-- if the wurm runs out of shots, or can't find a new target while firing, it will stop and set its next interval to WURM_ATTACK_COOLDOWN
+
+			--- NETWORKING
+			-- the host handles target acquisition, firing the attack, and managing shot count.
+			-- when the target changes, including there being no target before or after, the host sends a packet to sync the wurm's state on clients
+			-- the client just does the wurm's attacking fx, and nothing else.
 
 			wurm.cooldown = wurm.cooldown - 1
 			if wurm.cooldown < 0 then
-				local sync = false
+				local sync = false -- only matters on the host
+
 				if gm._mod_net_isHost() then
 					-- host handles targetting
 					if not wurm.firing then
@@ -221,7 +231,7 @@ Callback.add(Callback.TYPE.onStep, "SSJudderingEggStep", function()
 
 					msg:write_instance(actor) -- wurm owner
 					msg:write_uint(i - 1) -- wurm index
-					msg:write_instance(wurm.target)
+					msg:write_instance(wurm.target) -- if the target is invalid, the wurm is inferred to not be firing
 
 					msg:send_to_all()
 				end
@@ -255,7 +265,7 @@ packetSyncWurm:onReceived(function(msg)
 	end
 end)
 
--- draw wurms with this callback, so that they appear on top of everything
+-- draw wurms with this callback, so that they appear on top of foreground terrain
 Callback.add(Callback.TYPE.preHUDDraw, "SSJudderingEggDraw", function()
 	for id, _ in pairs(wurm_owners) do
 		if not Instance.exists(id) then
@@ -268,10 +278,13 @@ Callback.add(Callback.TYPE.preHUDDraw, "SSJudderingEggDraw", function()
 		local wurm_pets = actor:get_data().wurm_pets
 		if not wurm_pets then return end
 
+		-- draw laser first
 		for _, wurm in ipairs(wurm_pets) do
 			if wurm.firing then
 				local head = wurm.segments[1]
 
+				-- if the target ceases existing while the wurm is firing, the laser remains at the last valid position
+				-- only really comes into play on clients.
 				if Instance.exists(wurm.target) then
 					wurm.laser_x = wurm.target.x
 					wurm.laser_y = wurm.target.y
@@ -299,6 +312,7 @@ Callback.add(Callback.TYPE.preHUDDraw, "SSJudderingEggDraw", function()
 				gm.draw_set_alpha(1)
 			end
 		end
+		-- draw body
 		for _, wurm in ipairs(wurm_pets) do
 			for i=0, #wurm.segments-1 do
 				-- segments are drawn in reverse order (tail to head)
