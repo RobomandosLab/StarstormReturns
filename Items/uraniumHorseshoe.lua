@@ -18,6 +18,9 @@ end)
 
 horseshoe:onPostStep(function(actor, stack)
 	local data = actor:get_data()
+	if not data.horseshoeTimer then 
+		data.horseshoeTimer = 1 
+	end
 	if actor.pHspeed ~= 0 and actor:is_grounded() then
 		data.horseshoeTimer = data.horseshoeTimer + 1
 	else
