@@ -15,7 +15,11 @@ local init = function()
 	}
 	for _, folder in ipairs(folders) do
 		local names = path.get_files(path.combine(PATH, folder))
-		for _, name in ipairs(names) do require(name) end
+		for _, name in ipairs(names) do
+			if string.sub(name, -4, -1) == ".lua" then
+				require(name)
+			end
+		end
 	end
 
 	HOTLOADING = true
