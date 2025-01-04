@@ -3,7 +3,7 @@ local sprite_footstep = Resources.sprite_load(NAMESPACE, "UraniumHorseshoeFootst
 
 local parHorseshoe = Particle.new(NAMESPACE, "parHorshoe")
 parHorseshoe:set_sprite(sprite_footstep, true, true, false)
-parHorseshoe:set_life(14, 14)
+parHorseshoe:set_life(56, 56)
 
 local horseshoe = Item.new(NAMESPACE, "uraniumHorseshoe")
 horseshoe:set_sprite(sprite)
@@ -17,13 +17,13 @@ horseshoe:onStatRecalc(function(actor, stack)
 end)
 
 horseshoe:onPostStep(function(actor, stack)
-	local timer = actor:get_data().timer
+	local data = actor:get_data()
 	if actor.pHspeed ~= 0 and actor:is_grounded() then
-		timer = timer + 1
+		data.horseshoeTimer = data.horseshoeTimer + 1
 	else
-		timer = 1
+		data.horseshoeTimer = 1
 	end
-	if timer % 10 == 0 then
+	if data.horseshoeTimer % 10 == 0 then
 		parHorseshoe:set_orientation(90 + 90 * actor.image_xscale, 90 + 90 * actor.image_xscale, 0, 0, false)
 		parHorseshoe:create(actor.x, actor.y + 12, 1)
 	end
