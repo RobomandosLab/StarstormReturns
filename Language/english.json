@@ -160,6 +160,15 @@
 			"date" : "7/17/2057",
 			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
 			"priority": "<g>Priority</c>"
+		},
+		"uraniumHorseshoe" : {
+			"name": "Uranium Horseshoe",
+			"pickup" : "Increase movement speed and jump height.",
+			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			"destination" : "ur mums house lmao xd",
+			"date" : "now",
+			"story" : "the horses get radiation poisoning huh? not a bad idea...",
+			"priority": "<r>Standart/Volatile</c>"
 		}
 	},
 
