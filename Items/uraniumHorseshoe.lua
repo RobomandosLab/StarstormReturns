@@ -16,9 +16,8 @@ horseshoe:onStatRecalc(function(actor, stack)
 	actor.pVmax = actor.pVmax + 0.6 * stack
 end)
 
-local timer = 1
-
 horseshoe:onPostStep(function(actor, stack)
+	local timer = actor:get_data().timer
 	if actor.pHspeed ~= 0 and actor:is_grounded() then
 		timer = timer + 1
 	else
