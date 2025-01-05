@@ -1,4 +1,6 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Baroness")
+local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Baroness")
+
 
 local sprite_idle = Resources.sprite_load(NAMESPACE, "BaronessIdle", path.combine(SPRITE_PATH, "BaronessIdle.png"), 1, 15, 12)
 local sprite_walk = Resources.sprite_load(NAMESPACE, "BaronessWalk", path.combine(SPRITE_PATH, "BaronessWalk.png"), 8, 17, 13, 0.8)
@@ -6,6 +8,11 @@ local sprite_jump = Resources.sprite_load(NAMESPACE, "BaronessJump", path.combin
 local sprite_shoot = Resources.sprite_load(NAMESPACE, "BaronessShoot", path.combine(SPRITE_PATH, "BaronessShoot.png"), 1, 18, 17)
 
 
+-- Sounds
+local sound_shoot1 = Resources.sfx_load(NAMESPACE, "BaronessShoot1", path.combine(SOUND_PATH, "skill1a.ogg"))
+
+
+-- Survivor Info
 local baroness = Survivor.new(NAMESPACE, "baroness")
 local baroness_id = baroness
 
@@ -40,10 +47,14 @@ baroness.sprite_title = sprite_walk
 local baronessShootPrimary = baroness:get_primary()
 
 -- Baroness Primary
-baronessShootPrimary.cooldown = 2 * 60
+baronessShootPrimary.cooldown = 5
 baronessShootPrimary.damage = 2
 baronessShootPrimary.max_stock = 4
 baronessShootPrimary.is_primary = true
+baronessShootPrimary.require_key_press = false
+baronessShootPrimary.does_change_activity_state = true
+baronessShootPrimary.hold_facing_direction = true
+baronessShootPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
 local stateBaronessShoot = State.new(NAMESPACE, "baronessShootPrimary")
 
@@ -56,33 +67,41 @@ stateBaronessShoot:clear_callbacks()
 stateBaronessShoot:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+
+	actor:skill_util_strafe_init()
+	actor:skill_util_strafe_turn_init()
+
 end)
 
 stateBaronessShoot:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot, 0.25)
+	actor:skill_util_strafe_update(0.33 * actor.attack_speed, 0.5)
+	actor:skill_util_step_strafe_sprites()
+	actor:skill_util_strafe_turn_update()
 
 	if data.fired == 0 then
 		data.fired = 1
-		actor:sound_play(gm.constants.wBullet2, 1, 1.4 + math.random() * 0.2)
+
+		actor:sound_play(sound_shoot1, 1, 0.9 + math.random() * 0.2)
 
 		if actor:is_authority() then
-			local damage = actor:skill_get_damage(stateBaronessShoot)
-			local dir = actor:skill_util_facing_direction() + gm.random_range(-3, 3)
+			local damage = actor:skill_get_damage(baronessShootPrimary)
+			local dir = actor:skill_util_facing_direction()
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks23r, tracer).attack_info
-				attack_info.climb = i * 8
+			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Attack_Info.TRACER.commando1)
+					attack.climb = i * 8
+				end
 			end
 		end
 	end
 
-	actor:skill_util_exit_state_on_anim_end()
+	if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) then
+		actor:skill_util_reset_activity_state()
+	end
 end)
 
-stateBaronessShoot:onGetInterruptPriority(function(actor, data)
-	if actor.image_index >= 3 then
-		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
-	end
+stateBaronessShoot:onExit(function(actor, data)
+	actor:skill_util_strafe_exit()
 end)
