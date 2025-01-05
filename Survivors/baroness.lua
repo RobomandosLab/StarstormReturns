@@ -1,9 +1,9 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Baroness")
 
-local sprite_idle = Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
-local sprite_walk = Resources.sprite_load(NAMESPACE, "NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8)
-local sprite_jump = Resources.sprite_load(NAMESPACE, "NemCommandoJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 17)
-local sprite_shoot = Resources.sprite_load(NAMESPACE, "NemCommandoJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 17)
+local sprite_idle = Resources.sprite_load(NAMESPACE, "BaronessIdle", path.combine(SPRITE_PATH, "BaronessIdle.png"), 1, 15, 12)
+local sprite_walk = Resources.sprite_load(NAMESPACE, "BaronessWalk", path.combine(SPRITE_PATH, "BaronessWalk.png"), 8, 17, 13, 0.8)
+local sprite_jump = Resources.sprite_load(NAMESPACE, "BaronessJump", path.combine(SPRITE_PATH, "BaronessIdle.png"), 1, 18, 17)
+local sprite_shoot = Resources.sprite_load(NAMESPACE, "BaronessShoot", path.combine(SPRITE_PATH, "BaronessShoot.png"), 1, 18, 17)
 
 
 local baroness = Survivor.new(NAMESPACE, "baroness")
