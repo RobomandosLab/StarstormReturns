@@ -19,7 +19,7 @@ local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripW
 
 --Stage
 local basin_stage = Stage.new(NAMESPACE, "whistlingBasin")
-basin_stage.music_id = gm.sound_add_w(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Music", "musicWhistlingBasin.ogg"))
+basin_stage.music_id = gm.sound_add_w(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Sounds/Music", "musicWhistlingBasin.ogg"))
 basin_stage.token_name = "Whistling Basin"
 basin_stage.token_subname = "Dwindling Oasis" 
 basin_stage:set_index(2)
