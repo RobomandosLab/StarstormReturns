@@ -7,21 +7,26 @@ NAMESPACE = "ssr"
 
 local init = function()
 	local folders = {
-		"Misc", -- contains utility functions, so load first
+		"Misc", -- contains utility functions that other code depends on, so load first
 		"Actors",
 		"Gameplay",
 		"Survivors",
 		"Items",
 	}
+
 	for _, folder in ipairs(folders) do
-		local names = path.get_files(path.combine(PATH, folder))
-		for _, name in ipairs(names) do
-			if string.sub(name, -4, -1) == ".lua" then
-				require(name)
+		-- NOTE: this includes filepaths within subdirectories of the above folders
+		local filepaths = path.get_files(path.combine(PATH, folder))
+		for _, filepath in ipairs(filepaths) do
+			-- filter for files with the .lua extension, incase there's non-lua files
+			if string.sub(filepath, -4, -1) == ".lua" then
+				require(filepath)
 			end
 		end
 	end
 
+	-- once we have loaded everything, enable hot/live reloading.
+	-- this variable may be used by content code to make sure it behaves correctly when hotloading
 	HOTLOADING = true
 end
 Initialize(init)
