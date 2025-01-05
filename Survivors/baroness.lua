@@ -48,8 +48,7 @@ local baronessShootPrimary = baroness:get_primary()
 
 -- Baroness Primary
 baronessShootPrimary.cooldown = 5
-baronessShootPrimary.damage = 2
-baronessShootPrimary.max_stock = 4
+baronessShootPrimary.damage = 1.0
 baronessShootPrimary.is_primary = true
 baronessShootPrimary.require_key_press = false
 baronessShootPrimary.does_change_activity_state = true
