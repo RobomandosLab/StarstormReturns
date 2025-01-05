@@ -265,8 +265,8 @@ packetSyncWurm:onReceived(function(msg)
 	end
 end)
 
--- draw wurms with this callback, so that they appear on top of foreground terrain
-Callback.add(Callback.TYPE.preHUDDraw, "SSJudderingEggDraw", function()
+-- draw wurms with a global callback, so that they appear even if their player is invisible for any reason (teleporting, dead, etc.)
+Callback.add(Callback.TYPE.onDraw, "SSJudderingEggDraw", function()
 	for id, _ in pairs(wurm_owners) do
 		if not Instance.exists(id) then
 			wurm_owners[id] = nil
