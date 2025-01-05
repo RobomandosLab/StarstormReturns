@@ -42,15 +42,15 @@
 		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
-			"description": "Cut through nearby enemies, <r>wounding</c> them."
+			"description": "Cut through nearby enemies for <y>230% damage</c>. Inflicts <r>bleed</c> for <y>6x60% damage</c>.\nBleed <r>cannot be stacked</c>."
 		},
 		"nemesisCommandoX": {
-			"name": "Gun",
-			"description": "And for his side special, he wields a <y>gun</c>."
+			"name": "Single Tap",
+			"description": "Shoot an enemy for <y>160% damage</c>.\n<b>Hold up to 4.</c>"
 		},
 		"nemesisCommandoC": {
-			"name": "",
-			"description": ""
+			"name": "Tactical Roll",
+			"description": "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
 		},
 		"nemesisCommandoV": {
 			"name": "",

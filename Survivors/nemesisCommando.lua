@@ -2,15 +2,23 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
+local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "NemCommandoIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 15, 12)
+-- walk sprites have a sprite speed of 0.8 so they animate a bit slower
 local sprite_walk			= Resources.sprite_load(NAMESPACE, "NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8)
+local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "NemCommandoWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 17, 13, 0.8)
+local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "NemCommandoWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 20, 25, 0.8)
 local sprite_jump			= Resources.sprite_load(NAMESPACE, "NemCommandoJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 17)
+local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "NemCommandoJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 18, 16)
 local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "NemCommandoJumpPeak", path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 18, 17)
+local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "NemCommandoJumpPeakHalf", path.combine(SPRITE_PATH, "jumpPeakHalf.png"), 1, 18, 16)
 local sprite_fall			= Resources.sprite_load(NAMESPACE, "NemCommandoFall", path.combine(SPRITE_PATH, "fall.png"), 1, 18, 17)
+local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "NemCommandoFallHalf", path.combine(SPRITE_PATH, "fallHalf.png"), 1, 18, 16)
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "NemCommandoClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 20, 18)
 
 local sprite_shoot1_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 28, 62)
 local sprite_shoot1_2		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 28, 62)
 local sprite_shoot2			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 5, 15, 26)
+local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Half", path.combine(SPRITE_PATH, "shoot2Half.png"), 5, 15, 26)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot33", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
 
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
@@ -41,17 +49,41 @@ nemCommando:set_animations({
 	--decoy = sprite_decoy,
 })
 
+nemCommando:set_cape_offset(0, -8, 0, -8)
 nemCommando:set_primary_color(Color.from_rgb(250, 40, 40))
 
 nemCommando.sprite_title = sprite_walk
+
+nemCommando:clear_callbacks()
+nemCommando:onInit(function(actor)
+	local idle_half = Array.new()
+	local walk_half = Array.new()
+	local jump_half = Array.new()
+	local jump_peak_half = Array.new()
+	local fall_half = Array.new()
+	idle_half:push(sprite_idle, sprite_idle_half, 0)
+	walk_half:push(sprite_walk, sprite_walk_half, 0, sprite_walk_back)
+	jump_half:push(sprite_jump, sprite_jump_half, 0)
+	jump_peak_half:push(sprite_jump_peak, sprite_jump_peak_half, 0)
+	fall_half:push(sprite_fall, sprite_fall_half, 0)
+
+	actor.sprite_idle_half = idle_half
+	actor.sprite_walk_half = walk_half
+	actor.sprite_jump_half = jump_half
+	actor.sprite_jump_peak_half = jump_peak_half
+	actor.sprite_fall_half = fall_half
+
+	actor:survivor_util_init_half_sprites()
+end)
 
 local nemCommandoPrimary = nemCommando:get_primary()
 local nemCommandoSecondary = nemCommando:get_secondary()
 local nemCommandoUtility = nemCommando:get_utility()
 local nemCommandoSpecial = nemCommando:get_special()
 
+-- Blade of Cessation
 nemCommandoPrimary.cooldown = 10
-nemCommandoPrimary.damage = 1
+nemCommandoPrimary.damage = 2.3
 
 local stateNemCommandoPrimary = State.new(NAMESPACE, "nemCommandoPrimary")
 
@@ -65,23 +97,23 @@ stateNemCommandoPrimary:onEnter(function(actor, data)
 	actor.image_index = 0
 
 	data.fired = 0
-	if not data.side then
-		data.side = 0
-	else
-		data.side = 1 - data.side
+	-- variable used to keep track of which attack anim to use
+	if not data.attack_side then
+		data.attack_side = 0
 	end
 
 	actor.sprite_index = sprite_shoot1_1
-	if data.side == 1 then
+	if data.attack_side == 1 then
 		actor.sprite_index = sprite_shoot1_2
 	end
 end)
 stateNemCommandoPrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(actor.sprite_index, 0.18)
+	actor:actor_animation_set(actor.sprite_index, 0.2)
 
 	if actor.image_index >= 1 and data.fired == 0 then
 		data.fired = 1
+		data.attack_side = (data.attack_side + 1) % 2
 
 		actor:sound_play(gm.constants.wMercenaryShoot1_1, 1, 0.75 + math.random() * 0.05)
 
@@ -93,19 +125,49 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
-				attack_info:set_attack_flags(Attack_Info.ATTACK_FLAG.commando_wound, true)
 				attack_info.climb = i * 8
+				attack_info.__ssr_nemmando_bleed = 1
 			end
 		end
 	end
 
-	actor:skill_util_exit_state_on_anim_end()
+	if actor.image_index + actor.image_speed >= actor.image_number then
+		actor:skill_util_reset_activity_state()
+	end
 end)
 
+
+local nemmando_dots = {}
+
+Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoBleed", function(hit_info)
+	if hit_info.attack_info.__ssr_nemmando_bleed == 1 then
+		local parent = hit_info.inflictor
+		local victim = hit_info.target
+
+		local dot = nemmando_dots[victim.id]
+
+		if not dot or not dot:exists() then
+			dot = GM.instance_create(hit_info.x, hit_info.y, gm.constants.oDot)
+			dot.parent = parent
+			dot.target = victim
+			dot.damage = parent.damage * 0.6
+
+			nemmando_dots[victim.id] = dot
+		end
+		dot.ticks = 6
+	end
+end)
+Callback.add(Callback.TYPE.onStageStart, "SSNemmandoDotCleanup", function()
+	nemmando_dots = {}
+end)
+
+-- Single Tap
 nemCommandoSecondary.cooldown = 2 * 60
-nemCommandoSecondary.damage = 2
+nemCommandoSecondary.damage = 1.6
 nemCommandoSecondary.max_stock = 4
+-- is_primary makes the skill's cooldown reduced by attack speed, but also removes cooldown timer on HUD, and causes other unintuitive issues. is it worth?
 nemCommandoSecondary.is_primary = true
+nemCommandoSecondary.hold_facing_direction = true
 
 local tracer_particle = Particle.find("ror", "WispGTracer")
 local tracer_color = Color.from_rgb(252, 118, 98)
@@ -113,10 +175,19 @@ local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
 	y1 = y1 - 8
 	y2 = y2 - 8
 
-	-- particles
 	local dist = gm.point_distance(x1, y1, x2, y2)
 	local dir = gm.point_direction(x1, y1, x2, y2)
 
+	-- tracer
+	local t = GM.instance_create(x1, y1, gm.constants.oEfProjectileTracer)
+	t.direction = dir
+	t.speed = 60
+	t.length = 80
+	t.blend_1 = tracer_color
+	t.blend_2 = tracer_color
+	t:alarm_set(0, math.max(1, dist / t.speed))
+
+	-- particles
 	tracer_particle:set_direction(dir, dir, 0, 0)
 
 	local px = x1
@@ -140,12 +211,30 @@ end)
 
 stateNemCommandoSecondary:clear_callbacks()
 stateNemCommandoSecondary:onEnter(function(actor, data)
-	actor.image_index = 0
+	actor.image_index2 = 0
 	data.fired = 0
+
+	actor:skill_util_strafe_init()
+	--actor:skill_util_strafe_turn_init() -- this and skill_util_strafe_turn_update only works for skills in the Z/primary slot ....
 end)
 stateNemCommandoSecondary:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot2, 0.25)
+	actor.sprite_index2 = sprite_shoot2_half
+
+	actor:skill_util_strafe_update(0.25 * actor.attack_speed, 0.5)
+	actor:skill_util_step_strafe_sprites()
+	--actor:skill_util_strafe_turn_update()
+
+	-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
+	if actor.sprite_index == actor.sprite_walk_half[2] then
+		local walk_offset = 0
+		local leg_frame = math.floor(actor.image_index)
+		if leg_frame == 0 or leg_frame == 4 then
+			walk_offset = 2
+		elseif leg_frame == 2 or leg_frame == 6 then
+			walk_offset = -1
+		end
+		actor.ydisp = walk_offset -- ydisp controls upper body offset
+	end
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -153,11 +242,11 @@ stateNemCommandoSecondary:onStep(function(actor, data)
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(nemCommandoSecondary)
-			local dir = actor:skill_util_facing_direction() + gm.random_range(-3, 3)
+			local dir = actor:skill_util_facing_direction()
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks23r, tracer).attack_info
+				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir + gm.random_range(-3, 3), damage, nil, gm.constants.sSparks23r, tracer).attack_info
 				attack_info.climb = i * 8
 			end
 		end
@@ -165,8 +254,11 @@ stateNemCommandoSecondary:onStep(function(actor, data)
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
+stateNemCommandoSecondary:onExit(function(actor, data)
+	actor:skill_util_strafe_exit()
+end)
 stateNemCommandoSecondary:onGetInterruptPriority(function(actor, data)
-	if actor.image_index >= 3 then
+	if actor.image_index2 + 0.25 * actor.attack_speed >= 3 then
 		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
 	end
 end)
@@ -192,7 +284,7 @@ stateNemCommandoUtility:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot3, 0.25, false)
 
 	actor.pHspeed = 2.5 * actor.pHmax * actor.image_xscale
-	actor:set_immune(5)
+	actor:set_immune(3)
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -205,9 +297,4 @@ stateNemCommandoUtility:onStep(function(actor, data)
 	end
 
 	actor:skill_util_exit_state_on_anim_end()
-end)
-stateNemCommandoUtility:onExit(function(actor, data)
-	if actor.invincible <= 5 then
-		actor.invincible = 0
-	end
 end)
