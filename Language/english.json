@@ -169,7 +169,17 @@
 			"date" : "11/21/2056",
 			"story" : "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
 			"priority": "<r>Fragile</c>"
+		},
+		"uraniumHorseshoe" : {
+			"name": "Uranium Horseshoe",
+			"pickup" : "Increase movement speed and jump height.",
+			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			"destination" : "ur mums house lmao xd",
+			"date" : "now",
+			"story" : "the horses get radiation poisoning huh? not a bad idea...",
+			"priority": "<r>Standart/Volatile</c>"
 		}
+		
 	},
 
 	"actor" : {
