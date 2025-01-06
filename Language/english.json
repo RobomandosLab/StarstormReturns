@@ -42,11 +42,11 @@
 		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
-			"description": "Cut through nearby enemies for <y>230% damage</c>. Inflicts <r>bleed</c> for <y>6x60% damage</c>.\nBleed <r>cannot be stacked</c>."
+			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded>/c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
 		},
 		"nemesisCommandoX": {
 			"name": "Single Tap",
-			"description": "Shoot an enemy for <y>160% damage</c>.\n<b>Hold up to 4.</c>"
+			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c>"
 		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",

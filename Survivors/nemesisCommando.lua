@@ -83,7 +83,8 @@ local nemCommandoSpecial = nemCommando:get_special()
 
 -- Blade of Cessation
 nemCommandoPrimary.cooldown = 10
-nemCommandoPrimary.damage = 2.3
+nemCommandoPrimary.damage = 1.2
+nemCommandoPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
 local stateNemCommandoPrimary = State.new(NAMESPACE, "nemCommandoPrimary")
 
@@ -126,7 +127,7 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
 				attack_info.climb = i * 8
-				attack_info.__ssr_nemmando_bleed = 1
+				attack_info.__ssr_nemmando_wound = 1
 			end
 		end
 	end
@@ -135,35 +136,29 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 		actor:skill_util_reset_activity_state()
 	end
 end)
-
-
-local nemmando_dots = {}
-
-Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoBleed", function(hit_info)
-	if hit_info.attack_info.__ssr_nemmando_bleed == 1 then
-		local parent = hit_info.inflictor
-		local victim = hit_info.target
-
-		local dot = nemmando_dots[victim.id]
-
-		if not dot or not dot:exists() then
-			dot = GM.instance_create(hit_info.x, hit_info.y, gm.constants.oDot)
-			dot.parent = parent
-			dot.target = victim
-			dot.damage = parent.damage * 0.6
-
-			nemmando_dots[victim.id] = dot
-		end
-		dot.ticks = 6
+stateNemCommandoPrimary:onGetInterruptPriority(function(actor, data)
+	if actor.image_index >= 4 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
 	end
 end)
-Callback.add(Callback.TYPE.onStageStart, "SSNemmandoDotCleanup", function()
-	nemmando_dots = {}
+
+local wound = Buff.find("ror", "commandoWound")
+
+Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoOnHit", function(hit_info)
+	if hit_info.attack_info.__ssr_nemmando_wound == 1 then
+		victim = hit_info.target
+		if victim:buff_stack_count(wound) == 0 then
+			--victim:buff_apply(wound, 4 * 60)
+			GM.apply_buff(victim, wound, 6 * 60, 1)
+		else
+			GM.set_buff_time(victim, wound, 6 * 60)
+		end
+	end
 end)
 
 -- Single Tap
 nemCommandoSecondary.cooldown = 2 * 60
-nemCommandoSecondary.damage = 1.6
+nemCommandoSecondary.damage = 1.5
 nemCommandoSecondary.max_stock = 4
 -- is_primary makes the skill's cooldown reduced by attack speed, but also removes cooldown timer on HUD, and causes other unintuitive issues. is it worth?
 nemCommandoSecondary.is_primary = true
@@ -246,7 +241,7 @@ stateNemCommandoSecondary:onStep(function(actor, data)
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir + gm.random_range(-3, 3), damage, nil, gm.constants.sSparks23r, tracer).attack_info
+				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir + gm.random_range(-1, 1), damage, nil, gm.constants.sSparks23r, tracer).attack_info
 				attack_info.climb = i * 8
 			end
 		end
@@ -267,10 +262,12 @@ nemCommandoUtility.cooldown = 3 * 60
 nemCommandoUtility.max_stock = 2
 nemCommandoUtility.override_strafe_direction = true
 nemCommandoUtility.ignore_aim_direction = true
+nemCommandoUtility.is_utility = true
 
 local stateNemCommandoUtility = State.new(NAMESPACE, "nemCommandoUtility")
 stateNemCommandoUtility.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
 
+nemCommandoUtility:clear_callbacks()
 nemCommandoUtility:onActivate(function(actor)
 	actor:enter_state(stateNemCommandoUtility)
 end)
