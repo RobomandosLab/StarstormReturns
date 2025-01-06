@@ -295,3 +295,112 @@ stateNemCommandoUtility:onStep(function(actor, data)
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+-- Flush Out
+
+local objGrenade = Object.new(NAMESPACE, "NemmandoGrenade")
+objGrenade.obj_sprite = gm.constants.sEfGrenadeEnemy
+
+nemCommandoSpecial.cooldown = 6 * 60
+
+local stateNemCommandoSpecial = State.new(NAMESPACE, "nemCommandoSpecial")
+
+nemCommandoSpecial:clear_callbacks()
+nemCommandoSpecial:onActivate(function(actor)
+	actor:enter_state(stateNemCommandoSpecial)
+end)
+
+stateNemCommandoSpecial:clear_callbacks()
+stateNemCommandoSpecial:onEnter(function(actor, data)
+	actor.activity_type = 4 -- locks facing direction while allowing free movement and animation
+
+	data.timer = 2 * 60
+	data.fired = 0
+end)
+stateNemCommandoSpecial:onStep(function(actor, data)
+	actor.pHspeed = actor.pHspeed * 0.75
+
+	if data.fired == 0 and data.timer % 30 == 0 then
+		actor:sound_play(gm.constants.wPickupOLD, 0.7, 4)
+	end
+
+	data.timer = data.timer - 1
+
+	if (not gm.bool(actor.v_skill) or gm.bool(actor.ropeDown) or data.timer < 5) and data.fired == 0 then
+		local nade = objGrenade:create(actor.x, actor.y - 5)
+		nade.hspeed = actor.pHspeed
+		nade.vspeed = actor.pVspeed
+		if not gm.bool(actor.ropeDown) then
+			nade.hspeed = nade.hspeed + 4 * actor.image_xscale
+			nade.vspeed = nade.vspeed - 6
+		end
+		nade.parent = actor
+		nade.timer = data.timer
+
+		data.timer = 16
+		data.fired = 1
+	end
+
+	if data.fired == 1 and data.timer <= 0 then
+		actor:skill_util_reset_activity_state()
+	end
+end)
+
+local particleTrail = Particle.find("ror", "PixelDust")
+
+objGrenade:clear_callbacks()
+objGrenade:onCreate(function(inst)
+	inst.gravity = 0.4
+	inst.parent = -4
+	inst.bounces = 3
+end)
+objGrenade:onStep(function(inst)
+	if inst.bounces > 0 then
+		local bounced = false
+		local bounce_h = inst:is_colliding(gm.constants.pBlock, inst.x + inst.hspeed, inst.y)
+		local bounce_v = inst:is_colliding(gm.constants.pBlock, inst.x, inst.y + inst.vspeed)
+		if bounce_h then
+			inst.hspeed = inst.hspeed * -0.5
+			bounced = true
+		end
+		if bounce_v then
+			if inst.vspeed > 0 then
+				inst.bounces = inst.bounces - 1
+			end
+
+			inst.vspeed = inst.vspeed * -0.5
+			inst.hspeed = inst.hspeed * 0.75
+
+			bounced = true
+		end
+
+		if bounced and inst.speed > 1 then
+			inst:sound_play(gm.constants.wGuardHit, 1, 1 + 1 / (inst.speed))
+		end
+
+		if inst.bounces <= 0 then
+			inst.gravity = 0
+			inst:move_contact_solid(270, inst.speed)
+			inst.speed = 0
+		end
+	end
+
+	particleTrail:create_color(inst.x, inst.y, Color.RED, 1, Particle.SYSTEM.below)
+
+	if inst.timer % 30 == 0 then
+		inst:sound_play(gm.constants.wPickupOLD, 0.7, 4)
+	end
+
+	inst.timer = inst.timer - 1
+
+	if inst.timer <= 0 then
+		inst:destroy()
+	end
+end)
+objGrenade:onDestroy(function(inst)
+	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
+
+	if Instance.exists(inst.parent) and inst.parent:is_authority() then
+		inst.parent:fire_explosion(inst.x, inst.y, 160, 100, 5.0, gm.constants.sEfBombExplodeEnemy)
+	end
+end)
