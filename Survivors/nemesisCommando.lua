@@ -26,6 +26,10 @@ local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.c
 local nemCommando = Survivor.new(NAMESPACE, "nemesisCommando")
 local nemCommando_id = nemesisCommando
 
+local GRENADE_FUSE_TIMER = 2 * 60
+local GRENADE_TICK_INTERVAL = 30
+local GRENADE_AUTOTHROW_THRESHOLD = 5
+
 nemCommando:set_stats_base({
 	maxhp = 115,
 	damage = 11,
@@ -285,6 +289,16 @@ stateNemCommandoUtility:onStep(function(actor, data)
 
 	if data.fired == 0 then
 		data.fired = 1
+
+		local secondary = actor:get_active_skill(Skill.SLOT.secondary)
+
+		if secondary.stock < secondary.max_stock then
+			actor:sound_play(gm.constants.wSniperReload, 0.8, 1.5)
+		end
+
+		GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
+		GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
+
 		actor:sound_play(gm.constants.wCommandoRoll, 0.9, 1.2)
 
 		local dust = GM.instance_create(actor.x, actor.y + 12, gm.constants.oEfExplosion)
@@ -314,26 +328,38 @@ stateNemCommandoSpecial:clear_callbacks()
 stateNemCommandoSpecial:onEnter(function(actor, data)
 	actor.activity_type = 4 -- locks facing direction while allowing free movement and animation
 
-	data.timer = 2 * 60
+	data.timer = GRENADE_FUSE_TIMER
 	data.fired = 0
 end)
 stateNemCommandoSpecial:onStep(function(actor, data)
 	actor.pHspeed = actor.pHspeed * 0.75
 
-	if data.fired == 0 and data.timer % 30 == 0 then
+	if data.fired == 0 and data.timer % GRENADE_TICK_INTERVAL == 0 then
 		actor:sound_play(gm.constants.wPickupOLD, 0.7, 4)
+
+		local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
+		flash.parent = actor
+		flash.rate = 0.1
+		flash.image_alpha = 0.5
 	end
 
 	data.timer = data.timer - 1
 
-	if (not gm.bool(actor.v_skill) or gm.bool(actor.ropeDown) or data.timer < 5) and data.fired == 0 then
+	local low_toss = gm.bool(actor.ropeDown)
+
+	if (not gm.bool(actor.v_skill) or low_toss or data.timer < GRENADE_AUTOTHROW_THRESHOLD) and data.fired == 0 then
 		local nade = objGrenade:create(actor.x, actor.y - 5)
-		nade.hspeed = actor.pHspeed
-		nade.vspeed = actor.pVspeed
-		if not gm.bool(actor.ropeDown) then
-			nade.hspeed = nade.hspeed + 4 * actor.image_xscale
-			nade.vspeed = nade.vspeed - 6
+
+		if low_toss then
+			nade.hspeed = 3 * actor.image_xscale
+			nade.vspeed = -3
+		else
+			nade.hspeed = 4 * actor.image_xscale
+			nade.vspeed = -6
 		end
+
+		nade.hspeed = nade.hspeed + actor.pHspeed
+		nade.vspeed = nade.vspeed + actor.pVspeed
 		nade.parent = actor
 		nade.timer = data.timer
 
@@ -353,6 +379,7 @@ objGrenade:onCreate(function(inst)
 	inst.gravity = 0.4
 	inst.parent = -4
 	inst.bounces = 3
+	inst.timer = GRENADE_FUSE_TIMER
 end)
 objGrenade:onStep(function(inst)
 	if inst.bounces > 0 then
@@ -387,7 +414,7 @@ objGrenade:onStep(function(inst)
 
 	particleTrail:create_color(inst.x, inst.y, Color.RED, 1, Particle.SYSTEM.below)
 
-	if inst.timer % 30 == 0 then
+	if inst.timer % GRENADE_TICK_INTERVAL == 0 then
 		inst:sound_play(gm.constants.wPickupOLD, 0.7, 4)
 	end
 
@@ -401,6 +428,6 @@ objGrenade:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
 
 	if Instance.exists(inst.parent) and inst.parent:is_authority() then
-		inst.parent:fire_explosion(inst.x, inst.y, 160, 100, 5.0, gm.constants.sEfBombExplodeEnemy)
+		inst.parent:fire_explosion(inst.x, inst.y, 192, 160, 7.0, gm.constants.sEfBombExplodeEnemy)
 	end
 end)

@@ -46,7 +46,7 @@
 		},
 		"nemesisCommandoX": {
 			"name": "Single Tap",
-			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c>"
+			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c> Reload <y>2</c> charges by <b>rolling</c>."
 		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",
@@ -54,7 +54,11 @@
 		},
 		"nemesisCommandoV": {
 			"name": "Flush Out",
-			"description": "Throw a <y>grenade</c> for <y>500% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> input to <y>drop it</c> instead."
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoV2": {
+			"name": "Devastator",
+			"description": ":)"
 		},
 	},
 
