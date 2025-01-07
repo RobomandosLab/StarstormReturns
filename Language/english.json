@@ -34,6 +34,10 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
+		"robomando_saber": {
+			"name": "SABER",
+			"description": "SWING YOUR ANTENNA FOR <y>230% DAMAGE."
+		},
 	},
 
 	"item" : {

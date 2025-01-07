@@ -13,6 +13,7 @@ local init = function()
 		"Gameplay",
 		"Survivors",
 		"Items",
+		"Skills"
 	}
 
 	for _, folder in ipairs(folders) do
