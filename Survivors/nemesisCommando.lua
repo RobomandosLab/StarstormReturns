@@ -157,11 +157,13 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(nemCommandoPrimary)
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
-				attack_info.climb = i * 8
-				attack_info.__ssr_nemmando_wound = 1
+			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
+					attack_info.climb = i * 8
+					attack_info.__ssr_nemmando_wound = 1
+				end
 			end
 		end
 	end
