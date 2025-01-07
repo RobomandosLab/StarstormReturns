@@ -28,6 +28,7 @@ local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Ha
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot33", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
 
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
+local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 4, 4)
 
 local nemCommando = Survivor.new(NAMESPACE, "nemesisCommando")
 local nemCommando_id = nemesisCommando
@@ -307,7 +308,7 @@ nemCommandoUtility:onActivate(function(actor)
 	actor:enter_state(stateNemCommandoUtility)
 end)
 nemCommandoUtility:onCanActivate(function(actor)
-	-- TODO: implement interrupting the special when klehrik fixes this callback
+	-- TODO: implement interrupting the grenade by rolling
 end)
 
 stateNemCommandoUtility:clear_callbacks()
@@ -452,6 +453,10 @@ objGrenade:onStep(function(inst)
 
 		if bounced and inst.speed > 1 then
 			inst:sound_play(gm.constants.wGuardHit, 1, 1 + 1 / (inst.speed))
+
+			if bounce_h and bounce_v then
+				inst:sound_play(gm.constants.wReflect, 1, 2)
+			end
 		end
 
 		if inst.bounces <= 0 then
@@ -473,9 +478,14 @@ objGrenade:onStep(function(inst)
 		inst:destroy()
 	end
 end)
+
+local particleRubble2 = Particle.find("ror", "Rubble2")
+
 objGrenade:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
 	inst:screen_shake(4)
+
+	particleRubble2:create(inst.x, inst.y, 15)
 
 	if Instance.exists(inst.parent) and gm._mod_net_isHost() then
 		inst.parent:fire_explosion(inst.x, inst.y, 192, 160, 7.0, gm.constants.sEfBombExplodeEnemy)
@@ -483,5 +493,137 @@ objGrenade:onDestroy(function(inst)
 		if inst.stun_parent == 1 then
 			GM.actor_knockback_inflict(inst.parent, 1, -inst.parent.image_xscale, 60)
 		end
+	end
+end)
+
+-- Devastator
+local objRocket = Object.new(NAMESPACE, "NemmandoRocket")
+objRocket.obj_sprite = gm.constants.sEfMissile
+
+nemCommandoSpecial2 = Skill.new(NAMESPACE, "nemesisCommandoV2")
+nemCommando:add_special(nemCommandoSpecial2)
+
+nemCommandoSpecial2.cooldown = 6 * 60
+
+local stateNemCommandoSpecial2 = State.new(NAMESPACE, "nemCommandoSpecial2")
+
+nemCommandoSpecial2:clear_callbacks()
+nemCommandoSpecial2:onActivate(function(actor)
+	actor:enter_state(stateNemCommandoSpecial2)
+end)
+
+stateNemCommandoSpecial2:clear_callbacks()
+stateNemCommandoSpecial2:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+end)
+stateNemCommandoSpecial2:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+
+	actor:actor_animation_set(sprite_shoot2, 0.2)
+
+	if data.fired == 0 then
+		data.fired = 1
+
+		actor:sound_play(gm.constants.wEnforcerShoot1, 1, 0.5 + math.random() * 0.1)
+		actor:screen_shake(3)
+
+		local rocket = objRocket:create(actor.x + 8 * actor.image_xscale, actor.y - 8)
+
+		rocket.parent = actor
+		rocket.direction = actor:skill_util_facing_direction()
+
+		actor.pHspeed = actor.pHmax * -2 * actor.image_xscale
+		if gm.bool(actor.free) then
+			rocket.direction = 270 + actor.image_xscale * 45
+
+			actor.pVspeed = actor.pVmax * -1.2
+		end
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+local particleRocketTrail = Particle.find("ror", "MissileTrail")
+local particleRubble1 = Particle.find("ror", "Rubble1")
+
+objRocket:clear_callbacks()
+objRocket:onCreate(function(inst)
+	inst.speed = 2
+	inst.mask_index = sprite_rocket_mask
+
+	inst.team = 1
+	inst.parent = -4
+	inst.victim = -4
+
+	inst.lifetime = 3 * 60
+	inst.woosh_sound = -1
+end)
+objRocket:onStep(function(inst)
+	inst.image_angle = inst.direction
+
+	if inst.woosh_sound == -1 then
+		inst.woosh_sound = gm.sound_play_at(gm.constants.wFwoosh, 1, 0.1 + math.random() * 0.1, inst.x + inst.hspeed * 120, inst.y)
+	end
+
+	particleRocketTrail:set_orientation(inst.direction, inst.direction, 0, 0, 0)
+	-- always create enough trail particles to cover the rocket's travel
+	for i = 0, math.floor(inst.speed / 4) do
+		local xoff = (inst.hspeed * i) / 4
+		local yoff = (inst.vspeed * i) / 4
+		particleRocketTrail:create(inst.x - xoff, inst.y - yoff, 1)
+	end
+
+	inst.speed = math.min(24, inst.speed + 0.5)
+
+	local detonate = inst:is_colliding(gm.constants.pBlock)
+
+	if not detonate then
+		local actors = inst:get_collisions(gm.constants.pActorCollisionBase)
+
+		for _, actor in ipairs(actors) do
+			if inst:attack_collision_canhit(actor) then
+				detonate = true
+				inst.victim = actor
+				break
+			end
+		end
+	end
+
+	inst.lifetime = inst.lifetime - 1
+	if inst.lifetime < 0 then
+		detonate = true
+	end
+
+	if detonate then
+		inst:destroy()
+	end
+end)
+objRocket:onDestroy(function(inst)
+	inst:sound_play(gm.constants.wTurtleExplosion, 1, 0.4 + math.random() * 0.2)
+	inst:sound_play(gm.constants.wWormExplosion, 1, 0.6 + math.random() * 0.2)
+	inst:screen_shake(25)
+
+	if gm.audio_is_playing(inst.woosh_sound) then
+		gm.audio_stop_sound(inst.woosh_sound)
+	end
+
+	particleRubble1:create(inst.x, inst.y, 15)
+
+	if Instance.exists(inst.parent) and gm._mod_net_isHost() then
+		-- sweet spot aoe
+		--inst.parent:fire_explosion(inst.x, inst.y, 30, 30, 5)
+
+		-- direct hit
+		if inst.victim ~= -4 then
+			inst.parent:fire_direct(inst.victim, 10, inst.direction, inst.x, inst.y)
+		end
+
+		-- large stunning aoe
+		local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion).attack_info
+		attack.stun = 1.66
+		attack.knockback = 5
+		attack.knockup = 5
+		attack.climb = 8 * 1.35
 	end
 end)

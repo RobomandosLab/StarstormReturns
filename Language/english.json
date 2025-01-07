@@ -58,7 +58,7 @@
 		},
 		"nemesisCommandoV2": {
 			"name": "Devastator",
-			"description": ":)"
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downwards</c> at an angle."
 		},
 	},
 
