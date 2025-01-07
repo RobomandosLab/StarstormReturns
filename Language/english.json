@@ -46,7 +46,7 @@
 		},
 		"nemesisCommandoX": {
 			"name": "Single Tap",
-			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c> Reload <y>2</c> charges by <b>rolling</c>."
+			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
 		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",

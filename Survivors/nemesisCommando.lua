@@ -28,7 +28,14 @@ local nemCommando_id = nemesisCommando
 
 local GRENADE_FUSE_TIMER = 2 * 60
 local GRENADE_TICK_INTERVAL = 30
-local GRENADE_AUTOTHROW_THRESHOLD = 5
+local GRENADE_THROW_XSPEED = 4
+local GRENADE_THROW_YSPEED = -6
+local GRENADE_TOSS_XSPEED = 3
+local GRENADE_TOSS_YSPEED = -3
+local GRENADE_VELOCITY_INHERIT_MULT = 1
+local GRENADE_AUTOTHROW_THRESHOLD = 1
+local GRENADE_SELFSTUN_THRESHOLD = 15
+local GRENADE_END_LAG = 16
 
 nemCommando:set_stats_base({
 	maxhp = 115,
@@ -161,11 +168,11 @@ Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoOnHit", function(hit_info)
 end)
 
 -- Single Tap
-nemCommandoSecondary.cooldown = 2 * 60
+nemCommandoSecondary.cooldown = 2.5 * 60
 nemCommandoSecondary.damage = 1.5
 nemCommandoSecondary.max_stock = 4
 -- is_primary makes the skill's cooldown reduced by attack speed, but also removes cooldown timer on HUD, and causes other unintuitive issues. is it worth?
-nemCommandoSecondary.is_primary = true
+--nemCommandoSecondary.is_primary = true
 nemCommandoSecondary.hold_facing_direction = true
 
 local tracer_particle = Particle.find("ror", "WispGTracer")
@@ -275,6 +282,9 @@ nemCommandoUtility:clear_callbacks()
 nemCommandoUtility:onActivate(function(actor)
 	actor:enter_state(stateNemCommandoUtility)
 end)
+nemCommandoUtility:onCanActivate(function(actor)
+	-- TODO: implement interrupting the special when klehrik fixes this callback
+end)
 
 stateNemCommandoUtility:clear_callbacks()
 stateNemCommandoUtility:onEnter(function(actor, data)
@@ -292,12 +302,14 @@ stateNemCommandoUtility:onStep(function(actor, data)
 
 		local secondary = actor:get_active_skill(Skill.SLOT.secondary)
 
-		if secondary.stock < secondary.max_stock then
-			actor:sound_play(gm.constants.wSniperReload, 0.8, 1.5)
-		end
+		if secondary.skill_id == nemCommandoSecondary.value then
+			if secondary.stock < secondary.max_stock then
+				actor:sound_play(gm.constants.wSniperReload, 0.8, 1.5)
+			end
 
-		GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
-		GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
+			GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
+			GM.actor_skill_add_stock(actor, Skill.SLOT.secondary)
+		end
 
 		actor:sound_play(gm.constants.wCommandoRoll, 0.9, 1.2)
 
@@ -345,25 +357,30 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 
 	data.timer = data.timer - 1
 
+	local release = not gm.bool(actor.v_skill)
 	local low_toss = gm.bool(actor.ropeDown)
+	local auto_toss = data.timer <= GRENADE_AUTOTHROW_THRESHOLD
 
-	if (not gm.bool(actor.v_skill) or low_toss or data.timer < GRENADE_AUTOTHROW_THRESHOLD) and data.fired == 0 then
+	if (release or low_toss or auto_toss) and data.fired == 0 then
 		local nade = objGrenade:create(actor.x, actor.y - 5)
 
 		if low_toss then
-			nade.hspeed = 3 * actor.image_xscale
-			nade.vspeed = -3
+			nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
+			nade.vspeed = GRENADE_TOSS_YSPEED
 		else
-			nade.hspeed = 4 * actor.image_xscale
-			nade.vspeed = -6
+			nade.hspeed = GRENADE_THROW_XSPEED * actor.image_xscale
+			nade.vspeed = GRENADE_THROW_YSPEED
 		end
 
-		nade.hspeed = nade.hspeed + actor.pHspeed
-		nade.vspeed = nade.vspeed + actor.pVspeed
+		nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
+		nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
 		nade.parent = actor
 		nade.timer = data.timer
+		if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
+			nade.stun_parent = 1
+		end
 
-		data.timer = 16
+		data.timer = GRENADE_END_LAG
 		data.fired = 1
 	end
 
@@ -377,9 +394,11 @@ local particleTrail = Particle.find("ror", "PixelDust")
 objGrenade:clear_callbacks()
 objGrenade:onCreate(function(inst)
 	inst.gravity = 0.4
-	inst.parent = -4
 	inst.bounces = 3
+
+	inst.parent = -4
 	inst.timer = GRENADE_FUSE_TIMER
+	inst.stun_parent = 0
 end)
 objGrenade:onStep(function(inst)
 	if inst.bounces > 0 then
@@ -426,8 +445,13 @@ objGrenade:onStep(function(inst)
 end)
 objGrenade:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
+	inst:screen_shake(4)
 
-	if Instance.exists(inst.parent) and inst.parent:is_authority() then
+	if Instance.exists(inst.parent) and gm._mod_net_isHost() then
 		inst.parent:fire_explosion(inst.x, inst.y, 192, 160, 7.0, gm.constants.sEfBombExplodeEnemy)
+
+		if inst.stun_parent == 1 then
+			GM.actor_knockback_inflict(inst.parent, 1, -inst.parent.image_xscale, 60)
+		end
 	end
 end)
