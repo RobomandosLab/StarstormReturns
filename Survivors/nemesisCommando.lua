@@ -2,16 +2,22 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
+local sprite_idle2			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 15, 12)
 local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "NemCommandoIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 15, 12)
--- walk sprites have a sprite speed of 0.8 so they animate a bit slower
+-- walk sprites have a sprite speed of 0.8, the slower animation looks better
 local sprite_walk			= Resources.sprite_load(NAMESPACE, "NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8)
+local sprite_walk2			= Resources.sprite_load(NAMESPACE, "NemCommandoWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 15, 18, 0.8)
 local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "NemCommandoWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 17, 13, 0.8)
 local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "NemCommandoWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 20, 25, 0.8)
+local sprite_walk_back2		= Resources.sprite_load(NAMESPACE, "NemCommandoWalkBack2", path.combine(SPRITE_PATH, "walkBack2.png"), 8, 20, 25, 0.8)
 local sprite_jump			= Resources.sprite_load(NAMESPACE, "NemCommandoJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 17)
+local sprite_jump2			= Resources.sprite_load(NAMESPACE, "NemCommandoJump2", path.combine(SPRITE_PATH, "jump2.png"), 1, 18, 18)
 local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "NemCommandoJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 18, 16)
 local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "NemCommandoJumpPeak", path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 18, 17)
+local sprite_jump_peak2		= Resources.sprite_load(NAMESPACE, "NemCommandoJumpPeak2", path.combine(SPRITE_PATH, "jumpPeak2.png"), 1, 18, 18)
 local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "NemCommandoJumpPeakHalf", path.combine(SPRITE_PATH, "jumpPeakHalf.png"), 1, 18, 16)
 local sprite_fall			= Resources.sprite_load(NAMESPACE, "NemCommandoFall", path.combine(SPRITE_PATH, "fall.png"), 1, 18, 17)
+local sprite_fall2			= Resources.sprite_load(NAMESPACE, "NemCommandoFall2", path.combine(SPRITE_PATH, "fall2.png"), 1, 18, 18)
 local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "NemCommandoFallHalf", path.combine(SPRITE_PATH, "fallHalf.png"), 1, 18, 16)
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "NemCommandoClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 20, 18)
 
@@ -65,24 +71,38 @@ nemCommando:set_primary_color(Color.from_rgb(250, 40, 40))
 
 nemCommando.sprite_title = sprite_walk
 
+-- utility function for updating his basic sprites depending on if his last skill was the gun
+local function nemmando_update_sprites(actor, has_gun)
+	if has_gun then
+		actor.sprite_idle = sprite_idle2
+		actor.sprite_walk = sprite_walk2
+		actor.sprite_walk_half[4] = sprite_walk_back2
+		actor.sprite_jump = sprite_jump2
+		actor.sprite_jump_peak = sprite_jump_peak2
+		actor.sprite_fall = sprite_fall2
+	else
+		actor.sprite_idle = sprite_idle
+		actor.sprite_walk = sprite_walk
+		actor.sprite_walk_half[4] = sprite_walk_back
+		actor.sprite_jump = sprite_idle
+		actor.sprite_jump_peak = sprite_jump_peak
+		actor.sprite_fall = sprite_fall
+	end
+	actor.sprite_idle_half[1] = actor.sprite_idle
+	actor.sprite_walk_half[1] = actor.sprite_walk
+	actor.sprite_jump_half[1] = actor.sprite_jump
+	actor.sprite_jump_peak_half[1] = actor.sprite_jump_peak
+	actor.sprite_fall_half[1] = actor.sprite_fall
+	actor.sprite_walk_last = actor.sprite_walk -- dunno what this is but setting it was required
+end
+
 nemCommando:clear_callbacks()
 nemCommando:onInit(function(actor)
-	local idle_half = Array.new()
-	local walk_half = Array.new()
-	local jump_half = Array.new()
-	local jump_peak_half = Array.new()
-	local fall_half = Array.new()
-	idle_half:push(sprite_idle, sprite_idle_half, 0)
-	walk_half:push(sprite_walk, sprite_walk_half, 0, sprite_walk_back)
-	jump_half:push(sprite_jump, sprite_jump_half, 0)
-	jump_peak_half:push(sprite_jump_peak, sprite_jump_peak_half, 0)
-	fall_half:push(sprite_fall, sprite_fall_half, 0)
-
-	actor.sprite_idle_half = idle_half
-	actor.sprite_walk_half = walk_half
-	actor.sprite_jump_half = jump_half
-	actor.sprite_jump_peak_half = jump_peak_half
-	actor.sprite_fall_half = fall_half
+	actor.sprite_idle_half = Array.new({sprite_idle, sprite_idle_half, 0})
+	actor.sprite_walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk_back})
+	actor.sprite_jump_half = Array.new({sprite_jump, sprite_jump_half, 0})
+	actor.sprite_jump_peak_half = Array.new({sprite_jump_peak, sprite_jump_peak_half, 0})
+	actor.sprite_fall_half = Array.new({sprite_fall, sprite_fall_half, 0})
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -107,6 +127,8 @@ end)
 stateNemCommandoPrimary:clear_callbacks()
 stateNemCommandoPrimary:onEnter(function(actor, data)
 	actor.image_index = 0
+
+	nemmando_update_sprites(actor, false)
 
 	data.fired = 0
 	-- variable used to keep track of which attack anim to use
@@ -219,6 +241,8 @@ stateNemCommandoSecondary:clear_callbacks()
 stateNemCommandoSecondary:onEnter(function(actor, data)
 	actor.image_index2 = 0
 	data.fired = 0
+
+	nemmando_update_sprites(actor, true)
 
 	actor:skill_util_strafe_init()
 	--actor:skill_util_strafe_turn_init() -- this and skill_util_strafe_turn_update only works for skills in the Z/primary slot ....
@@ -403,8 +427,14 @@ end)
 objGrenade:onStep(function(inst)
 	if inst.bounces > 0 then
 		local bounced = false
-		local bounce_h = inst:is_colliding(gm.constants.pBlock, inst.x + inst.hspeed, inst.y)
-		local bounce_v = inst:is_colliding(gm.constants.pBlock, inst.x, inst.y + inst.vspeed)
+
+		-- extrapolate where the grenade will be next frame for collision detection
+		-- a half pixel margin is added to mitigate a bug where the grenade bounces incorrectly
+		local speedx = inst.hspeed + gm.sign(inst.hspeed) * 0.5
+		local speedy = inst.vspeed + gm.sign(inst.vspeed) * 0.5
+
+		local bounce_h = inst:is_colliding(gm.constants.pBlock, inst.x + speedx, inst.y)
+		local bounce_v = inst:is_colliding(gm.constants.pBlock, inst.x, inst.y + speedy)
 		if bounce_h then
 			inst.hspeed = inst.hspeed * -0.5
 			bounced = true
