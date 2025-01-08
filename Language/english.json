@@ -48,6 +48,10 @@
 			"name": "Single Tap",
 			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
 		},
+		"nemesisCommandoX2": {
+			"name": "Distant Gash",
+			"description": "Slash in a line forward for <y>180% damage</c>, <r>wounding</c> enemies for 6 seconds.\nStacks up to <y>2</c> times."
+		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",
 			"description": "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
@@ -56,9 +60,17 @@
 			"name": "Flush Out",
 			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
 		},
+		"nemesisCommandoVBoosted": {
+			"name": "Concussive Throw",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies. Hold to <b>cook</c> the grenade.\nEvery bounce <y>explodes</c> for <y>50% damage</c>.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
 		"nemesisCommandoV2": {
 			"name": "Devastator",
-			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downwards</c> at an angle."
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle."
+		},
+		"nemesisCommandoV2Boosted": {
+			"name": "Spanker",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 	},
 
