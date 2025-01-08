@@ -28,7 +28,14 @@ local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Ha
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot33", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
 
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
-local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 4, 4)
+local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
+
+-- grenade fx
+local particleRubble2 = Particle.find("ror", "Rubble2")
+-- rocket fx
+local particleRocketTrail = Particle.find("ror", "MissileTrail")
+local particleRubble1 = Particle.find("ror", "Rubble1")
+local particleSpark = Particle.find("ror", "Spark")
 
 local nemCommando = Survivor.new(NAMESPACE, "nemesisCommando")
 local nemCommando_id = nemesisCommando
@@ -85,7 +92,7 @@ local function nemmando_update_sprites(actor, has_gun)
 		actor.sprite_idle = sprite_idle
 		actor.sprite_walk = sprite_walk
 		actor.sprite_walk_half[4] = sprite_walk_back
-		actor.sprite_jump = sprite_idle
+		actor.sprite_jump = sprite_jump
 		actor.sprite_jump_peak = sprite_jump_peak
 		actor.sprite_fall = sprite_fall
 	end
@@ -310,7 +317,9 @@ nemCommandoUtility:onActivate(function(actor)
 	actor:enter_state(stateNemCommandoUtility)
 end)
 nemCommandoUtility:onCanActivate(function(actor)
-	-- TODO: implement interrupting the grenade by rolling
+	if actor.actor_state_current_id == State.find(NAMESPACE, "nemCommandoSpecial").value then
+		return true
+	end
 end)
 
 stateNemCommandoUtility:clear_callbacks()
@@ -401,6 +410,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 
 		nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
 		nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
+
 		nade.parent = actor
 		nade.timer = data.timer
 		if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
@@ -413,6 +423,23 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 
 	if data.fired == 1 and data.timer <= 0 then
 		actor:skill_util_reset_activity_state()
+	end
+end)
+stateNemCommandoSpecial:onExit(function(actor, data)
+	if data.timer > 0 and data.fired == 0 then
+		local nade = objGrenade:create(actor.x, actor.y - 5)
+
+		--nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
+		nade.vspeed = GRENADE_TOSS_YSPEED
+
+		nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
+		nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
+
+		nade.parent = actor
+		nade.timer = data.timer
+		if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
+			nade.stun_parent = 1
+		end
 	end
 end)
 
@@ -481,8 +508,6 @@ objGrenade:onStep(function(inst)
 	end
 end)
 
-local particleRubble2 = Particle.find("ror", "Rubble2")
-
 objGrenade:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
 	inst:screen_shake(4)
@@ -545,9 +570,6 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
-
-local particleRocketTrail = Particle.find("ror", "MissileTrail")
-local particleRubble1 = Particle.find("ror", "Rubble1")
 
 objRocket:clear_callbacks()
 objRocket:onCreate(function(inst)
