@@ -25,7 +25,9 @@ local sprite_shoot1_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_1",
 local sprite_shoot1_2		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 28, 62)
 local sprite_shoot2			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 5, 15, 26)
 local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Half", path.combine(SPRITE_PATH, "shoot2Half.png"), 5, 15, 26)
-local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot33", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
+local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
+local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
+local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
 local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
@@ -50,6 +52,10 @@ local GRENADE_VELOCITY_INHERIT_MULT = 1
 local GRENADE_AUTOTHROW_THRESHOLD = 1
 local GRENADE_SELFSTUN_THRESHOLD = 15
 local GRENADE_END_LAG = 16
+
+local ROCKET_SPEED_START = 0
+local ROCKET_SPEED_MAX = 24
+local ROCKET_ACCELERATION = 0.35
 
 nemCommando:set_stats_base({
 	maxhp = 115,
@@ -543,13 +549,24 @@ stateNemCommandoSpecial2:clear_callbacks()
 stateNemCommandoSpecial2:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+	data.airborne = actor.free
+
+	if gm.bool(data.airborne) then
+		actor.sprite_index = sprite_shoot4b_a
+	else
+		actor.sprite_index = sprite_shoot4b
+	end
+	actor:sound_play(gm.constants.wHANDShoot2_1, 1, 0.5)
 end)
 stateNemCommandoSpecial2:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 
-	actor:actor_animation_set(sprite_shoot2, 0.2)
+	actor:actor_animation_set(actor.sprite_index, 0.2)
 
-	if data.fired == 0 then
+	local airborne = gm.bool(data.airborne)
+	local should_fire = actor.image_index >= 3 or (actor.image_index >= 2 and airborne)
+
+	if should_fire and data.fired == 0 then
 		data.fired = 1
 
 		actor:sound_play(gm.constants.wEnforcerShoot1, 1, 0.5 + math.random() * 0.1)
@@ -561,7 +578,7 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 		rocket.direction = actor:skill_util_facing_direction()
 
 		actor.pHspeed = actor.pHmax * -2 * actor.image_xscale
-		if gm.bool(actor.free) then
+		if airborne then
 			rocket.direction = 270 + actor.image_xscale * 45
 
 			actor.pVspeed = actor.pVmax * -1.2
@@ -573,7 +590,7 @@ end)
 
 objRocket:clear_callbacks()
 objRocket:onCreate(function(inst)
-	inst.speed = 2
+	inst.speed = ROCKET_SPEED_START
 	inst.mask_index = sprite_rocket_mask
 
 	inst.team = 1
@@ -598,7 +615,7 @@ objRocket:onStep(function(inst)
 		particleRocketTrail:create(inst.x - xoff, inst.y - yoff, 1)
 	end
 
-	inst.speed = math.min(24, inst.speed + 0.5)
+	inst.speed = math.min(ROCKET_SPEED_MAX, inst.speed + ROCKET_ACCELERATION)
 
 	local detonate = inst:is_colliding(gm.constants.pBlock)
 
@@ -626,18 +643,16 @@ end)
 objRocket:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wTurtleExplosion, 1, 0.4 + math.random() * 0.2)
 	inst:sound_play(gm.constants.wWormExplosion, 1, 0.6 + math.random() * 0.2)
-	inst:screen_shake(25)
+	inst:screen_shake(10)
 
 	if gm.audio_is_playing(inst.woosh_sound) then
 		gm.audio_stop_sound(inst.woosh_sound)
 	end
 
 	particleRubble1:create(inst.x, inst.y, 15)
+	particleSpark:create(inst.x, inst,y, 6)
 
 	if Instance.exists(inst.parent) and gm._mod_net_isHost() then
-		-- sweet spot aoe
-		--inst.parent:fire_explosion(inst.x, inst.y, 30, 30, 5)
-
 		-- direct hit
 		if inst.victim ~= -4 then
 			inst.parent:fire_direct(inst.victim, 10, inst.direction, inst.x, inst.y)
