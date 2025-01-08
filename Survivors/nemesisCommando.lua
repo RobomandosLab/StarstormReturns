@@ -50,6 +50,9 @@ local particleSpark = Particle.find("ror", "Spark")
 local nemCommando = Survivor.new(NAMESPACE, "nemesisCommando")
 local nemCommando_id = nemesisCommando
 
+local ATTACK_TAG_APPLY_WOUND = 1
+local ATTACK_TAG_EXTEND_WOUND = 2
+
 local GRENADE_FUSE_TIMER = 2 * 60
 local GRENADE_TICK_INTERVAL = 30
 local GRENADE_THROW_XSPEED = 4
@@ -184,7 +187,7 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
 					local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
 					attack_info.climb = i * 8
-					attack_info.__ssr_nemmando_wound = 1
+					attack_info.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 				end
 			end
 		end
@@ -203,14 +206,23 @@ end)
 local wound = Buff.find("ror", "commandoWound")
 
 Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoOnHit", function(hit_info)
-	local wound_limit = hit_info.attack_info.__ssr_nemmando_wound
-	if wound_limit and wound_limit > 0 then
+	local attack_tag = hit_info.attack_info.__ssr_nemmando_wound
+	if attack_tag then
 		victim = hit_info.target
-		if victim:buff_stack_count(wound) < wound_limit then
-			--victim:buff_apply(wound, 6 * 60) -- doesn't work correctly (????????)
-			GM.apply_buff(victim, wound, 6 * 60, 1)
-		else
-			GM.set_buff_time(victim, wound, 6 * 60)
+
+		if attack_tag == ATTACK_TAG_APPLY_WOUND then
+			if victim:buff_stack_count(wound) == 0 then
+				--victim:buff_apply(wound, 6 * 60) -- doesn't work correctly (????????)
+				GM.apply_buff(victim, wound, 6 * 60, 1)
+			else
+				GM.set_buff_time(victim, wound, 6 * 60)
+			end
+		elseif attack_tag == ATTACK_TAG_EXTEND_WOUND then
+			if victim:buff_stack_count(wound) > 0 then
+				--GM.apply_buff(victim, wound, 6 * 60, 1)
+				local time = GM.get_buff_time(victim, wound)
+				GM.set_buff_time(victim, wound, time + 4 * 60)
+			end
 		end
 	end
 end)
@@ -428,7 +440,7 @@ objSlash:onStep(function(inst)
 		if inst:attack_collision_canhit(actor) and not data.hit_list[actor.id] then
 			if gm._mod_net_isHost() then
 				local attack = inst.parent:fire_direct(actor, 1.8, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
-				attack.__ssr_nemmando_wound = 2
+				attack.__ssr_nemmando_wound = ATTACK_TAG_EXTEND_WOUND
 			end
 
 			inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
