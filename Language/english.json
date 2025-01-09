@@ -50,7 +50,7 @@
 		},
 		"nemesisCommandoX2": {
 			"name": "Distant Gash",
-			"description": "Slash in a line forward for <y>180% damage</c>.\nHitting <r>wounded</c> enemies adds 4 seconds to the debuff."
+			"description": "Slash in a line forward for <y>180% damage</c>.\nHitting <r>wounded</c> enemies <y>resets</c> the debuff's duration."
 		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",

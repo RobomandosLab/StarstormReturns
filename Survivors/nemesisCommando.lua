@@ -27,6 +27,9 @@ local sprite_shoot1_2		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_2",
 local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Half", path.combine(SPRITE_PATH, "shoot2Half.png"), 5, 15, 26)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2B", path.combine(SPRITE_PATH, "shoot2b.png"), 10, 36, 39)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
+local sprite_shoot4_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 10, 23, 30)
+local sprite_shoot4_2a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2A", path.combine(SPRITE_PATH, "shoot4_2a.png"), 4, 17, 24)
+local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B", path.combine(SPRITE_PATH, "shoot4_2b.png"), 4, 19, 17)
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
 local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
@@ -52,6 +55,7 @@ local nemCommando_id = nemesisCommando
 
 local ATTACK_TAG_APPLY_WOUND = 1
 local ATTACK_TAG_EXTEND_WOUND = 2
+local WOUND_DEBUFF_DURATION = 6 * 60
 
 local GRENADE_FUSE_TIMER = 2 * 60
 local GRENADE_TICK_INTERVAL = 30
@@ -185,7 +189,7 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 80, 58, damage, nil, gm.constants.sSparks9r).attack_info
+					local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 100, 65, damage, nil, gm.constants.sSparks9r).attack_info
 					attack_info.climb = i * 8
 					attack_info.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 				end
@@ -215,13 +219,12 @@ Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoOnHit", function(hit_info)
 				--victim:buff_apply(wound, 6 * 60) -- doesn't work correctly (????????)
 				GM.apply_buff(victim, wound, 6 * 60, 1)
 			else
-				GM.set_buff_time(victim, wound, 6 * 60)
+				GM.set_buff_time(victim, wound, WOUND_DEBUFF_DURATION)
 			end
 		elseif attack_tag == ATTACK_TAG_EXTEND_WOUND then
 			if victim:buff_stack_count(wound) > 0 then
 				--GM.apply_buff(victim, wound, 6 * 60, 1)
-				local time = GM.get_buff_time(victim, wound)
-				GM.set_buff_time(victim, wound, time + 4 * 60)
+				GM.set_buff_time(victim, wound, WOUND_DEBUFF_DURATION)
 			end
 		end
 	end
@@ -314,7 +317,7 @@ stateNemCommandoSecondary:onStep(function(actor, data)
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir + gm.random_range(-1, 1), damage, nil, gm.constants.sSparks23r, tracer).attack_info
+				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir, damage, nil, gm.constants.sSparks23r, tracer).attack_info
 				attack_info.climb = i * 8
 			end
 		end
@@ -464,7 +467,9 @@ nemCommandoUtility:onActivate(function(actor)
 	actor:enter_state(stateNemCommandoUtility)
 end)
 nemCommandoUtility:onCanActivate(function(actor)
-	if actor.actor_state_current_id == State.find(NAMESPACE, "nemCommandoSpecial").value then
+	local special_id = State.find(NAMESPACE, "nemCommandoSpecial").value
+	local data = actor.actor_state_current_data_table
+	if actor.actor_state_current_id == special_id and data.primed == 1 then
 		return true
 	end
 end)
@@ -532,60 +537,118 @@ end)
 
 stateNemCommandoSpecial:clear_callbacks()
 stateNemCommandoSpecial:onEnter(function(actor, data)
-	actor.activity_type = 4 -- locks facing direction while allowing free movement and animation
+	actor:skill_util_strafe_init()
 
-	data.timer = GRENADE_FUSE_TIMER
-	data.fired = 0
+	actor.image_index2 = 0
+	actor.sprite_index2 = sprite_shoot4_1
+
+	data.fuse_timer = GRENADE_FUSE_TIMER
+	data.primed = 0
+	data.tossed = 0
+	data.low_toss = 0
+	data.blip = 0
 end)
 stateNemCommandoSpecial:onStep(function(actor, data)
-	actor.pHspeed = actor.pHspeed * 0.75
+	local animation_speed = 0.25 * actor.attack_speed
 
-	if data.fired == 0 and data.timer % GRENADE_TICK_INTERVAL == 0 then
-		actor:sound_play(gm.constants.wPickupOLD, 0.7, 4)
+	actor:skill_util_strafe_update(animation_speed, 0.75)
+	actor:skill_util_step_strafe_sprites()
 
-		local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
-		flash.parent = actor
-		flash.rate = 0.1
-		flash.image_alpha = 0.5
+	if actor.sprite_index == actor.sprite_walk_half[2] then
+		local walk_offset = 0
+		local leg_frame = math.floor(actor.image_index)
+		if leg_frame == 0 or leg_frame == 4 then
+			walk_offset = 2
+		elseif leg_frame == 2 or leg_frame == 6 then
+			walk_offset = -1
+		end
+		actor.ydisp = walk_offset -- ydisp controls upper body offset
 	end
 
-	data.timer = data.timer - 1
+	if data.primed == 1 then
+		if data.fuse_timer % GRENADE_TICK_INTERVAL == 0 then
+			actor:sound_play(gm.constants.wPickupOLD, 0.7, 4)
 
-	local release = not gm.bool(actor.v_skill)
-	local low_toss = gm.bool(actor.ropeDown)
-	local auto_toss = data.timer <= GRENADE_AUTOTHROW_THRESHOLD
-
-	if (release or low_toss or auto_toss) and data.fired == 0 then
-		local nade = objGrenade:create(actor.x, actor.y - 5)
-
-		if low_toss then
-			nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
-			nade.vspeed = GRENADE_TOSS_YSPEED
-		else
-			nade.hspeed = GRENADE_THROW_XSPEED * actor.image_xscale
-			nade.vspeed = GRENADE_THROW_YSPEED
+			local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
+			flash.parent = actor
+			flash.rate = 0.1
+			flash.image_alpha = 0.5
 		end
-
-		nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
-		nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
-
-		nade.parent = actor
-		nade.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
-		nade.timer = data.timer
-		if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
-			nade.stun_parent = 1
-		end
-
-		data.timer = GRENADE_END_LAG
-		data.fired = 1
+		data.fuse_timer = data.fuse_timer - 1
 	end
 
-	if data.fired == 1 and data.timer <= 0 then
-		actor:skill_util_reset_activity_state()
+	if data.tossed == 0 then
+		if data.primed == 0 and actor.image_index2 >= 2 then
+			data.primed = 1
+			actor:sound_play(gm.constants.wPickup, 1, 1.5)
+		end
+
+		if actor.image_index2 >= 5 and (data.fuse_timer - 4) % GRENADE_TICK_INTERVAL == 0 then
+			data.blip = 1
+		end
+
+		if data.blip == 0 and actor.image_index2 >= 6 then
+			actor.image_index2 = 5
+		elseif data.blip == 1 and actor.image_index2 >= 10 then
+			actor.image_index2 = 5
+			data.blip = 0
+		end
+
+		if actor.image_index2 >= 4 then
+			local release = not gm.bool(actor.v_skill)
+			local low_toss = gm.bool(actor.ropeDown)
+			local auto_toss = data.fuse_timer <= GRENADE_AUTOTHROW_THRESHOLD
+
+			if (release or low_toss or auto_toss) and data.tossed == 0 then
+				if low_toss then
+					actor.sprite_index2 = sprite_shoot4_2b
+				else
+					actor.sprite_index2 = sprite_shoot4_2a
+				end
+				actor.image_index2 = 0
+
+				data.tossed = 1
+				data.low_toss = low_toss
+			end
+		end
+	else
+		if data.tossed == 1 and actor.image_index2 >= 1 then
+			data.tossed = 2
+			data.primed = 0
+
+			actor:sound_play(gm.constants.wFwoosh, 0.6, 0.6 + math.random() * 0.1)
+
+			local low_toss = gm.bool(data.low_toss)
+
+			local nade = objGrenade:create(actor.x, actor.y - 5)
+
+			if low_toss then
+				nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
+				nade.vspeed = GRENADE_TOSS_YSPEED
+			else
+				nade.hspeed = GRENADE_THROW_XSPEED * actor.image_xscale
+				nade.vspeed = GRENADE_THROW_YSPEED
+			end
+
+			nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
+			nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
+
+			nade.parent = actor
+			nade.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+			nade.timer = data.fuse_timer
+			if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
+				nade.stun_parent = 1
+			end
+		end
+
+		if actor.image_index2 >= 4 then
+			actor:skill_util_reset_activity_state()
+			actor.v_skill_buffered = 0
+		end
 	end
 end)
 stateNemCommandoSpecial:onExit(function(actor, data)
-	if data.timer > 0 and data.fired == 0 then
+	if data.tossed < 2 then
 		local nade = objGrenade:create(actor.x, actor.y - 5)
 
 		--nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
@@ -596,11 +659,12 @@ stateNemCommandoSpecial:onExit(function(actor, data)
 
 		nade.parent = actor
 		nade.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
-		nade.timer = data.timer
+		nade.timer = data.fuse_timer
 		if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
 			nade.stun_parent = 1
 		end
 	end
+	actor:skill_util_strafe_exit()
 end)
 
 objGrenade:clear_callbacks()
@@ -653,6 +717,7 @@ objGrenade:onStep(function(inst)
 
 			if boosted and gm._mod_net_isHost() then
 				local attack = inst.parent:fire_explosion(inst.x, inst.y, 120, 80, 0.5, gm.constants.sEfExplosive).attack_info
+				inst:screen_shake(1)
 			end
 		end
 
