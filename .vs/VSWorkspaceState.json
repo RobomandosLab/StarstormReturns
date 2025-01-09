@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Actors",
+    "\\Elites",
+    "\\Items",
     "\\Survivors"
   ],
-  "SelectedNode": "\\Survivors\\chirr.lua",
   "PreviewInSolutionExplorer": false
 }

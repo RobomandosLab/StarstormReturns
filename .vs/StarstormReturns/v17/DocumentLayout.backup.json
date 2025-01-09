@@ -1,12 +1,104 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Connor\\Documents\\GitHub\\StarstormReturns\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\chirr.lua||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Survivors\\chirr.lua||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Elites\\poison.lua||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Elites\\poison.lua||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\executioner.lua||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Survivors\\executioner.lua||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Items\\judderingEgg.lua||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Items\\judderingEgg.lua||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Actors\\exploder.lua||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Actors\\exploder.lua||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "judderingEgg.lua",
+              "DocumentMoniker": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Items\\judderingEgg.lua",
+              "RelativeDocumentMoniker": "Items\\judderingEgg.lua",
+              "ToolTip": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Items\\judderingEgg.lua",
+              "RelativeToolTip": "Items\\judderingEgg.lua",
+              "ViewState": "AgIAAEABAAAAAAAAAAAswFQBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-08T02:20:58.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "exploder.lua",
+              "DocumentMoniker": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Actors\\exploder.lua",
+              "RelativeDocumentMoniker": "Actors\\exploder.lua",
+              "ToolTip": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Actors\\exploder.lua",
+              "RelativeToolTip": "Actors\\exploder.lua",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-07T01:37:06.698Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "poison.lua",
+              "DocumentMoniker": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Elites\\poison.lua",
+              "RelativeDocumentMoniker": "Elites\\poison.lua",
+              "ToolTip": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Elites\\poison.lua",
+              "RelativeToolTip": "Elites\\poison.lua",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-07T01:28:26.903Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "executioner.lua",
+              "DocumentMoniker": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\executioner.lua",
+              "RelativeDocumentMoniker": "Survivors\\executioner.lua",
+              "ToolTip": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\executioner.lua",
+              "RelativeToolTip": "Survivors\\executioner.lua",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAswDIBAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-06T02:16:29.539Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "chirr.lua",
+              "DocumentMoniker": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\chirr.lua",
+              "RelativeDocumentMoniker": "Survivors\\chirr.lua",
+              "ToolTip": "C:\\Users\\Connor\\AppData\\Roaming\\r2modmanPlus-local\\RiskofRainReturns\\profiles\\Lets go modding\\ReturnOfModding\\plugins\\StarstormReturns\\Survivors\\chirr.lua",
+              "RelativeToolTip": "Survivors\\chirr.lua",
+              "ViewState": "AgIAAHEBAAAAAAAAAAAswI8BAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-01-05T21:52:39.256Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

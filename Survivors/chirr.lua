@@ -1,6 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Chirr")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Chirr")
 
+
 -- assets
 -- icon sprites and stuff
 local sprite_loadout =        Resources.sprite_load(NAMESPACE, "ChirrSelect", path.combine(SPRITE_PATH, "select.png"), 15, 14, 0)
@@ -32,6 +33,10 @@ local sprite_shoot4 =         Resources.sprite_load(NAMESPACE, "ChirrShoot4", pa
 local sprite_sparks =         Resources.sprite_load(NAMESPACE, "ChirrSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 11, 3)
 local sprite_tracer =         Resources.sprite_load(NAMESPACE, "ChirrTracer", path.combine(SPRITE_PATH, "tracer.png"), 5, 0, 2)
 
+-- sprites for the elite type given to tamed monsters
+local sprite_palette =        Resources.sprite_load(NAMESPACE, "ChirrPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_tamed_icon =     Resources.sprite_load(NAMESPACE, "ChirrTameIcon", path.combine(SPRITE_PATH, "tameIcon.png"))
+
 -- sounds
 local sound_shoot1 =          Resources.sfx_load(NAMESPACE, "ChirrShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2 =          Resources.sfx_load(NAMESPACE, "ChirrShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
@@ -57,8 +62,8 @@ chirr:set_stats_level({ -- setting stats for leveling up
 })
 
 local base_physics = { -- chirrs default different physics
-	gravity1 = 0.2,
-	gravity2 = 0.08
+	gravity1 = 0.4,
+	gravity2 = 0.16
 }
 chirr:set_physics_base(base_physics)
 
@@ -103,36 +108,31 @@ chirr:onInit(function(actor) -- setting up the beasts half sprite stuff
 end)
 
 -- her wing sprites
-local objWings = Object.new(NAMESPACE, "chirrWings")
-objWings.obj_sprite = sprite_wings
-objWings.obj_depth = 1
-
-local function wingStep(inst)
-	local data = inst:get_data()
-
-	inst.x = data.parent.x
-	inst.y = data.parent.y
-end
-
-objWings:onStep(wingStep)
+local obj_wings = Object.new(NAMESPACE, "chirrWings")
+obj_wings.obj_sprite = sprite_wings
+obj_wings.obj_depth = 1
 
 -- her movement control stuff
 local player = Instance.find(gm.constants.pActor)
 local flying = false
 local wings
-chirr:onStep(function(actor)
-	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.0 then -- her hover
+chirr:onStep(function( actor )
+	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.35 then -- her hover
 		flying = true
-		actor.pVspeed = 0.0
+		actor.pVspeed = 0.35
 
-		if actor.actor_state_current_id == -1 then
+		if actor.actor_state_current_id == -1 then -- setting her sprite to the flight idle if nothing else is happening
 			actor.sprite_index = sprite_flight
 		end
 		
-		if not wings then
-			wings = objWings:create(actor.x, actor.y)
+		if not wings then -- displaying her wings
+			wings = obj_wings:create(actor.ghost_x, actor.ghost_y)
 			wingsData = wings:get_data()
 			wingsData.parent = actor
+		else
+			wings.x = actor.x
+			wings.y = actor.y
+			wings.image_xscale = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
 		end
 	else
 		flying = false
@@ -142,8 +142,6 @@ chirr:onStep(function(actor)
 			wings = nil
 		end
 	end
-
-	wingStep(actor)
 end)
 
 -- getting default skills
@@ -205,12 +203,12 @@ thorn_tracer_info.sparks_offset_y = 0
 local stateChirrPrimary = State.new(NAMESPACE, "chirrPrimary") -- making a primary state
 
 chirrPrimary:clear_callbacks()
-chirrPrimary:onActivate(function(actor) 
+chirrPrimary:onActivate(function( actor ) 
 	actor:enter_state(stateChirrPrimary)
 end)
 
 stateChirrPrimary:clear_callbacks() -- using the skill, setting up the important data and stuff
-stateChirrPrimary:onEnter(function(actor, data)
+stateChirrPrimary:onEnter(function( actor, data )
 	actor.image_index2 = 0
 	data.fired = 0
 	data.count = 3
@@ -219,7 +217,7 @@ stateChirrPrimary:onEnter(function(actor, data)
 	actor:skill_util_strafe_turn_init()
 end)
 
-stateChirrPrimary:onStep(function(actor, data) -- actually using the skill
+stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
 	actor.sprite_index2 = sprite_shoot1_half
 	
 	actor:skill_util_strafe_update(.12 * actor.attack_speed, 0.5)
@@ -229,7 +227,7 @@ stateChirrPrimary:onStep(function(actor, data) -- actually using the skill
 		data.fired = 1
 		data.count = data.count - 1
 
-		actor:sound_play(sound_shoot1, 1, 0.9 + math.random() * 0.4)
+		actor:sound_play(sound_shoot1, .5, 0.9 + math.random() * 0.4)
 		
 		if actor:is_authority() then -- if local player
 			local damage = actor:skill_get_damage(chirrPrimary)
@@ -264,23 +262,24 @@ chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORIT
 local stateChirrSecondary = State.new(NAMESPACE, "chirrSecondary") -- setting up states again
 
 chirrSecondary:clear_callbacks()
-chirrSecondary:onActivate(function(actor)
+chirrSecondary:onActivate(function( actor )
 	actor:enter_state(stateChirrSecondary)
 end)
 
 stateChirrSecondary:clear_callbacks()
-stateChirrSecondary:onEnter(function(actor, data) -- skill setup again
+stateChirrSecondary:onEnter(function( actor, data ) -- skill setup again
 	actor.image_index = 0
 	data.fired = 0
 end)
 
-stateChirrSecondary:onStep(function(actor, data) -- using the skill
+stateChirrSecondary:onStep(function( actor, data ) -- using the skill
 	actor.sprite_index = sprite_shoot2
 	actor.image_speed = 0.25
+	actor:skill_util_fix_hspeed()
 
 	if data.fired == 0 then
 		data.fired = 1
-		actor:sound_play(sound_shoot2, 1, 0.9 + math.random() * 0.2)
+		actor:sound_play(sound_shoot2, .8, 0.9 + math.random() * 0.2)
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(chirrSecondary)
@@ -300,3 +299,113 @@ stateChirrSecondary:onStep(function(actor, data) -- using the skill
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
+
+-------- heal pulse
+-- more info yayyyyyyy
+chirrUtility.sprite = sprite_skills
+chirrUtility.subimage = 2
+chirrUtility.cooldown = 15 * 60
+chirrUtility.is_utility = true
+chirrUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+local stateChirrUtility = State.new(NAMESPACE, "chirrUtility") -- guess what this is, you get three tries
+
+chirrUtility:clear_callbacks()
+chirrUtility:onActivate(function(actor)
+	actor:enter_state(stateChirrUtility)
+end)
+
+stateChirrUtility:clear_callbacks()
+stateChirrUtility:onEnter(function(actor, data)
+	actor.image_index = 0
+	actor:sound_play(sound_shoot3a, .8, 1.4)
+end)
+
+stateChirrUtility:onStep(function( actor, data )
+	actor.sprite_index = sprite_shoot3
+	actor.image_speed = .25
+
+	if actor.image_index == 12 then -- when the animation reaches the final frame
+		actor:sound_play(sound_shoot3b, 1.2, 0.9 + math.random() * 0.2)
+
+		local healArea = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle) -- cool circle object ty kris
+		healArea.radius = 240
+		healArea.rate = 60
+		healArea.image_blend = Color.from_rgb(179,217,148)
+
+		if actor:is_authority() then
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
+				local friends = List.new() -- list to hold our friends
+
+				actor:collision_circle_list(actor.x, actor.y, 320, gm.constants.pActor, false, false, friends, false) -- this grabs all the actors in a radius
+
+				for _, friend in ipairs(friends) do
+					if friend.team == actor.team then -- checking to see who is actually our friend
+						friend:heal(friend.maxhp * .25)
+					end
+				end
+				
+				friends:destroy()
+			end
+		end
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+
+-------- taming
+chirrSpecial.sprite = sprite_skills
+chirrSpecial.subimage = 3
+chirrSpecial.cooldown = 4 * 60
+chirrSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
+
+chirrSpecial:clear_callbacks()
+chirrSpecial:onActivate(function( actor, data )
+	actor:enter_state(stateChirrSpecial)
+end)
+
+local obj_tame_heart = Object.new(NAMESPACE, "chirrTameHeart") -- making the little heart object
+obj_tame_heart.obj_sprite = sprite_shoot4
+obj_tame_heart.obj_depth = 1
+
+local function tameHeartStep( inst ) -- heart animation and lifetime stuff
+	inst.image_speed = 0.25
+	if inst.image_index == 9 then
+		inst:destroy()
+	end
+end
+
+obj_tame_heart:onStep(tameHeartStep)
+
+local elite = Elite.new(NAMESPACE, "tamed") -- setup for the elite type
+local elite_id = gm.elite_type_find("tamed")
+elite:set_healthbar_icon(sprite_tamed_icon)
+elite.palette = sprite_palette
+gm._mod_elite_generate_palette_all()
+
+local tamed = {} -- list of your friends!
+
+stateChirrSpecial:clear_callbacks()
+stateChirrSpecial:onEnter(function( actor, data )
+	actor:sound_play(sound_shoot4, 1, 1)
+
+	obj_tame_heart:create(actor.x + 14 * gm.cos(gm.degtorad(actor:skill_util_facing_direction())), actor.y - 10) -- make the little heart
+
+	local potential_tames = List.new()
+	actor:collision_circle_list(actor.x, actor.y, 120, gm.constants.pActor, true, false, potential_tames, false) -- grab all nearby actors like the util
+
+	for _, tame_option in ipairs(potential_tames) do
+		if tame_option.team ~= actor.team and not tame_option.enemy_party then 
+			actor:actor_team_set(tame_option, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
+			tame_option.persistent = true -- this stops our friends from going away each stage
+			GM.elite_set(tame_option, elite) -- sets the elite type of your friend
+		end
+	end
+
+	potential_tames:destroy()
+	actor:skill_util_reset_activity_state()
+end)
