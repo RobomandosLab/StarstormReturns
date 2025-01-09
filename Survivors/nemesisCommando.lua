@@ -66,7 +66,6 @@ local GRENADE_TOSS_YSPEED = -3
 local GRENADE_VELOCITY_INHERIT_MULT = 1
 local GRENADE_AUTOTHROW_THRESHOLD = 1
 local GRENADE_SELFSTUN_THRESHOLD = 15
-local GRENADE_END_LAG = 16
 
 local ROCKET_SPEED_START = 0
 local ROCKET_SPEED_MAX = 24
@@ -183,16 +182,33 @@ stateNemCommandoPrimary:onStep(function(actor, data)
 
 		actor:skill_util_nudge_forward(2 * actor.image_xscale)
 
-		if actor:is_authority() then
-			local damage = actor:skill_get_damage(nemCommandoPrimary)
+		actor.z_count = actor.z_count + 1 -- this is part of heaven cracker and has to be run shared for reasons
 
-			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 100, 65, damage, nil, gm.constants.sSparks9r).attack_info
-					attack_info.climb = i * 8
-					attack_info.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
+		-- has to be host-side instead of authority-side because of the wounding thing uughhhhhhhhhhhh
+		if gm._mod_net_isHost() then
+			local damage = actor:skill_get_damage(nemCommandoPrimary)
+			local direction = actor:skill_util_facing_direction()
+
+			-- skill_util_update_heaven_cracker runs is_authority internally
+			-- and so we have to manually recreate it to fire the drill host-side, to make it inflict wound, because otherwise it wont work for clients
+			-- ohhhhh the misery
+			local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
+			local cracker_shot = false
+
+			if heaven_cracker_count > 0 and actor.z_count >= 5 - heaven_cracker_count then
+				cracker_shot = true
+				actor.z_count = 0
+			end
+
+			for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
+				local attack_info
+				if cracker_shot then
+					attack_info = actor:fire_bullet(actor.x, actor.y, 700, direction, damage, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
+				else
+					attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 100, 65, damage, nil, gm.constants.sSparks9r).attack_info
 				end
+				attack_info.climb = i * 8 * 1.35
+				attack_info.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 			end
 		end
 	end
