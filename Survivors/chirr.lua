@@ -48,6 +48,8 @@ local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "ChirrShoot4", path.
 -------- the creachirr
 local chirr = Survivor.new(NAMESPACE, "chirr")
 local chirr_id = chirr.value
+local player_actor
+local tamed = {}
 
 chirr:set_stats_base({ -- setting base stats
 	maxhp = 104,
@@ -112,6 +114,13 @@ local obj_wings = Object.new(NAMESPACE, "chirrWings")
 obj_wings.obj_sprite = sprite_wings
 obj_wings.obj_depth = 1
 
+-- setting up the default skills
+local chirrPrimary =   chirr:get_primary()
+local chirrSecondary = chirr:get_secondary()
+local chirrUtility =   chirr:get_utility()
+local chirrSpecial =   chirr:get_special()
+
+
 -- her movement control stuff
 local player = Instance.find(gm.constants.pActor)
 local flying = false
@@ -129,6 +138,7 @@ chirr:onStep(function( actor )
 			wings = obj_wings:create(actor.ghost_x, actor.ghost_y)
 			wingsData = wings:get_data()
 			wingsData.parent = actor
+			wings.image_xscale = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
 		else
 			wings.x = actor.x
 			wings.y = actor.y
@@ -142,13 +152,17 @@ chirr:onStep(function( actor )
 			wings = nil
 		end
 	end
-end)
 
--- getting default skills
-local chirrPrimary =   chirr:get_primary()
-local chirrSecondary = chirr:get_secondary()
-local chirrUtility =   chirr:get_utility()
-local chirrSpecial =   chirr:get_special()
+	if player_actor ~= actor then -- updating the actor value for my own convenience
+		player_actor = actor
+	end
+
+	if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then
+		print("im sooo hungry...")
+	else
+		print("im full now!")
+	end
+end)
 
 
 -------- get this girl her thorns
@@ -275,7 +289,12 @@ end)
 stateChirrSecondary:onStep(function( actor, data ) -- using the skill
 	actor.sprite_index = sprite_shoot2
 	actor.image_speed = 0.25
+
 	actor:skill_util_fix_hspeed()
+
+	for _, friend in ipairs(tamed) do
+		gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
+	end
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -321,6 +340,14 @@ stateChirrUtility:onEnter(function(actor, data)
 	actor:sound_play(sound_shoot3a, .8, 1.4)
 end)
 
+local utilRegenBuff = Buff.new(NAMESPACE, "chirrRegenBuff")
+utilRegenBuff.show_icon = false
+
+utilRegenBuff:clear_callbacks()
+utilRegenBuff:onStatRecalc(function( actor )
+	actor.hp_regen = actor.hp_regen + actor.maxhp * .002
+end)
+
 stateChirrUtility:onStep(function( actor, data )
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = .25
@@ -343,6 +370,7 @@ stateChirrUtility:onStep(function( actor, data )
 				for _, friend in ipairs(friends) do
 					if friend.team == actor.team then -- checking to see who is actually our friend
 						friend:heal(friend.maxhp * .25)
+						friend:buff_apply(utilRegenBuff, 6 * 60)
 					end
 				end
 				
@@ -356,15 +384,36 @@ end)
 
 
 -------- taming
+-- getting a tame
 chirrSpecial.sprite = sprite_skills
 chirrSpecial.subimage = 3
 chirrSpecial.cooldown = 4 * 60
 chirrSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
+-- getting a SUUUUUPPPERRR tame
+local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
+chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
+
+chirrSpecialScepter.sprite = sprite_skills
+chirrSpecialScepter.subimage = 5
+chirrSpecialScepter.cooldown = 4 * 60
+chirrSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+-- girl and her tether
+local chirrTether = Skill.new(NAMESPACE, "chirrTether")
+chirrTether.sprite = sprite_skills
+chirrTether.subimage = 4
+chirrTether.cooldown = 2 * 60
+chirrTether.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
 local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
 
 chirrSpecial:clear_callbacks()
 chirrSpecial:onActivate(function( actor, data )
+	actor:enter_state(stateChirrSpecial)
+end)
+chirrSpecialScepter:clear_callbacks()
+chirrSpecialScepter:onActivate(function( actor, data )
 	actor:enter_state(stateChirrSpecial)
 end)
 
@@ -387,7 +436,33 @@ elite:set_healthbar_icon(sprite_tamed_icon)
 elite.palette = sprite_palette
 gm._mod_elite_generate_palette_all()
 
-local tamed = {} -- list of your friends!
+ -- list of your friends!
+
+Callback.add(Callback.TYPE.onGameStart, "chirrResetTameTable", function(  )
+	tamed = {}
+end)
+
+Callback.add(Callback.TYPE.onDeath, "chirrTameUpdate", function( victim, fell_out_of_bounds )
+	for index, friend in ipairs(tamed) do
+		if friend.value == victim.value then
+			table.remove(tamed, index)
+		end
+	end
+end)
+
+Callback.add(Callback.TYPE.onPickupCollected, "chirrFriendItemSync", function( pickup, player )
+	if pickup.equipment_id == -1 then
+		for _, friend in ipairs(tamed) do
+			friend:item_give(pickup.item_id, 1, pickup.item_stack_kind)	
+		end
+	end
+end)
+
+Callback.add(Callback.TYPE.onStageStart, "chirrFriendGroupup", function(  )
+	for _, friend in ipairs(tamed) do
+		gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
+	end
+end)
 
 stateChirrSpecial:clear_callbacks()
 stateChirrSpecial:onEnter(function( actor, data )
@@ -399,10 +474,16 @@ stateChirrSpecial:onEnter(function( actor, data )
 	actor:collision_circle_list(actor.x, actor.y, 120, gm.constants.pActor, true, false, potential_tames, false) -- grab all nearby actors like the util
 
 	for _, tame_option in ipairs(potential_tames) do
-		if tame_option.team ~= actor.team and not tame_option.enemy_party then 
-			actor:actor_team_set(tame_option, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
-			tame_option.persistent = true -- this stops our friends from going away each stage
-			GM.elite_set(tame_option, elite) -- sets the elite type of your friend
+		if tame_option.team ~= actor.team and not tame_option.enemy_party and tame_option.hp <= tame_option.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
+			if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then -- sets the limit based off our scepter count
+				actor:actor_team_set(tame_option, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
+				tame_option.persistent = true -- this stops our friends from going away each stage
+				GM.elite_set(tame_option, elite) -- sets the elite type of your friend
+				table.insert(tamed, tame_option) -- adds them to our list of friends
+				tame_option.hp = tame_option.maxhp -- heals them for their troubles
+				actor:inventory_items_copy(actor, tame_option, 0) -- gives our friend our items
+				tame_option.y_range = 175
+			end
 		end
 	end
 
