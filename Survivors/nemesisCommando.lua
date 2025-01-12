@@ -28,8 +28,8 @@ local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Ha
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2B", path.combine(SPRITE_PATH, "shoot2b.png"), 10, 36, 39)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
 local sprite_shoot4_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 10, 23, 30)
-local sprite_shoot4_2a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2A", path.combine(SPRITE_PATH, "shoot4_2a.png"), 4, 17, 24)
-local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B", path.combine(SPRITE_PATH, "shoot4_2b.png"), 4, 19, 17)
+local sprite_shoot4_2a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2A", path.combine(SPRITE_PATH, "shoot4_2a.png"), 3, 17, 24)
+local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B", path.combine(SPRITE_PATH, "shoot4_2b.png"), 3, 19, 17)
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
 local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
@@ -122,6 +122,20 @@ local function nemmando_update_sprites(actor, has_gun)
 	actor.sprite_jump_peak_half[1] = actor.sprite_jump_peak
 	actor.sprite_fall_half[1] = actor.sprite_fall
 	actor.sprite_walk_last = actor.sprite_walk -- dunno what this is but setting it was required
+end
+
+local function nemmando_update_strafe(actor)
+	-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
+	if actor.sprite_index == actor.sprite_walk_half[2] then
+		local walk_offset = 0
+		local leg_frame = math.floor(actor.image_index)
+		if leg_frame == 0 or leg_frame == 4 then
+			walk_offset = 2
+		elseif leg_frame == 2 or leg_frame == 6 then
+			walk_offset = -1
+		end
+		actor.ydisp = walk_offset -- ydisp controls upper body offset
+	end
 end
 
 nemCommando:clear_callbacks()
@@ -310,18 +324,7 @@ stateNemCommandoSecondary:onStep(function(actor, data)
 	actor:skill_util_strafe_update(0.25 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	--actor:skill_util_strafe_turn_update()
-
-	-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
-	if actor.sprite_index == actor.sprite_walk_half[2] then
-		local walk_offset = 0
-		local leg_frame = math.floor(actor.image_index)
-		if leg_frame == 0 or leg_frame == 4 then
-			walk_offset = 2
-		elseif leg_frame == 2 or leg_frame == 6 then
-			walk_offset = -1
-		end
-		actor.ydisp = walk_offset -- ydisp controls upper body offset
-	end
+	nemmando_update_strafe(actor)
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -536,9 +539,11 @@ local nemCommandoSpecialBoosted = Skill.new(NAMESPACE, "nemesisCommandoVBoosted"
 nemCommandoSpecial:set_skill_icon(sprite_skills, 4)
 nemCommandoSpecial:set_skill_upgrade(nemCommandoSpecialBoosted)
 nemCommandoSpecial.cooldown = 6 * 60
+nemCommandoSpecial.require_key_press = true
 
 nemCommandoSpecialBoosted:set_skill_icon(sprite_skills, 5)
 nemCommandoSpecialBoosted.cooldown = 6 * 60
+nemCommandoSpecialBoosted.require_key_press = true
 
 local stateNemCommandoSpecial = State.new(NAMESPACE, "nemCommandoSpecial")
 
@@ -570,16 +575,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 	actor:skill_util_strafe_update(animation_speed, 0.75)
 	actor:skill_util_step_strafe_sprites()
 
-	if actor.sprite_index == actor.sprite_walk_half[2] then
-		local walk_offset = 0
-		local leg_frame = math.floor(actor.image_index)
-		if leg_frame == 0 or leg_frame == 4 then
-			walk_offset = 2
-		elseif leg_frame == 2 or leg_frame == 6 then
-			walk_offset = -1
-		end
-		actor.ydisp = walk_offset -- ydisp controls upper body offset
-	end
+	nemmando_update_strafe(actor)
 
 	if data.primed == 1 then
 		if data.fuse_timer % GRENADE_TICK_INTERVAL == 0 then
@@ -611,60 +607,51 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 		end
 
 		if actor.image_index2 >= 4 then
-			local release = not gm.bool(actor.v_skill)
+			local release = not actor:control("skill4", 0)
 			local low_toss = gm.bool(actor.ropeDown)
 			local auto_toss = data.fuse_timer <= GRENADE_AUTOTHROW_THRESHOLD
 
 			if (release or low_toss or auto_toss) and data.tossed == 0 then
+				-- TODO: this is probably better handled in another actor state
+				actor.image_index2 = 0
 				if low_toss then
 					actor.sprite_index2 = sprite_shoot4_2b
 				else
 					actor.sprite_index2 = sprite_shoot4_2a
 				end
-				actor.image_index2 = 0
+				actor:sound_play(gm.constants.wFwoosh, 0.6, 0.6 + math.random() * 0.1)
 
 				data.tossed = 1
-				data.low_toss = low_toss
+				data.primed = 0
+
+				local nade = objGrenade:create(actor.x, actor.y - 5)
+				if low_toss then
+					nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
+					nade.vspeed = GRENADE_TOSS_YSPEED
+				else
+					nade.hspeed = GRENADE_THROW_XSPEED * actor.image_xscale
+					nade.vspeed = GRENADE_THROW_YSPEED
+				end
+
+				nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
+				nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
+
+				nade.parent = actor
+				nade.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+				nade.timer = data.fuse_timer
+				if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
+					nade.stun_parent = 1
+				end
 			end
 		end
 	else
-		if data.tossed == 1 and actor.image_index2 >= 1 then
-			data.tossed = 2
-			data.primed = 0
-
-			actor:sound_play(gm.constants.wFwoosh, 0.6, 0.6 + math.random() * 0.1)
-
-			local low_toss = gm.bool(data.low_toss)
-
-			local nade = objGrenade:create(actor.x, actor.y - 5)
-
-			if low_toss then
-				nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
-				nade.vspeed = GRENADE_TOSS_YSPEED
-			else
-				nade.hspeed = GRENADE_THROW_XSPEED * actor.image_xscale
-				nade.vspeed = GRENADE_THROW_YSPEED
-			end
-
-			nade.hspeed = nade.hspeed + actor.pHspeed * GRENADE_VELOCITY_INHERIT_MULT
-			nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
-
-			nade.parent = actor
-			nade.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
-			nade.timer = data.fuse_timer
-			if nade.timer <= GRENADE_SELFSTUN_THRESHOLD then
-				nade.stun_parent = 1
-			end
-		end
-
-		if actor.image_index2 >= 4 then
+		if actor.image_index2 >= 3 then
 			actor:skill_util_reset_activity_state()
-			actor.v_skill_buffered = 0
 		end
 	end
 end)
 stateNemCommandoSpecial:onExit(function(actor, data)
-	if data.tossed < 2 then
+	if data.tossed == 0 then
 		local nade = objGrenade:create(actor.x, actor.y - 5)
 
 		--nade.hspeed = GRENADE_TOSS_XSPEED * actor.image_xscale
