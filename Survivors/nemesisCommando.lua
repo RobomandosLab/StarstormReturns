@@ -28,8 +28,8 @@ local sprite_shoot2_half	= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2Ha
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot2B", path.combine(SPRITE_PATH, "shoot2b.png"), 10, 36, 39)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemCommandoShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 6, 14, 13)
 local sprite_shoot4_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 10, 23, 30)
-local sprite_shoot4_2a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2A", path.combine(SPRITE_PATH, "shoot4_2a.png"), 3, 17, 24)
-local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B", path.combine(SPRITE_PATH, "shoot4_2b.png"), 3, 19, 17)
+local sprite_shoot4_2a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2A", path.combine(SPRITE_PATH, "shoot4_2a.png"), 6, 17, 24)
+local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B", path.combine(SPRITE_PATH, "shoot4_2b.png"), 6, 19, 17)
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
 local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
@@ -645,7 +645,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 			end
 		end
 	else
-		if actor.image_index2 >= 3 then
+		if actor.image_index2 >= 6 then
 			actor:skill_util_reset_activity_state()
 		end
 	end
