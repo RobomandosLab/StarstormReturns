@@ -33,6 +33,9 @@ local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
 local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
+local sprite_drone_idle		= Resources.sprite_load(NAMESPACE, "DronePlayerNemCommandoIdle", path.combine(SPRITE_PATH, "drone_idle.png"), 5, 15, 13)
+local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerNemCommandoShoot", path.combine(SPRITE_PATH, "drone_shoot.png"), 5, 33, 13)
+
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "NemCommandoSkills", path.combine(SPRITE_PATH, "skills.png"), 8, 0, 0)
 local sprite_gash			= Resources.sprite_load(NAMESPACE, "NemCommandoGash", path.combine(SPRITE_PATH, "gash.png"), 4, 25, 25)
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
@@ -92,6 +95,9 @@ nemCommando:set_animations({
 	climb = sprite_climb,
 	--death = sprite_death,
 	--decoy = sprite_decoy,
+
+	drone_idle = sprite_drone_idle,
+	drone_shoot = sprite_drone_shoot,
 })
 
 nemCommando:set_cape_offset(0, -8, 0, -8)
