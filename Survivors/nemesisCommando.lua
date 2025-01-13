@@ -494,7 +494,7 @@ end)
 nemCommandoUtility:onCanActivate(function(actor)
 	local special_id = State.find(NAMESPACE, "nemCommandoSpecial").value
 	local data = actor.actor_state_current_data_table
-	if actor.actor_state_current_id == special_id and data.primed == 1 then
+	if actor.actor_state_current_id == special_id and (data.primed == 1 or data.tossed == 1) then
 		return true
 	end
 end)
@@ -682,6 +682,7 @@ objGrenade:onCreate(function(inst)
 	inst.bounces = 3
 
 	inst.parent = -4
+	inst.damage = 7
 	inst.timer = GRENADE_FUSE_TIMER
 	inst.stun_parent = 0
 	inst.scepter = 0
@@ -693,7 +694,6 @@ objGrenade:onStep(function(inst)
 	end
 	if inst.bounces > 0 then
 		local bounced = false
-		local boosted = inst.scepter > 0
 
 		-- extrapolate where the grenade will be next frame for collision detection
 		-- a half pixel margin is added to mitigate a bug where the grenade bounces incorrectly
@@ -723,11 +723,6 @@ objGrenade:onStep(function(inst)
 			if bounce_h and bounce_v then
 				inst:sound_play(gm.constants.wReflect, 1, 2)
 			end
-
-			if boosted and gm._mod_net_isHost() then
-				local attack = inst.parent:fire_explosion(inst.x, inst.y, 120, 80, 0.5, gm.constants.sEfExplosive).attack_info
-				inst:screen_shake(1)
-			end
 		end
 
 		if inst.bounces <= 0 then
@@ -753,7 +748,7 @@ end)
 objGrenade:onDestroy(function(inst)
 	if not Instance.exists(inst.parent) then return end
 
-	inst:sound_play(gm.constants.wExplosiveShot, 1, 2)
+	inst:sound_play(gm.constants.wBanditShoot2Explo, 1, 1 + math.random() * 0.2)
 	inst:screen_shake(4)
 
 	particleRubble2:create(inst.x, inst.y, 15)
@@ -762,7 +757,7 @@ objGrenade:onDestroy(function(inst)
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
 		local boosted = inst.scepter > 0
 		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 192, 160, 7.0, gm.constants.sEfBombExplodeEnemy).attack_info
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 192, 160, inst.damage, gm.constants.sEfBombExplodeEnemy).attack_info
 			attack.climb = i * 8 * 1.35
 
 			if boosted then
@@ -772,6 +767,20 @@ objGrenade:onDestroy(function(inst)
 
 		if inst.stun_parent == 1 then
 			GM.actor_knockback_inflict(inst.parent, 1, -inst.parent.image_xscale, 60)
+		end
+
+		if boosted then
+			for i=-1, 1 do
+				local nade = objGrenade:create(inst.x, inst.y)
+				nade.timer = GRENADE_FUSE_TIMER * (0.25 + math.random() * 0.25)
+				nade.parent = inst.parent
+				nade.damage = 1.5
+				nade.direction = 90 + i * 45
+				nade.speed = 4 + math.random(4)
+
+				nade.hspeed = nade.hspeed + inst.hspeed
+				nade.vspeed = nade.vspeed + inst.vspeed
+			end
 		end
 	end
 end)
