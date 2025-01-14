@@ -42,6 +42,9 @@ local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.c
 local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
 
 local sound_slash			= Resources.sfx_load(NAMESPACE, "NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))
+local sound_grenade_prime	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadePrimeA", path.combine(SOUND_PATH, "grenade_prime.ogg"))
+local sound_grenade_throw	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeThrowA", path.combine(SOUND_PATH, "grenade_throw.ogg"))
+local sound_grenade_bounce	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeBounceA", path.combine(SOUND_PATH, "grenade_bounce.ogg"))
 
 -- secondary skill tracer
 local particleTracer = Particle.find("ror", "WispGTracer")
@@ -598,7 +601,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 	if data.tossed == 0 then
 		if data.primed == 0 and actor.image_index2 >= 2 then
 			data.primed = 1
-			actor:sound_play(gm.constants.wPickup, 1, 1.5)
+			actor:sound_play(sound_grenade_prime, 1, 1)
 		end
 
 		if actor.image_index2 >= 5 and (data.fuse_timer - 4) % GRENADE_TICK_INTERVAL == 0 then
@@ -625,7 +628,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 				else
 					actor.sprite_index2 = sprite_shoot4_2a
 				end
-				actor:sound_play(gm.constants.wFwoosh, 0.6, 0.6 + math.random() * 0.1)
+				actor:sound_play(sound_grenade_throw, 1, 1.0 + math.random() * 0.2)
 
 				data.tossed = 1
 				data.primed = 0
@@ -718,7 +721,7 @@ objGrenade:onStep(function(inst)
 		end
 
 		if bounced and inst.speed > 1 then
-			inst:sound_play(gm.constants.wGuardHit, 1, 1 + 1 / (inst.speed))
+			inst:sound_play(sound_grenade_bounce, 0.8, 1 + 1 / (inst.speed))
 
 			if bounce_h and bounce_v then
 				inst:sound_play(gm.constants.wReflect, 1, 2)
