@@ -49,7 +49,12 @@ local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "ChirrShoot4", path.
 local chirr = Survivor.new(NAMESPACE, "chirr")
 local chirr_id = chirr.value
 local player_actor
+
 local tamed = {}
+local has_full_party = 0
+
+local tethered
+local time_since_tether_override
 
 chirr:set_stats_base({ -- setting base stats
 	maxhp = 104,
@@ -120,10 +125,14 @@ local chirrSecondary = chirr:get_secondary()
 local chirrUtility =   chirr:get_utility()
 local chirrSpecial =   chirr:get_special()
 
+local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
+chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
+
+local chirrTether = Skill.new(NAMESPACE, "chirrTether")
+
 
 -- her movement control stuff
-local player = Instance.find(gm.constants.pActor)
-local flying = false
+local flying = false -- hover stuff
 local wings
 chirr:onStep(function( actor )
 	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.35 then -- her hover
@@ -157,10 +166,15 @@ chirr:onStep(function( actor )
 		player_actor = actor
 	end
 
-	if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then
-		print("im sooo hungry...")
-	else
-		print("im full now!")
+	if #tamed < 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 1 then -- if your party has newly been made empty
+		has_full_party = 0
+		time_since_tether_override = os.clock()
+		GM._mod_ActorSkillSlot_removeOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether , Skill.OVERRIDE_PRIORITY.cancel) -- sets the override skill to tether
+
+	elseif #tamed >= 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 0 then -- if your party has newly been made full
+		has_full_party = 1
+		GM._mod_ActorSkillSlot_addOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether, Skill.OVERRIDE_PRIORITY.cancel) -- removes the tether override skill
+		time_since_tether_override = os.clock()
 	end
 end)
 
@@ -271,6 +285,7 @@ chirrSecondary.sprite = sprite_skills
 chirrSecondary.subimage = 1
 chirrSecondary.cooldown = 3*60
 chirrSecondary.damage = 3.0
+chirrSecondary.require_key_press = true
 chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateChirrSecondary = State.new(NAMESPACE, "chirrSecondary") -- setting up states again
@@ -291,10 +306,6 @@ stateChirrSecondary:onStep(function( actor, data ) -- using the skill
 	actor.image_speed = 0.25
 
 	actor:skill_util_fix_hspeed()
-
-	for _, friend in ipairs(tamed) do
-		gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
-	end
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -325,6 +336,7 @@ chirrUtility.sprite = sprite_skills
 chirrUtility.subimage = 2
 chirrUtility.cooldown = 15 * 60
 chirrUtility.is_utility = true
+chirrUtility.require_key_press = true
 chirrUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateChirrUtility = State.new(NAMESPACE, "chirrUtility") -- guess what this is, you get three tries
@@ -388,25 +400,24 @@ end)
 chirrSpecial.sprite = sprite_skills
 chirrSpecial.subimage = 3
 chirrSpecial.cooldown = 4 * 60
+chirrSpecial.require_key_press = true
 chirrSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 -- getting a SUUUUUPPPERRR tame
-local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
-chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
-
 chirrSpecialScepter.sprite = sprite_skills
 chirrSpecialScepter.subimage = 5
 chirrSpecialScepter.cooldown = 4 * 60
 chirrSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 -- girl and her tether
-local chirrTether = Skill.new(NAMESPACE, "chirrTether")
 chirrTether.sprite = sprite_skills
 chirrTether.subimage = 4
-chirrTether.cooldown = 2 * 60
+chirrTether.cooldown = 4 * 60
+chirrTether.require_key_press = false
 chirrTether.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
+local stateChirrTether = State.new(NAMESPACE, "chirrTether")
 
 chirrSpecial:clear_callbacks()
 chirrSpecial:onActivate(function( actor, data )
@@ -436,31 +447,43 @@ elite:set_healthbar_icon(sprite_tamed_icon)
 elite.palette = sprite_palette
 gm._mod_elite_generate_palette_all()
 
- -- list of your friends!
-
-Callback.add(Callback.TYPE.onGameStart, "chirrResetTameTable", function(  )
+Callback.add(Callback.TYPE.onGameStart, "chirrResetTameTable", function(  ) -- resets the friend list each game
 	tamed = {}
 end)
 
-Callback.add(Callback.TYPE.onDeath, "chirrTameUpdate", function( victim, fell_out_of_bounds )
+Callback.add(Callback.TYPE.onDeath, "chirrTameUpdate", function( victim, fell_out_of_bounds ) -- removes friends from the list once they die
 	for index, friend in ipairs(tamed) do
 		if friend.value == victim.value then
 			table.remove(tamed, index)
 		end
 	end
-end)
 
-Callback.add(Callback.TYPE.onPickupCollected, "chirrFriendItemSync", function( pickup, player )
-	if pickup.equipment_id == -1 then
-		for _, friend in ipairs(tamed) do
-			friend:item_give(pickup.item_id, 1, pickup.item_stack_kind)	
+	if tethered then
+		if tethered.value == victim.value then
+			tethered = nil
 		end
 	end
 end)
 
-Callback.add(Callback.TYPE.onStageStart, "chirrFriendGroupup", function(  )
+Callback.add(Callback.TYPE.onPickupCollected, "chirrFriendItemSync", function( pickup, player ) -- copies your new items over to your friend
+	if pickup.equipment_id == -1 then
+		for _, friend in ipairs(tamed) do
+			friend:item_give(pickup.item_id, 1, pickup.item_stack_kind)	 
+		end
+	end
+end)
+
+Callback.add(Callback.TYPE.onStageStart, "chirrFriendGroupup", function(  ) -- brings your friends to you on each stage
 	for _, friend in ipairs(tamed) do
 		gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
+	end
+end)
+
+Callback.add(Callback.TYPE.onDamagedProc, "chirrTetherSiphon", function( actor, hit_info ) -- soul siphon ACTIVATE!!
+	if actor.value == player_actor.value and tethered then
+		local damage_to_siphon = hit_info.damage
+		player_actor:heal(damage_to_siphon)
+		GM.damage_inflict(tethered, damage_to_siphon)
 	end
 end)
 
@@ -471,7 +494,7 @@ stateChirrSpecial:onEnter(function( actor, data )
 	obj_tame_heart:create(actor.x + 14 * gm.cos(gm.degtorad(actor:skill_util_facing_direction())), actor.y - 10) -- make the little heart
 
 	local potential_tames = List.new()
-	actor:collision_circle_list(actor.x, actor.y, 120, gm.constants.pActor, true, false, potential_tames, false) -- grab all nearby actors like the util
+	actor:collision_circle_list(actor.x, actor.y, 240, gm.constants.pActor, true, false, potential_tames, false) -- grab all nearby actors like the util
 
 	for _, tame_option in ipairs(potential_tames) do
 		if tame_option.team ~= actor.team and not tame_option.enemy_party and tame_option.hp <= tame_option.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
@@ -479,14 +502,85 @@ stateChirrSpecial:onEnter(function( actor, data )
 				actor:actor_team_set(tame_option, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
 				tame_option.persistent = true -- this stops our friends from going away each stage
 				GM.elite_set(tame_option, elite) -- sets the elite type of your friend
-				table.insert(tamed, tame_option) -- adds them to our list of friends
+				table.insert(tamed, tame_option) -- adds them to our list of total friends
 				tame_option.hp = tame_option.maxhp -- heals them for their troubles
 				actor:inventory_items_copy(actor, tame_option, 0) -- gives our friend our items
-				tame_option.y_range = 175
+				tame_option.y_range = 100
 			end
 		end
 	end
 
 	potential_tames:destroy()
 	actor:skill_util_reset_activity_state()
+end)
+
+chirrTether:clear_callbacks()
+chirrTether:onActivate(function( actor, state )
+	actor:enter_state(stateChirrTether)
+end)
+
+stateChirrTether:clear_callbacks()
+stateChirrTether:onEnter(function( actor, data )
+	data.step = 0
+	data.exit = 0
+end)
+
+local tether_tp_charge_time = .75*60
+
+stateChirrTether:onStep(function( actor, data )
+	if os.clock() - time_since_tether_override > .1 then
+		actor:skill_util_fix_hspeed()
+	
+		data.step = data.step + 1
+
+		local holding = gm.bool(actor.v_skill)
+		if not holding or data.step >= tether_tp_charge_time then
+			actor:skill_util_reset_activity_state()
+		end
+	else
+		data.exit = 1
+		actor:skill_util_reset_activity_state()
+	end
+end)
+
+stateChirrTether:onExit(function( actor, data )
+	if data.exit == 0 then
+		if data.step >= tether_tp_charge_time then 
+			for _, friend in ipairs(tamed) do
+				gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
+			end
+		else
+			if not tethered then
+				local nearby_friends = {}
+				local nearby_allies = List.new()
+				actor:collision_circle_list(actor.x, actor.y, 240, gm.constants.pActor, true, false, nearby_allies, false)
+
+				for _,ally in ipairs(nearby_allies) do
+					for _,friend in ipairs(tamed) do 
+						if ally.value == friend.value then
+							table.insert(nearby_friends, ally)
+						end
+					end
+				end
+
+				local shortest_distance
+				local closest_friend
+				if #nearby_friends > 0 then
+					for _,friend in ipairs(nearby_friends) do
+						local current_distance = math.sqrt((friend.x - actor.x)^2+(friend.y - actor.y)^2)
+
+						if not shortest_distance or shortest_distance > current_distance then
+							shortest_distance = current_distance
+							closest_friend = friend
+							print(shortest_distance)
+						end
+					end
+				end
+
+				tethered = closest_friend
+			else
+				tethered = nil
+			end
+		end
+	end
 end)
