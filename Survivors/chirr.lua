@@ -283,7 +283,7 @@ end)
 -- just skill info
 chirrSecondary.sprite = sprite_skills
 chirrSecondary.subimage = 1
-chirrSecondary.cooldown = 3*60
+chirrSecondary.cooldown = 4*60
 chirrSecondary.damage = 3.0
 chirrSecondary.require_key_press = true
 chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
@@ -447,11 +447,11 @@ elite:set_healthbar_icon(sprite_tamed_icon)
 elite.palette = sprite_palette
 gm._mod_elite_generate_palette_all()
 
-Callback.add(Callback.TYPE.onGameStart, "chirrResetTameTable", function(  ) -- resets the friend list each game
+Callback.add(Callback.TYPE.onGameStart, "SSChirrResetTameTable", function(  ) -- resets the friend list each game
 	tamed = {}
 end)
 
-Callback.add(Callback.TYPE.onDeath, "chirrTameUpdate", function( victim, fell_out_of_bounds ) -- removes friends from the list once they die
+Callback.add(Callback.TYPE.onDeath, "SSChirrTameUpdate", function( victim, fell_out_of_bounds ) -- removes friends from the list once they die
 	for index, friend in ipairs(tamed) do
 		if friend.value == victim.value then
 			table.remove(tamed, index)
@@ -465,7 +465,7 @@ Callback.add(Callback.TYPE.onDeath, "chirrTameUpdate", function( victim, fell_ou
 	end
 end)
 
-Callback.add(Callback.TYPE.onPickupCollected, "chirrFriendItemSync", function( pickup, player ) -- copies your new items over to your friend
+Callback.add(Callback.TYPE.onPickupCollected, "SSChirrFriendItemSync", function( pickup, player ) -- copies your new items over to your friend
 	if pickup.equipment_id == -1 then
 		for _, friend in ipairs(tamed) do
 			friend:item_give(pickup.item_id, 1, pickup.item_stack_kind)	 
@@ -473,17 +473,35 @@ Callback.add(Callback.TYPE.onPickupCollected, "chirrFriendItemSync", function( p
 	end
 end)
 
-Callback.add(Callback.TYPE.onStageStart, "chirrFriendGroupup", function(  ) -- brings your friends to you on each stage
+Callback.add(Callback.TYPE.onStageStart, "SSChirrFriendGroupup", function(  ) -- brings your friends to you on each stage
 	for _, friend in ipairs(tamed) do
 		gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
 	end
 end)
 
-Callback.add(Callback.TYPE.onDamagedProc, "chirrTetherSiphon", function( actor, hit_info ) -- soul siphon ACTIVATE!!
+Callback.add(Callback.TYPE.onDamagedProc, "SSChirrTetherSiphon", function( actor, hit_info ) -- soul siphon ACTIVATE!!
 	if actor.value == player_actor.value and tethered then
 		local damage_to_siphon = hit_info.damage
 		player_actor:heal(damage_to_siphon)
 		GM.damage_inflict(tethered, damage_to_siphon)
+	end
+end)
+
+Callback.add(Callback.TYPE.onDraw, "SSChirrTetherDraw", function(  )
+	if tethered then
+		gm.draw_set_alpha(0.5)
+
+		gm.draw_set_colour(Color.TEXT_GREEN)
+		gm.draw_line_width(player_actor.x, player_actor.y, tethered.x, tethered.y, 5 + math.random() * 2)
+		gm.draw_circle(tethered.x, tethered.y, 4 + math.random() * 8, false)
+		gm.draw_circle(player_actor.x, player_actor.y, 2 + math.random() * 4, false)
+
+		gm.draw_set_colour(Color.WHITE)
+		gm.draw_line_width(player_actor.x, player_actor.y, tethered.x, tethered.y, 2)
+		gm.draw_circle(tethered.x, tethered.y, 8, true)
+		gm.draw_circle(player_actor.x, player_actor.y, 4, true)
+
+		gm.draw_set_alpha(1)
 	end
 end)
 

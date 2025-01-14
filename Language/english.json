@@ -10,6 +10,12 @@
 			"nameUpper" : "EXECUTIONER",
 			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
 			"endQuote": "..and so he left, bloodlust unfulfilled.",
+		},
+		"chirr" : {
+			"name" : "Chirr",
+			"nameUpper" : "CHIRR",
+			"description" : "<y>Chirr</c> is a mystical creature who holds a pure connection with the planet. Her innate healing properties give her a highly supportive role, being also able to withdraw from any battle easily thanks to her high ability to hover. Chirr can befriend one creature at a time through her <g>Natural Link.</c>",
+			"endQuote" : "..and so she left, carrying new life in her spirit."
 		}
 	},
 
@@ -33,6 +39,31 @@
 		"executionerVBoosted": {
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+
+		"chirrZ" : {
+			"name" : "Life Thorns",
+			"description" : "Shoot 3 projectiles for <y>270% total damage</c>."
+		},
+		"chirrX" : {
+			"name" : "Headbutt",
+			"description" : "Headbutt the enemies in front of you for <y>300% damage</c>, <b>stunning them for 3 seconds</c>."
+		},
+		"chirrC" : {
+			"name" : "Sanative Aura",
+			"description" : "Heal yourself and nearby allies for <g>25% of their total health</c>. Healed allies earn <g>increased health regeneration for 6 seconds</c>."
+		},
+		"chirrV" : {
+			"name" : "Natural Link",
+			"description" : "<g>Befriend</c> the closest nearby creature if it's <y>below 50% of its total health</c>. <b>Only one creature may be tamed at a time</c>."
+		},
+		"chirrVBoosted" : {
+			"name" : "Prime Natural Link",
+			"description" : "<g>Befriend</c> the closest nearby creature if it's <y>below 50% of its total health</c>. <b>Multiple creatures may be tamed at a time</c>."
+		},
+		"chirrTether" : {
+			"name" : "Unbreakable Bond",
+			"description" : "<b>Press</c> to connect yourself to a friend, redirecting all damage to them. <b>Hold</c> to teleport all nearby friends to Chirr."
 		},
 	},
 
