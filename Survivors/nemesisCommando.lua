@@ -617,11 +617,29 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 
 		if actor.image_index2 >= 4 then
 			local release = not actor:control("skill4", 0)
+			if not actor:is_authority() then
+				-- for online purposes -- see below on wtf this means
+				release = gm.bool(actor.activity_var2)
+			end
 			local low_toss = gm.bool(actor.ropeDown)
 			local auto_toss = data.fuse_timer <= GRENADE_AUTOTHROW_THRESHOLD
 
 			if (release or low_toss or auto_toss) and data.tossed == 0 then
-				-- TODO: this is probably better handled in another actor state
+				if gm._mod_net_isOnline() then
+					-- magical bullshit to sync grenade releasing
+					-- so the thing is, there's no way to tell if another player is holding down their skill input.
+					-- so to actually sync this, i use the game's own message system to send a vanilla packet -- id 43: "set_activity_var2"
+					-- this packet sets the activity_var2 variable on the actor when received. so this way we can inform the host/other clients that a nemmando released his grenade.
+					-- it also sets the actor's xscale i guess
+					if gm._mod_net_isHost() then
+						-- args: [not sure], packet id, object index, net id, value to write to activity_var2, actor xscale
+						gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, gm.sign(actor.image_xscale))
+					else
+						-- args: packet id, value to write to activity_var2, actor xscale
+						gm.client_message_send(43, 1, gm.sign(actor.image_xscale))
+					end
+				end
+
 				actor.image_index2 = 0
 				if low_toss then
 					actor.sprite_index2 = sprite_shoot4_2b
@@ -678,6 +696,40 @@ stateNemCommandoSpecial:onExit(function(actor, data)
 	end
 	actor:skill_util_strafe_exit()
 end)
+
+-- used to sync the scepter grenade upgrade's split nades.
+local packetGrenadeSync = Packet.new()
+packetGrenadeSync:onReceived(function(msg)
+	local owner = msg:read_instance()
+	local x, y = msg:read_ushort(), msg:read_ushort()
+	local hspeed, vspeed = msg:read_half(), msg:read_half()
+	local timer = msg:read_byte()
+
+	if not owner:exists() then return end
+
+	local nade = objGrenade:create(x, y)
+	nade.parent = owner
+	nade.hspeed = hspeed
+	nade.vspeed = vspeed
+	nade.timer = timer
+end)
+
+local function sync_grenade(owner, x, y, hspeed, vspeed, timer)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_grenade called on client!")
+		return
+	end
+
+	local msg = packetGrenadeSync:message_begin()
+	msg:write_instance(owner)
+	msg:write_ushort(x)
+	msg:write_ushort(y)
+	msg:write_half(hspeed)
+	msg:write_half(vspeed)
+	msg:write_byte(timer)
+
+	msg:send_to_all()
+end
 
 objGrenade:clear_callbacks()
 objGrenade:onCreate(function(inst)
@@ -783,6 +835,10 @@ objGrenade:onDestroy(function(inst)
 
 				nade.hspeed = nade.hspeed + inst.hspeed
 				nade.vspeed = nade.vspeed + inst.vspeed
+
+				if gm._mod_net_isOnline() then
+					sync_grenade(nade.parent, nade.x, nade.y, nade.hspeed, nade.vspeed, nade.timer)
+				end
 			end
 		end
 	end
