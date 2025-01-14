@@ -470,8 +470,8 @@ objSlash:onStep(function(inst)
 	for _, actor in ipairs(actors) do
 		if inst:attack_collision_canhit(actor) and not data.hit_list[actor.id] then
 			if gm._mod_net_isHost() then
-				local attack = inst.parent:fire_direct(actor, 1.8, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
-				attack.__ssr_nemmando_wound = ATTACK_TAG_EXTEND_WOUND
+				local attack = inst.parent:fire_direct(actor, 0.6, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
+				attack.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 			end
 
 			inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
