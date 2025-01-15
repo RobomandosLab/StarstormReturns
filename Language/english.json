@@ -50,7 +50,7 @@
 		},
 		"nemesisCommandoX2": {
 			"name": "Distant Gash",
-			"description": "Slash in a line forward for <y>60% damage</c>, <r>wounding</c> enemies for 6 seconds"
+			"description": "Slash in a line forward for <y>90% damage</c>, <r>wounding</c> enemies for 6 seconds."
 		},
 		"nemesisCommandoC": {
 			"name": "Tactical Roll",

@@ -430,7 +430,7 @@ objSlash:onCreate(function(inst)
 
 	local data = inst:get_data()
 	data.hit_list = {}
-	data.lifetime = 110
+	data.lifetime = 80
 end)
 objSlash:onStep(function(inst)
 	if not Instance.exists(inst.parent) then
@@ -470,7 +470,7 @@ objSlash:onStep(function(inst)
 	for _, actor in ipairs(actors) do
 		if inst:attack_collision_canhit(actor) and not data.hit_list[actor.id] then
 			if gm._mod_net_isHost() then
-				local attack = inst.parent:fire_direct(actor, 0.6, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
+				local attack = inst.parent:fire_direct(actor, 0.9, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
 				attack.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 			end
 
