@@ -105,22 +105,11 @@ executioner.sprite_credits = sprite_credits
 executioner:clear_callbacks()
 executioner:onInit(function(actor)
 	-- setup half-sprite nonsense
-	local idle_half = Array.new()
-	local walk_half = Array.new()
-	local jump_half = Array.new()
-	local jump_peak_half = Array.new()
-	local fall_half = Array.new()
-	idle_half:push(sprite_idle, sprite_idle_half, 0)
-	walk_half:push(sprite_walk, sprite_walk_half, 0, sprite_walk_back)
-	jump_half:push(sprite_jump, sprite_jump_half, 0)
-	jump_peak_half:push(sprite_jump_peak, sprite_jump_peak_half, 0)
-	fall_half:push(sprite_fall, sprite_fall_half, 0)
-
-	actor.sprite_idle_half = idle_half
-	actor.sprite_walk_half = walk_half
-	actor.sprite_jump_half = jump_half
-	actor.sprite_jump_peak_half = jump_peak_half
-	actor.sprite_fall_half = fall_half
+	actor.sprite_idle_half		= Array.new({sprite_idle,		sprite_idle_half, 0})
+	actor.sprite_walk_half		= Array.new({sprite_walk,		sprite_walk_half, 0, sprite_walk_back})
+	actor.sprite_jump_half		= Array.new({sprite_jump,		sprite_jump_half, 0})
+	actor.sprite_jump_peak_half	= Array.new({sprite_jump_peak,	sprite_jump_peak_half, 0})
+	actor.sprite_fall_half		= Array.new({sprite_fall,		sprite_fall_half, 0})
 
 	actor:survivor_util_init_half_sprites()
 end)
