@@ -3,7 +3,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- assets.
 local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 22, 28, 0)
-local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorExecutioner", path.combine(SPRITE_PATH, "credits.png"), 1, 6, 12)
@@ -43,6 +43,8 @@ local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "ExecutionerSparks", pa
 local sprite_tracer2		= Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
 local sprite_ion_particle	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticle", path.combine(SPRITE_PATH, "ionParticle.png"), 5, 8, 8)
 local sprite_ion_particleS	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticleS", path.combine(SPRITE_PATH, "ionParticleS.png"), 5, 8, 8)
+
+local sprite_log			= Resources.sprite_load(NAMESPACE, "ExecutionerLog", path.combine(SPRITE_PATH, "log.png"))
 
 local sound_shoot1			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
@@ -619,3 +621,5 @@ Callback.add(Callback.TYPE.onAttackHandleEnd, "SSExecutionCDR", function(attack_
 		GM.actor_skill_reset_cooldowns(attack_info.parent, -60 * kill_count, true, false, true)
 	end
 end)
+
+local executionerLog = Survivor_Log.new(executioner, sprite_log)
