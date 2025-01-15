@@ -261,6 +261,25 @@ executionerSecondary:clear_callbacks()
 executionerSecondary:onActivate(function(actor, skill)
 	actor:enter_state(stateExecutionerSecondary)
 end)
+executionerSecondary:onStep(function(actor, skill)
+	local ion_rounds = skill.stock
+
+	local frame = 1
+
+	if ion_rounds == 0 then
+		frame = 1
+	elseif ion_rounds < 4 then
+		frame = 2
+	elseif ion_rounds < 7 then
+		frame = 3
+	elseif ion_rounds < 10 then
+		frame = 4
+	else
+		frame = 5
+	end
+
+	skill.subimage = frame
+end)
 stateExecutionerSecondary:clear_callbacks()
 stateExecutionerSecondary:onEnter(function(actor, data)
 	actor.image_index = 0
@@ -333,28 +352,6 @@ Callback.add(Callback.TYPE.onKillProc, "SSIonCharge", function(victim, killer)
 			GM.actor_skill_add_stock_networked(killer, 1)
 		end
 	end
-end)
-
--- update his secondary's subimage depending on how many ion rounds he has.
-executioner:onStep(function(actor)
-	local ion_burst = actor:get_active_skill(Skill.SLOT.secondary)
-	local ion_rounds = ion_burst.stock
-
-	local frame = 1
-
-	if ion_rounds == 0 then
-		frame = 1
-	elseif ion_rounds < 4 then
-		frame = 2
-	elseif ion_rounds < 7 then
-		frame = 3
-	elseif ion_rounds < 10 then
-		frame = 4
-	else
-		frame = 5
-	end
-
-	ion_burst.subimage = frame
 end)
 
 -- Crowd Dispersion
