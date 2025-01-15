@@ -22,6 +22,7 @@ local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "ExecutionerFallHalf"
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 12, 18)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 11, 38, 17)
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
+--local sprite_palette		= Resources.sprite_load(NAMESPACE, "ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
 
 local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
@@ -101,7 +102,8 @@ executioner:set_primary_color(Color.from_rgb(175, 113, 126))
 executioner.sprite_loadout = sprite_loadout
 executioner.sprite_portrait = sprite_portrait
 executioner.sprite_portrait_small = sprite_portrait_small
-executioner.sprite_title = sprite_walk
+executioner.sprite_idle = sprite_idle -- used by skin systen for idle sprite
+executioner.sprite_title = sprite_walk -- also used by skin system for walk sprite
 executioner.sprite_credits = sprite_credits
 
 executioner:clear_callbacks()
