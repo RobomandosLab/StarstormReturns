@@ -46,7 +46,7 @@
 		},
 		"nemesisCommandoX": {
 			"name": "Single Tap",
-			"description": "Shoot an enemy for <y>150% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
+			"description": "Shoot an enemy for <y>200% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
 		},
 		"nemesisCommandoX2": {
 			"name": "Distant Gash",

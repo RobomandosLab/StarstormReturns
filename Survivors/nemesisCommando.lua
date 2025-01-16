@@ -272,7 +272,7 @@ end)
 -- Single Tap
 nemCommandoSecondary:set_skill_icon(sprite_skills, 1)
 nemCommandoSecondary.cooldown = 2 * 60
-nemCommandoSecondary.damage = 1.5
+nemCommandoSecondary.damage = 2.0
 nemCommandoSecondary.max_stock = 4
 -- is_primary makes the skill's cooldown reduced by attack speed, but also removes cooldown timer on HUD, and causes other unintuitive issues. is it worth?
 --nemCommandoSecondary.is_primary = true
