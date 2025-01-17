@@ -184,4 +184,8 @@
 	"actor" : {
 		"Exploder.name" : "Exploder"
 	},
+
+	"elite" : {
+		"poison.name" : "Poisoning %s"
+	}
 }
