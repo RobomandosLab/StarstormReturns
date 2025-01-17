@@ -174,10 +174,10 @@
 			"name": "Uranium Horseshoe",
 			"pickup" : "Increase movement speed and jump height.",
 			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
-			"destination" : "ur mums house lmao xd",
-			"date" : "now",
-			"story" : "the horses get radiation poisoning huh? not a bad idea...",
-			"priority": "<r>Standart/Volatile</c>"
+			"destination" : "6900,\nMartian's Face Horse Care and Farm Supplies,\nMars",
+			"date" : "04/20/2056",
+			"story" : "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
+			"priority": "<w>Standard</c>"
 		}
 	},
 
