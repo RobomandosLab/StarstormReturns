@@ -169,6 +169,15 @@
 			"date" : "11/21/2056",
 			"story" : "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
 			"priority": "<r>Fragile</c>"
+		},
+		"uraniumHorseshoe" : {
+			"name": "Uranium Horseshoe",
+			"pickup" : "Increase movement speed and jump height.",
+			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			"destination" : "6900,\nMartian's Face Horse Care and Farm Supplies,\nMars",
+			"date" : "04/20/2056",
+			"story" : "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
+			"priority": "<w>Standard</c>"
 		}
 	},
 
