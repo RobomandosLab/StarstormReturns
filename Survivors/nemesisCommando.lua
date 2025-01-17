@@ -1,6 +1,8 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
+local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
+
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
 local sprite_idle2			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 15, 12)
 local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "NemCommandoIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 15, 12)
@@ -106,7 +108,9 @@ nemCommando:set_animations({
 nemCommando:set_cape_offset(0, -8, 0, -8)
 nemCommando:set_primary_color(Color.from_rgb(250, 40, 40))
 
+nemCommando.sprite_idle = sprite_idle
 nemCommando.sprite_title = sprite_walk
+nemCommando.sprite_credits = sprite_credits
 
 -- utility function for updating his basic sprites depending on if his last skill was the gun
 local function nemmando_update_sprites(actor, has_gun)
