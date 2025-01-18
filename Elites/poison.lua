@@ -12,6 +12,8 @@ elitePoison.healthbar_icon = sprite_icon
 elitePoison.palette = sprite_palette
 elitePoison.blend_col = Color.PURPLE
 
+-- when called without arguments, generates palettes for every elite affix, for every registered monster palette
+-- once more elite types are implemented, this should probably be moved elsewhere to be called just once after all elite types are initialized
 GM.elite_generate_palettes()
 
 local itemEliteOrbPoison = Item.new(NAMESPACE, "eliteOrbPoison", true) -- true for no logbook
@@ -63,9 +65,10 @@ itemEliteOrbPoison:onPostStep(function(actor, stack)
 end)
 
 local blacklist = {
-	["magmaWorm"] = true,
+	["magmaWorm"] = true, -- worm uses blend_col, looks ugly, and isn't made very interesting by this elite affix anyhow
 }
 
+-- dunno if this is the best way to go about this, but it works well enough for now
 local all_monster_cards = Monster_Card.find_all()
 for i, card in ipairs(all_monster_cards) do
 	if not blacklist[card.identifier] then
