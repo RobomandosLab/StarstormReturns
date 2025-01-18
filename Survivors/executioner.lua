@@ -181,7 +181,7 @@ stateExecutionerPrimary:onStep(function(actor, data)
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
 					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Attack_Info.TRACER.commando1)
-					attack.climb = i * 8
+					attack.climb = i * 8 * 1.35
 				end
 			end
 		end
@@ -319,7 +319,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_sparks2, ion_tracer).attack_info
 				attack_info:set_stun(1.0)
-				attack_info.climb = i * 8
+				attack_info.climb = i * 8 * 1.35
 			end
 		end
 
@@ -585,7 +585,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 					local buff_shadow_clone = Buff.find("ror", "shadowClone")
 					for i=0, actor:buff_stack_count(buff_shadow_clone) do
 						local attack_info = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage).attack_info
-						attack_info.climb = i * 8
+						attack_info.climb = i * 8 * 1.35
 						attack_info.y = actor.y
 						attack_info.execution = 1
 					end
