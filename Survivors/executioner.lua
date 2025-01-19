@@ -40,6 +40,9 @@ local sprite_shoot5PreAir	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5P
 local sprite_shoot5PreSlide	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5PreSlide", path.combine(SPRITE_PATH, "shoot5PreSlide.png"), 5, 39, 63)
 local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 18, 70, 82)
 
+local sprite_drone_idle		= Resources.sprite_load(NAMESPACE, "DronePlayerExecutionerIdle", path.combine(SPRITE_PATH, "droneIdle.png"), 5, 11, 14)
+local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerExecutionerShoot", path.combine(SPRITE_PATH, "droneShoot.png"), 5, 33, 13)
+
 local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "ExecutionerSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
 local sprite_tracer2		= Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
 local sprite_ion_particle	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticle", path.combine(SPRITE_PATH, "ionParticle.png"), 5, 8, 8)
@@ -94,6 +97,8 @@ executioner:set_animations({
 	climb = sprite_climb,
 	death = sprite_death,
 	decoy = sprite_decoy,
+	drone_idle = sprite_drone_idle,
+	drone_shoot = sprite_drone_shoot,
 })
 
 executioner:set_cape_offset(0, -8, 0, -12)
