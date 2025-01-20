@@ -364,6 +364,8 @@ stateChirrUtility:onStep(function( actor, data )
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = .25
 
+	actor:skill_util_fix_hspeed()
+
 	if actor.image_index == 12 then -- when the animation reaches the final frame
 		actor:sound_play(sound_shoot3b, 1.2, 0.9 + math.random() * 0.2)
 
