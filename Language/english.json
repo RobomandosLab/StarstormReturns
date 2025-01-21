@@ -390,7 +390,6 @@
 			"priority": "<r>Volatile</c>"
 		}
 	},
-	
 	"artifact" : {
 		"multitude" : {
 			"pickupName" : "Artifact of Multitude",
@@ -410,7 +409,10 @@
 			"description": "Gold drops are doubled but they must be picked up.",
 		}
 	},
-	
+	"actor" : {
+		"Exploder.name" : "Exploder",
+		"Follower.name" : "Follower",
+	},
 	
 	"actor" : {
 		"Exploder.name" : "Exploder",
