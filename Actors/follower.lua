@@ -14,7 +14,7 @@ local sprite_death		= Resources.sprite_load(NAMESPACE, "FollowerDeath",		path.co
 local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "FollowerShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 17, 32, 65)
 local sprite_spark		= Resources.sprite_load(NAMESPACE, "FollowerSpark",		path.combine(SPRITE_PATH, "spark.png"), 4, 12, 12)
 
-local sprite_buff		= Resources.sprite_load(NAMESPACE, "BuffLamp",			path.combine(SPRITE_PATH, "lampBuff.png"), 1, 13, 13)
+local sprite_buff		= Resources.sprite_load(NAMESPACE, "BuffLamp",			path.combine(PATH, "Sprites/Buffs/lamp.png"), 1, 13, 13)
 
 gm.elite_generate_palettes(sprite_palette)
 
