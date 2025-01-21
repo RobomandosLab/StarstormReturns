@@ -34,6 +34,8 @@ follower.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 local efFollowerAttack = Object.new(NAMESPACE, "EfFollowerAttack")
 efFollowerAttack.obj_depth = 10
 
+local packetFollowerAttackFX = Packet.new()
+
 local EFFECT_COLOR = 0x9EE4F7
 local FOLLOWER_ALLY_RADIUS = 500
 
@@ -145,28 +147,70 @@ statePrimary:onStep(function(actor, data)
 	end
 
 	if actor.image_index >= 8 + data.fired * 2 and data.fired < 2 then
-		local ax, ay = data.attack_x, data.attack_y
+		local end_x, end_y = data.attack_x, data.attack_y
 
-		if actor:is_authority() then
-			actor:fire_explosion(ax, ay, 8, 8, actor:skill_get_damage(skillPrimary), sprite_spark)
+		if gm._mod_net_isHost() then
+			actor:fire_explosion(end_x, end_y, 8, 8, actor:skill_get_damage(skillPrimary), sprite_spark)
 
 			if Instance.exists(target) and target.parent.team == actor.team then
 				target.parent:buff_apply(buffLamp, 4 * 60)
-				GM.actor_heal_networked(target.parent, actor.damage)
+				GM.actor_heal_networked(target.parent, actor.damage, false)
+			end
+			local ef = efFollowerAttack:create(actor.x, actor.y-40)
+			ef.endx = end_x
+			ef.endy = end_y
+
+			if gm._mod_net_isOnline() then
+				local msg = packetFollowerAttackFX:message_begin()
+				msg:write_instance(actor)
+				msg:write_short(end_x)
+				msg:write_short(end_y)
+				msg:send_to_all()
 			end
 		end
 
-		particleSpark:create(ax, ay, 4)
+		particleSpark:create(end_x, end_y, 4)
 		actor:sound_play(gm.constants.wChainLightning2, 0.8, 0.7 + data.fired * 0.2 + math.random() * 0.2)
-
-		local ef = efFollowerAttack:create(actor.x, actor.y-40)
-		ef.endx = ax
-		ef.endy = ay
 
 		data.fired = data.fired + 1
 	end
 
 	actor:skill_util_exit_state_on_anim_end()
+end)
+
+packetFollowerAttackFX:onReceived(function(msg)
+	local actor = msg:read_instance()
+	local endx = msg:read_short()
+	local endy = msg:read_short()
+	local ef = efFollowerAttack:create(actor.x, actor.y-40)
+	ef.endx = endx
+	ef.endy = endy
+end)
+
+efFollowerAttack:clear_callbacks()
+efFollowerAttack:onCreate(function(self)
+	self.endx = self.x
+	self.endy = self.y
+
+	self.lifetime = 18
+end)
+efFollowerAttack:onStep(function(self)
+	self.lifetime = self.lifetime - 1
+	if self.lifetime < 0 then
+		self:destroy()
+	end
+end)
+efFollowerAttack:onDraw(function(self)
+	local alpha = self.lifetime / 18
+	gm.draw_set_alpha(alpha)
+	gm.draw_set_colour(EFFECT_COLOR)
+	gm.draw_lightning(self.x, self.y, self.endx, self.endy, EFFECT_COLOR)
+
+	gm.draw_set_alpha(alpha * 0.2)
+	for i=1, 3 do
+		gm.draw_circle(self.endx, self.endy, 18 * i + math.random(4), false)
+	end
+	gm.draw_set_alpha(1)
 end)
 
 buffLamp.icon_sprite = sprite_buff
@@ -211,32 +255,6 @@ buffLamp:onPostDraw(function(actor, stack)
 	gm.draw_set_colour(EFFECT_COLOR)
 	for i=1, 3 do
 		gm.draw_circle(actor.ghost_x, actor.ghost_y, radius * i + math.random(4), false)
-	end
-	gm.draw_set_alpha(1)
-end)
-
-efFollowerAttack:clear_callbacks()
-efFollowerAttack:onCreate(function(self)
-	self.endx = self.x
-	self.endy = self.y
-
-	self.lifetime = 18
-end)
-efFollowerAttack:onStep(function(self)
-	self.lifetime = self.lifetime - 1
-	if self.lifetime < 0 then
-		self:destroy()
-	end
-end)
-efFollowerAttack:onDraw(function(self)
-	local alpha = self.lifetime / 18
-	gm.draw_set_alpha(alpha)
-	gm.draw_set_colour(EFFECT_COLOR)
-	gm.draw_lightning(self.x, self.y, self.endx, self.endy, EFFECT_COLOR)
-
-	gm.draw_set_alpha(alpha * 0.2)
-	for i=1, 3 do
-		gm.draw_circle(self.endx, self.endy, 18 * i + math.random(4), false)
 	end
 	gm.draw_set_alpha(1)
 end)
