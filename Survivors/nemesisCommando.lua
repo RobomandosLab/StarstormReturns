@@ -22,6 +22,7 @@ local sprite_fall			= Resources.sprite_load(NAMESPACE, "NemCommandoFall", path.c
 local sprite_fall2			= Resources.sprite_load(NAMESPACE, "NemCommandoFall2", path.combine(SPRITE_PATH, "fall2.png"), 1, 18, 18)
 local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "NemCommandoFallHalf", path.combine(SPRITE_PATH, "fallHalf.png"), 1, 18, 16)
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "NemCommandoClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 20, 18)
+local sprite_death			= Resources.sprite_load(NAMESPACE, "NemCommandoDeath", path.combine(SPRITE_PATH, "death.png"), 13, 31, 9)
 
 local sprite_shoot1_1		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 28, 62)
 local sprite_shoot1_2		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 28, 62)
@@ -98,7 +99,7 @@ nemCommando:set_animations({
 	jump_peak = sprite_jump_peak,
 	fall = sprite_fall,
 	climb = sprite_climb,
-	--death = sprite_death,
+	death = sprite_death,
 	--decoy = sprite_decoy,
 
 	drone_idle = sprite_drone_idle,
