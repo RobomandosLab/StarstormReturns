@@ -182,6 +182,7 @@
 	},
 
 	"actor" : {
-		"Exploder.name" : "Exploder"
+		"Exploder.name" : "Exploder",
+		"Follower.name" : "Follower",
 	},
 }
