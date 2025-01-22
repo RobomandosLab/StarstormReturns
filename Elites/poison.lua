@@ -55,7 +55,7 @@ itemEliteOrbPoison:onPostStep(function(actor, stack)
 		if math.random() < 0.05 then
 			GM.sound_play_networked(sound_poison_cloud, 1, 0.9 + math.random() * 0.2, actor.x, actor.y)
 
-			local cloud = GM.instance_create(actor.x, actor.y, gm.constants.oMushDust)
+			local cloud = GM.instance_create(actor.x, actor.bbox_bottom - 24, gm.constants.oMushDust)
 			cloud.parent = actor
 			cloud.team = actor.team
 			cloud.damage = actor.damage * 0.3
