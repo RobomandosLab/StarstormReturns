@@ -32,14 +32,19 @@ follower.obj_sprite = sprite_idle
 follower.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 
 local efFollowerAttack = Object.new(NAMESPACE, "EfFollowerAttack")
-efFollowerAttack.obj_depth = 10
+local efFollowerTelegraph = Object.new(NAMESPACE, "EfFollowerTelegraph")
+efFollowerAttack.obj_depth = 9
+efFollowerTelegraph.obj_depth = 10
 
 local EFFECT_COLOR = 0x9EE4F7
-local FOLLOWER_ALLY_RADIUS = 500
+local FOLLOWER_ALLY_SEARCH_RADIUS = 750
+local FOLLOWER_ALLY_SEARCH_GIVE_UP_THRESHOLD = 20
 
 local skillPrimary = Skill.new(NAMESPACE, "followerPrimary")
 local statePrimary = State.new(NAMESPACE, "followerPrimary")
 local buffLamp = Buff.new(NAMESPACE, "lamp")
+
+local _current_ally_check_frame_offset = 0
 
 follower:clear_callbacks()
 follower:onCreate(function(actor)
@@ -67,8 +72,11 @@ follower:onCreate(function(actor)
 
 	actor.ai_max_distance_y = 500
 	actor.y_range = 500
-	actor.z_range = 700
+	actor.z_range = 500
 	actor:set_default_skill(Skill.SLOT.primary, skillPrimary)
+
+	actor.ally_check_frame_offset = _current_ally_check_frame_offset
+	_current_ally_check_frame_offset = _current_ally_check_frame_offset + 1
 
 	actor:init_actor_late()
 end)
@@ -76,7 +84,7 @@ follower:onStep(function(actor)
 	if not actor:is_authority() then return end
 	if Global.time_stop ~= 0 then return end
 	if actor.actor_state_current_id ~= -1 then return end
-	if Global._current_frame % 30 ~= 0 then return end
+	if (Global._current_frame + actor.ally_check_frame_offset) % 30 ~= 0 then return end
 
 	local should_find_ally = false
 	local target = actor.target
@@ -86,11 +94,17 @@ follower:onStep(function(actor)
 	end
 
 	if should_find_ally then
-		local allies = List.wrap(actor:find_characters_circle(actor.x, actor.y, FOLLOWER_ALLY_RADIUS, true, actor.team, true))
+		local allies = List.wrap(actor:find_characters_circle(actor.x, actor.y, FOLLOWER_ALLY_SEARCH_RADIUS, true, actor.team, true))
 		local current_candidate
 		local current_distance = math.huge
-		for _, candidate in ipairs(allies) do
+
+		-- only search through 20 potential allies, as otherwise it gets exceedingly slow
+		for i=1, math.min(#allies, FOLLOWER_ALLY_SEARCH_GIVE_UP_THRESHOLD) do
+			local candidate = allies[i]
 			local viable = true
+			-- theoretically faster, doesn't seem to make a big difference though?
+			--local dx, dy = actor.x - candidate.x, actor.y - candidate.y
+			--local distance = dx*dx + dy*dy
 			local distance = gm.point_distance(actor.x, actor.y, candidate.x, candidate.y)
 			if candidate:get_object_index_self() == follower_id then
 				viable = false
@@ -120,6 +134,7 @@ statePrimary:clear_callbacks()
 statePrimary:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+	data.telegraphed = 0
 
 	data.attack_x = actor.x
 	data.attack_y = actor.y
@@ -127,8 +142,11 @@ statePrimary:onEnter(function(actor, data)
 	-- `target` is an oActorTargetPlayer/oActorTargetEnemy object here, NOT the actor instance itself
 	local target = actor.target
 	if Instance.exists(target) then
-		data.attack_x = target.x
-		data.attack_y = target.y
+		local direction = math.random(360)
+		local distance = math.random(45)
+
+		data.attack_x = target.x + gm.lengthdir_x(distance, direction)
+		data.attack_y = target.y + gm.lengthdir_y(distance, direction)
 	end
 	actor.interrupt_sound = actor:sound_play(sound_shoot, 1.0, (0.9 + math.random() * 0.2))
 end)
@@ -137,18 +155,21 @@ statePrimary:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot1, 0.2)
 
 	local target = actor.target
-	if Instance.exists(target) then
-		if actor.image_index < 6 or target.parent.team == actor.team then
-			data.attack_x = target.x
-			data.attack_y = target.y
-		end
+	if Instance.exists(target) and target.parent.team == actor.team then
+		data.attack_x = target.x
+		data.attack_y = target.y
+	end
+
+	if data.telegraphed == 0 then
+		local ef = efFollowerTelegraph:create(data.attack_x, data.attack_y)
+		data.telegraphed = 1
 	end
 
 	if actor.image_index >= 8 + data.fired * 2 and data.fired < 2 then
 		if gm._mod_net_isHost() then
 			local end_x, end_y = data.attack_x, data.attack_y
 
-			actor:fire_explosion(end_x, end_y, 8, 8, actor:skill_get_damage(skillPrimary), sprite_spark)
+			actor:fire_explosion(end_x, end_y, 20, 20, actor:skill_get_damage(skillPrimary), sprite_spark)
 
 			if Instance.exists(target) and target.parent.team == actor.team then
 				target.parent:buff_apply(buffLamp, 4 * 60)
@@ -179,13 +200,14 @@ efFollowerAttack:onCreate(function(self)
 	self:instance_sync()
 end)
 efFollowerAttack:onStep(function(self)
-	self.lifetime = self.lifetime - 1
-	if self.lifetime < 0 then
-		self:destroy()
-	end
 	if self.sparked == 0 then
 		particleSpark:create(self.end_x, self.end_y, 4)
 		self.sparked = 1
+	end
+
+	self.lifetime = self.lifetime - 1
+	if self.lifetime <= 0 then
+		self:destroy()
 	end
 end)
 efFollowerAttack:onDraw(function(self)
@@ -207,6 +229,26 @@ end)
 efFollowerAttack:onDeserialize(function(self, msg)
 	self.end_x = msg:read_short()
 	self.end_y = msg:read_short()
+end)
+
+efFollowerTelegraph:clear_callbacks()
+efFollowerTelegraph:onCreate(function(self)
+	self.lifetime = 45
+	self.radius = 0
+end)
+efFollowerTelegraph:onStep(function(self)
+	self.lifetime = self.lifetime - 1
+	if self.lifetime <= 0 then
+		self:destroy()
+	end
+
+	self.radius = self.radius + 0.2
+	if self.radius > 4 then
+		self.radius = 0
+	end
+end)
+efFollowerTelegraph:onDraw(function(self)
+	gm.draw_missile_indicator(self.x, self.y, self.radius * 3)
 end)
 
 buffLamp.icon_sprite = sprite_buff
@@ -277,4 +319,8 @@ end
 for _, s in ipairs(stages_loop) do
 	local stage = Stage.find(s)
 	stage:add_monster_loop(monsterCard)
+end
+
+for _, stage in ipairs(Stage.find_all()) do
+	stage:add_monster(monsterCard)
 end
