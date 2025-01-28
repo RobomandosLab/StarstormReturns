@@ -5,6 +5,6 @@
 	"description": "Content mod featuring survivors, enemies, items, stages, and more!",
 	"dependencies": [
 		"ReturnOfModding-ReturnOfModding-1.0.56",
-		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.8"
+		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.11"
 	]
 }
