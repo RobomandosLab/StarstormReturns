@@ -49,7 +49,7 @@
 		"brassKnuckles" : {
 			"name": "Brass Knuckles",
 			"pickup" : "Deal extra damage at close range.",
-			"description": "Deal <y>+35% damage</c> to enemies within <y>5m</c> <c_stack>(+2.5 per stack)</c>.",
+			"description": "Deal <y>+35% damage</c> to enemies within <y>2.8m</c> <c_stack>(+1.4 per stack)</c>.",
 			"destination": "UESPD,\nE42,\nUES Halberd B2",
 			"date": "03/01/2056",
 			"story" : "We found this at the crime scene. We need to check for DNA against the rest of the evidence. I still cant believe they got away.\nThe back has some kind of symbol, maybe that could give us a clue. I'll be heading to the west of [REDACTED], I know someone who can help us solve the case.",
@@ -178,7 +178,16 @@
 			"date" : "04/20/2056",
 			"story" : "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
 			"priority": "<w>Standard</c>"
-		}
+		},
+		"blastKnuckles" : {
+			"name": "Blast Knuckles",
+			"pickup" : "Your attacks explode at close range!",
+			"description": "Hitting an enemy within <y>4.5m</c> also <y>blasts behind them</c> for <y>220% <c_stack>(+220% per stack) <y>damage.</c> Hold up to <y>5 charges</c>. Gain a charge every <y>3 seconds.</c>",
+			"destination" : "todo",
+			"date" : "todo",
+			"story" : "todo",
+			"priority": "<g>Priority</c>"
+		},
 	},
 
 	"actor" : {
