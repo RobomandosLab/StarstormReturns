@@ -1,4 +1,5 @@
-local sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckles", path.combine(PATH, "Sprites/Items/blastKnuckles.png"), 1, 16, 14)
+local item_sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckles", path.combine(PATH, "Sprites/Items/blastKnuckles.png"), 1, 16, 14)
+local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffBlastCharge", path.combine(PATH, "Sprites/Buffs/blastCharge.png"), 1, 5, 14)
 
 local RADIUS = 96
 local RADIUS_SQUARED = RADIUS * RADIUS
@@ -12,8 +13,10 @@ local CHARGE_CAPACITY = 5
 local CHARGE_INITIAL = 3
 local CHARGE_INTERVAL = 3 * 60
 
+local COLOR = Color.from_rgb(76, 128, 86)
+
 local blastKnuckles = Item.new(NAMESPACE, "blastKnuckles")
-blastKnuckles:set_sprite(sprite)
+blastKnuckles:set_sprite(item_sprite)
 blastKnuckles:set_tier(Item.TIER.uncommon)
 blastKnuckles:set_loot_tags(Item.LOOT_TAG.category_damage)
 
@@ -21,7 +24,8 @@ local buffBlastCharge = Buff.new(NAMESPACE, "blastKnuckles")
 buffBlastCharge.is_timed = false
 buffBlastCharge.max_stack = CHARGE_CAPACITY
 buffBlastCharge.draw_stack_number = true
-buffBlastCharge.stack_number_col = Array.new({Color.ORANGE})
+buffBlastCharge.stack_number_col = Array.new({COLOR})
+buffBlastCharge.icon_sprite = buff_sprite
 buffBlastCharge.icon_stack_subimage = false
 
 blastKnuckles:clear_callbacks()
@@ -62,7 +66,7 @@ blastKnuckles:onHitProc(function(actor, victim, stack, hit_info)
 
 		local blast = actor:fire_explosion(x_origin + offset, hit_info.y, BLAST_WIDTH, BLAST_HEIGHT, BLAST_DAMAGE_COEFFICIENT * stack, gm.constants.sBanditShoot2Explosion, nil, false).attack_info
 		blast.direction = hit_info.direction
-		blast.damage_color = Color.ORANGE
+		blast.damage_color = COLOR
 		blast.knockback_direction = attack_info.knockback_direction
 		blast.climb = hit_info.attack_info.climb + 8 * 1.35
 	end
@@ -85,7 +89,7 @@ blastKnuckles:onPostDraw(function(actor, stack)
 	end
 
 	gm.draw_set_alpha(alpha)
-	gm.draw_set_colour(Color.ORANGE)
+	gm.draw_set_colour(COLOR)
 	gm.draw_circle(actor.ghost_x, actor.ghost_y, RADIUS, true)
 	gm.draw_set_alpha(1)
 end)
