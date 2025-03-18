@@ -188,6 +188,15 @@
 			"story" : "todo",
 			"priority": "<g>Priority</c>"
 		},
+		"malice" : {
+			"name": "Malice",
+			"pickup" : "Damage spreads to nearby enemies.",
+			"description": "Attacks <p>spread to nearby enemies</c> for <y>45% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
+			"destination" : "P24,\nRomeo,\nPol-A Station",
+			"date" : "02/11/2056",
+			"story" : "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
+			"priority": "<p>Malicious</c>"
+		},
 	},
 
 	"actor" : {
