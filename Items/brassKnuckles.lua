@@ -8,9 +8,9 @@ brassKnuckles:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 brassKnuckles:clear_callbacks()
 brassKnuckles:onAttackHit(function(actor, victim, stack, hit_info)
-	local radius = 35 + stack * 30
-	local dx = victim.x - actor.x
-	local dy = victim.y - actor.y
+	local radius = 30 + stack * 30
+	local dx = hit_info.x - actor.x
+	local dy = hit_info.y - actor.y
 	if (dx * dx + dy * dy) <= (radius * radius) then
 		hit_info.damage = hit_info.damage * 1.35
 		gm.sound_play_networked(sound, 0.55, 0.8 + math.random() * 0.4, actor.x, actor.y)
