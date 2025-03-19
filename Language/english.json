@@ -206,6 +206,16 @@
 			"story" : "Guys, remember the tiny guy I sent over some time ago? Well.. this one is a bit more aggressive.. although she is a funny little gal! She loves spinnin' around and watching me from inside the bottle. Man, if I hadn't rescued her, she would be in some alien stomach right now.\nI kinda want to name her Ann, thoughts?",
 			"priority": "<g>Priority</c>"
 		},
+
+		"midas" : {
+			"name" : "M.I.D.A.S",
+			"pickup" : "Convert half of your health into gold.",
+			"description" : "Lose <r>50% health</c>, gaining <y>$1 gold per health spent</c>, plus the cost of a <b>chest</c>.","destination" : "Hidden Cubby,\nMt. Creation,\nVenus",
+			"destination" : "R A 5-5,\nPrime,\nTitan",
+			"date" : "05/04/2056",
+			"story" : "\"A miracle from the gods..\"\nYou keep saying it over and over again. Are you out of your mind? You keep treating us like we're ignorant when all we tried to do was to SAVE YOU.\n\nDo us a favour and keep it. Do whatever you want with it, we do NOT want to see you around here anymore. We do NOT want to be part of whatever is going on with you and this thing.\n\nIt's making you a greedy, souless person and I hope you know it.",
+			"priority": "<r>Volatile</c>"
+		}
 	},
 
 	"actor" : {
