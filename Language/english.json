@@ -197,6 +197,15 @@
 			"story" : "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
 			"priority": "<p>Malicious</c>"
 		},
+		"manOWar" : {
+			"name": "Man-o'-war",
+			"pickup" : "Create an electric discharge on kill.",
+			"description": "Killing an enemy fires <y>chain lightning</c> for <y>100% <c_stack>(+40% per stack)<y> damage</c> on up to <y>2</c> targets.",
+			"destination" : "Hidden Cubby,\nMt. Creation,\nVenus",
+			"date" : "11/20/2056",
+			"story" : "Guys, remember the tiny guy I sent over some time ago? Well.. this one is a bit more aggressive.. although she is a funny little gal! She loves spinnin' around and watching me from inside the bottle. Man, if I hadn't rescued her, she would be in some alien stomach right now.\nI kinda want to name her Ann, thoughts?",
+			"priority": "<g>Priority</c>"
+		},
 	},
 
 	"actor" : {
