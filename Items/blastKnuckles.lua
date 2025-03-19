@@ -1,5 +1,6 @@
 local item_sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckles", path.combine(PATH, "Sprites/Items/blastKnuckles.png"), 1, 16, 14)
 local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffBlastCharge", path.combine(PATH, "Sprites/Buffs/blastCharge.png"), 1, 5, 14)
+local effect_sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckleBoom", path.combine(PATH, "Sprites/Items/Effects/blastKnuckleBoom.png"), 6, 56, 16)
 
 local RADIUS = 96
 local RADIUS_SQUARED = RADIUS * RADIUS
@@ -64,7 +65,7 @@ blastKnuckles:onHitProc(function(actor, victim, stack, hit_info)
 		end
 		local offset = (0.5 * (width + BLAST_WIDTH) + BLAST_OFFSET_MARGIN + knockback_compensate) * attack_vector
 
-		local blast = actor:fire_explosion(x_origin + offset, hit_info.y, BLAST_WIDTH, BLAST_HEIGHT, BLAST_DAMAGE_COEFFICIENT * stack, gm.constants.sBanditShoot2Explosion, nil, false).attack_info
+		local blast = actor:fire_explosion(x_origin + offset, hit_info.y, BLAST_WIDTH, BLAST_HEIGHT, BLAST_DAMAGE_COEFFICIENT * stack, effect_sprite, nil, false).attack_info
 		blast.direction = hit_info.direction
 		blast.damage_color = COLOR
 		blast.knockback_direction = attack_info.knockback_direction
