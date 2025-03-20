@@ -1032,7 +1032,7 @@ objRocket:onDestroy(function(inst)
 			end
 
 			-- large stunning aoe
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion).attack_info
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion, nil. false).attack_info
 			attack.stun = 1.66
 			attack.knockback = 5
 			attack.knockup = 5
