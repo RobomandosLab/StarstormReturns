@@ -261,7 +261,7 @@ local wound = Buff.find("ror", "commandoWound")
 Callback.add(Callback.TYPE.onAttackHit, "SSNemmandoOnHit", function(hit_info)
 	local attack_tag = hit_info.attack_info.__ssr_nemmando_wound
 	if attack_tag then
-		victim = hit_info.target
+		local victim = hit_info.target
 
 		if attack_tag == ATTACK_TAG_APPLY_WOUND then
 			if victim:buff_stack_count(wound) == 0 then
@@ -1032,7 +1032,7 @@ objRocket:onDestroy(function(inst)
 			end
 
 			-- large stunning aoe
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion, nil. false).attack_info
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion, nil, false).attack_info
 			attack.stun = 1.66
 			attack.knockback = 5
 			attack.knockup = 5
