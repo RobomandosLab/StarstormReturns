@@ -61,8 +61,8 @@
 			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
 		},
 		"nemesisCommandoVBoosted": {
-			"name": "Carpet Bomb",
-			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies. Hold to <b>cook</c> the grenade.\nSplits into <y>3</c> grenades for <y>3x150% damage.</c>\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+			"name": "Cluster Bomb",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies and <y>spitting into 3</c> grenades for <y>3x150% damage.</c>\nHold to <b>cook</c> the grenade. Press the <b>down</c> direction to <y>toss</c> at a low arc instead."
 		},
 		"nemesisCommandoV2": {
 			"name": "Devastator",
