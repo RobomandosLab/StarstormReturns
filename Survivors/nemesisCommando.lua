@@ -42,6 +42,11 @@ local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerNemComma
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "NemCommandoSkills", path.combine(SPRITE_PATH, "skills.png"), 8, 0, 0)
 local sprite_gash			= Resources.sprite_load(NAMESPACE, "NemCommandoGash", path.combine(SPRITE_PATH, "gash.png"), 4, 25, 25)
 local sprite_dust			= Resources.sprite_load(NAMESPACE, "NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
+local sprite_grenade		= Resources.sprite_load(NAMESPACE, "NemCommandoGrenade", path.combine(SPRITE_PATH, "grenade.png"), 8, 9, 9)
+gm.sprite_set_bbox_mode(sprite_grenade, 2) -- manual
+gm.sprite_set_bbox(sprite_grenade, 1, 1, 16, 16) -- reduce hitbox by 1px on each side
+local sprite_explosion		= Resources.sprite_load(NAMESPACE, "NemCommandoExplosion", path.combine(SPRITE_PATH, "grenade_explosion.png"), 5, 117, 102)
+local sprite_rocket			= Resources.sprite_load(NAMESPACE, "NemCommandoRocket", path.combine(SPRITE_PATH, "rocket.png"), 3, 33, 10)
 local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
 
 local sound_slash			= Resources.sfx_load(NAMESPACE, "NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))
@@ -55,7 +60,7 @@ local particleTracer = Particle.find("ror", "WispGTracer")
 local particleRubble2 = Particle.find("ror", "Rubble2")
 local particleTrail = Particle.find("ror", "PixelDust")
 -- rocket fx
-local particleRocketTrail = Particle.find("ror", "MissileTrail")
+local particleRocketTrail = Particle.find("ror", "MissileTrailSuper")
 local particleRubble1 = Particle.find("ror", "Rubble1")
 local particleSpark = Particle.find("ror", "Spark")
 
@@ -546,7 +551,7 @@ end)
 -- Flush Out
 
 local objGrenade = Object.new(NAMESPACE, "NemmandoGrenade")
-objGrenade.obj_sprite = gm.constants.sEfGrenadeEnemy
+objGrenade.obj_sprite = sprite_grenade
 
 local nemCommandoSpecialBoosted = Skill.new(NAMESPACE, "nemesisCommandoVBoosted")
 
@@ -738,6 +743,7 @@ end
 
 objGrenade:clear_callbacks()
 objGrenade:onCreate(function(inst)
+	inst.image_speed = 1
 	inst.gravity = 0.4
 	inst.bounces = 3
 
@@ -779,6 +785,7 @@ objGrenade:onStep(function(inst)
 
 		if bounced and inst.speed > 1 then
 			inst:sound_play(sound_grenade_bounce, 0.8, 1 + 1 / (inst.speed))
+			inst.image_speed = inst.image_speed * 0.6
 
 			if bounce_h and bounce_v then
 				inst:sound_play(gm.constants.wReflect, 1, 2)
@@ -789,13 +796,21 @@ objGrenade:onStep(function(inst)
 			inst.gravity = 0
 			inst:move_contact_solid(270, inst.speed)
 			inst.speed = 0
+			inst.image_speed = 0
 		end
 	end
 
-	particleTrail:create_color(inst.x, inst.y, Color.RED, 1, Particle.SYSTEM.below)
+	if math.random() < 0.5 then
+		particleTrail:create_color(inst.x, inst.y, 0x454efc, 1, Particle.SYSTEM.below)
+	end
 
 	if inst.timer % GRENADE_TICK_INTERVAL == 0 then
 		inst:sound_play(gm.constants.wPickupOLD, 0.7, 4)
+
+		local ef = GM.instance_create(0, 0, gm.constants.oEfFlash)
+		ef.parent = inst
+		ef.image_blend = 0x454efc
+		ef.rate = 0.2
 	end
 
 	inst.timer = inst.timer - 1
@@ -817,7 +832,7 @@ objGrenade:onDestroy(function(inst)
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
 		local boosted = inst.scepter > 0
 		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 192, 160, inst.damage, gm.constants.sEfBombExplodeEnemy).attack_info
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 192, 160, inst.damage, sprite_explosion).attack_info
 			attack.climb = i * 8 * 1.35
 
 			if boosted then
@@ -851,7 +866,7 @@ end)
 
 -- Devastator
 local objRocket = Object.new(NAMESPACE, "NemmandoRocket")
-objRocket.obj_sprite = gm.constants.sEfMissile
+objRocket.obj_sprite = sprite_rocket
 
 local nemCommandoSpecial2 = Skill.new(NAMESPACE, "nemesisCommandoV2")
 local nemCommandoSpecial2Boosted = Skill.new(NAMESPACE, "nemesisCommandoV2Boosted")
@@ -901,6 +916,7 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 		data.fired = 1
 
 		actor:sound_play(gm.constants.wEnforcerShoot1, 1, 0.5 + math.random() * 0.1)
+		actor:sound_play(gm.constants.wEnforcerGrenadeShoot, 1, 0.9 + math.random() * 0.2)
 		actor:screen_shake(3)
 
 		if actor:is_authority() then
@@ -922,6 +938,7 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 		local rocket = objRocket:create(actor.x + 8 * actor.image_xscale, actor.y - 8)
 		rocket.parent = actor
 		rocket.direction = actor:skill_util_facing_direction()
+		rocket.image_xscale = actor.image_xscale
 		rocket.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
 
 		actor.pHspeed = actor.pHmax * -2 * actor.image_xscale
@@ -930,6 +947,11 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 
 			actor.pVspeed = actor.pVmax * -1.2
 			actor.force_jump_held = true
+		end
+
+		rocket.image_angle = rocket.direction
+		if actor.image_xscale < 0 then
+			rocket.image_angle = rocket.image_angle - 180
 		end
 	end
 
@@ -950,19 +972,15 @@ objRocket:onCreate(function(inst)
 	inst.woosh_sound = -1
 end)
 objRocket:onStep(function(inst)
-	inst.image_angle = inst.direction
-
 	if inst.woosh_sound == -1 then
 		inst.woosh_sound = gm.sound_play_at(gm.constants.wFwoosh, 1, 0.1 + math.random() * 0.1, inst.x + inst.hspeed * 120, inst.y)
 	end
 
-	particleRocketTrail:set_orientation(inst.direction, inst.direction, 0, 0, 0)
-	-- always create enough trail particles to cover the rocket's travel
-	for i = 0, math.floor(inst.speed / 4) do
-		local xoff = (inst.hspeed * i) / 4
-		local yoff = (inst.vspeed * i) / 4
-		particleRocketTrail:create(inst.x - xoff, inst.y - yoff, 1)
-	end
+	local dir = inst.direction
+	local xoff = gm.lengthdir_x(16, dir)
+	local yoff = gm.lengthdir_y(16, dir)
+	particleRocketTrail:set_orientation(dir, dir, 0, 0, 0)
+	particleRocketTrail:create(inst.x - xoff, inst.y - yoff, 1, Particle.SYSTEM.above)
 
 	inst.speed = math.min(ROCKET_SPEED_MAX, inst.speed + ROCKET_ACCELERATION)
 
@@ -990,8 +1008,9 @@ objRocket:onStep(function(inst)
 	end
 end)
 objRocket:onDestroy(function(inst)
-	inst:sound_play(gm.constants.wTurtleExplosion, 1, 0.4 + math.random() * 0.2)
+	inst:sound_play(gm.constants.wTurtleExplosion, 1, 0.8 + math.random() * 0.1)
 	inst:sound_play(gm.constants.wWormExplosion, 1, 0.6 + math.random() * 0.2)
+	inst:sound_play(gm.constants.wExplosiveShot, 1, 1.25 + math.random() * 0.1)
 	inst:screen_shake(10)
 
 	if gm.audio_is_playing(inst.woosh_sound) then
