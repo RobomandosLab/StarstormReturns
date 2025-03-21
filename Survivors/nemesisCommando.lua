@@ -1,6 +1,8 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
+local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemCommandoPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
+local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall", path.combine(SPRITE_PATH, "portraitTiny.png"))
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
@@ -66,6 +68,9 @@ local particleSpark = Particle.find("ror", "Spark")
 
 local nemCommando = Survivor.new(NAMESPACE, "nemesisCommando")
 local nemCommando_id = nemesisCommando
+
+nemCommando.sprite_portrait = sprite_portrait
+nemCommando.sprite_portrait_small = sprite_portrait_small
 
 local ATTACK_TAG_APPLY_WOUND = 1
 local ATTACK_TAG_EXTEND_WOUND = 2
