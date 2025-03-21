@@ -63,7 +63,7 @@
 		},
 		"chirrTether" : {
 			"name" : "Unbreakable Bond",
-			"description" : "<b>Press</c> to connect yourself to a friend, redirecting all damage to them. <b>Hold</c> to teleport all nearby friends to Chirr."
+			"description" : "<b>Press</c> to connect yourself to a friend, redirecting <b>half of all</c> damage to them. <b>Hold</c> to teleport all nearby friends to Chirr."
 		},
 	},
 
