@@ -946,7 +946,7 @@ stateNemCommandoSpecial2:onStep(function(actor, data)
 		rocket.image_xscale = actor.image_xscale
 		rocket.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
 
-		actor.pHspeed = actor.pHmax * -2 * actor.image_xscale
+		actor.pHspeed = actor.pHspeed + actor.pHmax * -2 * actor.image_xscale
 		if airborne then
 			rocket.direction = 270 + actor.image_xscale * 45
 
