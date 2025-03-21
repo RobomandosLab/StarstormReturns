@@ -43,7 +43,7 @@
 
 		"chirrZ" : {
 			"name" : "Life Thorns",
-			"description" : "Shoot 3 projectiles for <y>270% total damage</c>."
+			"description" : "Shoot 3 projectiles for <y>270% total damage</c>. <g>Marks</c> the last hit enemy."
 		},
 		"chirrX" : {
 			"name" : "Headbutt",
@@ -55,7 +55,7 @@
 		},
 		"chirrV" : {
 			"name" : "Natural Link",
-			"description" : "<g>Befriend</c> the closest nearby creature if it's <y>below 50% of its total health</c>. <b>Only one creature may be tamed at a time</c>."
+			"description" : "<g>Befriend</c> a <g>marked</c> creature if it's <y>below 50% of its total health</c>. <b>Only one creature may be tamed at a time</c>."
 		},
 		"chirrVBoosted" : {
 			"name" : "Prime Natural Link",
