@@ -9,9 +9,9 @@ local sprite_idle		= Resources.sprite_load(NAMESPACE, "MimicIdle",		path.combine
 local sprite_idle2		= Resources.sprite_load(NAMESPACE, "MimicIdle2",	path.combine(SPRITE_PATH, "idle2.png"), 2, 30, 45)
 local sprite_walk		= Resources.sprite_load(NAMESPACE, "MimicWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 30, 35)
 local sprite_walk2		= Resources.sprite_load(NAMESPACE, "MimicWalk2",	path.combine(SPRITE_PATH, "walk2.png"), 6, 30, 35)
-local sprite_jump		= Resources.sprite_load(NAMESPACE, "MimicJump",		path.combine(SPRITE_PATH, "fall.png"), 1, 30, 35)
-local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "MimicJumpPeak",	path.combine(SPRITE_PATH, "fall.png"), 1, 30, 35)
-local sprite_fall		= Resources.sprite_load(NAMESPACE, "MimicFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 30, 35)
+local sprite_jump		= Resources.sprite_load(NAMESPACE, "MimicJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 19, 28)
+local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "MimicJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 19, 28)
+local sprite_fall		= Resources.sprite_load(NAMESPACE, "MimicFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 19, 28)
 local sprite_death		= Resources.sprite_load(NAMESPACE, "MimicDeath",	path.combine(SPRITE_PATH, "death.png"), 10, 55, 93)
 local sprite_shoot1a	= Resources.sprite_load(NAMESPACE, "MimicShoot1a",	path.combine(SPRITE_PATH, "shoot1a.png"), 10, 30, 45)
 local sprite_shoot1b	= Resources.sprite_load(NAMESPACE, "MimicShoot1b",	path.combine(SPRITE_PATH, "shoot1b.png"), 4, 30, 45)
@@ -93,11 +93,15 @@ mimic:onCreate(function(actor)
 	actor:init_actor_late()
 end)
 mimic:onStep(function(actor)
-	if gm._mod_net_isClient() then return end
 	if actor.stolen_item or actor.gold > 0 and not actor.fleeing then
 		actor.fleeing = true
 		actor:alarm_set(0, -1) -- disable the classic enemy ai -- not perfect but it does the job
+
+		actor.sprite_idle = sprite_idle2
+		actor.sprite_walk = sprite_walk2
 	end
+
+	if gm._mod_net_isClient() then return end
 
 	if actor.fleeing and actor.actor_state_current_id == -1 then
 		if Instance.exists(actor.target) then
@@ -129,6 +133,7 @@ mimic:onStep(function(actor)
 end)
 mimic:onDestroy(function(actor)
 	Particle.find("ror", "Spark"):create(actor.x, actor.y, 7)
+	actor:screen_shake(4)
 
 	if actor.gold > 0 then
 		gm.drop_gold_and_exp(actor.x, actor.y, actor.gold, nil, true, false)
@@ -180,6 +185,8 @@ packetMimicSteal:onReceived(function(msg)
 	steal.tier = tier
 end)
 local function do_gold_steal(actor, victim)
+	victim:sound_play(gm.constants.wGoldBomb, 0.5, 2.5)
+
 	local amount = math.ceil(victim.gold)
 	local dir = gm.point_direction(victim.x, victim.y, actor.x, actor.y)
 	local log = math.ceil(math.log(amount, 5))
@@ -290,7 +297,6 @@ stateMimicSuck:onStep(function(actor, data)
 					break
 				elseif victim.gold and victim.gold > 0 then
 					data.stealed = 1
-					gm.sound_play_networked(gm.constants.wGoldBomb, 0.5, 2.5, victim.x, victim.y)
 
 					do_gold_steal(actor, victim)
 					break
@@ -309,14 +315,14 @@ stateMimicSuck:onStep(function(actor, data)
 		particleVacuum:create(px, py, 1)
 	end
 
-	if data.loops > 3 then
-		actor:enter_state(stateMimicSuckEnd)
-	end
 	if actor.image_index + actor.image_speed >= 4 then
 		actor.image_index = actor.image_index - 4
 		data.loops = data.loops + 1
 
 		data.fired = 0
+	end
+	if data.loops > 3 then
+		actor:enter_state(stateMimicSuckEnd)
 	end
 end)
 
