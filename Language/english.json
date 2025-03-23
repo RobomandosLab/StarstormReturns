@@ -185,4 +185,9 @@
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest"
 	},
+
+	"interactable" : {
+		"MimicInactive.text" : "..?",
+		"MimicInactive.name" : "Large Chest?",
+	},
 }
