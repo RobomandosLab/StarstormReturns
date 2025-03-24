@@ -28,6 +28,13 @@ packetAmuletProc:onReceived(function(buffer)
 	end
 end)
 
+local function get_true_xscale(actor)
+	if actor.object_index == gm.constants.oEngiTurret then
+		return actor.image_xscale2
+	end
+	return actor.image_xscale
+end
+
 Callback.add(Callback.TYPE.onAttackHit, "SSGuardingAmulet", function(hit_info)
 	local stack = hit_info.target:item_stack_count(guardingAmulet)
 	if stack == 0 then return end
@@ -39,7 +46,7 @@ Callback.add(Callback.TYPE.onAttackHit, "SSGuardingAmulet", function(hit_info)
 	local block = false
 	local attack_x = attacker.x
 
-	if gm.sign(victim.x - attack_x) == victim.image_xscale then
+	if gm.sign(victim.x - attack_x) == get_true_xscale(victim) then
 		block = true
 	end
 
@@ -60,13 +67,15 @@ guardingAmulet:onPostStep(function(actor, stack)
 	end
 end)
 guardingAmulet:onPostDraw(function(actor, stack)
+	local actor_xscale = get_true_xscale(actor)
+
 	local f = Global._current_frame
-	local x = actor.ghost_x - 10 * actor.image_xscale
+	local x = actor.ghost_x - 10 * actor_xscale
 	local y = actor.ghost_y + math.sin(f * 0.04)
 	local a = 0.75 + math.sin(f * 0.02) * 0.1
 
 	local pulse = actor:get_data().amulet_pulse * 0.2
-	local xscale = (1 + pulse) * actor.image_xscale
+	local xscale = (1 + pulse) * actor_xscale
 	local yscale = 1 + pulse
 
 	gm.gpu_set_blendmode(1)
