@@ -1,4 +1,5 @@
 local sprite = Resources.sprite_load(NAMESPACE, "Midas", path.combine(PATH, "Sprites/Equipments/midas.png"), 2, 16, 14)
+local sound = Resources.sfx_load(NAMESPACE, "MidasUse", path.combine(PATH, "Sounds/Items/midasUse.ogg"))
 
 local DAMAGE_INFLICT_FLAGS = {
 	ignore_armor = 1 << 0,
@@ -14,7 +15,7 @@ midas.cooldown = 60 * 60
 
 midas:clear_callbacks()
 midas:onUse(function(actor, embryo)
-	actor:sound_play(gm.constants.wGoldBomb, 1.0, 1.5)
+	actor:sound_play(sound, 1, 1)
 
 	local deduction = math.floor(actor.hp * 0.5)
 
