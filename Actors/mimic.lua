@@ -349,10 +349,10 @@ end)
 Callback.add(Callback.TYPE.onDeath, "SSMimicDropItem", function(actor, out_of_bounds)
 	if GM.get_object_index(actor) == mimic_id and not out_of_bounds then
 		if actor.stolen_item then
-			for i=1, actor.stolen_item_count do
-				local item = Item.wrap(actor.stolen_item)
-				-- some items don't have corresponding objects, such as used dios or time keeper's secret
-				if item.object_id ~= -1 then
+			local item = Item.wrap(actor.stolen_item)
+			-- some items don't have corresponding objects, such as used dios or time keeper's secret
+			if item.object_id ~= -1 then
+				for i=1, actor.stolen_item_count do
 					item:create(actor.x, actor.y)
 				end
 			end
