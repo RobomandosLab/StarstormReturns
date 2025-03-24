@@ -34,6 +34,15 @@ blastKnuckles:onAcquire(function(actor, stack)
 	actor:buff_apply(buffBlastCharge, 60, CHARGE_INITIAL)
 end)
 
+-- doesn't seem to be built-in syncing for removing just 1 stack of a buff, so we have to user packet it, ah well
+local packetConsumeCharge = Packet.new()
+packetConsumeCharge:onReceived(function(buffer)
+	local actor = buffer:read_instance()
+	if actor:exists() then
+		actor:buff_remove(buffBlastCharge, 1)
+	end
+end)
+
 -- uses `__ssr_blasted` magic variable to mark the attack_info to prevent one attack from firing more than one blast
 blastKnuckles:onHitProc(function(actor, victim, stack, hit_info)
 	if hit_info.attack_info.__ssr_blasted then return end
@@ -45,16 +54,22 @@ blastKnuckles:onHitProc(function(actor, victim, stack, hit_info)
 		attack_info.__ssr_blasted = true
 
 		actor:buff_remove(buffBlastCharge, 1)
+		if gm._mod_net_isOnline() then
+			local msg = packetConsumeCharge:message_begin()
+			msg:write_instance(actor)
+			msg:send_to_all()
+		end
+
 		gm.sound_play_networked(gm.constants.wExplosiveShot, 1.0, 1.2, victim.x, victim.y)
 
-		-- calculate the blast's location, such that it
+		-- calculate the blast's location, such that it's flush with the victim's bounding box on the opposite direction to the hit
 		local width = victim.bbox_right - victim.bbox_left
 		local x_origin = (victim.bbox_right + victim.bbox_left) * 0.5 -- centre of victim based on collision, accounts for offset
 		local attack_vector = gm.lengthdir_x(1, attack_info.direction)
 		attack_vector = gm.sign(attack_vector)
 
 		local knockback_compensate = 0
-		if GM.actor_is_classic(victim) then
+		if gm.actor_is_classic(victim.id) then
 			-- compensate for 1-frame delay to attack processing so the blast doesn't hit the victim when they're knocked back
 			knockback_compensate = attack_info.knockback * 2 + attack_info.stun * 20
 
