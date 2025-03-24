@@ -167,15 +167,15 @@ local function sync_steal_effects(actor, x, y, tier, item_count)
 	if gm._mod_net_isClient() then error("sync_steal_effects called on client!") end
 	local msg = packetMimicSteal:message_begin()
 	msg:write_instance(actor)
-	msg:write_ushort(x)
-	msg:write_ushort(y)
+	msg:write_short(x)
+	msg:write_short(y)
 	msg:write_byte(tier)
 	msg:write_ushort(item_count)
 	msg:send_to_all()
 end
 packetMimicSteal:onReceived(function(msg)
 	local actor = msg:read_instance()
-	local x, y = msg:read_ushort(), msg:read_ushort()
+	local x, y = msg:read_short(), msg:read_short()
 	local tier = msg:read_byte()
 	local item_count = msg:read_ushort()
 
