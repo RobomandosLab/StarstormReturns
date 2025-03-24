@@ -206,11 +206,20 @@
 			"story" : "Guys, remember the tiny guy I sent over some time ago? Well.. this one is a bit more aggressive.. although she is a funny little gal! She loves spinnin' around and watching me from inside the bottle. Man, if I hadn't rescued her, she would be in some alien stomach right now.\nI kinda want to name her Ann, thoughts?",
 			"priority": "<g>Priority</c>"
 		},
+		"guardingAmulet" : {
+			"name": "Guarding Amulet",
+			"pickup" : "Reduce damage from behind you.",
+			"description": "Damage taken <b>from behind</c> you is reduced by <b>40% <c_stack>(+40% per stack)</c>.",
+			"destination" : "C8,\nAzure Garden,\nSanctuary",
+			"date" : "03/11/2056",
+			"story" : "I know he's somewhere out there, I know you can find him.. but you must be persistent. By the time my soul leaves this shell, the words will be spoken and you will take my place. He will be the one to show you the path to the answers you always wanted from me.\nEmbrace this amulet; you will depend on it, and it will keep you from ever looking back.",
+			"priority": "<w>Standard</c>"
+		},
 
 		"midas" : {
 			"name" : "M.I.D.A.S",
 			"pickup" : "Convert half of your health into gold.",
-			"description" : "Lose <r>50% health</c>, gaining <y>$1 gold per health spent</c>, plus the cost of a <b>chest</c>.","destination" : "Hidden Cubby,\nMt. Creation,\nVenus",
+			"description" : "Lose <r>50% health</c>, gaining <y>$1 gold per health spent</c>, plus the cost of a <b>chest</c>.",
 			"destination" : "R A 5-5,\nPrime,\nTitan",
 			"date" : "05/04/2056",
 			"story" : "\"A miracle from the gods..\"\nYou keep saying it over and over again. Are you out of your mind? You keep treating us like we're ignorant when all we tried to do was to SAVE YOU.\n\nDo us a favour and keep it. Do whatever you want with it, we do NOT want to see you around here anymore. We do NOT want to be part of whatever is going on with you and this thing.\n\nIt's making you a greedy, souless person and I hope you know it.",
