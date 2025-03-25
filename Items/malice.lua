@@ -36,7 +36,7 @@ malice:onHitProc(function(actor, victim, stack, hit_info)
 		if to_malice.id ~= victim.id then
 			maliced_count = maliced_count + 1
 
-			local m = objEfMalice:create(victim.x, victim.y)
+			local m = objEfMalice:create(hit_info.x, hit_info.y)
 			m.target = to_malice
 			m.parent = actor
 			m.critical = hit_info.critical
