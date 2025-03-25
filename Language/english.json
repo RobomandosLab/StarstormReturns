@@ -143,15 +143,6 @@
 			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
 			"priority": "<g>Priority</c>"
 		},
-		"strangeCan" : {
-			"name": "Strange Can",
-			"pickup" : "Chance to intoxicate enemies.",
-			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
-			"destination" : "1530,\n563,\nA-LC12",
-			"date" : "05/22/2056",
-			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
-			"priority": "<g>Priority</c>"
-		},
 		"roulette" : {
 			"name": "Roulette",
 			"pickup" : "Roll a random buff every minute.",
@@ -224,7 +215,16 @@
 			"date" : "05/04/2056",
 			"story" : "\"A miracle from the gods..\"\nYou keep saying it over and over again. Are you out of your mind? You keep treating us like we're ignorant when all we tried to do was to SAVE YOU.\n\nDo us a favour and keep it. Do whatever you want with it, we do NOT want to see you around here anymore. We do NOT want to be part of whatever is going on with you and this thing.\n\nIt's making you a greedy, souless person and I hope you know it.",
 			"priority": "<r>Volatile</c>"
-		}
+		},
+		"strangeCan" : {
+			"name": "Strange Can",
+			"pickup" : "Throw out a can that intoxicates enemies.",
+			"description": "Throw out a <g>peculiar can</c> that explodes on collision and <y>intoxicates</c> enemies, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
+			"destination" : "1530,\n563,\nA-LC12",
+			"date" : "05/22/2056",
+			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
+			"priority": "<r>Volatile</c>"
+		},
 	},
 
 	"actor" : {
