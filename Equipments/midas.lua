@@ -10,8 +10,7 @@ local DAMAGE_INFLICT_FLAGS = {
 
 local midas = Equipment.new(NAMESPACE, "midas")
 midas:set_sprite(sprite)
-
-midas.cooldown = 60 * 60
+midas:set_cooldown(60)
 
 midas:clear_callbacks()
 midas:onUse(function(actor, embryo)
