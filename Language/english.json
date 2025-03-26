@@ -218,8 +218,8 @@
 		},
 		"strangeCan" : {
 			"name": "Strange Can",
-			"pickup" : "Throw out a can that intoxicates enemies.",
-			"description": "Throw out a <g>peculiar can</c> that explodes on collision and <y>intoxicates</c> enemies, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
+			"pickup" : "Throw a can to mark an enemy. Killing it releases a toxic cloud.",
+			"description": "Throw out a <g>peculiar can</c> that <y>intoxicates</c> the enemy with the <r>highest maximum health</c>. <y>Intoxicated</c> enemies release a <y>toxic cloud</c> on death that deals <y>50%</c> of the enemy's <y>maximum health as damage</c> over 5 seconds.",
 			"destination" : "1530,\n563,\nA-LC12",
 			"date" : "05/22/2056",
 			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
