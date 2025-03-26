@@ -29,14 +29,19 @@ strangeCan:onUse(function(actor, embryo)
 	obj.direction = 90 - actor.image_xscale * 60
 	obj.speed = 6
 	obj.team = actor.team
-	obj.embryo = embryo
+
+	if embryo then
+		local obj = objTossedCan:create(actor.x - 8 * actor.image_xscale, actor.y-6)
+		obj.direction = 90 + actor.image_xscale * 60
+		obj.speed = 6
+		obj.team = actor.team
+	end
 end)
 
 objTossedCan:clear_callbacks()
 objTossedCan:onCreate(function(self)
 	self.gravity = 0.3
 	self.team = 1
-	self.embryo = false
 end)
 objTossedCan:onStep(function(self)
 	self.image_angle = self.image_angle + 8
@@ -50,13 +55,7 @@ objTossedCan:onStep(function(self)
 		self:sound_play(gm.constants.wArtiShoot3_2, 0.5, 0.9 + math.random() * 0.1)
 		self:screen_shake(7)
 
-		local radius = INTOXICATION_RADIUS
-		if gm.bool(self.embryo) then
-			-- this kinda sucks... eh?
-			radius = radius * 2
-		end
-
-		local victims = List.wrap(self:find_characters_circle(self.x, self.y, radius, false, self.team))
+		local victims = List.wrap(self:find_characters_circle(self.x, self.y, INTOXICATION_RADIUS, false, self.team))
 		for _, victim in ipairs(victims) do
 			victim:buff_apply(buffIntoxication, 7 * 60)
 		end
