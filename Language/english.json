@@ -34,6 +34,11 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
+
+		"peace": {
+			"name": "<#a4eae4>Peace!",
+			"description": "Cannot use this skill."
+		}
 	},
 
 	"item" : {
@@ -224,6 +229,15 @@
 			"date" : "05/22/2056",
 			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
 			"priority": "<r>Volatile</c>"
+		},
+		"whiteFlag" : {
+			"name": "White Flag",
+			"pickup": "Place a white flag. Everyone around it is unable to attack.",
+			"description": "Place down a white flag for <b>8</c> seconds. <b>Disables skills</c> for <r>everyone</c> within its radius.\n<r>Doesn't affect</c> drones and flying enemies.",
+			"destination" : "Room 2B,\nSomnus Hotel,\nEarth",
+			"date" : "10/5/2056",
+			"story" : "Save this for me until I get back home, I didn't need it. In fact, we became friends! I can't wait to tell you all about it soon. It's been a long trip and an unexpected series of events. I've told them about you and they want me to invite you over the next time. How's that, huh!? Love you.",
+			"priority": "<r>Volatile</c>",
 		},
 	},
 
