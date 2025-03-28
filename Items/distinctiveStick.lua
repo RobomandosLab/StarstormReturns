@@ -28,7 +28,7 @@ objTree:onStep(function(self)
 		for _, actor in ipairs(targets) do
 			local heal = GM.instance_create(self.x, self.y, gm.constants.oEfHeal2)
 			heal.target = actor
-			gm.variable_instance_set(heal.id, "value", actor.maxhp * 0.02)
+			gm.variable_instance_set(heal.id, "value", actor.maxhp * 0.022)
 		end
 	end
 end)
