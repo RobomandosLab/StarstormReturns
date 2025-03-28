@@ -1,6 +1,7 @@
 local item_sprite = Resources.sprite_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
 local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
 local skill_sprite = Resources.sprite_load(NAMESPACE, "SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
+local sound = Resources.sfx_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sounds/Items/whiteFlag.ogg"))
 
 local whiteFlag = Equipment.new(NAMESPACE, "whiteFlag")
 whiteFlag:set_sprite(item_sprite)
@@ -35,6 +36,8 @@ objFlag:onCreate(function(self)
 	self.life = 8 * 60
 
 	self.image_speed = 0
+
+	self:sound_play(sound, 1, 1)
 end)
 objFlag:onStep(function(self)
 	if self.life % 5 == 0 then
