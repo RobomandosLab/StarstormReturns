@@ -141,8 +141,8 @@
 		},
 		"huntersSigil" : {
 			"name": "Hunter's Sigil",
-			"pickup" : "Standing still increases armor and critical strike chance.",
-			"description": "After standing still for 1 second, gain <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
+			"pickup" : "Standing still creates a zone that increases armor and critical strike chance.",
+			"description": "After standing still for 1 second, create a <y>small zone</c> that buffs you and allies for <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
 			"destination" : "2East,\nBeckham Building,\nEarth",
 			"date" : "02/02/2056",
 			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
