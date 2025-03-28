@@ -211,6 +211,15 @@
 			"story" : "I know he's somewhere out there, I know you can find him.. but you must be persistent. By the time my soul leaves this shell, the words will be spoken and you will take my place. He will be the one to show you the path to the answers you always wanted from me.\nEmbrace this amulet; you will depend on it, and it will keep you from ever looking back.",
 			"priority": "<w>Standard</c>"
 		},
+		"distinctiveStick" : {
+			"name": "Distinctive Stick",
+			"pickup" : "Heal near the teleporter.",
+			"description": "Grows a tree near Teleporters, <g>healing</c> allies within <b>10m <c_stack>(+3.75m per stack)</c> for <g>2.2%</c> of their <g>health</c> every 2 seconds.",
+			"destination" : "Dreq Mineli,\nTesaft,\nEarth",
+			"date" : "01/15/2056",
+			"story" : "Darling, I have something special for you..\nThe other day on my mission, I came across this. It caught my eye because it's unlike any of the branches I've seen in my life! This branch excudes a peculiar energy. It made me feel connected to nature in a way I thought was only possible in stories! In honor of our anniversary, I'm giving it to you.\nI'll arrive home soon with an even greater present. Please, don't lose faith.",
+			"priority": "<w>Standard</c>"
+		},
 
 		"midas" : {
 			"name" : "M.I.D.A.S",
@@ -224,7 +233,7 @@
 		"strangeCan" : {
 			"name": "Strange Can",
 			"pickup" : "Throw a can to mark an enemy. Killing it releases a toxic cloud.",
-			"description": "Throw out a <g>peculiar can</c> that <y>intoxicates</c> the enemy with the <r>highest maximum health</c>. <y>Intoxicated</c> enemies release a <y>toxic cloud</c> on death that deals <y>50%</c> of the enemy's <y>maximum health as damage</c> over 5 seconds.",
+			"description": "Throw out a <g>peculiar can</c> that <y>intoxicates</c> the enemy with the <r>highest maximum health</c>. <y>Intoxicated</c> enemies release a <y>toxic cloud</c> on death for <y>50%</c> of the enemy's <y>maximum health as damage</c> over 5 seconds.",
 			"destination" : "1530,\n563,\nA-LC12",
 			"date" : "05/22/2056",
 			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
