@@ -33,7 +33,9 @@ objTree:onStep(function(self)
 	end
 end)
 objTree:onDraw(function(self)
-	local a = 0.6 + math.sin(Global._current_frame * 0.03) * 0.2
+	-- time it so that peak brightness coincides with spawning heal
+	local t = (Global._current_frame + 60) / (math.pi * 6)
+	local a = 0.6 + math.sin(t) * 0.2
 	local r = self.radius
 
 	gm.draw_set_colour(Color.from_hex(0x82FF9F))
