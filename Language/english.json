@@ -229,6 +229,15 @@
 			"story" : "When I was younger I used to love balloons. They're quite fun to watch in places with an atmosphere. However, this one is of special value to me, as it was of the first ones to be made out of reinforced rubber, back in the '22s. I hope you take care of it, it might cost a fortune in a few more years (if it's still floating, of course!).",
 			"priority": "<g>Priority/Fragile</c>"
 		},
+		"iceTool" : {
+			"name": "Ice Tool",
+			"pickup" : "Gain a wall jump. Climb faster.",
+			"description": "Gain <b>1 <c_stack>(+1 per stack)<b> extra jump</c> while in contact with a wall. Increase <b>climbing speed</c> by <b>18% <c_stack>(+18% per stack)</c>.",
+			"destination" : "Mon's Tower #33,\nSolei Shore,\nEarth",
+			"date" : "03/12/2056",
+			"story" : "Good day fellow hiking friend, I found the ice tool you lost last time we went to Mt. [REDACTED]. Please keep an eye out for the snow next time!\nI wonder if the ice tool is still usable though, it's been through so much!",
+			"priority": "<w>Standard</c>"
+		},
 
 		"midas" : {
 			"name" : "M.I.D.A.S",
