@@ -881,9 +881,11 @@ nemCommando:add_special(nemCommandoSpecial2)
 nemCommandoSpecial2:set_skill_icon(sprite_skills, 6)
 nemCommandoSpecial2:set_skill_upgrade(nemCommandoSpecial2Boosted)
 nemCommandoSpecial2.cooldown = 6 * 60
+nemCommandoSpecial2.disable_aim_stall = true
 nemCommandoSpecial2Boosted:set_skill_icon(sprite_skills, 7)
 nemCommandoSpecial2Boosted.cooldown = 6 * 60
 nemCommandoSpecial2Boosted.max_stock = 2
+nemCommandoSpecial2Boosted.disable_aim_stall = true
 
 local stateNemCommandoSpecial2 = State.new(NAMESPACE, "nemCommandoSpecial2")
 
