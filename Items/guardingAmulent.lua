@@ -9,24 +9,7 @@ guardingAmulet:set_sprite(item_sprite)
 guardingAmulet:set_tier(Item.TIER.common)
 guardingAmulet:set_loot_tags(Item.LOOT_TAG.category_utility)
 
-local packetAmuletProc = Packet.new()
-local function do_guard_fx(actor)
-	actor:get_data().amulet_pulse = 10
-	actor:sound_play(sound, 1, 0.9 + math.random() * 0.2)
-	actor:sound_play(gm.constants.wMercenary_Parry_Deflection, 0.5, 1.5 + math.random() * 0.5)
-
-	if gm._mod_net_isOnline() and gm._mod_net_isHost() then
-		local msg = packetAmuletProc:message_begin()
-		msg:write_instance(actor)
-		msg:send_to_all()
-	end
-end
-packetAmuletProc:onReceived(function(buffer)
-	local actor = buffer:read_instance()
-	if actor:exists() then
-		do_guard_fx(actor)
-	end
-end)
+guardingAmuletID = guardingAmulet.value
 
 local function get_true_xscale(actor)
 	if actor.object_index == gm.constants.oEngiTurret then
@@ -34,27 +17,6 @@ local function get_true_xscale(actor)
 	end
 	return actor.image_xscale
 end
-
-Callback.add(Callback.TYPE.onAttackHit, "SSGuardingAmulet", function(hit_info)
-	local stack = hit_info.target:item_stack_count(guardingAmulet)
-	if stack == 0 then return end
-	if not Instance.exists(hit_info.inflictor) then return end
-
-	local victim = hit_info.target
-	local attacker = hit_info.inflictor
-
-	local block = false
-	local attack_x = attacker.x
-
-	if gm.sign(victim.x - attack_x) == get_true_xscale(victim) then
-		block = true
-	end
-
-	if block then
-		do_guard_fx(victim)
-		hit_info.damage = math.ceil(hit_info.damage * DAMAGE_MULTIPLIER ^ stack)
-	end
-end)
 
 guardingAmulet:clear_callbacks()
 guardingAmulet:onAcquire(function(actor, stack)
@@ -84,4 +46,43 @@ guardingAmulet:onPostDraw(function(actor, stack)
 		gm.draw_sprite_ext( effect_sprite, 0, x, y, xscale, yscale, 0, Color.WHITE, pulse * 3)
 	end
 	gm.gpu_set_blendmode(0)
+end)
+
+
+-- onAttackHit callbacks and such can't be used to modify the damage because by then the visual damage number was already drawn.
+
+-- signature:
+-- damager_calculate_damage(hit_info, true_hit, hit, damage, critical, parent, proc, attack_flags, damage_col, team, climb, percent_hp, xscale, hit_x, hit_y)
+gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, result, args)
+	--local _true_hit = args[2]
+	local _hit = args[3]
+	local _damage = args[4]
+	--local _critical = args[5]
+	local _parent = args[6]
+	--local _proc = args[7]
+	--local _attack_flags = args[8]
+	--local _damage_col = args[9]
+	--local _team = args[10]
+	--local _climb = args[11]
+	--local _percent_hp = args[12]
+	--local _xscale = args[13]
+	local _hit_x = args[14]
+	local _hit_y = args[15]
+
+	local count = gm.item_count(_hit.value, guardingAmuletID)
+	if count > 0 then
+		local attacker = Instance.wrap(_parent.value)
+		local target = Instance.wrap(_hit.value)
+
+		local attack_x = attacker.x
+
+		-- use the x locations of the actors to determine blocking .... not ideal but it works?
+		if gm.sign(target.x - attack_x) == get_true_xscale(target) then
+			_damage.value = math.ceil(_damage.value * DAMAGE_MULTIPLIER ^ count)
+
+			target:get_data().amulet_pulse = 10
+			target:sound_play(sound, 1, 0.9 + math.random() * 0.2)
+			target:sound_play(gm.constants.wMercenary_Parry_Deflection, 0.5, 1.5 + math.random() * 0.5)
+		end
+	end
 end)
