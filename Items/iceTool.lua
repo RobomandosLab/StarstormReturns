@@ -21,6 +21,10 @@ iceTool:clear_callbacks()
 iceTool:onAcquire(function(actor, stack)
 	local data = actor:get_data()
 	data.iceTool_jumps = stack
+
+	if gm.actor_state_is_climb_state(actor.actor_state_current_id) then
+		GM.apply_buff_internal(actor, buffIceTool, math.huge, 1)
+	end
 end)
 
 iceTool:onPostStep(function(actor, stack)
