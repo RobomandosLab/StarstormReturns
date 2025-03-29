@@ -63,7 +63,7 @@
 		"detritiveTrematode" : {
 			"name": "Detritive Trematode",
 			"pickup" : "Low health enemies receive damage over time.",
-			"description": "Enemies <y>below 10% </c> <c_stack>(+5% per stack) <y>health</c> become <y>infected</c>, receiving <y>2% of max health</c> damage per second.",
+			"description": "Enemies <y>below 10% <c_stack>(+5% per stack) <y>health</c> become <y>infected</c>, receiving <y>2% of max health</c> damage per second.",
 			"destination": "112,\nNeaus 2,\nMars",
 			"date": "03/11/2057",
 			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
