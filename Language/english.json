@@ -238,6 +238,15 @@
 			"story" : "Good day fellow hiking friend, I found the ice tool you lost last time we went to Mt. [REDACTED]. Please keep an eye out for the snow next time!\nI wonder if the ice tool is still usable though, it's been through so much!",
 			"priority": "<w>Standard</c>"
 		},
+		"needles" : {
+			"name": "Needles",
+			"pickup" : "Chance to mark enemies for guaranteed critical strikes.",
+			"description": "<y>4% <c_stack>(+2% per stack)</c> chance on hit to <y>mark</c> enemies for 100% <y>critical chance</c> against them for 3 seconds.",
+			"destination" : "E2,\nOren's Loop,\nVenus",
+			"date" : "[REDACTED]",
+			"story" : "Uh.. madre dice que si puedes leer esto, es porque no eres tan torpe como pensaba, y pues eso. Esperamos que te sirvan estas agujas. Me temo que no son las que pediste, pero no hace mucha diferencia, pienso.\nNo recuerdo si los enviamos bien embalados. Ten cuidado.",
+			"priority": "<y>Piercing</c>"
+		},
 
 		"midas" : {
 			"name" : "M.I.D.A.S",
