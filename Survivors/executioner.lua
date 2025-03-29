@@ -108,7 +108,7 @@ executioner:set_animations({
 	drone_shoot = sprite_drone_shoot,
 })
 
-executioner:set_cape_offset(0, -8, 0, -12)
+executioner:set_cape_offset(0, -8, 0, -5)
 executioner:set_primary_color(Color.from_rgb(175, 113, 126))
 
 executioner.sprite_loadout = sprite_loadout
