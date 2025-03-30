@@ -10,6 +10,12 @@
 			"nameUpper" : "EXECUTIONER",
 			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
 			"endQuote": "..and so he left, bloodlust unfulfilled.",
+		},
+		"technician" : {
+			"name" : "Technician",
+			"nameUpper" : "TECHNICIAN",
+			"description": "",
+			"endQuote": "..and so he left, by switching the ship off and on again.",
 		}
 	},
 
@@ -32,6 +38,35 @@
 		},
 		"executionerVBoosted": {
 			"name": "Crowd Execution",
+			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		
+		"technicianZ": {
+			"name": "Fine Tune",
+			"description": "Strike forward with a wrench for <y>150% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
+		},
+		"technicianZ2": {
+			"name": "Troubleshoot",
+			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>100% damage.\n<y>Hitting gadgets</c> 3 times <r>temporarily <b>upgrades them."
+		},
+		"technicianX": {
+			"name": "Forced Shutdown",
+			"description": "Toss out a <y>stunning</c> bomb dealing <y>700% damage</c> on reactivation.\nPassively pulls in enemies when <b>upgraded."
+		},
+		"technicianX2": {
+			"name": "The Red Button",
+			"description": "Detonate the dropped bomb for <y>700% damage, stunning enemies."
+		},
+		"technicianC": {
+			"name": "24/7 Energy",
+			"description": "<y>Dash forward, fearing nearby enemies</c>.\nYou <b>cannot be hit</c> while dashing."
+		},
+		"technicianV": {
+			"name": "Backup Firewall",
+			"description": "Launch into the air, and slam down with a projected axe for <y>1000% damage.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"technicianVBoosted": {
+			"name": "Backup Firewall 2.0",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 	},
@@ -160,6 +195,24 @@
 			"date" : "7/17/2057",
 			"story" : "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
 			"priority": "<g>Priority</c>"
+		},
+		"judderingEgg" : {
+			"name": "Juddering Egg",
+			"pickup" : "Gain a little friend!",
+			"description": "Hatch <b>1 <c_stack>(+1 per stack)</c> <b>young wurm</c> who fights with you, periodically <y>attacking surrounding enemies</c> for <y>18x80% damage</c>.",
+			"destination" : "Gate B,\nLee Compound,\nEarth",
+			"date" : "11/21/2056",
+			"story" : "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
+			"priority": "<r>Fragile</c>"
+		},
+		"uraniumHorseshoe" : {
+			"name": "Uranium Horseshoe",
+			"pickup" : "Increase movement speed and jump height.",
+			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			"destination" : "6900,\nMartian's Face Horse Care and Farm Supplies,\nMars",
+			"date" : "04/20/2056",
+			"story" : "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
+			"priority": "<w>Standard</c>"
 		}
 	},
 
