@@ -6,6 +6,7 @@ local sound = Resources.sfx_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sou
 local whiteFlag = Equipment.new(NAMESPACE, "whiteFlag")
 whiteFlag:set_sprite(item_sprite)
 whiteFlag:set_cooldown(45)
+whiteFlag:set_loot_tags(Item.LOOT_TAG.category_utility, Item.LOOT_TAG.equipment_blacklist_chaos)
 
 local buffPeace = Buff.new(NAMESPACE, "peace")
 buffPeace.icon_sprite = buff_sprite

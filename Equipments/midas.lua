@@ -11,6 +11,7 @@ local DAMAGE_INFLICT_FLAGS = {
 local midas = Equipment.new(NAMESPACE, "midas")
 midas:set_sprite(sprite)
 midas:set_cooldown(60)
+midas:set_loot_tags(Item.LOOT_TAG.category_utility, Item.LOOT_TAG.equipment_blacklist_chaos)
 
 midas:clear_callbacks()
 midas:onUse(function(actor, embryo)

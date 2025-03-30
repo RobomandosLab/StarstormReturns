@@ -13,6 +13,7 @@ local sound = Resources.sfx_load(NAMESPACE, "IntoxicateApply", path.combine(PATH
 local strangeCan = Equipment.new(NAMESPACE, "strangeCan")
 strangeCan:set_sprite(sprite_item)
 strangeCan:set_cooldown(30)
+strangeCan:set_loot_tags(Item.LOOT_TAG.category_damage)
 
 local objTossedCan = Object.new(NAMESPACE, "EfCan")
 objTossedCan.obj_sprite = sprite_projectile
