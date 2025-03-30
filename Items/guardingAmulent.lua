@@ -31,9 +31,11 @@ end)
 guardingAmulet:onPostDraw(function(actor, stack)
 	local actor_xscale = get_true_xscale(actor)
 
+	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
+
 	local f = Global._current_frame
-	local x = actor.ghost_x - 10 * actor_xscale
-	local y = actor.ghost_y + math.sin(f * 0.04)
+	local x = x - 10 * actor_xscale
+	local y = y + math.sin(f * 0.04)
 	local a = 0.75 + math.sin(f * 0.02) * 0.1
 
 	local pulse = actor:get_data().amulet_pulse * 0.2

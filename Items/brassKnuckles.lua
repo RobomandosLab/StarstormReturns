@@ -11,10 +11,11 @@ local brassKnucklesID = brassKnuckles.value
 brassKnuckles:clear_callbacks()
 brassKnuckles:onPostDraw(function(actor, stack)
 	local radius = 30 + stack * 30
+	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
 	gm.draw_set_alpha(0.2)
 	gm.draw_set_colour(0)
-	gm.draw_circle(actor.ghost_x, actor.ghost_y, radius-1, true)
-	gm.draw_circle(actor.ghost_x, actor.ghost_y, radius+1, true)
+	gm.draw_circle(x, y, radius-1, true)
+	gm.draw_circle(x, y, radius+1, true)
 	gm.draw_set_alpha(1)
 end)
 

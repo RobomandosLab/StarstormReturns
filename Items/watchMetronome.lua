@@ -65,8 +65,10 @@ local drifter_id = Survivor.find("ror", "drifter").value
 watchMetronome:onPostDraw(function(actor, stack)
 	local data = actor:get_data()
 
-	local x = actor.ghost_x + 1
-	local y = actor.ghost_y + 19
+	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
+
+	local x = x + 1
+	local y = y + 19
 	-- her scrap bar gets in the way, move ours further down
 	if actor.class == drifter_id then
 		y = actor.bbox_bottom + 27

@@ -97,7 +97,7 @@ end)
 
 blastKnuckles:onPostDraw(function(actor, stack)
 	local alpha = 0.65 + math.sin(Global._current_frame*0.03) * 0.1
-	local x, y = actor.ghost_x, actor.ghost_y
+	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
 	local charges = actor:buff_stack_count(buffBlastCharge)
 
 	if charges == 0 then
@@ -106,6 +106,6 @@ blastKnuckles:onPostDraw(function(actor, stack)
 
 	gm.draw_set_alpha(alpha)
 	gm.draw_set_colour(COLOR)
-	gm.draw_circle(actor.ghost_x, actor.ghost_y, RADIUS, true)
+	gm.draw_circle(x, y, RADIUS, true)
 	gm.draw_set_alpha(1)
 end)
