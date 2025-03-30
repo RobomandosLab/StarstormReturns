@@ -38,7 +38,7 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 	local _hit_x = args[14]
 	local _hit_y = args[15]
 
-	local count = gm.item_count(_parent.value, brassKnucklesID)
+	local count = gm.item_count(_parent.value or -4, brassKnucklesID) or 0
 	if count > 0 then
 		local parent = Instance.wrap(_parent.value)
 		local hit_x = _hit_x.value

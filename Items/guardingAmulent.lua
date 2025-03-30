@@ -69,7 +69,7 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 	local _hit_x = args[14]
 	local _hit_y = args[15]
 
-	local count = gm.item_count(_hit.value, guardingAmuletID)
+	local count = gm.item_count(_hit.value or -4, guardingAmuletID) or 0
 	if count > 0 then
 		local attacker = Instance.wrap(_parent.value)
 		local target = Instance.wrap(_hit.value)

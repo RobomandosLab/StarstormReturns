@@ -45,7 +45,8 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 	--local _hit_x = args[14]
 	--local _hit_y = args[15]
 
-	if gm.get_buff_stack(_hit.value, buffNeedlesID) > 0 and Helper.is_false(_critical.value) then
+	local needled = gm.get_buff_stack(_hit.value or -4, buffNeedlesID) or 0
+	if needled > 0 and Helper.is_false(_critical.value) then
 		_critical.value = true
 		_damage.value = _damage.value * 2
 	end
