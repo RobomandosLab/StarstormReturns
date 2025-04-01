@@ -9,7 +9,7 @@ guardingAmulet:set_sprite(item_sprite)
 guardingAmulet:set_tier(Item.TIER.common)
 guardingAmulet:set_loot_tags(Item.LOOT_TAG.category_utility)
 
-guardingAmuletID = guardingAmulet.value
+local guardingAmuletID = guardingAmulet.value
 
 local function get_true_xscale(actor)
 	if actor.object_index == gm.constants.oEngiTurret then
@@ -76,7 +76,7 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 		local attacker = Instance.wrap(_parent.value)
 		local target = Instance.wrap(_hit.value)
 
-		local attack_x = attacker.x
+		local attack_x = attacker.x or _hit_x.value
 
 		-- use the x locations of the actors to determine blocking .... not ideal but it works?
 		if gm.sign(target.x - attack_x) == get_true_xscale(target) then

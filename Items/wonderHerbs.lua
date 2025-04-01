@@ -4,7 +4,8 @@ local wonderHerbs = Item.new(NAMESPACE, "wonderHerbs")
 wonderHerbs:set_sprite(sprite)
 wonderHerbs:set_tier(Item.TIER.common)
 wonderHerbs:set_loot_tags(Item.LOOT_TAG.category_healing)
-wonderHerbsID = wonderHerbs.value
+
+local wonderHerbsID = wonderHerbs.value
 
 local HEAL_COLOR = Color.from_rgb(143, 255, 38)
 
