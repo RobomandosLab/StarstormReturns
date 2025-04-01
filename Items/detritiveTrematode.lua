@@ -7,13 +7,13 @@ local detritiveTrematode = Item.new(NAMESPACE, "detritiveTrematode")
 detritiveTrematode:set_sprite(item_sprite)
 detritiveTrematode:set_tier(Item.TIER.common)
 detritiveTrematode:set_loot_tags(Item.LOOT_TAG.category_damage)
-
 local detritiveTrematodeID = detritiveTrematode.value
 
 local buffDisease = Buff.new(NAMESPACE, "disease")
 buffDisease.icon_sprite = buff_sprite
 buffDisease.is_debuff = true
 buffDisease.is_timed = false
+buffDiseaseID = buffDisease.value
 
 detritiveTrematode:clear_callbacks()
 -- this effect honestly looks ugly ..?? idk
@@ -49,15 +49,20 @@ gm.post_script_hook(gm.constants.damager_hit_process, function(self, other, resu
 	local _target = args[2].value
 	local _parent = _hit_info.parent
 
-	if not Instance.exists(_target) or _target.hp <= 0 then return end
+	if not Instance.exists(_target) then return end
+	if gm.get_buff_stack(_target, buffDiseaseID) > 0 then return end
 
 	local count = gm.item_count(_parent or -4, detritiveTrematodeID) or 0
+
 	if count > 0 then
+		local target = Instance.wrap(_target) -- sometimes _target is an instance ID, so gotta wrap it for the dot syntax
+		if target.hp <= 0 then return end
+
 		local threshold = 0.1 + 0.05 * count
 
-		if _target.hp <= _target.maxhp * threshold then
-			gm.apply_buff(_target, buffDisease.value, 60)
-			_target.__ssr_trematode_damage = _parent.damage * 0.5
+		if target.hp <= target.maxhp * threshold then
+			target:buff_apply(buffDisease, 60)
+			target.__ssr_trematode_damage = _parent.damage * 0.5
 		end
 	end
 end)
