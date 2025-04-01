@@ -26,9 +26,16 @@ objTree:onStep(function(self)
 		local targets = List.wrap(self:find_characters_circle(self.x, self.y, self.radius, false, 1, true))
 
 		for _, actor in ipairs(targets) do
-			local heal = GM.instance_create(self.x, self.y, gm.constants.oEfHeal2)
-			heal.target = actor
-			gm.variable_instance_set(heal.id, "value", actor.maxhp * 0.022)
+			local amount = actor.maxhp * 0.022
+			if actor.object_index == gm.constants.oP then
+				local heal = GM.instance_create(self.x, self.y, gm.constants.oEfHeal2)
+				heal.target = actor
+				--heal.value = amount -- this doesn't work because RMT wrappers use the `value` key lol
+				gm.variable_instance_set(heal.id, "value", amount)
+			else
+				-- spwaning healing orbs for non-players looks too noisy, so just heal them directly
+				actor:heal(amount)
+			end
 		end
 	end
 end)
