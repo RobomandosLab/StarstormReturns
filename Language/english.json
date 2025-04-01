@@ -89,8 +89,8 @@
 		},
 		"watchMetronome" : {
 			"name" : "Watch Metronome",
-			"pickup" : "Standing still charges speed for your next movement.",
-			"description": "Standing still <b>increases movement speed</c> by up to <b>+85%</c>. Decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>.",
+			"pickup" : "Charge the watch by standing still. Move faster at full charge.",
+			"description": "Standing still charges the watch over <b>3</c> seconds. At full charge, increase <b>movement speed</c> by <b>50%</c>, consuming charge over <b>3 <c_stack>(+1 per stack)</c> seconds.",
 			"destination": "Cage 1,\nG-44 (Underground),\nEarth",
 			"date": "09/05/2056",
 			"story" : "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",
@@ -241,7 +241,7 @@
 		"needles" : {
 			"name": "Needles",
 			"pickup" : "Chance to mark enemies for guaranteed critical strikes.",
-			"description": "<y>4% <c_stack>(+2% per stack)</c> chance on hit to <y>mark</c> enemies for 100% <y>critical chance</c> against them for 3 seconds.",
+			"description": "<y>4% <c_stack>(+2% per stack)</c> chance on hit to <y>mark</c> enemies for <y>100% critical chance</c> against them for 3 seconds.",
 			"destination" : "E2,\nOren's Loop,\nVenus",
 			"date" : "[REDACTED]",
 			"story" : "Uh.. madre dice que si puedes leer esto, es porque no eres tan torpe como pensaba, y pues eso. Esperamos que te sirvan estas agujas. Me temo que no son las que pediste, pero no hace mucha diferencia, pienso.\nNo recuerdo si los enviamos bien embalados. Ten cuidado.",
