@@ -41,8 +41,8 @@ objTree:onStep(function(self)
 end)
 objTree:onDraw(function(self)
 	-- time it so that peak brightness coincides with spawning heal
-	local t = (Global._current_frame + 60) / (math.pi * 6)
-	local a = 0.6 + math.sin(t) * 0.2
+	local t = (Global._current_frame / 60) * math.pi
+	local a = 0.6 + math.cos(t) * 0.2
 	local r = self.radius
 
 	gm.draw_set_colour(Color.from_hex(0x82FF9F))
@@ -64,8 +64,6 @@ objTree:onDestroy(function(self)
 	self:instance_destroy_sync()
 end)
 
-local trees_spawned_this_stage = false
-
 local function update_trees(removal)
 	if gm._mod_net_isClient() then return end
 
@@ -77,7 +75,7 @@ local function update_trees(removal)
 		stack = stack - 1
 	end
 
-	if not trees_spawned_this_stage then
+	if not Instance.exists(objTree) then
 		for _, inst in ipairs(Instance.find_all(gm.constants.pTeleporter)) do
 			objTree:create(inst.x + math.random(-80, 80), inst.y)
 		end
@@ -94,8 +92,6 @@ local function update_trees(removal)
 			inst:destroy()
 		end
 	end
-
-	trees_spawned_this_stage = stack > 0
 end
 
 distinctiveStick:clear_callbacks()
@@ -107,6 +103,5 @@ distinctiveStick:onRemove(function(actor, stack)
 end)
 
 Callback.add(Callback.TYPE.onStageStart, "SSDistinctiveTree", function()
-	trees_spawned_this_stage = false
 	update_trees()
 end)
