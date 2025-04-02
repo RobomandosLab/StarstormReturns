@@ -17,6 +17,9 @@ local buffChrono = Buff.new(NAMESPACE, "chrono")
 buffChrono.show_icon = false
 buffChrono.is_timed = false
 
+local objMetronomeBar = Object.new(NAMESPACE, "MetronomeBar")
+objMetronomeBar.obj_depth = -400
+
 watchMetronome:clear_callbacks()
 watchMetronome:onAcquire(function(actor, stack)
 	local data = actor:get_data()
@@ -30,12 +33,21 @@ watchMetronome:onRemove(function(actor, stack)
 	if stack == 1 then
 		data.chrono_charge = nil
 		data.chrono_tick = nil
+		if data.chrono_bar:exists() then
+			data.chrono_bar:destroy()
+		end
 
 		actor:buff_remove(buffChrono)
 	end
 end)
 watchMetronome:onPostStep(function(actor, stack)
 	local data = actor:get_data()
+
+
+	if not Instance.exists(data.chrono_bar) then
+		data.chrono_bar = objMetronomeBar:create()
+		data.chrono_bar.parent = actor
+	end
 
 	local charged = actor:buff_stack_count(buffChrono) > 0
 	local motion_frac = math.abs(actor.pHspeed) / actor.pHmax
@@ -91,7 +103,20 @@ local class_offsets = {
 	[Survivor.find("ror", "sniper").value] = 22,
 }
 
-watchMetronome:onPostDraw(function(actor, stack)
+objMetronomeBar:clear_callbacks()
+objMetronomeBar:onCreate(function(self)
+	self.parent = -4
+	self.persistent = true
+end)
+objMetronomeBar:onStep(function(self)
+	if not GM.actor_is_alive(self.parent) then
+		self:destroy()
+	end
+end)
+objMetronomeBar:onDraw(function(self)
+	if not Instance.exists(self.parent) then return end
+
+	local actor = self.parent
 	local data = actor:get_data()
 
 	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
@@ -109,7 +134,7 @@ watchMetronome:onPostDraw(function(actor, stack)
 	local bar_top		= y - 2
 	local bar_bottom	= y + 2
 
-	local fraction = data.chrono_charge
+	local fraction = data.chrono_charge or 0
 	local charged = actor:buff_stack_count(buffChrono) > 0
 
 	if charged then
