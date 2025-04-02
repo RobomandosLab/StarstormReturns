@@ -75,7 +75,7 @@ local function update_trees(removal)
 		stack = stack - 1
 	end
 
-	if not Instance.exists(objTree) then
+	if Instance.count(objTree) == 0 then
 		for _, inst in ipairs(Instance.find_all(gm.constants.pTeleporter)) do
 			objTree:create(inst.x + math.random(-80, 80), inst.y)
 		end
