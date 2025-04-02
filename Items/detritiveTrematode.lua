@@ -49,7 +49,8 @@ gm.post_script_hook(gm.constants.damager_hit_process, function(self, other, resu
 	local _target = args[2].value
 	local _parent = _hit_info.parent
 
-	if not Instance.exists(_target) then return end
+	if gm.instance_exists(_target) == 0.0 then return end
+	if gm.instance_exists(_parent) == 0.0 then return end
 	if gm.get_buff_stack(_target, buffDiseaseID) > 0 then return end
 
 	local count = gm.item_count(_parent or -4, detritiveTrematodeID) or 0
