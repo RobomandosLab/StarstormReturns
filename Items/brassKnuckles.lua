@@ -24,26 +24,14 @@ end)
 -- signature:
 -- damager_calculate_damage(hit_info, true_hit, hit, damage, critical, parent, proc, attack_flags, damage_col, team, climb, percent_hp, xscale, hit_x, hit_y)
 gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, result, args)
-	--local _true_hit = args[2]
-	local _hit = args[3]
-	local _damage = args[4]
-	--local _critical = args[5]
-	local _parent = args[6]
-	--local _proc = args[7]
-	--local _attack_flags = args[8]
-	--local _damage_col = args[9]
-	--local _team = args[10]
-	--local _climb = args[11]
-	--local _percent_hp = args[12]
-	--local _xscale = args[13]
-	local _hit_x = args[14]
-	local _hit_y = args[15]
+	local parent = args[6].value
 
-	local count = gm.item_count(_parent.value or -4, brassKnucklesID) or 0
+	if gm.instance_exists(parent) == 0.0 then return end
+
+	local count = gm.item_count(parent or -4, brassKnucklesID) or 0
 	if count > 0 then
-		local parent = Instance.wrap(_parent.value)
-		local hit_x = _hit_x.value
-		local hit_y = _hit_y.value
+		local hit_x = args[14].value
+		local hit_y = args[15].value
 
 		local radius = 30 + count * 30
 		local dx = hit_x - parent.x
@@ -51,6 +39,7 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 
 		-- squared distance check
 		if (dx * dx + dy * dy) <= (radius * radius) then
+			local _damage = args[4]
 			_damage.value = _damage.value * 1.35
 			gm.sound_play_at(sound, 0.55, 0.8 + math.random() * 0.4, hit_x, hit_y)
 		end
