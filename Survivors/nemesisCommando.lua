@@ -1,6 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
+local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", path.combine(SPRITE_PATH, "select.png"), 25, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemCommandoPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall", path.combine(SPRITE_PATH, "portraitTiny.png"))
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
@@ -38,6 +39,7 @@ local sprite_shoot4_2b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4_2B
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 47, 33)
 local sprite_shoot4b_a		= Resources.sprite_load(NAMESPACE, "NemCommandoShoot4B_A", path.combine(SPRITE_PATH, "shoot4b_a.png"), 8, 34, 27)
 
+local sprite_decoy			= Resources.sprite_load(NAMESPACE, "NemCommandoDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 22, 18)
 local sprite_drone_idle		= Resources.sprite_load(NAMESPACE, "DronePlayerNemCommandoIdle", path.combine(SPRITE_PATH, "drone_idle.png"), 5, 15, 13)
 local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerNemCommandoShoot", path.combine(SPRITE_PATH, "drone_shoot.png"), 5, 33, 13)
 
@@ -110,7 +112,7 @@ nemCommando:set_animations({
 	fall = sprite_fall,
 	climb = sprite_climb,
 	death = sprite_death,
-	--decoy = sprite_decoy,
+	decoy = sprite_decoy,
 
 	drone_idle = sprite_drone_idle,
 	drone_shoot = sprite_drone_shoot,
@@ -119,6 +121,7 @@ nemCommando:set_animations({
 nemCommando:set_cape_offset(0, -8, 0, -8)
 nemCommando:set_primary_color(Color.from_rgb(250, 40, 40))
 
+nemCommando.sprite_loadout = sprite_select
 nemCommando.sprite_idle = sprite_idle
 nemCommando.sprite_title = sprite_walk
 nemCommando.sprite_credits = sprite_credits
