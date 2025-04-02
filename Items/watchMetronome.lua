@@ -43,7 +43,6 @@ end)
 watchMetronome:onPostStep(function(actor, stack)
 	local data = actor:get_data()
 
-
 	if not Instance.exists(data.chrono_bar) then
 		data.chrono_bar = objMetronomeBar:create()
 		data.chrono_bar.parent = actor
@@ -115,6 +114,7 @@ objMetronomeBar:onStep(function(self)
 end)
 objMetronomeBar:onDraw(function(self)
 	if not Instance.exists(self.parent) then return end
+	if not gm.bool(self.parent.visible) then return end
 
 	local actor = self.parent
 	local data = actor:get_data()
