@@ -15,7 +15,7 @@ buffNeedlesID = buffNeedles.value
 
 needles:clear_callbacks()
 needles:onHitProc(function(actor, victim, stack, hit_info)
-	if math.random() <= 0.02 + stack * 0.02 then
+	if math.random() <= 0.01 + stack * 0.02 then
 		victim:buff_apply(buffNeedles, 190)
 	end
 end)
