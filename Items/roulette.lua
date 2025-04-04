@@ -30,7 +30,6 @@ local roulette_buffs = {
 }
 
 local rouletteObject = Object.new(NAMESPACE, "RouletteWheel")
-local packetRoulette = Packet.new()
 
 local function roulette_roll(actor)
 	if gm._mod_net_isClient() then return end
@@ -40,13 +39,6 @@ local function roulette_roll(actor)
 	local obj = rouletteObject:create(actor.x, actor.bbox_top - 40)
 	obj.buff_index = buff_index
 	obj.parent = actor
-
-	if gm._mod_net_isOnline() then
-		local msg = packetRoulette:message_begin()
-		msg:write_instance(actor)
-		msg:write_byte(buff_index)
-		msg:send_to_all()
-	end
 end
 
 local function roulette_clear_buffs(actor)
@@ -56,15 +48,6 @@ local function roulette_clear_buffs(actor)
 		end
 	end
 end
-
-packetRoulette:onReceived(function(msg)
-	local actor = msg:read_instance()
-	local buff_index = msg:read_byte()
-
-	local obj = rouletteObject:create(actor.x, actor.bbox_top - 40)
-	obj.buff_index = buff_index
-	obj.parent = actor
-end)
 
 roulette:clear_callbacks()
 roulette:onAcquire(function(actor, stack)
@@ -108,6 +91,7 @@ rouletteObject:onCreate(function(self)
 	self.parent = -4
 
 	self:sound_play(sound, 1, 1)
+	self:instance_sync()
 end)
 rouletteObject:onStep(function(self)
 	if not Instance.exists(self.parent) then
@@ -142,6 +126,14 @@ rouletteObject:onStep(function(self)
 			self:destroy()
 		end
 	end
+end)
+rouletteObject:onSerialize(function(self, buffer)
+	buffer:write_instance(self.parent)
+	buffer:write_byte(self.buff_index)
+end)
+rouletteObject:onDeserialize(function(self, buffer)
+	self.parent = buffer:read_instance()
+	self.buff_index = buffer:read_byte()
 end)
 
 for i, buff in ipairs(roulette_buffs) do
