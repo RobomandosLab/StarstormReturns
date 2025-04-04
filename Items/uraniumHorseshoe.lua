@@ -2,6 +2,8 @@
 -- this is probably the easiest item in ssr with the exception of the fork
 -- ill comment on literally everything because of this
 
+-- hi it's kris i'm here too, i touched up this item a bit while refining things
+
 -- load the sprites for the item and the footstep effect
 local sprite = Resources.sprite_load(NAMESPACE, "UraniumHorseshoe", path.combine(PATH, "Sprites/Items/uraniumHorseshoe.png"), 1, 14, 17)
 local sprite_footstep = Resources.sprite_load(NAMESPACE, "UraniumHorseshoeFootstep", path.combine(PATH, "Sprites/Items/Effects/horseshoeFootstep.png"), 7, 3, 0)
@@ -33,7 +35,7 @@ horseshoe:onPostStep(function(actor, stack)
 		data.horseshoeTimer = 1 
 	end
 	
-	if actor.pHspeed ~= 0 and actor:is_grounded() then -- if the player is moving on the ground, we increase the timer by one on every frame
+	if actor.pHspeed ~= 0 and Helper.is_false(actor.free) then -- if the player is moving on the ground, we increase the timer by one on every frame
 		data.horseshoeTimer = data.horseshoeTimer + 1
 	else -- if they arent, we reset it back to 1
 		data.horseshoeTimer = 1
@@ -43,7 +45,12 @@ horseshoe:onPostStep(function(actor, stack)
 	-- the operator % in lua will return the remainder of a division
 	-- this is also why we have been using 1 as our starting value instead of 0, cuz 0 divided by 10 will have a remainder of 0, meaning that this code will run on every tick while youre in the air or moving (which is bad cuz we dont want to do that)
 	if data.horseshoeTimer % 10 == 0 then
-		parHorseshoe:set_orientation(90 + 90 * actor.image_xscale, 90 + 90 * actor.image_xscale, 0, 0, false) -- actor.image_xscale is the direction the player is looking in, with 1 being right and -1 being left
-		parHorseshoe:create(actor.x, actor.y + 12, 1) -- creating a particle at 12 pixels below the players y coordiante will make it at the players feet level
+		local orientation = 90 + 90 * actor.image_xscale -- actor.image_xscale is the direction the player is looking in, with 1 being right and -1 being left
+		local offset = 0
+		if orientation == 180 then
+			offset = 1 -- compensate for 1-pixel offset when the particle is flipped
+		end
+		parHorseshoe:set_orientation(orientation, orientation, 0, 0, false)
+		parHorseshoe:create(actor.x, actor.bbox_bottom + offset, 1) -- the bbox_bottom variable always holds the global y coordinate of the bottom of the actor's hitbox
 	end
 end)
