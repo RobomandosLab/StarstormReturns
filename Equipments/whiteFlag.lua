@@ -1,18 +1,20 @@
-local item_sprite = Resources.sprite_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
-local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
-local skill_sprite = Resources.sprite_load(NAMESPACE, "SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
+local sprite_item			= Resources.sprite_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
+local sprite_flag_spawn		= Resources.sprite_load(NAMESPACE, "EfWhiteFlagSpawn", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagSpawn.png"), 13, 32, 45)
+local sprite_flag_idle		= Resources.sprite_load(NAMESPACE, "EfWhiteFlagIdle", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagIdle.png"), 5, 15, 26)
+local sprite_buff			= Resources.sprite_load(NAMESPACE, "BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
+local sprite_skill			= Resources.sprite_load(NAMESPACE, "SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
 local sound = Resources.sfx_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sounds/Items/whiteFlag.ogg"))
 
 local whiteFlag = Equipment.new(NAMESPACE, "whiteFlag")
-whiteFlag:set_sprite(item_sprite)
+whiteFlag:set_sprite(sprite_item)
 whiteFlag:set_cooldown(45)
 whiteFlag:set_loot_tags(Item.LOOT_TAG.category_utility, Item.LOOT_TAG.equipment_blacklist_chaos)
 
 local buffPeace = Buff.new(NAMESPACE, "peace")
-buffPeace.icon_sprite = buff_sprite
+buffPeace.icon_sprite = sprite_buff
 
 local skillPeace = Skill.new(NAMESPACE, "peace")
-skillPeace.sprite = skill_sprite
+skillPeace.sprite = sprite_skill
 skillPeace.is_primary = true -- prevent icon from graying out
 -- ensure this "skill" cannot be activated
 skillPeace.max_stock = -math.huge -- prevent backup mag and afterburner from giving it extra stocks
@@ -20,7 +22,7 @@ skillPeace.auto_restock = false
 skillPeace.start_with_stock = false
 
 local objFlag = Object.new(NAMESPACE, "EfWhiteFlag")
-objFlag.obj_sprite = gm.constants.sEfWarbanner
+objFlag.obj_sprite = sprite_flag_idle
 
 whiteFlag:clear_callbacks()
 whiteFlag:onUse(function(actor, embryo)
@@ -36,7 +38,8 @@ objFlag:onCreate(function(self)
 	self.radius = 160
 	self.life = 8 * 60
 
-	self.image_speed = 0
+	self.image_speed = 0.25
+	self.sprite_index = sprite_flag_spawn
 
 	self:sound_play(sound, 1, 1)
 end)
@@ -55,7 +58,13 @@ objFlag:onStep(function(self)
 		end
 	end
 
+	if self.sprite_index == sprite_flag_spawn and self.image_index + self.image_speed >= 13 then
+		self.image_index = 0
+		self.sprite_index = sprite_flag_idle
+	end
+
 	self.life = self.life - 1
+	self.image_alpha = self.life / 15
 	if self.life < 0 then
 		self:destroy()
 	end
