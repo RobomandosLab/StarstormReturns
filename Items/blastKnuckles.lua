@@ -1,3 +1,6 @@
+-- this item sucks. needs to be redesigned completely at some point.
+-- but for now we have too many damage items in the green pool anyway, so, bleh
+--[[
 local item_sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckles", path.combine(PATH, "Sprites/Items/blastKnuckles.png"), 1, 16, 14)
 local buff_sprite = Resources.sprite_load(NAMESPACE, "BuffBlastCharge", path.combine(PATH, "Sprites/Buffs/blastCharge.png"), 1, 5, 14)
 local effect_sprite = Resources.sprite_load(NAMESPACE, "BlastKnuckleBoom", path.combine(PATH, "Sprites/Items/Effects/blastKnuckleBoom.png"), 6, 56, 16)
@@ -109,3 +112,4 @@ blastKnuckles:onPostDraw(function(actor, stack)
 	gm.draw_circle(x, y, RADIUS, true)
 	gm.draw_set_alpha(1)
 end)
+--]]
