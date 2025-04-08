@@ -34,7 +34,6 @@ iceTool:onPostStep(function(actor, stack)
 
 	local is_climbing = gm.actor_state_is_climb_state(actor.actor_state_current_id)
 	local is_airborne = gm.bool(actor.free)
-	local jump_input = gm.bool(actor.moveUp) or gm.bool(actor.moveUp_buffered)
 
 	local collision_dir = 0
 	if actor:is_colliding(gm.constants.pBlock, actor.x-1) then
@@ -43,10 +42,12 @@ iceTool:onPostStep(function(actor, stack)
 		collision_dir = 1
 	end
 
-	-- do some dumb jank to make ice tool take precedence over hopoo feather
 	local can_do_it = is_airborne and collision_dir ~= 0 and data.iceTool_jumps > 0
+
+	-- do some dumb jank to make ice tool take precedence over hopoo feather
 	if can_do_it and not data.iceTool_feather_preserve then
 		data.iceTool_feather_preserve = actor.jump_count
+		actor.jump_count = math.huge
 	elseif not can_do_it and data.iceTool_feather_preserve then
 		actor.jump_count = data.iceTool_feather_preserve
 		data.iceTool_feather_preserve = nil
@@ -63,39 +64,33 @@ iceTool:onPostStep(function(actor, stack)
 		return
 	end
 
-	if jump_input and is_airborne then
-		local feather_count = actor:item_stack_count(Item.find("ror", "hopooFeather"))
+	if gm.bool(actor.moveUp_buffered) and can_do_it then
+		actor.pVspeed = -actor.pVmax - 1.5
+		actor.free_jump_timer = 0
+		actor.jumping = true
+		actor.moveUp = false
+		actor.moveUp_buffered = false
 
-		if actor.jump_count >= feather_count and data.iceTool_jumps > 0 then
-			if collision_dir ~= 0 then
-				actor.pVspeed = -actor.pVmax - 1.5
-				actor.free_jump_timer = 0
-				actor.jumping = true
-				actor.moveUp = false
-				actor.moveUp_buffered = false
+		actor.pHspeed = -actor.pHmax * collision_dir
+		actor.image_xscale = -collision_dir
 
-				actor.pHspeed = -actor.pHmax * collision_dir
-				actor.image_xscale = -collision_dir
+		data.iceTool_jumps = data.iceTool_jumps - 1
 
-				data.iceTool_jumps = data.iceTool_jumps - 1
-
-				if actor:is_authority() then
-					-- send actor_position_info packet to sync the jumping velocity and stuff
-					actor:net_send_instance_message(0)
-				end
-
-				if actor:buff_stack_count(buffIceTool) > 0 then
-					GM.set_buff_time_nosync(actor, buffIceTool, 30)
-				else
-					GM.apply_buff_internal(actor, buffIceTool, 30, 3)
-				end
-
-				actor:sound_play(sound, 1, 1)
-				particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
-
-				efIceTool:create(actor.x, actor.y).image_xscale = collision_dir
-			end
+		if actor:is_authority() then
+			-- send actor_position_info packet to sync the jumping velocity and stuff
+			actor:net_send_instance_message(0)
 		end
+
+		if actor:buff_stack_count(buffIceTool) > 0 then
+			GM.set_buff_time_nosync(actor, buffIceTool, 30)
+		else
+			GM.apply_buff_internal(actor, buffIceTool, 30, 3)
+		end
+
+		actor:sound_play(sound, 1, 1)
+		particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
+
+		efIceTool:create(actor.x, actor.y).image_xscale = collision_dir
 	end
 end)
 
