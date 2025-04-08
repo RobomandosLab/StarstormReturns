@@ -58,7 +58,7 @@ gm.post_script_hook(gm.constants.damager_hit_process, function(self, other, resu
 	if count > 0 then
 		local target = Instance.wrap(_target) -- sometimes _target is an instance ID, so gotta wrap it for the dot syntax
 		if target.hp <= 0 then return end
-		if _target.id == _parent.id then return end -- meteor counts as self-damage. prevent this from becoming an issue lmaoooo
+		if target.id == _parent.id then return end -- meteor counts as self-damage. prevent this from becoming an issue lmaoooo
 
 		local threshold = 0.1 + 0.05 * count
 
