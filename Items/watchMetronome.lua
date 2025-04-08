@@ -131,6 +131,7 @@ objMetronomeBar:onDraw(function(self)
 
 	local bar_left		= x - 20
 	local bar_right		= x + 20
+	local bar_width		= bar_right - bar_left
 	local bar_top		= y - 2
 	local bar_bottom	= y + 2
 
@@ -142,7 +143,7 @@ objMetronomeBar:onDraw(function(self)
 	else
 		gm.draw_set_colour(BAR_COLOR)
 	end
-	gm.draw_rectangle(bar_left, bar_top, gm.lerp(bar_left, bar_right, fraction), bar_bottom, false)
+	gm.draw_rectangle(bar_left, bar_top, bar_left + bar_width * fraction, bar_bottom, false)
 
 	gm.draw_sprite(bar_sprite, 0, x, y)
 end)
@@ -157,11 +158,11 @@ buffChrono:onApply(function(actor, stack)
 	ef.rate = 0.04
 end)
 buffChrono:onRemove(function(actor, stack)
-	actor:sound_play(gm.constants.wChefShoot2_1, 0.8, 1.2)
+	actor:sound_play(gm.constants.wWispSpawn, 0.8, 1.5)
 
 	local ef = GM.instance_create(0, 0, gm.constants.oEfFlash)
 	ef.parent = actor
-	ef.image_blend = BAR_COLOR
+	ef.image_blend = Color.WHITE
 	ef.rate = 0.08
 end)
 buffChrono:onStatRecalc(function(actor, stack)
