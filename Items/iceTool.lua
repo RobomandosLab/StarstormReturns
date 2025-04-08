@@ -7,6 +7,8 @@ local particleSpark = Particle.find("ror", "Spark")
 local efIceTool = Object.new(NAMESPACE, "EfIceTool")
 efIceTool.obj_sprite = sprite_effect
 
+-- this buff is used for the brief speed boost on walljump and while climbing
+-- all applications of it use _internal functions to bypass networking, because player movement is clientside
 local buffIceTool = Buff.new(NAMESPACE, "IceTool")
 buffIceTool.client_handles_removal = true
 buffIceTool.show_icon = false
@@ -34,6 +36,28 @@ iceTool:onPostStep(function(actor, stack)
 	local is_airborne = gm.bool(actor.free)
 	local jump_input = gm.bool(actor.moveUp) or gm.bool(actor.moveUp_buffered)
 
+	local collision_dir = 0
+	if actor:is_colliding(gm.constants.pBlock, actor.x-1) then
+		collision_dir = -1
+	elseif actor:is_colliding(gm.constants.pBlock, actor.x+1) then
+		collision_dir = 1
+	end
+
+	-- do some dumb jank to make ice tool take precedence over hopoo feather
+	local can_do_it = is_airborne and collision_dir ~= 0 and data.iceTool_jumps > 0
+	if can_do_it and not data.iceTool_feather_preserve then
+		data.iceTool_feather_preserve = actor.jump_count
+	elseif not can_do_it and data.iceTool_feather_preserve then
+		actor.jump_count = data.iceTool_feather_preserve
+		data.iceTool_feather_preserve = nil
+	end
+
+	-- just in-case something like a geyser or whatever changes the jump count ....
+	-- this is all very jank and terrible but it's good enough and the QoL is worth it ....
+	if actor.jump_count ~= math.huge and data.iceTool_feather_preserve then
+		actor.jump_count = math.huge
+	end
+
 	if not is_airborne or is_climbing then
 		data.iceTool_jumps = stack
 		return
@@ -42,27 +66,21 @@ iceTool:onPostStep(function(actor, stack)
 	if jump_input and is_airborne then
 		local feather_count = actor:item_stack_count(Item.find("ror", "hopooFeather"))
 
-		-- make sure feathers have been exhausted
 		if actor.jump_count >= feather_count and data.iceTool_jumps > 0 then
-			local xscale = 0
-			if actor:is_colliding(gm.constants.pBlock, actor.x-1) then
-				xscale = -1
-			elseif actor:is_colliding(gm.constants.pBlock, actor.x+1) then
-				xscale = 1
-			end
-			if xscale ~= 0 then
+			if collision_dir ~= 0 then
 				actor.pVspeed = -actor.pVmax - 1.5
 				actor.free_jump_timer = 0
 				actor.jumping = true
 				actor.moveUp = false
 				actor.moveUp_buffered = false
 
-				actor.pHspeed = -actor.pHmax * xscale
-				actor.image_xscale = -xscale
+				actor.pHspeed = -actor.pHmax * collision_dir
+				actor.image_xscale = -collision_dir
 
 				data.iceTool_jumps = data.iceTool_jumps - 1
 
 				if actor:is_authority() then
+					-- send actor_position_info packet to sync the jumping velocity and stuff
 					actor:net_send_instance_message(0)
 				end
 
@@ -73,9 +91,9 @@ iceTool:onPostStep(function(actor, stack)
 				end
 
 				actor:sound_play(sound, 1, 1)
-				particleSpark:create(actor.x + 6 * xscale, actor.y, 2)
+				particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
 
-				efIceTool:create(actor.x, actor.y).image_xscale = xscale
+				efIceTool:create(actor.x, actor.y).image_xscale = collision_dir
 			end
 		end
 	end
