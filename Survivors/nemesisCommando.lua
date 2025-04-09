@@ -53,6 +53,8 @@ local sprite_explosion		= Resources.sprite_load(NAMESPACE, "NemCommandoExplosion
 local sprite_rocket			= Resources.sprite_load(NAMESPACE, "NemCommandoRocket", path.combine(SPRITE_PATH, "rocket.png"), 3, 33, 10)
 local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
 
+local sprite_log			= Resources.sprite_load(NAMESPACE, "NemCommandoLog", path.combine(SPRITE_PATH, "log.png"))
+
 local sound_slash			= Resources.sfx_load(NAMESPACE, "NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))
 local sound_grenade_prime	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadePrimeA", path.combine(SOUND_PATH, "grenade_prime.ogg"))
 local sound_grenade_throw	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeThrowA", path.combine(SOUND_PATH, "grenade_throw.ogg"))
@@ -1057,3 +1059,5 @@ objRocket:onDestroy(function(inst)
 		end
 	end
 end)
+
+local nemCommandoLog = Survivor_Log.new(nemCommando, sprite_log)
