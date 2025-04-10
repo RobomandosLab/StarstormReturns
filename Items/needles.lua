@@ -15,7 +15,8 @@ buffNeedlesID = buffNeedles.value
 
 needles:clear_callbacks()
 needles:onHitProc(function(actor, victim, stack, hit_info)
-	if math.random() <= 0.01 + stack * 0.02 and victim:buff_stack_count(buffNeedles) == 0 then
+	local force_proc = hit_info.attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.force_proc)
+	if (math.random() <= 0.01 + stack * 0.02 or force_proc) and victim:buff_stack_count(buffNeedles) == 0 then
 		victim:buff_apply(buffNeedles, 190)
 	end
 end)
@@ -30,23 +31,13 @@ end)
 -- signature:
 -- damager_calculate_damage(hit_info, true_hit, hit, damage, critical, parent, proc, attack_flags, damage_col, team, climb, percent_hp, xscale, hit_x, hit_y)
 gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, result, args)
-	--local _true_hit = args[2]
+	-- RValues, access underlying value using .value
 	local _hit = args[3]
 	local _damage = args[4]
 	local _critical = args[5]
-	--local _parent = args[6]
-	--local _proc = args[7]
-	--local _attack_flags = args[8]
-	--local _damage_col = args[9]
-	--local _team = args[10]
-	--local _climb = args[11]
-	--local _percent_hp = args[12]
-	--local _xscale = args[13]
-	--local _hit_x = args[14]
-	--local _hit_y = args[15]
 
-	local needled = gm.get_buff_stack(_hit.value or -4, buffNeedlesID) or 0
-	if needled > 0 and Helper.is_false(_critical.value) then
+	local needled = gm.has_buff(_hit.value or -4, buffNeedlesID)
+	if needled and not gm.bool(_critical.value) then
 		_critical.value = true
 		_damage.value = _damage.value * 2
 	end
