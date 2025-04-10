@@ -36,8 +36,6 @@ balloon:onPostStatRecalc(function(actor, stack)
 	-- modifying downward/default gravity is iffy, jetpack doesn't do this and doing it makes falling uncontrollably slower
 	--actor.pGravity1 = actor.pGravity1 * 0.70 ^ exponent
 	actor.pGravity2 = actor.pGravity2 * 0.65 ^ exponent
-
-	print(1 - 0.65 ^ exponent)
 end)
 
 local golden_ratio = (math.pi * 360) / 137.50776405004
