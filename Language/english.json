@@ -10,7 +10,14 @@
 			"nameUpper" : "EXECUTIONER",
 			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
 			"endQuote": "..and so he left, bloodlust unfulfilled.",
-		}
+		},
+		"nemesisCommando" : {
+			"name" : "Nemesis Commando",
+			"nameUpper" : "NEMESIS COMMANDO",
+			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			"endQuote": "..and so he left, carrying new sense of humanity within.",
+			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>",
+		},
 	},
 
 	"skill" : {
@@ -34,7 +41,6 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
-
 		"peace": {
 			"name": "<#a4eae4>Peace!",
 			"description": "Cannot use this skill."
@@ -278,6 +284,16 @@
 	},
 
 	"actor" : {
-		"Exploder.name" : "Exploder"
+		"Exploder.name" : "Exploder",
+		"Mimic.name" : "Security Chest"
 	},
+
+	"interactable" : {
+		"MimicInactive.text" : "..?",
+		"MimicInactive.name" : "Large Chest?",
+	},
+
+	"elite" : {
+		"poison.name" : "Poisoning %s"
+	}
 }

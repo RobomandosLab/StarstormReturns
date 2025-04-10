@@ -12,7 +12,9 @@ typhoon:set_primary_color(Color.from_rgb(195, 28, 124))
 typhoon:set_sound(sound_select)
 typhoon:set_scaling(0.2, 4.0, 1.7)
 typhoon:set_monsoon_or_higher(true)
+typhoon:set_allow_blight_spawns(true)
 
+--[[
 Callback.add(Callback.TYPE.onGameStart, "SSTyphoonStart", function()
 	if typhoon:is_active() then
 		local director = GM._mod_game_getDirector()
@@ -55,9 +57,4 @@ gm.post_script_hook(gm.constants.recalculate_stats, function(self, other, result
 		end
 	end
 end)
-
-gm.post_script_hook(gm.constants.enemy_stats_init, function(self, other, result, args)
-	if typhoon:is_active() then
-		self.exp_worth = self.exp_worth * 0.7
-	end
-end)
+]]--
