@@ -90,30 +90,6 @@ buffIntoxication:onApply(function(actor, stack)
 	actor:sound_play(sound, 1, 1)
 	actor:sound_play(gm.constants.wMushShoot1, 1, 0.7)
 end)
---[[
-buffIntoxication:onApply(function(actor, stack)
-	actor:get_data().intoxication_timer = 0
-	actor:sound_play(sound, 1, 1)
-end)
-buffIntoxication:onPostStep(function(actor, stack)
-	local data = actor:get_data()
-	data.intoxication_timer = data.intoxication_timer + 1
-
-	if data.intoxication_timer >= 90 then
-		data.intoxication_timer = 0
-		local time_left = GM.get_buff_time(actor, buffIntoxication)
-		if time_left then
-			gm.instance_create(actor.x, actor.y, gm.constants.oBugGuts)
-			gm.instance_create(actor.x, actor.y, gm.constants.oBugGuts)
-
-			if gm._mod_net_isHost() then
-				local dmg = math.ceil(actor.hp * 0.03 * time_left / 60)
-				gm.damage_inflict(actor.id, dmg, 0, -4, actor.x, actor.y, dmg, 1, INTOXICATION_COLOR)
-			end
-		end
-	end
-end)
---]]
 
 Callback.add(Callback.TYPE.onKillProc, "SSStrangeCanDetonate", function(victim, killer)
 	if victim:buff_stack_count(buffIntoxication) > 0 then
