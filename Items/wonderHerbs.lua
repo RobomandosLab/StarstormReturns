@@ -5,14 +5,21 @@ wonderHerbs:set_sprite(sprite)
 wonderHerbs:set_tier(Item.TIER.common)
 wonderHerbs:set_loot_tags(Item.LOOT_TAG.category_healing)
 
-local color_herbs = Color.from_rgb(143, 255, 38)
+local wonderHerbsID = wonderHerbs.value
+
+local HEAL_COLOR = Color.from_rgb(143, 255, 38)
 
 -- doesn't use onHeal due to its implementation not sufficiently covering every source of healing
 
 local preserve_number
 gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
-	local actor = Instance.wrap(args[1].value)
-	local stack = actor:item_stack_count(wonderHerbs)
+	--local actor = Instance.wrap(args[1].value)
+	--local stack = actor:item_stack_count(wonderHerbs)
+
+	-- it's a smidge faster to just use these directly
+	local actor = args[1].value or -4
+	local stack = gm.item_count(actor, wonderHerbsID) or 0
+
 	if stack > 0 then
 		local in_amount = args[2].value
 		local is_passive = args[3].value
@@ -26,7 +33,7 @@ gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, ar
 			new_amount = math.max(new_amount, in_amount + 1)
 
 			local diff = new_amount - in_amount
-			gm.draw_damage(actor.x, actor.bbox_top+2, diff, 0, color_herbs, actor.team, 0)
+			gm.draw_damage(actor.x, actor.bbox_top+2, diff, 0, HEAL_COLOR, 4, 0)
 		end
 
 		args[2].value = new_amount
