@@ -26,6 +26,7 @@ basin_stage.teleporter_index = 0
 basin_stage:set_index(2)
 
 --Rooms
+basin_stage:clear_rooms()
 basin_stage:add_room(path.combine(PATH.."/Stages/WhistlingBasin", "whistlingBasin1.rorlvl"))
 basin_stage:add_room(path.combine(PATH.."/Stages/WhistlingBasin", "whistlingBasin2.rorlvl"))
 basin_stage:add_room(path.combine(PATH.."/Stages/WhistlingBasin", "whistlingBasin3.rorlvl"))
