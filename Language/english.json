@@ -223,7 +223,7 @@
 		"balloon" : {
 			"name": "Balloon",
 			"pickup" : "Lower your gravity.",
-			"description": "Decrease gravity by <b>30% <c_stack>(-14% per stack)</c>.",
+			"description": "Decrease <b>gravity</c> while holding the jump button by <b>35% <c_stack>(-15% per stack)</c>.",
 			"destination" : "55 Mo.,\nPaare Plaza,\nEarth",
 			"date" : "06/31/2056",
 			"story" : "When I was younger I used to love balloons. They're quite fun to watch in places with an atmosphere. However, this one is of special value to me, as it was of the first ones to be made out of reinforced rubber, back in the '22s. I hope you take care of it, it might cost a fortune in a few more years (if it's still floating, of course!).",

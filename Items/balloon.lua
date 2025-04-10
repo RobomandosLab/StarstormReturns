@@ -1,7 +1,3 @@
--- this item is probably best disabled for now as its too similar to rusty jetpack
--- its role is supposedly debloating the pool and we don't have that much bloat yet
-
---[[
 local sprite_item = Resources.sprite_load(NAMESPACE, "Balloon", path.combine(PATH, "Sprites/Items/balloon.png"), 1, 17, 17)
 local sprite_effect = Resources.sprite_load(NAMESPACE, "EfBalloon", path.combine(PATH, "Sprites/Items/Effects/balloon.png"), 6, 4, 6)
 
@@ -35,9 +31,13 @@ balloon:onRemove(function(actor, stack)
 end)
 
 balloon:onPostStatRecalc(function(actor, stack)
-	local exponent = stack ^ 0.7
-	actor.pGravity1 = actor.pGravity1 * 0.70 ^ exponent
+	local exponent = stack ^ 0.7 -- try and somewhat reduce the potency of stacking
+
+	-- modifying downward/default gravity is iffy, jetpack doesn't do this and doing it makes falling uncontrollably slower
+	--actor.pGravity1 = actor.pGravity1 * 0.70 ^ exponent
 	actor.pGravity2 = actor.pGravity2 * 0.65 ^ exponent
+
+	print(1 - 0.65 ^ exponent)
 end)
 
 local golden_ratio = (math.pi * 360) / 137.50776405004
@@ -80,4 +80,3 @@ balloon:onPreDraw(function(actor, stack)
 		gm.draw_set_alpha(1)
 	end
 end)
---]]
