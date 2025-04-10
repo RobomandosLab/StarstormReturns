@@ -1,6 +1,8 @@
 local sprite = Resources.sprite_load(NAMESPACE, "Midas", path.combine(PATH, "Sprites/Equipments/midas.png"), 2, 16, 14)
 local sound = Resources.sfx_load(NAMESPACE, "MidasUse", path.combine(PATH, "Sounds/Items/midasUse.ogg"))
 
+-- these come from this file sarn posted in the rorr modding server, listing most enums used by the game's code.
+-- https://discord.com/channels/1171745917272084550/1175150719700058233/1189771316522389566
 local DAMAGE_INFLICT_FLAGS = {
 	ignore_armor = 1 << 0,
 	nonlethal = 1 << 1,
@@ -20,6 +22,7 @@ midas:onUse(function(actor, embryo)
 	local deduction = math.floor(actor.hp * 0.5)
 
 	if actor:is_authority() then
+		-- same set of flags used by Lost Doll equipment
 		local flags = DAMAGE_INFLICT_FLAGS.ignore_armor
 					+ DAMAGE_INFLICT_FLAGS.nonlethal
 					+ DAMAGE_INFLICT_FLAGS.ignore_invincibility
