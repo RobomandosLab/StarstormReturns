@@ -4,7 +4,7 @@
 	"website_url": "https://www.youtube.com/watch?v=wBW4LtSi2QE",
 	"description": "Content mod featuring survivors, enemies, items, stages, and more!",
 	"dependencies": [
-		"ReturnOfModding-ReturnOfModding-1.0.56",
-		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.8"
+		"ReturnOfModding-ReturnOfModding-1.0.58",
+		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.12"
 	]
 }
