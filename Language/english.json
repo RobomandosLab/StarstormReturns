@@ -8,8 +8,12 @@
 		"executioner" : {
 			"name" : "Executioner",
 			"nameUpper" : "EXECUTIONER",
-			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
-			"endQuote": "..and so he left, bloodlust unfulfilled.",
+			"description" : "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
+			"endQuote" : "..and so he left, bloodlust unfulfilled.",
+			"story": "<ul>Passenger Details:</c>\n<y>[Military Class]</c>\n\n<ul>Luggage and Equipment:</c>\nOfficer boarded with EXN Acting Officer carbonweave uniform, civilian-grade plated oversuit and an issued service pistol. At military checkpoint, passenger's armament was noted to have an additional under-barrel \nmodification- and was cleared after an agreement was made to store it in a secure container. The passenger also cleared one ION 204X series battery customized with propulsion orifices. As a safety measure, passenger's \ntechnological goods were temporarily fitted with electrical auto-nullifiers and returned to them.\n\n<b>[SECURITY RECALL]</c>\n\n<ul>[Note E1a]</c> Several reports of Passenger making entire security checkpoint crew uneasy. Light surveillance will be required until further notice.\n<ul>[Note E1b]</c> Passenger would often reply in sounds rather than speech before opting to use Universal Sign Language.\n<ul>[Event E1]</c> Contracted commando performs security check in Passenger's quarters.\n<ul>[Event E1a]</c> Contracted commando requests 24 hour private surveillance in hall leading to Passenger's quarters.\n<ul>[Event E2]</c> Passenger asked to move tables during mealtime after another Passenger sent a formal complaint to onboard security.",
+			"id" : "Travel ID: 4383354378334FF3D34D",
+			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
+			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa",
 		},
 		"nemesisCommando" : {
 			"name" : "Nemesis Commando",
@@ -40,6 +44,38 @@
 		"executionerVBoosted": {
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"nemesisCommandoZ": {
+			"name": "Blade of Cessation",
+			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
+		},
+		"nemesisCommandoX": {
+			"name": "Single Tap",
+			"description": "Shoot an enemy for <y>200% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
+		},
+		"nemesisCommandoX2": {
+			"name": "Distant Gash",
+			"description": "Slash in a line forward for <y>90% damage</c>, <r>wounding</c> enemies for 6 seconds."
+		},
+		"nemesisCommandoC": {
+			"name": "Tactical Roll",
+			"description": "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
+		},
+		"nemesisCommandoV": {
+			"name": "Flush Out",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoVBoosted": {
+			"name": "Cluster Bomb",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies and <y>spitting into 3</c> grenades for <y>3x150% damage.</c>\nHold to <b>cook</c> the grenade. Press the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoV2": {
+			"name": "Devastator",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle."
+		},
+		"nemesisCommandoV2Boosted": {
+			"name": "Spanker",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
