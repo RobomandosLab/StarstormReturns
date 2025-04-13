@@ -3,7 +3,7 @@ local spark_sprite = gm.constants.sSparks18s--Resources.sprite_load(NAMESPACE, "
 
 local RANGE_BASE = 90
 local RANGE_STACK = 21
-local DAMAGE_COEFFICIENT = 0.45
+local DAMAGE_COEFFICIENT = 0.5
 
 local TRAVEL_TIME = 1 / 10 -- 10 frames
 local COLOR_BRIGHT = Color.from_rgb(188, 17, 255)
