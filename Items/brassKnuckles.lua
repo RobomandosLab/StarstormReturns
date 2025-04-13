@@ -40,7 +40,12 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 		-- squared distance check
 		if (dx * dx + dy * dy) <= (radius * radius) then
 			local _damage = args[4]
-			_damage.value = _damage.value * 1.35
+			local _damage_col = args[9]
+			local attack_flags = args[8].value
+			local true_hit = args[2].value
+
+			_damage.value = math.ceil(_damage.value * 1.35)
+			_damage_col.value = gm.merge_colour(_damage_col.value, 0, 0.25) -- tint damage number grey
 			gm.sound_play_at(sound, 0.55, 0.8 + math.random() * 0.4, hit_x, hit_y)
 		end
 	end
