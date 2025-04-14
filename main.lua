@@ -10,9 +10,11 @@ local init = function()
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
 		"Actors",
+		"Elites",
 		"Gameplay",
 		"Survivors",
 		"Items",
+		"Equipments",
 	}
 
 	for _, folder in ipairs(folders) do

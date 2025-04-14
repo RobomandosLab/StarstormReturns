@@ -8,9 +8,20 @@
 		"executioner" : {
 			"name" : "Executioner",
 			"nameUpper" : "EXECUTIONER",
-			"description": "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
-			"endQuote": "..and so he left, bloodlust unfulfilled.",
-		}
+			"description" : "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
+			"endQuote" : "..and so he left, bloodlust unfulfilled.",
+			"story": "<ul>Passenger Details:</c>\n<y>[Military Class]</c>\n\n<ul>Luggage and Equipment:</c>\nOfficer boarded with EXN Acting Officer carbonweave uniform, civilian-grade plated oversuit and an issued service pistol. At military checkpoint, passenger's armament was noted to have an additional under-barrel \nmodification- and was cleared after an agreement was made to store it in a secure container. The passenger also cleared one ION 204X series battery customized with propulsion orifices. As a safety measure, passenger's \ntechnological goods were temporarily fitted with electrical auto-nullifiers and returned to them.\n\n<b>[SECURITY RECALL]</c>\n\n<ul>[Note E1a]</c> Several reports of Passenger making entire security checkpoint crew uneasy. Light surveillance will be required until further notice.\n<ul>[Note E1b]</c> Passenger would often reply in sounds rather than speech before opting to use Universal Sign Language.\n<ul>[Event E1]</c> Contracted commando performs security check in Passenger's quarters.\n<ul>[Event E1a]</c> Contracted commando requests 24 hour private surveillance in hall leading to Passenger's quarters.\n<ul>[Event E2]</c> Passenger asked to move tables during mealtime after another Passenger sent a formal complaint to onboard security.",
+			"id" : "Travel ID: 4383354378334FF3D34D",
+			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
+			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa",
+		},
+		"nemesisCommando" : {
+			"name" : "Nemesis Commando",
+			"nameUpper" : "NEMESIS COMMANDO",
+			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			"endQuote": "..and so he left, carrying new sense of humanity within.",
+			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>",
+		},
 	},
 
 	"skill" : {
@@ -34,6 +45,42 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
+		"nemesisCommandoZ": {
+			"name": "Blade of Cessation",
+			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
+		},
+		"nemesisCommandoX": {
+			"name": "Single Tap",
+			"description": "Shoot an enemy for <y>200% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
+		},
+		"nemesisCommandoX2": {
+			"name": "Distant Gash",
+			"description": "Slash in a line forward for <y>90% damage</c>, <r>wounding</c> enemies for 6 seconds."
+		},
+		"nemesisCommandoC": {
+			"name": "Tactical Roll",
+			"description": "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
+		},
+		"nemesisCommandoV": {
+			"name": "Flush Out",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoVBoosted": {
+			"name": "Cluster Bomb",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies and <y>spitting into 3</c> grenades for <y>3x150% damage.</c>\nHold to <b>cook</c> the grenade. Press the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoV2": {
+			"name": "Devastator",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle."
+		},
+		"nemesisCommandoV2Boosted": {
+			"name": "Spanker",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
+		},
+		"peace": {
+			"name": "<#a4eae4>Peace!",
+			"description": "Cannot use this skill."
+		}
 	},
 
 	"item" : {
@@ -49,7 +96,7 @@
 		"brassKnuckles" : {
 			"name": "Brass Knuckles",
 			"pickup" : "Deal extra damage at close range.",
-			"description": "Deal <y>+35% damage</c> to enemies within <y>5m</c> <c_stack>(+2.5 per stack)</c>.",
+			"description": "Deal <y>+35% damage</c> to enemies within <y>2.8m</c> <c_stack>(+1.4 per stack)</c>.",
 			"destination": "UESPD,\nE42,\nUES Halberd B2",
 			"date": "03/01/2056",
 			"story" : "We found this at the crime scene. We need to check for DNA against the rest of the evidence. I still cant believe they got away.\nThe back has some kind of symbol, maybe that could give us a clue. I'll be heading to the west of [REDACTED], I know someone who can help us solve the case.",
@@ -58,7 +105,7 @@
 		"detritiveTrematode" : {
 			"name": "Detritive Trematode",
 			"pickup" : "Low health enemies receive damage over time.",
-			"description": "Enemies <y>below 10% </c> <c_stack>(+5% per stack) <y>health</c> become <y>infected</c>, receiving <y>2% of max health</c> damage per second.",
+			"description": "Enemies <y>below 15% <c_stack>(+5% per stack) <y>health</c> become permanently <y>infected</c>, receiving <y>100%</c> damage per second.",
 			"destination": "112,\nNeaus 2,\nMars",
 			"date": "03/11/2057",
 			"story" : "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
@@ -84,8 +131,8 @@
 		},
 		"watchMetronome" : {
 			"name" : "Watch Metronome",
-			"pickup" : "Standing still charges speed for your next movement.",
-			"description": "Standing still <b>increases movement speed</c> by up to <b>+85%</c>. Decays over <b>3 seconds</c> <c_stack>(+3 per stack)</c>.",
+			"pickup" : "Charge the watch by standing still. Move faster at full charge.",
+			"description": "Standing still charges the watch over <b>3</c> seconds. At full charge, increase <b>movement speed</c> by <b>50%</c>, consuming charge over <b>3 <c_stack>(+1 per stack)</c> seconds.",
 			"destination": "Cage 1,\nG-44 (Underground),\nEarth",
 			"date": "09/05/2056",
 			"story" : "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",
@@ -136,20 +183,11 @@
 		},
 		"huntersSigil" : {
 			"name": "Hunter's Sigil",
-			"pickup" : "Standing still increases armor and critical strike chance.",
-			"description": "After standing still for 1 second, gain <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
+			"pickup" : "Standing still creates a zone that increases armor and critical strike chance.",
+			"description": "After standing still for 1 second, create a <y>small zone</c> that buffs you and allies for <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
 			"destination" : "2East,\nBeckham Building,\nEarth",
 			"date" : "02/02/2056",
 			"story" : "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
-			"priority": "<g>Priority</c>"
-		},
-		"strangeCan" : {
-			"name": "Strange Can",
-			"pickup" : "Chance to intoxicate enemies.",
-			"description": "<y>8.5% <c_stack>(+5% per stack)</c> chance on hit to <y>intoxicate</c> an enemy, dealing up to <y>40% of enemy health</c> as <y>damage over time</c>.",
-			"destination" : "1530,\n563,\nA-LC12",
-			"date" : "05/22/2056",
-			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
 			"priority": "<g>Priority</c>"
 		},
 		"roulette" : {
@@ -169,10 +207,129 @@
 			"date" : "11/21/2056",
 			"story" : "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
 			"priority": "<r>Fragile</c>"
-		}
+		},
+		"uraniumHorseshoe" : {
+			"name": "Uranium Horseshoe",
+			"pickup" : "Increase movement speed and jump height.",
+			"description": "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			"destination" : "6900,\nMartian's Face Horse Care and Farm Supplies,\nMars",
+			"date" : "04/20/2056",
+			"story" : "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
+			"priority": "<w>Standard</c>"
+		},
+		"blastKnuckles" : {
+			"name": "Blast Knuckles",
+			"pickup" : "Your attacks explode at close range!",
+			"description": "Hitting an enemy within <y>4.5m</c> also <y>blasts behind them</c> for <y>220% <c_stack>(+220% per stack) <y>damage.</c> Hold up to <y>5 charges</c>. Gain a charge every <y>3 seconds.</c>",
+			"destination" : "todo",
+			"date" : "todo",
+			"story" : "todo",
+			"priority": "<g>Priority</c>"
+		},
+		"malice" : {
+			"name": "Malice",
+			"pickup" : "Damage spreads to nearby enemies.",
+			"description": "Attacks <p>spread to nearby enemies</c> for <y>45% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
+			"destination" : "P24,\nRomeo,\nPol-A Station",
+			"date" : "02/11/2056",
+			"story" : "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
+			"priority": "<p>Malicious</c>"
+		},
+		"manOWar" : {
+			"name": "Man-o'-war",
+			"pickup" : "Create an electric discharge on kill.",
+			"description": "Killing an enemy fires <y>chain lightning</c> for <y>100% <c_stack>(+40% per stack)<y> damage</c> on up to <y>2</c> targets.",
+			"destination" : "Hidden Cubby,\nMt. Creation,\nVenus",
+			"date" : "11/20/2056",
+			"story" : "Guys, remember the tiny guy I sent over some time ago? Well.. this one is a bit more aggressive.. although she is a funny little gal! She loves spinnin' around and watching me from inside the bottle. Man, if I hadn't rescued her, she would be in some alien stomach right now.\nI kinda want to name her Ann, thoughts?",
+			"priority": "<g>Priority</c>"
+		},
+		"guardingAmulet" : {
+			"name": "Guarding Amulet",
+			"pickup" : "Reduce damage from behind you.",
+			"description": "Damage taken <b>from behind</c> you is reduced by <b>40% <c_stack>(+40% per stack)</c>.",
+			"destination" : "C8,\nAzure Garden,\nSanctuary",
+			"date" : "03/11/2056",
+			"story" : "I know he's somewhere out there, I know you can find him.. but you must be persistent. By the time my soul leaves this shell, the words will be spoken and you will take my place. He will be the one to show you the path to the answers you always wanted from me.\nEmbrace this amulet; you will depend on it, and it will keep you from ever looking back.",
+			"priority": "<w>Standard</c>"
+		},
+		"distinctiveStick" : {
+			"name": "Distinctive Stick",
+			"pickup" : "Heal near the teleporter.",
+			"description": "Grows a tree near Teleporters, <g>healing</c> allies within <b>10m <c_stack>(+3.75m per stack)</c> for <g>2.2%</c> of their <g>health</c> every 2 seconds.",
+			"destination" : "Dreq Mineli,\nTesaft,\nEarth",
+			"date" : "01/15/2056",
+			"story" : "Darling, I have something special for you..\nThe other day on my mission, I came across this. It caught my eye because it's unlike any of the branches I've seen in my life! This branch excudes a peculiar energy. It made me feel connected to nature in a way I thought was only possible in stories! In honor of our anniversary, I'm giving it to you.\nI'll arrive home soon with an even greater present. Please, don't lose faith.",
+			"priority": "<w>Standard</c>"
+		},
+		"balloon" : {
+			"name": "Balloon",
+			"pickup" : "Lower your gravity.",
+			"description": "Decrease <b>gravity</c> while holding the jump button by <b>35% <c_stack>(-15% per stack)</c>.",
+			"destination" : "55 Mo.,\nPaare Plaza,\nEarth",
+			"date" : "06/31/2056",
+			"story" : "When I was younger I used to love balloons. They're quite fun to watch in places with an atmosphere. However, this one is of special value to me, as it was of the first ones to be made out of reinforced rubber, back in the '22s. I hope you take care of it, it might cost a fortune in a few more years (if it's still floating, of course!).",
+			"priority": "<g>Priority/Fragile</c>"
+		},
+		"iceTool" : {
+			"name": "Ice Tool",
+			"pickup" : "Gain a wall jump. Climb faster.",
+			"description": "Gain <b>1 <c_stack>(+1 per stack)<b> extra jump</c> while in contact with a wall. Increase <b>climbing speed</c> by <b>18% <c_stack>(+18% per stack)</c>.",
+			"destination" : "Mon's Tower #33,\nSolei Shore,\nEarth",
+			"date" : "03/12/2056",
+			"story" : "Good day fellow hiking friend, I found the ice tool you lost last time we went to Mt. [REDACTED]. Please keep an eye out for the snow next time!\nI wonder if the ice tool is still usable though, it's been through so much!",
+			"priority": "<w>Standard</c>"
+		},
+		"needles" : {
+			"name": "Needles",
+			"pickup" : "Chance to mark enemies for guaranteed critical strikes.",
+			"description": "<y>3% <c_stack>(+2% per stack)</c> chance on hit to <y>mark</c> enemies for <y>100% critical chance</c> against them for 3 seconds.",
+			"destination" : "E2,\nOren's Loop,\nVenus",
+			"date" : "[REDACTED]",
+			"story" : "Uh.. madre dice que si puedes leer esto, es porque no eres tan torpe como pensaba, y pues eso. Esperamos que te sirvan estas agujas. Me temo que no son las que pediste, pero no hace mucha diferencia, pienso.\nNo recuerdo si los enviamos bien embalados. Ten cuidado.",
+			"priority": "<y>Piercing</c>"
+		},
+
+		"midas" : {
+			"name" : "M.I.D.A.S",
+			"pickup" : "Convert half of your health into gold.",
+			"description" : "Lose <r>50% health</c>, gaining <y>$1 gold per health spent</c>, plus the cost of a <b>chest</c>.",
+			"destination" : "R A 5-5,\nPrime,\nTitan",
+			"date" : "05/04/2056",
+			"story" : "\"A miracle from the gods..\"\nYou keep saying it over and over again. Are you out of your mind? You keep treating us like we're ignorant when all we tried to do was to SAVE YOU.\n\nDo us a favour and keep it. Do whatever you want with it, we do NOT want to see you around here anymore. We do NOT want to be part of whatever is going on with you and this thing.\n\nIt's making you a greedy, souless person and I hope you know it.",
+			"priority": "<r>Volatile</c>"
+		},
+		"strangeCan" : {
+			"name": "Strange Can",
+			"pickup" : "Throw a can to mark an enemy. Killing it releases a toxic cloud.",
+			"description": "Throw out a <g>peculiar can</c> that <y>intoxicates</c> the enemy with the <r>highest maximum health</c>. <y>Intoxicated</c> enemies release a <y>toxic cloud</c> on death for <y>50%</c> of the enemy's <y>maximum health as damage</c> over 5 seconds.",
+			"destination" : "1530,\n563,\nA-LC12",
+			"date" : "05/22/2056",
+			"story" : "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
+			"priority": "<r>Volatile</c>"
+		},
+		"whiteFlag" : {
+			"name": "White Flag",
+			"pickup": "Place a white flag. Everyone around it is unable to attack.",
+			"description": "Place down a white flag for <b>8</c> seconds. <b>Disables skills</c> for <r>everyone</c> within its radius.\n<r>Doesn't affect</c> drones and flying enemies.",
+			"destination" : "Room 2B,\nSomnus Hotel,\nEarth",
+			"date" : "10/5/2056",
+			"story" : "Save this for me until I get back home, I didn't need it. In fact, we became friends! I can't wait to tell you all about it soon. It's been a long trip and an unexpected series of events. I've told them about you and they want me to invite you over the next time. How's that, huh!? Love you.",
+			"priority": "<r>Volatile</c>",
+		},
 	},
 
 	"actor" : {
-		"Exploder.name" : "Exploder"
+		"Exploder.name" : "Exploder",
+		"Mimic.name" : "Security Chest"
 	},
+
+	"interactable" : {
+		"MimicInactive.text" : "..?",
+		"MimicInactive.name" : "Large Chest?",
+	},
+
+	"elite" : {
+		"poison.name" : "Poisoning %s"
+	}
 }
