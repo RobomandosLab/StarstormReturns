@@ -318,7 +318,15 @@
 			"priority": "<r>Volatile</c>",
 		},
 	},
-
+	
+	"artifact" : {
+		"Multitude" : {
+			"name" : "Multitude",
+			"description": "Enemies come in hordes.",
+		}
+	},
+	
+	
 	"actor" : {
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest"
