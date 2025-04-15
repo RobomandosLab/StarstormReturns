@@ -1,12 +1,5 @@
 --All my functions! And sometimes some constants
 
---A table of my survivors, objects, and pretty much everything in the entire mod
-votv = {}
-votv.objects = {}
-votv.survivors = {}
-votv.items = {}
-votv.achievements = {}
-
 --Check if a point is colliding with the stage
 function is_point_colliding_stage(x, y)
 	local collision = gm.collision_point(x, y, gm.constants.pBlock, false, true)
@@ -134,6 +127,11 @@ function move_contact_air(inst, angle, amount)
 		end
 	end
 	return x, y
+end
+
+function move_in_direction(inst, angle, amount)
+	inst.x = inst.x + math.cos(math.rad(angle)) * amount
+	inst.y = inst.y + math.sin(math.rad(angle)) * amount
 end
 
 --Kinda useless but whatever... Feels better anyways

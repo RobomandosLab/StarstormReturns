@@ -1,4 +1,4 @@
-local item_sprite = Resources.sprite_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 16, 16)
+local item_sprite = Resources.sprite_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 14, 19)
 local coin_sprite = Resources.sprite_load(NAMESPACE, "EfGoldMoltenCoin", path.combine(PATH, "Sprites/Items/Effects/moltenCoin.png"), 6, 5, 5)
 local sound = Resources.sfx_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sounds/Items/moltenCoin.ogg"))
 

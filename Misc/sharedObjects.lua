@@ -1,0 +1,44 @@
+--Objects used in a lot of parts of the module
+
+obj_sparks = Object.new(NAMESPACE, "sparks")
+obj_sparks:set_sprite(gm.constants.sSparks2)
+obj_sparks:set_depth(1)
+obj_sparks:onCreate(function(inst)
+	inst:get_data().frame_index = 0
+	inst.image_speed = 0.33
+end)
+obj_sparks:onStep(function(inst)
+	local data = inst:get_data()
+	data.frame_index = data.frame_index + inst.image_speed
+	inst.image_index = data.frame_index
+	if data.frame_index >= gm.sprite_get_number(inst.sprite_index) then
+		inst:destroy()
+	end
+end)
+
+obj_fading_sparks = Object.new(NAMESPACE, "fading_sparks")
+obj_fading_sparks:set_sprite(gm.constants.sEfChestRain)
+obj_fading_sparks:set_depth(1)
+obj_fading_sparks:onCreate(function(inst)
+	local data = inst:get_data()
+	data.delay = 5 * 60
+	data.rate = 1 / 600
+	data.frame_index = 0
+	inst.image_speed = 0.2
+end)
+obj_fading_sparks:onStep(function(inst)
+	local data = inst:get_data()
+	local frames = gm.sprite_get_number(inst.sprite_index)
+	data.frame_index = data.frame_index + inst.image_speed
+	inst.image_index = math.min(inst.image_index, frames - 1)
+	if inst.image_index >= frames - 1 then
+		inst.image_index = frames - 1
+		data.delay = data.delay - 1
+		if data.delay <= 0 then
+			inst.image_alpha = inst.image_alpha - data.rate
+			if inst.image_alpha <= 0 then
+				inst:destroy()
+			end
+		end
+	end
+end)
