@@ -2,10 +2,10 @@
 -- artifact!!!! makes many enemy but weak enemy!!!
 -- i tried commenting about everything you could get confused about
 
-local loadout = Resources.sprite_load(NAMESPACE, "ArtifactOfMultitude", path.combine(PATH, "Sprites/Artifacts/Multitude/loadout.png"), 3, 19, 19)
-local pickup = Resources.sprite_load(NAMESPACE, "ArtifactOfMultitude", path.combine(PATH, "Sprites/Artifacts/Multitude/pickup.png"), 1, 20, 20)
+local loadout = Resources.sprite_load(NAMESPACE, "ArtifactOfMultitudeLoadout", path.combine(PATH, "Sprites/Artifacts/Multitude/loadout.png"), 3, 19, 19)
+local pickup = Resources.sprite_load(NAMESPACE, "ArtifactOfMultitudePickup", path.combine(PATH, "Sprites/Artifacts/Multitude/pickup.png"), 1, 20, 20)
 
-local multitude = Artifact.new(NAMESPACE, "Multitude")
+local multitude = Artifact.new(NAMESPACE, "multitude")
 multitude:set_sprites(loadout, pickup)
 
 Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
@@ -37,7 +37,7 @@ Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
 	
 	if spawn and gm._mod_game_get_timestop() <= 0 then -- if spawns are enabled and the time isnt stopped, procceed
 		if not director:get_data().multitudeTime then
-			director:get_data().multitudeTime = 5000 -- set the initial multitude timer
+			director:get_data().multitudeTime = 100 -- set the initial multitude timer
 		end
 		if director:get_data().multitudeTime < timeRequired then -- increment the timer by one until it reaches timeRequired
 			director:get_data().multitudeTime = director:get_data().multitudeTime + 1
@@ -95,10 +95,10 @@ Callback.add(Callback.TYPE.onDraw, "MultitudeWarningMessage", function()
 		if director:get_data().multitudeTime < timeRequired - 200 then
 			if director:get_data().multitudeTime > timeRequired - 1000 then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1) -- makes the text use normal white font
-				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.Multitude.arriving")) -- the line itself is in the language file
+				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.arriving")) -- the line itself is in the language file
 			elseif director:get_data().multitudeTime > timeRequired - 2000 then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
-				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.Multitude.approaching"))
+				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.approaching"))
 			end
 		end
 	end
