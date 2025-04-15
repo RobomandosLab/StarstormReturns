@@ -45,7 +45,7 @@ Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
 			if director:get_data().multitudeTime > timeRequired - 100 then
 				director.points = director.points + director.enemy_buff --  increase credit gain by a huge amount
 				for _, player in ipairs(Instance.find_all(gm.constants.oP)) do
-					player:screen_shake(40) -- shake the screen
+					player:screen_shake(40) -- gimme the screen shaker
 				end
 				local enemies = 0
 				-- count all the enemies currently present
