@@ -323,6 +323,8 @@
 		"Multitude" : {
 			"name" : "Multitude",
 			"description": "Enemies come in hordes.",
+			"approaching": "A horde of enemies is approaching.",
+			"arriving": "Prepare yourself...",
 		}
 	},
 	
