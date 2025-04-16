@@ -142,8 +142,8 @@ keeper:onCreate(function(actor)
 	actor.pHmax_base = 1.4
 	actor.knockback_immune = true
 	actor.stun_immune = true
-	actor.z_range = 500
-	actor.y_range = 500
+	actor.z_range = 800
+	actor.x_range = 600
 	actor:get_data().attack_mode = 1
 
 	actor:set_default_skill(Skill.SLOT.primary, keeperPrimary)
