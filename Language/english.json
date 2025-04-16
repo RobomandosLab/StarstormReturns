@@ -335,7 +335,8 @@
 	
 	"actor" : {
 		"Exploder.name" : "Exploder",
-		"Mimic.name" : "Security Chest"
+		"Mimic.name" : "Security Chest",
+		"Gatekeeper.name" : "Gatekeeper"
 	},
 
 	"interactable" : {
