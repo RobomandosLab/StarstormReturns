@@ -49,16 +49,18 @@ gathering:set_sprites(loadout, pickup)
 
 gm.post_code_execute("gml_Object_oEfGold_Create_0", function(self, other)
 	if not gathering.active then return end
-	
 	local gold = Instance.wrap(self)
-	gold.value.value = gold.value.value * 2 -- we have to use value.value because value is already a thing that returns a cinstance in rmt
 	gold.life = 1000
 end)
 
 gm.pre_code_execute("gml_Object_oEfGold_Step_2", function(self, other)
 	if not gathering.active then return end
-	
 	local gold = Instance.wrap(self)
+	
+	if not gold.gathering then -- for some reason this doesnt work if set in post create code
+		gold.value.value = gold.value.value * 2 -- we have to use value.value because value is already a thing that returns a cinstance in rmt
+		gold.gathering = true
+	end
 	
 	if gold:alarm_get(1) ~= -1 then -- alarm 1 controls whether the gold is homing in on the player or not
 		gold:alarm_set(1, -1) -- setting it to -1 if it isnt already -1 makes it not home in
