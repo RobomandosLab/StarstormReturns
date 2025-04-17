@@ -26,6 +26,7 @@ local sound_death			= Resources.sfx_load(NAMESPACE, "GatekeeperDeath",			path.co
 
 local keeper = Object.new(NAMESPACE, "Gatekeeper", Object.PARENT.enemyClassic)
 local keeper_id = keeper.value
+keeper:clear_callbacks()
 
 local objLaser = Object.new(NAMESPACE, "GatekeeperLaser")
 objLaser.obj_depth = -5
@@ -116,6 +117,7 @@ keeperPrimary.cooldown = 4 * 60
 keeperPrimary.is_primary = true
 keeperPrimary.is_utility = false
 keeperPrimary.does_change_activity_state = true
+keeperPrimary:clear_callbacks()
 
 local keeperSecondary = Skill.new(NAMESPACE, "gatekeeperX")
 
@@ -147,7 +149,7 @@ keeper:onCreate(function(actor)
 	actor:get_data().attack_mode = 1
 
 	actor:set_default_skill(Skill.SLOT.primary, keeperPrimary)
-	--actor:set_default_skill(Skill.SLOT.secondary, keeperSecondary)
+	actor:set_default_skill(Skill.SLOT.secondary, keeperSecondary)
 
 	actor:init_actor_late()
 end)
@@ -161,7 +163,6 @@ local stateKeeperPrimaryB = State.new(NAMESPACE, "gatekeeperPrimaryB")
 stateKeeperPrimaryA:clear_callbacks()
 stateKeeperPrimaryB:clear_callbacks()
 
-keeperPrimary:clear_callbacks()
 keeperPrimary:onActivate(function(actor)
 	if actor:get_data().attack_mode == 1 then
 		actor:enter_state(stateKeeperPrimaryA)
@@ -223,6 +224,111 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 	
 	if actor.image_index >= 3 and data.fired == 1 then
 		data.targetting = nil
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+stateKeeperPrimaryB:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+	data.trx = nil
+	data.try = nil
+	data.trmoving = 0
+	actor:sound_play(sound_laser_fire, 1, 0.8 + math.random() * 0.2)
+end)
+
+stateKeeperPrimaryB:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot1b, 0.16)
+	if actor.image_index < 3 and data.fired == 0 then
+		local target = actor.target.parent
+		
+		if target and target:exists() then
+			if data.trx and data.try then
+				local dif = data.trx - target.x
+				if data.trx > target.x then
+					data.trx = math.min(target.x, data.trx + dif * 0.6)
+				else
+					data.trx = math.max(target.x, data.trx + dif * 0.6)
+				end
+				
+				dif = data.try - target.y
+				if data.try > target.y then
+					data.try = math.min(target.y, data.try - dif * 0.6)
+				else
+					data.try = math.max(target.y, data.try - dif * 0.6)
+				end
+				
+				data.trmoving = target.pHspeed
+			else
+				data.trx = target.x
+				data.try = target.y
+				data.trmoving = 0
+			end
+		end
+	end
+	
+	if actor.image_index >= 3 and data.fired == 0 then
+		local target = actor.target.parent
+		
+		if target then
+			data.fired = 1
+			local laser = objLaser:create(data.trx, data.try)
+			laser.parent = actor
+			laser.speed = data.trmoving * 0.9
+		end
+	end
+	
+	if actor.image_index >= 3 and data.fired == 1 then
+		data.targetting = nil
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+local keeperSecondary = Skill.new(NAMESPACE, "gatekeeperX")
+keeperSecondary.cooldown = 7 * 60
+keeperSecondary.is_primary = false
+keeperSecondary.is_utility = false
+keeperSecondary.does_change_activity_state = true
+keeperSecondary:clear_callbacks()
+
+local stateKeeperSecondary = State.new(NAMESPACE, "gatekeeperSecondary")
+stateKeeperSecondary:clear_callbacks()
+
+keeperSecondary:onActivate(function(actor)
+	actor:enter_state(stateKeeperSecondary)
+end)
+
+stateKeeperSecondary:onEnter(function(actor, data)
+	actor.image_index = 0
+	if actor:get_data().attack_mode == 1 then
+		actor:get_data().attack_mode = 2
+		actor.sprite_idle = sprite_idle2
+		if not actor:get_data().fortified then
+			actor.armor = actor.armor + 100
+			actor.pHmax = actor.pHmax - 40
+			actor:get_data().fortified = true
+		end
+	else
+		actor:get_data().attack_mode = 1
+		actor.sprite_idle = sprite_idle
+		if actor:get_data().fortified then
+			actor.armor = actor.armor - 100
+			actor.pHmax = actor.pHmax + 40
+			actor:get_data().fortified = nil
+		end
+	end
+end)
+
+stateKeeperSecondary:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	
+	if actor:get_data().attack_mode == 1 then
+		actor:actor_animation_set(sprite_shoot2b, 0.15)
+	else
+		actor:actor_animation_set(sprite_shoot2a, 0.15)
 	end
 	
 	actor:skill_util_exit_state_on_anim_end()

@@ -329,6 +329,10 @@
 		"displacement" : {
 			"name" : "Displacement",
 			"description": "Stages are shuffled.",
+		},
+		"gathering" : {
+			"name" : "Gathering",
+			"description": "Gold drops are doubled but they must be picked up.",
 		}
 	},
 	
