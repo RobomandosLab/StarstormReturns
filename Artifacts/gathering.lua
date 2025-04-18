@@ -47,18 +47,15 @@ gathering:set_sprites(loadout, pickup)
 --	end
 --end)
 
-gm.post_code_execute("gml_Object_oEfGold_Create_0", function(self, other)
+gm.post_code_execute("gml_Object_oEfGold_Create_0", function(gold, other)
 	if not gathering.active then return end
-	local gold = Instance.wrap(self)
 	gold.life = 1000
 end)
 
-gm.pre_code_execute("gml_Object_oEfGold_Step_2", function(self, other)
+gm.pre_code_execute("gml_Object_oEfGold_Step_2", function(gold, other)
 	if not gathering.active then return end
-	local gold = Instance.wrap(self)
-	
 	if not gold.gathering then -- for some reason this doesnt work if set in post create code
-		gold.value.value = gold.value.value * 2 -- we have to use value.value because value is already a thing that returns a cinstance in rmt
+		gold.value = gold.value * 2 -- we have to use value.value because value is already a thing that returns a cinstance in rmt
 		gold.gathering = true
 	end
 	
@@ -68,7 +65,7 @@ gm.pre_code_execute("gml_Object_oEfGold_Step_2", function(self, other)
 	
 	-- alarm 2 controls whether the gold is being picked up
 	-- whether this alarm is active or not is based on alarm 1, and since we stopped alarm 1 this wont work on its own
-	if gold:alarm_get(2) == -1 and gold:is_colliding(gm.constants.oP) then -- solution? activate the alarm manually when a coin is colliding with a player object
+	if gold:alarm_get(2) == -1 and gold:place_meeting(gold.x, gold.y, gm.constants.oP) == 1.0 then -- solution? activate the alarm manually when a coin is colliding with a player object
 		gold:alarm_set(2, 3)
 	end
 	
@@ -80,6 +77,6 @@ gm.pre_code_execute("gml_Object_oEfGold_Step_2", function(self, other)
 			gold.visible = true
 		end
 	else
-		gold:destroy()
+		gm.instance_destroy(gold)
 	end
 end)
