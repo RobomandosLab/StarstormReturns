@@ -698,6 +698,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 	end
 end)
 stateNemCommandoSpecial:onExit(function(actor, data)
+	-- release the grenade if the state was exited for any reason prior to release
 	if data.tossed == 0 then
 		local nade = objGrenade:create(actor.x, actor.y - 5)
 
@@ -716,40 +717,6 @@ stateNemCommandoSpecial:onExit(function(actor, data)
 	end
 	actor:skill_util_strafe_exit()
 end)
-
--- used to sync the scepter grenade upgrade's split nades.
-local packetGrenadeSync = Packet.new()
-packetGrenadeSync:onReceived(function(msg)
-	local owner = msg:read_instance()
-	local x, y = msg:read_ushort(), msg:read_ushort()
-	local hspeed, vspeed = msg:read_half(), msg:read_half()
-	local timer = msg:read_byte()
-
-	if not owner:exists() then return end
-
-	local nade = objGrenade:create(x, y)
-	nade.parent = owner
-	nade.hspeed = hspeed
-	nade.vspeed = vspeed
-	nade.timer = timer
-end)
-
-local function sync_grenade(owner, x, y, hspeed, vspeed, timer)
-	if not gm._mod_net_isHost() then
-		log.warning("sync_grenade called on client!")
-		return
-	end
-
-	local msg = packetGrenadeSync:message_begin()
-	msg:write_instance(owner)
-	msg:write_ushort(x)
-	msg:write_ushort(y)
-	msg:write_half(hspeed)
-	msg:write_half(vspeed)
-	msg:write_byte(timer)
-
-	msg:send_to_all()
-end
 
 objGrenade:clear_callbacks()
 objGrenade:onCreate(function(inst)
@@ -831,45 +798,47 @@ objGrenade:onStep(function(inst)
 end)
 
 objGrenade:onDestroy(function(inst)
-	if not Instance.exists(inst.parent) then return end
+	local parent = inst.parent
+	if not Instance.exists(parent) then return end
+
+	particleRubble2:create(inst.x, inst.y, 15)
+	local ef = gm.instance_create(inst.x, inst.y, gm.constants.oEfExplosion)
+	ef.sprite_index = sprite_explosion
 
 	inst:sound_play(gm.constants.wBanditShoot2Explo, 1, 1 + math.random() * 0.2)
 	inst:screen_shake(4)
 
-	particleRubble2:create(inst.x, inst.y, 15)
+	local boosted = inst.scepter > 0
 
-	if gm._mod_net_isHost() then
+	if parent:is_authority() then
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
-		local boosted = inst.scepter > 0
-		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 192, 160, inst.damage, sprite_explosion).attack_info
+		for i=0, parent:buff_stack_count(buff_shadow_clone) do
+			local attack = parent:fire_explosion(inst.x, inst.y, 192, 160, inst.damage).attack_info
 			attack.climb = i * 8 * 1.35
 
 			if boosted then
 				attack.stun = 1
 			end
 		end
+	end
 
-		if inst.stun_parent == 1 then
-			GM.actor_knockback_inflict(inst.parent, 1, -inst.parent.image_xscale, 60)
-		end
+	if inst.stun_parent == 1 then
+		-- this occurs host-side
+		GM.actor_knockback_inflict(parent, 1, -parent.image_xscale, 60)
+	end
 
-		if boosted then
-			for i=-1, 1 do
-				local nade = objGrenade:create(inst.x, inst.y)
-				nade.timer = GRENADE_FUSE_TIMER * (0.25 + math.random() * 0.25)
-				nade.parent = inst.parent
-				nade.damage = 1.5
-				nade.direction = 90 + i * 45
-				nade.speed = 4 + math.random(4)
+	if boosted then
+		-- this doesn't sync, but it doesn't matter because the client that threw them is the one that fires the attacks, and it'll feel fine for them
+		for i=-1, 1 do
+			local nade = objGrenade:create(inst.x, inst.y)
+			nade.timer = GRENADE_FUSE_TIMER * (0.4 + math.random() * 0.1 - i * 0.05)
+			nade.parent = parent
+			nade.damage = 1.5
+			nade.direction = 90 + i * 45
+			nade.speed = 5 + math.random(2)
 
-				nade.hspeed = nade.hspeed + inst.hspeed
-				nade.vspeed = nade.vspeed + inst.vspeed
-
-				if gm._mod_net_isOnline() then
-					sync_grenade(nade.parent, nade.x, nade.y, nade.hspeed, nade.vspeed, nade.timer)
-				end
-			end
+			nade.hspeed = nade.hspeed + inst.hspeed
+			nade.vspeed = nade.vspeed + inst.vspeed
 		end
 	end
 end)
@@ -1020,6 +989,9 @@ objRocket:onStep(function(inst)
 	end
 end)
 objRocket:onDestroy(function(inst)
+	local ef = gm.instance_create(inst.x, inst.y, gm.constants.oEfExplosion)
+	ef.sprite_index = gm.constants.sEfSuperMissileExplosion
+
 	inst:sound_play(gm.constants.wTurtleExplosion, 1, 0.8 + math.random() * 0.1)
 	inst:sound_play(gm.constants.wWormExplosion, 1, 0.6 + math.random() * 0.2)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 1.25 + math.random() * 0.1)
@@ -1032,7 +1004,7 @@ objRocket:onDestroy(function(inst)
 	particleRubble1:create(inst.x, inst.y, 15)
 	particleSpark:create(inst.x, inst.y, 6)
 
-	if Instance.exists(inst.parent) and gm._mod_net_isHost() then
+	if Instance.exists(inst.parent) and inst.parent:is_authority() then
 		local boosted = inst.scepter > 0
 
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
@@ -1045,7 +1017,7 @@ objRocket:onDestroy(function(inst)
 
 			-- large stunning aoe
 			-- i wish i could turn off procs on this but it makes knockback not work. ughhh
-			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5, gm.constants.sEfSuperMissileExplosion).attack_info
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 260, 260, 0.5).attack_info
 			attack.stun = 1.66
 			attack.knockback = 5
 			attack.knockup = 5

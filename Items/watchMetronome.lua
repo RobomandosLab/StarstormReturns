@@ -152,6 +152,10 @@ buffChrono:clear_callbacks()
 buffChrono:onApply(function(actor, stack)
 	actor:sound_play(gm.constants.wChefShoot2_1, 0.8, 1.5)
 
+	-- the charge value isn't synced, but the buff *is*
+	-- so just incase the clients' charge desyncs, it gets corrected by this
+	actor:get_data().chrono_charge = 1
+
 	local ef = GM.instance_create(0, 0, gm.constants.oEfFlash)
 	ef.parent = actor
 	ef.image_blend = BAR_COLOR_LIT
@@ -159,6 +163,7 @@ buffChrono:onApply(function(actor, stack)
 end)
 buffChrono:onRemove(function(actor, stack)
 	actor:sound_play(gm.constants.wWispSpawn, 0.8, 1.5)
+	actor:get_data().chrono_charge = 0
 
 	local ef = GM.instance_create(0, 0, gm.constants.oEfFlash)
 	ef.parent = actor

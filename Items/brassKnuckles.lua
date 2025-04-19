@@ -1,4 +1,5 @@
 local sprite = Resources.sprite_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sprites/Items/brassKnuckles.png"), 1, 15, 12)
+local sprite_effect = Resources.sprite_load(NAMESPACE, "EfBrassKnuckles", path.combine(PATH, "Sprites/Items/Effects/brassKnuckles.png"), 4, 28, 24)
 local sound = Resources.sfx_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sounds/Items/brassKnuckles.ogg"))
 
 local brassKnuckles = Item.new(NAMESPACE, "brassKnuckles")
@@ -40,8 +41,29 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 		-- squared distance check
 		if (dx * dx + dy * dy) <= (radius * radius) then
 			local _damage = args[4]
-			_damage.value = _damage.value * 1.35
+			local _damage_col = args[9]
+			local attack_flags = args[8].value
+			local true_hit = args[2].value
+
+			_damage.value = math.ceil(_damage.value * 1.35)
+			_damage_col.value = gm.merge_colour(_damage_col.value, 0, 0.25) -- tint damage number grey
 			gm.sound_play_at(sound, 0.55, 0.8 + math.random() * 0.4, hit_x, hit_y)
+
+			-- don't do hitsparks if the attack is the red damage from commando's wound debuff
+			-- cause it always has an xscale of 1 and creates an ugly doubled up effect
+			if attack_flags & Attack_Info.ATTACK_FLAG.commando_wound_damage == 0 then
+				-- "true hit" is the instance that the attack actually hit
+				-- helps for positioning the effect on brambles, worms, etc.
+				if type(true_hit) == "number" then
+					-- sometimes true_hit is an instance ID instead, fix it if that's the case
+					true_hit = gm.CInstance.instance_id_to_CInstance[true_hit]
+				end
+				if not true_hit then return end
+
+				local ef = gm.instance_create(true_hit.x, true_hit.y, gm.constants.oEfSparks)
+				ef.sprite_index = sprite_effect
+				ef.image_xscale = args[13].value
+			end
 		end
 	end
 end)
