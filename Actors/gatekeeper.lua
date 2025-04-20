@@ -1,20 +1,20 @@
+-- todo add comments later
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Gatekeeper")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Gatekeeper")
 
-local sprite_mask			= Resources.sprite_load(NAMESPACE, "GatekeeperMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 32, 94)
-local sprite_laser_mask		= Resources.sprite_load(NAMESPACE, "GatekeeperLaserMask",	path.combine(SPRITE_PATH, "laserMask.png"), 1, 6, 8)
+local sprite_mask			= Resources.sprite_load(NAMESPACE, "GatekeeperMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 38, 59)
+local sprite_laser_mask		= Resources.sprite_load(NAMESPACE, "GatekeeperLaserMask",	path.combine(SPRITE_PATH, "laserMask.png"), 1, 6, 20)
 local sprite_palette		= Resources.sprite_load(NAMESPACE, "GatekeeperPalette",		path.combine(SPRITE_PATH, "palette.png"))
-local sprite_spawn			= Resources.sprite_load(NAMESPACE, "GatekeeperSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 22, 66, 141)
-local sprite_idle			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle",		path.combine(SPRITE_PATH, "idle.png"), 1, 52, 125)
-local sprite_idle2			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle2",		path.combine(SPRITE_PATH, "idle2.png"), 1, 52, 125)
-local sprite_walk			= Resources.sprite_load(NAMESPACE, "GatekeeperWalk",		path.combine(SPRITE_PATH, "walk.png"), 6, 58, 126)
-local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 7, 54, 126)
-local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1b",		path.combine(SPRITE_PATH, "shoot1b.png"), 17, 54, 126)
-local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2a",		path.combine(SPRITE_PATH, "shoot2a.png"), 5, 54, 126)
-local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2b",		path.combine(SPRITE_PATH, "shoot2b.png"), 5, 54, 126)
-local sprite_death			= Resources.sprite_load(NAMESPACE, "GatekeeperDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 79, 148)
+local sprite_spawn			= Resources.sprite_load(NAMESPACE, "GatekeeperSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 22, 72, 106)
+local sprite_idle			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle",		path.combine(SPRITE_PATH, "idle.png"), 1, 58, 90)
+local sprite_idle2			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle2",		path.combine(SPRITE_PATH, "idle2.png"), 1, 58, 90)
+local sprite_walk			= Resources.sprite_load(NAMESPACE, "GatekeeperWalk",		path.combine(SPRITE_PATH, "walk.png"), 6, 64, 91)
+local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 7, 60, 91)
+local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1b",		path.combine(SPRITE_PATH, "shoot1b.png"), 17, 60, 91)
+local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2a",		path.combine(SPRITE_PATH, "shoot2a.png"), 5, 60, 91)
+local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2b",		path.combine(SPRITE_PATH, "shoot2b.png"), 5, 60, 91)
+local sprite_death			= Resources.sprite_load(NAMESPACE, "GatekeeperDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 85, 113)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "GatekeeperPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
-local sprite_tracer 		= Resources.sprite_load(NAMESPACE, "GatekeeperTracer",		path.combine(SPRITE_PATH, "tracer.png"))
 
 gm.elite_generate_palettes(sprite_palette)
 
@@ -46,7 +46,6 @@ objLaser:onCreate(function(self)
 	local data = self:get_data()
 	self.mask = sprite_laser_mask
 	self.sprite_index = sprite_laser_mask
-	self.image_yscale = 0 -- fuck it
 	self:move_contact_solid(270, 200)
 	self.direction = 0
 	self.speed = 0
@@ -54,13 +53,18 @@ objLaser:onCreate(function(self)
 	data.target = -4
 	data.charge = 0
 	data.timer = 30
-	data.color = Color.from_hex(0x83CDCD)
+	data.color = Color.from_hex(0x81CADC)
 end)
 
 objLaser:onStep(function(self)
 	local data = self:get_data()
+	local parent = Instance.wrap(data.parent)
 	
 	self:move_contact_solid(270, 200)
+	
+	while self:is_colliding(gm.constants.pBlock, self.x, self.y) do
+		self.y = self.y - 1
+	end
 	
 	if data.timer > 0 then
 		data.timer = data.timer - 1
@@ -72,17 +76,17 @@ objLaser:onStep(function(self)
 		end
 		
 		if data.colorCheck == nil and parent and parent:exists() then
-			if self.parent.elite_type and self.parent.elite_type ~= -1 then
-				data.color = Elite.wrap(self.parent.elite_type.blend_col)
+			if parent.elite_type and parent.elite_type ~= -1 then
+				data.color = Elite.wrap(parent.elite_type).blend_col
 			end
 			data.colorCheck = true
 		end
 		
-		if data.parent:exists() then
+		if parent:exists() then
 			if data.charge % 6 == 0 then
-				local attack = data.parent:fire_explosion(self.x, self.y - 200, ((data.charge * 0.3) + 8), 400, 1 * data.charge * 0.005)
+				local attack = parent:fire_explosion(self.x, self.y - 200, ((data.charge * 0.3) + 8), 400, 1 * data.charge * 0.005)
 				attack.attack_info.gk_laser = true
-				data.parent:fire_explosion(self.x, self.y, 0, 0, 0)
+				parent:fire_explosion(self.x, self.y, 0, 0, 0)
 			end
 		end
 	end
@@ -168,25 +172,36 @@ end)
 
 keeper:onDraw(function(actor)
 	local stdata = actor.actor_state_current_data_table
-	local color = Color.from_hex(0x83CDCD)
+	local color = Color.from_hex(0x81CADC)
 	
 	if actor.elite_type and actor.elite_type ~= -1 then
-		color = Elite.wrap(actor.elite_type.blend_col)
+		color = Elite.wrap(actor.elite_type).blend_col
 	end
 	
-	-- additive
-	
 	if stdata.trx and stdata.try then
-		if actor.sprite_index == sprite_shoot1b then
-			actor:collision_line_advanced(actor.x, actor.y - 38, stdata.trx, stdata.try, gm.constants.pBlock, true, true)
-			local xx = gm.variable_global_get("collision_x")
-			local yy = gm.variable_global_get("collision_y")
+		if actor.sprite_index == sprite_shoot1b and stdata.fired < 1 then
 			gm.draw_set_colour(color)
 			gm.draw_set_alpha(0.64)
-			gm.draw_line_width(actor.x, actor.y - 38, xx, yy, 4)
-			if stdata.trx == xx and stdata.try == yy then
-				gm.draw_circle(stdata.trx, stdata.try, 6, true)
-			end
+			local angle = gm.point_direction(actor.x - 35, actor.y + 9, stdata.trx, stdata.try)
+			local xend = gm.lengthdir_x(5000, angle)
+			local yend = gm.lengthdir_y(5000, angle)
+			actor:collision_line_advanced(actor.x - 35, actor.y + 9, actor.x - 35 + xend, actor.y + 9 + yend, gm.constants.pBlock, true, true)
+			local xx = gm.variable_global_get("collision_x")
+			local yy = gm.variable_global_get("collision_y")
+			gm.draw_line_width(actor.x - 35, actor.y + 9, xx, yy, 2)
+			gm.draw_set_alpha(1)
+		end
+		
+		if actor.sprite_index == sprite_shoot1b and stdata.fired < 2 then
+			gm.draw_set_colour(color)
+			gm.draw_set_alpha(0.64)
+			angle = gm.point_direction(actor.x + 35, actor.y + 9, stdata.trx, stdata.try)
+			xend = gm.lengthdir_x(5000, angle)
+			yend = gm.lengthdir_y(5000, angle)
+			actor:collision_line_advanced(actor.x + 35, actor.y + 9, actor.x - 35 + xend, actor.y + 9 + yend, gm.constants.pBlock, true, true)
+			xx = gm.variable_global_get("collision_x")
+			yy = gm.variable_global_get("collision_y")
+			gm.draw_line_width(actor.x + 35, actor.y + 9, xx, yy, 2)
 			gm.draw_set_alpha(1)
 		end
 	end
@@ -199,30 +214,18 @@ Callback.add(Callback.TYPE.onAttackHit, "GatekeeperLaserHit", function(hit_info)
 	end
 end)
 
-local parTracer = Particle.new(NAMESPACE, "GatekeeperTracer")
-parTracer:set_sprite(sprite_tracer, false, true, false)
-parTracer:set_life(30, 30)
-parTracer:set_orientation(0, 0, 0, 0, true)
-parTracer:set_alpha2(0.75, 0)
-parTracer:set_blend(true)
-
-local tracer_color = Color.from_hex(0x83CDCD)
+local tracer_color = Color.from_hex(0x81CADC)
 local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
 	local dist = gm.point_distance(x1, y1, x2, y2)
 	local dir = gm.point_direction(x1, y1, x2, y2)
-
-	-- particles
-	parTracer:set_direction(dir, dir, 0, 0)
-
-	local px = x1
-	local py = y1
-	local i = 0
-	while i < dist do
-		parTracer:create_colour(px, py, tracer_color, 1)
-		px = px + gm.lengthdir_x(15, dir)
-		py = py + gm.lengthdir_y(15, dir)
-		i = i + 15
-	end
+	local t = GM.instance_create(x1, y1, gm.constants.oEfLaserLine)
+	t.xend = x2
+	t.yend = y2
+	t.length = 60
+	t.width = 6
+	t.image_blend = tracer_color
+	t.rate = 0.4
+	t:alarm_set(0, math.max(1, dist / t.speed))
 end)
 
 local stateKeeperPrimaryA = State.new(NAMESPACE, "gatekeeperPrimaryA")
@@ -244,6 +247,7 @@ stateKeeperPrimaryA:onEnter(function(actor, data)
 	data.trx = nil
 	data.try = nil
 	data.trmoving = 0
+	data.laser = nil
 	actor:sound_play(sound_laser_fire, 1, 0.8 + math.random() * 0.2)
 end)
 
@@ -288,9 +292,15 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 		
 		if target and target:exists() then
 			data.fired = 1
-			local laser = objLaser:create(data.trx, data.try)
-			laser:get_data().parent = actor
-			laser.speed = data.trmoving
+			actor:get_data().laser = objLaser:create(data.trx, data.try)
+			actor:get_data().laser:get_data().parent = actor
+			actor:get_data().laser.speed = data.trmoving
+		end
+	end
+ 	
+	if actor:get_data().laser then
+		if actor:get_data().laser:exists() and actor.image_index >= 5 then
+			actor.image_index = 3
 		end
 	end
 	
@@ -303,6 +313,7 @@ stateKeeperPrimaryB:onEnter(function(actor, data)
 	data.try = nil
 	data.fired = 0
 	data.tracer = 0
+	data.locked = 0
 end)
 
 stateKeeperPrimaryB:onStep(function(actor, data)
@@ -319,7 +330,7 @@ stateKeeperPrimaryB:onStep(function(actor, data)
 		
 		if data.trx and data.try then
 			local xx = actor.x - 35 * actor.image_xscale
-			local yy = actor.y - 29
+			local yy = actor.y + 9
 			local angle = gm.point_direction(xx, yy, data.trx, data.try)
 			local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer,  true)
 			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
@@ -329,30 +340,30 @@ stateKeeperPrimaryB:onStep(function(actor, data)
 		
 		if data.trx and data.try then
 			local xx = actor.x + 35 * actor.image_xscale
-			local yy = actor.y - 29
+			local yy = actor.y + 9
 			local angle = gm.point_direction(xx, yy, data.trx, data.try)
 			local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer, true)
 			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
 		end
 	end
 	
-	if data.fired < 2 then
+	if data.locked == 0 and data.fired < 2 then
 		if target and target:exists() then
 			if data.trx and data.try then
 				local dif = data.trx - target.x
 				if data.trx < target.x then
-					data.trx = math.min(target.x, data.trx + math.abs(dif * 0.18))
+					data.trx = math.min(target.x, data.trx + math.abs(dif * 0.2))
 				end
 				if data.trx > target.x then
-					data.trx = math.max(target.x, data.trx - math.abs(dif * 0.18))
+					data.trx = math.max(target.x, data.trx - math.abs(dif * 0.2))
 				end
 				
 				dif = data.try - target.y
 				if data.try < target.y then
-					data.try = math.min(target.y, data.try + math.abs(dif * 0.18))
+					data.try = math.min(target.y, data.try + math.abs(dif * 0.2))
 				end
 				if data.try > target.y then
-					data.try = math.max(target.y, data.try - math.abs(dif * 0.18))
+					data.try = math.max(target.y, data.try - math.abs(dif * 0.2))
 				end 
 			else
 				data.trx = target.x
@@ -361,6 +372,10 @@ stateKeeperPrimaryB:onStep(function(actor, data)
 		end
 	end
 	
+	if data.locked == 0 and actor.image_index >= 10 then
+		data.locked = 1
+	end
+
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
