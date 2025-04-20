@@ -85,7 +85,7 @@ chirr:set_animations({ -- setting the animations, a lot of this is modeled after
 	fall = sprite_fall,
 	climb = sprite_climb,
 	death = sprite_death,
-	decoy = sprite_decoy,
+	decoy = sprite_decoy
 })
 
 chirr:set_cape_offset(0,0,0,0)
@@ -658,6 +658,9 @@ stateChirrTether:onStep(function( actor, data ) -- track how long the tether ski
 		data.step = data.step + 1
 
 		local holding = gm.bool(actor.v_skill)
+		if not holding or data.step >= tether_tp_charge_time then
+			actor:skill_util_reset_activity_state()
+		end		local holding = gm.bool(actor.v_skill)
 		if not holding or data.step >= tether_tp_charge_time then
 			actor:skill_util_reset_activity_state()
 		end
