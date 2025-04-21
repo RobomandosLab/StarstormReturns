@@ -44,7 +44,7 @@ local sound_shoot1c =         Resources.sfx_load(NAMESPACE, "KnightShoot1c", pat
 local sound_shoot1d =         Resources.sfx_load(NAMESPACE, "KnightShoot1d", path.combine(SOUND_PATH, "skill1d.ogg"))
 local sound_shoot2 =          Resources.sfx_load(NAMESPACE, "KnightShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
 local sound_shoot2_impact =   Resources.sfx_load(NAMESPACE, "Knightshoot2Impact", path.combine(SOUND_PATH, "skill2impact.ogg"))
-local sound_shoot2_block =    Resources.sfx_load(NAMESPACE, "KnightShoot2Block", path.combine(SOUND_PATH, "skill2deflect.ogg"))
+local sound_shoot2_deflect =    Resources.sfx_load(NAMESPACE, "KnightShoot2Block", path.combine(SOUND_PATH, "skill2deflect.ogg"))
 local sound_shoot3a =         Resources.sfx_load(NAMESPACE, "KnightShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
 local sound_shoot3b =         Resources.sfx_load(NAMESPACE, "KnightShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
 local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "KnightShoot4", path.combine(SOUND_PATH, "skill4.ogg"))
@@ -53,7 +53,6 @@ local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "KnightShoot4", path
 -------- knight
 local knight = Survivor.new(NAMESPACE, "knight")
 local knight_id = knight.value
-
 
 -- stats setup
 knight:set_stats_base({
@@ -121,7 +120,7 @@ knightSpecial:set_skill_upgrade(knightSpecialScepter)
 local knightShieldBash = Skill.new(NAMESPACE, "knightShieldBash")
 
 
--------- cling clash claanngg shrrrrrr shingg!
+-------- DUEL!
 local combo = 0
 local combo_window = 0.5
 local combo_time = 0
@@ -137,15 +136,9 @@ knightPrimary.does_change_activity_state = true
 knightPrimary.hold_facing_direction = true
 knightPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
-knightShieldBash.sprite = sprite_skills
-knightShieldBash.subimage = 5
-knightShieldBash.damage = 2
-knightShieldBash.cooldown = 0
-knightShieldBash.require_key_press = true
-
 local stateKnightPrimary = State.new(NAMESPACE, "knightPrimary")
-local stateKnightShieldBash = State.new(NAMESPACE, "knightShieldBash")
 
+-- actual skill
 knightPrimary:clear_callbacks()
 knightPrimary:onActivate(function( actor )
 	actor:enter_state(stateKnightPrimary)
@@ -178,8 +171,9 @@ stateKnightPrimary:onStep(function( actor, data )
 
 	if data.fired == 0 then
 		data.fired = 1
-		
 		actor:sound_play(shoot1_sounds[math.ceil(math.random() * 3 + 1)], .5, 0.9 + math.random() * 0.8)
+
+		print(actor.deflect)
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightPrimary)
@@ -205,6 +199,19 @@ stateKnightPrimary:onStep(function( actor, data )
 	end
 end)
 
+
+-------- CLASH!
+local hit_enemies_shieldbash
+
+knightShieldBash.sprite = sprite_skills
+knightShieldBash.subimage = 5
+knightShieldBash.damage = 2
+knightShieldBash.cooldown = 0
+knightShieldBash.require_key_press = true
+
+local stateKnightShieldBash = State.new(NAMESPACE, "knightShieldBash")
+
+-- actual skill
 knightShieldBash:clear_callbacks()
 knightShieldBash:onActivate(function( actor )
 	actor:enter_state(stateKnightShieldBash)
@@ -214,6 +221,8 @@ stateKnightShieldBash:clear_callbacks()
 stateKnightShieldBash:onEnter(function( actor, data )
 	data.fired = 0
 	actor.image_index = 0
+	data.previous_index = 0
+	hit_enemies_shieldbash = List.new()
 end)
 
 stateKnightShieldBash:onStep(function( actor, data )
@@ -225,17 +234,41 @@ stateKnightShieldBash:onStep(function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor.pHspeed = 2.5 * actor.pHmax * actor.image_xscale
+		actor:sound_play(sound_shoot2, 1.5, 0.8)
+	end
+
+	if data.previous_index < math.floor(actor.image_index) then
+		data.previous_index = data.previous_index + 1
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightShieldBash)
 			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local targets = List.new()
 
-			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					attack = actor:fire_explosion(actor.x + dir * 80, actor.y, 200, 50, damage, nil, nil, true)
-					attack.attack_info:allow_stun()
-					attack.attack_info:set_stun(2, dir, standard)
+			local x_size = 25
+			local y_size = 25
+
+			actor:collision_rectangle_list(actor.x - x_size, actor.y + y_size, actor.x + x_size, actor.y - y_size, gm.constants.pActor, false, true, targets, false)
+
+			for _, target in ipairs(targets) do
+				if target.team ~= actor.team then
+					local cannot_be_hit = 0
+					for _, previous in ipairs(hit_enemies_shieldbash) do
+						if target.value == previous.value then 
+							cannot_be_hit = 1
+						end
+					end
+
+					if cannot_be_hit == 0 then
+						local buff_shadow_clone = Buff.find("ror", "shadowClone")
+						for i=0, actor:buff_stack_count(buff_shadow_clone) do
+							attack = actor:fire_direct(target, damage, dir, actor.x, actor.y, sprite_sparks2, true)
+							attack.attack_info:allow_stun()
+							attack.attack_info:set_stun(2.5, dir, standard)
+						end
+
+						table.insert(hit_enemies_shieldbash, target)
+					end
 				end
 			end
 		end
@@ -249,7 +282,12 @@ stateKnightShieldBash:onExit(function( actor, data )
 end)
 
 
--------- block. parry. DODGE!
+-------- CONTEND!
+local blocking = 0
+local parry_window = 0.5
+local parry_start
+local parried_hits = 0
+
 knightSecondary.sprite = sprite_skills
 knightSecondary.subimage = 1
 knightSecondary.cooldown = 3 * 60
@@ -260,6 +298,7 @@ knightSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORI
 
 local stateKnightSecondary = State.new(NAMESPACE, "knightSecondary")
 
+-- extra armor when guarding
 local knightArmorBuff = Buff.new(NAMESPACE, "knightArmorBuff")
 knightArmorBuff.show_icon = false
 knightArmorBuff.is_timed = false
@@ -269,6 +308,16 @@ knightArmorBuff:onStatRecalc(function( actor )
 	actor.armor = actor.armor + 100
 end)
 
+-- handling what to do when hit while guarding
+Callback.add(Callback.TYPE.onDamagedProc, "SSKnightHandleBlocking", function( actor, hit_info )
+	if actor.object_index == gm.constants.oP and actor.class == knight.value then
+		if blocking == 1 then
+			actor:sound_play(sound_shoot2_impact, .5, 0.9 + math.random() * 0.8)
+		end
+	end
+end)
+
+-- actual skill
 knightSecondary:clear_callbacks()
 knightSecondary:onActivate(function( actor )
 	actor:enter_state(stateKnightSecondary)
@@ -278,6 +327,10 @@ stateKnightSecondary:clear_callbacks()
 stateKnightSecondary:onEnter(function( actor, data )
 	actor.image_index2 = 0
 	data.exit = 0
+	data.primed = 0
+	blocking = 1
+	actor.deflect = 1
+	parry_start = os.clock()
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
@@ -289,23 +342,44 @@ stateKnightSecondary:onEnter(function( actor, data )
 	end
 end)
 
-stateKnightSecondary:onStep(function( actor, data )
+stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state down because its a bunch of stuff
+	-- set up strafing
 	actor.sprite_index2 = sprite_shoot2_half
-
 	actor:skill_util_strafe_update(.25, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
+	-- exits if you let go of the key earlier
 	if data.exit == 1 then
 		actor:skill_util_reset_activity_state()
+		actor:sound_play(sound_shoot2, .5, 0.8)
 	end
 
+	-- freezes the animation while being held
 	if actor.image_index2 > 3 then
 		actor.image_index2 = 3.1
 	end
 
+	-- plays the sound when the skill is first used
+	if data.primed == 0 then
+		data.primed = 1
+		actor:sound_play(sound_shoot2, .5, 1.2)
+	end
+
+	-- tallies your hits youve parried
+	if actor.deflect == 2 then
+		actor.deflect = 1
+		parried_hits = parried_hits + 1
+	end
+
+	-- turns off the parry window once its been a set amount of time
+	if os.clock() - parry_start > parry_window then
+		actor.deflect = 0
+	end
+
 	actor:freeze_active_skill(Skill.SLOT.secondary)
 
+	-- turns off the skill once you let go of the key
 	local holding = gm.bool(actor.x_skill)
 	if not holding then
 		actor.image_index2 = 4
@@ -315,10 +389,16 @@ end)
 
 stateKnightSecondary:onExit(function( actor, data )
 	actor:buff_remove(knightArmorBuff)
+	blocking = 0
+	actor.deflect = 0
+	print(parried_hits)
+	parried_hits = 0
 end)
 
 
 -------- STRIKE!
+local hit_enemies_strike
+
 knightUtility.sprite = sprite_skills
 knightUtility.subimage = 2
 knightUtility.cooldown = 5 * 60
@@ -328,6 +408,9 @@ knightUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY
 
 local stateKnightUtility = State.new(NAMESPACE, "stateKnightUtility")
 
+local shoot3_sounds = {sound_shoot3a, sound_shoot3b}
+
+-- actual skill
 knightUtility:clear_callbacks()
 knightUtility:onActivate(function( actor )
 	actor:enter_state(stateKnightUtility)
@@ -337,6 +420,8 @@ stateKnightUtility:clear_callbacks()
 stateKnightUtility:onEnter(function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
+	data.previous_index = 0
+	hit_enemies_strike = List.new()
 end)
 
 stateKnightUtility:onStep(function( actor, data )
@@ -346,16 +431,42 @@ stateKnightUtility:onStep(function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor.pHspeed = 3.5 * actor.pHmax * actor.image_xscale
-		
+		actor:sound_play(shoot3_sounds[math.ceil(math.random() + 1)], .5, 0.9 + math.random() * 0.8)
+	end
+
+	if data.previous_index < math.floor(actor.image_index) then
+		data.previous_index = data.previous_index + 1
+
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightUtility)
 			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local targets = List.new()
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				attack = actor:fire_explosion(actor.x + dir * 80, actor.y, 200, 50, damage, nil, sprite_sparks2, true)
-				attack.attack_info:allow_stun()
-				attack.attack_info:set_stun(1, dir, standard)
+			local x_size = 50
+			local y_size = 25
+
+			actor:collision_rectangle_list(actor.x - x_size, actor.y + y_size, actor.x + x_size, actor.y - y_size, gm.constants.pActor, false, true, targets, false)
+
+			for _, target in ipairs(targets) do
+				if target.team ~= actor.team then
+					local cannot_be_hit = 0
+					for _, previous in ipairs(hit_enemies_strike) do
+						if target.value == previous.value then 
+							cannot_be_hit = 1
+						end
+					end
+
+					if cannot_be_hit == 0 then
+						local buff_shadow_clone = Buff.find("ror", "shadowClone")
+						for i=0, actor:buff_stack_count(buff_shadow_clone) do
+							attack = actor:fire_direct(target, damage, dir, actor.x, actor.y, sprite_sparks2, true)
+							attack.attack_info:allow_stun()
+							attack.attack_info:set_stun(1, dir, standard)
+						end
+
+						table.insert(hit_enemies_strike, target)
+					end
+				end
 			end
 		end
 	end
@@ -364,7 +475,7 @@ stateKnightUtility:onStep(function( actor, data )
 end)
 
 
--------- invigorate is already a funny word i dont even need to add anything for this section honestly
+-------- invigorate is such a funny word
 knightSpecial.sprite = sprite_skills
 knightSpecial.subimage = 3
 knightSpecial.cooldown = 12 * 60
@@ -399,6 +510,7 @@ knightSpecialScepter:onActivate(function( actor )
 	actor:enter_state(stateKnightSpecial)
 end)
 
+-- actual skill
 stateKnightSpecial:clear_callbacks()
 stateKnightSpecial:onEnter(function( actor, data )
 	actor.image_index = 0
@@ -451,7 +563,7 @@ stateKnightSpecial:onStep(function( actor, data )
 
 			for _, ally in ipairs(allies) do
 				if ally.team == actor.team then -- checking to see who is actually our friend
-					ally:buff_apply(knightInvigorateBuff, 3 * 60)
+					ally:buff_apply(knightInvigorateBuff, 4 * 60)
 				end
 			end
 		end
