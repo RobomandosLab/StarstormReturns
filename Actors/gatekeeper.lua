@@ -15,6 +15,8 @@ local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2a",		p
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2b",		path.combine(SPRITE_PATH, "shoot2b.png"), 5, 60, 91)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "GatekeeperDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 85, 113)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "GatekeeperPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
+local sprite_laser_par		= Resources.sprite_load(NAMESPACE, "GatekeeperLaserPar",	path.combine(SPRITE_PATH, "laserPar.png"), 6, 6, 6)
+local sprite_laser_trail	= Resources.sprite_load(NAMESPACE, "GatekeeperLaserTrail",	path.combine(SPRITE_PATH, "laserTrail.png"))
 
 gm.elite_generate_palettes(sprite_palette)
 
@@ -28,6 +30,13 @@ local sound_death			= Resources.sfx_load(NAMESPACE, "GatekeeperDeath",			path.co
 local keeper = Object.new(NAMESPACE, "Gatekeeper", Object.PARENT.enemyClassic)
 local keeper_id = keeper.value
 keeper:clear_callbacks()
+
+local laserPar = Particle.new(NAMESPACE, "GatekeeperLaserPar")
+laserPar:set_sprite(sprite_laser_par, true, true, false)
+laserPar:set_alpha2(1, 0)
+laserPar:set_life(60, 60)
+laserPar:set_alpha1(0.9)
+laserPar:set_speed(9, 11, -8 / 30, 0)
 
 local fortified = Buff.new(NAMESPACE, "GatekeeperFortified")
 fortified.show_icon = false
@@ -46,6 +55,7 @@ objLaser:onCreate(function(self)
 	local data = self:get_data()
 	self.mask = sprite_laser_mask
 	self.sprite_index = sprite_laser_mask
+	self.image_alpha = 0
 	self:move_contact_solid(270, 200)
 	self.direction = 0
 	self.speed = 0
@@ -53,6 +63,7 @@ objLaser:onCreate(function(self)
 	data.target = -4
 	data.charge = 0
 	data.timer = 30
+	data.trailtimer = 0
 	data.color = Color.from_hex(0x81CADC)
 end)
 
@@ -82,36 +93,98 @@ objLaser:onStep(function(self)
 			data.colorCheck = true
 		end
 		
-		if parent:exists() then
-			if data.charge % 6 == 0 then
-				local attack = parent:fire_explosion(self.x, self.y - 200, ((data.charge * 0.3) + 8), 400, 1 * data.charge * 0.005)
-				attack.attack_info.gk_laser = true
-				parent:fire_explosion(self.x, self.y, 0, 0, 0)
+		if data.charge % 6 == 0 then
+			if parent:exists() then
+				local attack = parent:fire_explosion_local(self.x, self.y - 500, (44 - math.max(22, data.charge * 0.4)) * 4, 1000, 1 * data.charge * 0.005)
+				attack.attack_info.y = self.y
 			end
+			
+			if data.charge <= 90 then
+				if math.random() >= 0.5 then
+					laserPar:set_direction(0, 0, 0, 0)
+				else
+					laserPar:set_direction(180, 180, 0, 0)
+				end
+				laserPar:create(self.x, self.y - math.random(500), 1, Particle.SYSTEM.middle)
+			end
+			
+			self:screen_shake(1)
+			self:sound_play(sound_laser_hit, ((110 - math.max(55, data.charge))) / 55 * 0.6, 0.9 + math.random() * 0.2)
 		end
+	end
+	
+	if data.charge == 1 then
+		self:screen_shake(5)
 	end
 end)
 
 objLaser:onDraw(function(self)
 	local data = self:get_data()
+	local parent = Instance.wrap(data.parent)
+	local offset = 150
 	
 	if data.timer > 0 then
-		local width = data.timer * 0.4
+		local width = 44 - gm.round(data.timer * 1.46)
 		
-		gm.draw_set_colour(Color.WHITE)
-		gm.draw_set_alpha(0.3 + data.timer * 0.01)
-		gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, true)
-	else
-		local color = data.color
-		local width = data.charge * 0.4
-		local alpha = math.min((110 - data.charge) * 0.08, 1)
-		
-		gm.draw_set_colour(color)
-		gm.draw_set_alpha(0.75 * alpha)
+		gm.draw_set_colour(data.color)
+		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
 		gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
 		gm.draw_set_colour(Color.WHITE)
-		gm.draw_set_alpha(0.9 * alpha)
+		gm.draw_set_alpha((30 - data.timer) / 30 * 0.9)
 		gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, false)
+		
+		gm.draw_set_colour(data.color)
+		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
+		gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
+		gm.draw_set_colour(Color.WHITE)
+		gm.draw_set_alpha((30 - data.timer) / 30 * 0.9)
+		gm.draw_rectangle(parent.x - width / 3, 0, parent.x + width / 3, parent.y - offset, false)
+		gm.draw_set_alpha(1)
+		
+		gm.draw_circle(parent.x, parent.y - offset, width, false)
+	else
+		if data.charge > 10 then
+			local width = (44 - math.max(22, data.charge * 0.4)) * 2
+			local width2 = (44 / 2 - math.max(22 / 2, data.charge * 0.4 / 2)) * 2
+			local width3 = (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 2
+			local width4 = (44 / 3 - math.max(22 / 3, data.charge * 0.4 / 3)) * 2
+			
+			gm.draw_set_colour(data.color)
+			gm.draw_set_alpha(0.75)
+			gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
+			gm.draw_set_colour(Color.WHITE)
+			gm.draw_set_alpha(0.9)
+			gm.draw_rectangle(self.x - width2, 0, self.x + width2, self.y - 1, false)
+			
+			gm.draw_set_colour(data.color)
+			gm.draw_set_alpha(0.75)
+			gm.draw_rectangle(parent.x - width3, 0, parent.x + width3, parent.y - offset, false)
+			gm.draw_set_colour(Color.WHITE)
+			gm.draw_set_alpha(0.9)
+			gm.draw_rectangle(parent.x - width4, 0, parent.x + width4, parent.y - offset, false)
+			gm.draw_set_alpha(1)
+			
+			gm.draw_circle(parent.x, parent.y - offset, width, false)
+		else
+			local width = 44 * (0.5 + 2 ^ -(data.charge / 10))
+			
+			gm.draw_set_colour(data.color)
+			gm.draw_set_alpha(0.75)
+			gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
+			gm.draw_set_colour(Color.WHITE)
+			gm.draw_set_alpha(0.9)
+			gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, false)
+			
+			gm.draw_set_colour(data.color)
+			gm.draw_set_alpha(0.75)
+			gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
+			gm.draw_set_colour(Color.WHITE)
+			gm.draw_set_alpha(0.9)
+			gm.draw_rectangle(parent.x - width / 3, 0, parent.x + width / 3, parent.y - offset, false)
+			gm.draw_set_alpha(1)
+			
+			gm.draw_circle(parent.x, parent.y - offset, width, false)
+		end
 	end
 end)
 
@@ -207,13 +280,6 @@ keeper:onDraw(function(actor)
 	end
 end)
 
-Callback.add(Callback.TYPE.onAttackHit, "GatekeeperLaserHit", function(hit_info)
-	if hit_info.gk_laser then
-		hit_info.target:sound_play(sound_laser_hit, 0.6, 0.9 + math.random() * 0.2)
-		hit_info.target:screen_shake(2)
-	end
-end)
-
 local tracer_color = Color.from_hex(0x81CADC)
 local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
 	local dist = gm.point_distance(x1, y1, x2, y2)
@@ -256,8 +322,12 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot1a, 0.16)
 	
 	local target = nil
-	if actor.target.parent and actor.target.parent:exists() then
-		target = actor.target.parent
+	if Instance.wrap(actor.target) then
+		if Instance.wrap(actor.target.parent) then 
+			if Instance.wrap(actor.target.parent):exists() then
+				target = Instance.wrap(actor.target.parent)
+			end
+		end
 	end
 	
 	if actor.image_index < 3 and data.fired == 0 then
@@ -299,7 +369,7 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 	end
  	
 	if actor:get_data().laser then
-		if actor:get_data().laser:exists() and actor.image_index >= 5 then
+		if Instance.wrap(actor:get_data().laser):exists() and actor.image_index >= 5 then
 			actor.image_index = 3
 		end
 	end
