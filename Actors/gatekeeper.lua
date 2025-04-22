@@ -16,7 +16,6 @@ local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2b",		p
 local sprite_death			= Resources.sprite_load(NAMESPACE, "GatekeeperDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 85, 113)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "GatekeeperPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
 local sprite_laser_par		= Resources.sprite_load(NAMESPACE, "GatekeeperLaserPar",	path.combine(SPRITE_PATH, "laserPar.png"), 6, 6, 6)
-local sprite_laser_trail	= Resources.sprite_load(NAMESPACE, "GatekeeperLaserTrail",	path.combine(SPRITE_PATH, "laserTrail.png"))
 
 gm.elite_generate_palettes(sprite_palette)
 
