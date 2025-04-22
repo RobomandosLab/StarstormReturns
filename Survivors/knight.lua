@@ -122,7 +122,7 @@ local knightShieldBash = Skill.new(NAMESPACE, "knightShieldBash")
 
 -------- DUEL!
 local combo = 0
-local combo_window = 0.5
+local combo_window = 0.5 * 60
 local combo_time = 0
 local shoot1_sounds = {sound_shoot1a, sound_shoot1b, sound_shoot1c, sound_shoot1d}
 
@@ -154,7 +154,7 @@ stateKnightPrimary:onEnter(function( actor, data )
 end)
 
 stateKnightPrimary:onStep(function( actor, data )
-	if os.clock() - combo_time > combo_window then
+	if Global._current_frame - combo_time > combo_window then
 		combo = 0
 	end
 
@@ -163,7 +163,7 @@ stateKnightPrimary:onStep(function( actor, data )
 	else
 		actor.sprite_index2 = sprite_shoot1_2_half
 	end
-	combo_time = os.clock()
+	combo_time = Global._current_frame
 
 	actor:skill_util_strafe_update(.15 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
@@ -177,7 +177,7 @@ stateKnightPrimary:onStep(function( actor, data )
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightPrimary)
-			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local dir = actor.image_xscale
 			local sparks = combo == 0 and sprite_sparks1 or sprite_sparks2
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
@@ -242,7 +242,7 @@ stateKnightShieldBash:onStep(function( actor, data )
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightShieldBash)
-			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local dir = actor.image_xscale
 			local targets = List.new()
 
 			local x_size = 25
@@ -271,6 +271,8 @@ stateKnightShieldBash:onStep(function( actor, data )
 					end
 				end
 			end
+
+			targets:destroy()
 		end
 	end
 
@@ -279,12 +281,13 @@ end)
 
 stateKnightShieldBash:onExit(function( actor, data )
 	GM._mod_ActorSkillSlot_removeOverride(actor:actor_get_skill_slot(Skill.SLOT.primary), knightShieldBash, Skill.OVERRIDE_PRIORITY.cancel)
+	hit_enemies_shieldbash:destroy()
 end)
 
 
 -------- CONTEND!
 local blocking = 0
-local parry_window = 0.5
+local parry_window = 0.5 * 60
 local parry_start
 local parried_hits = 0
 
@@ -330,7 +333,7 @@ stateKnightSecondary:onEnter(function( actor, data )
 	data.primed = 0
 	blocking = 1
 	actor.deflect = 1
-	parry_start = os.clock()
+	parry_start = Global._current_frame
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
@@ -373,7 +376,7 @@ stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state d
 	end
 
 	-- turns off the parry window once its been a set amount of time
-	if os.clock() - parry_start > parry_window then
+	if Global._current_frame - parry_start > parry_window then
 		actor.deflect = 0
 	end
 
@@ -439,7 +442,7 @@ stateKnightUtility:onStep(function( actor, data )
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightUtility)
-			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local dir = actor.image_xscale
 			local targets = List.new()
 
 			local x_size = 50
@@ -468,10 +471,16 @@ stateKnightUtility:onStep(function( actor, data )
 					end
 				end
 			end
+
+			targets:destroy()
 		end
 	end
 
 	actor:skill_util_exit_state_on_anim_end()
+end)
+
+stateKnightUtility:onExit(function( actor, data )
+	hit_enemies_strike:destroy()
 end)
 
 
@@ -528,7 +537,7 @@ stateKnightSpecial:onStep(function( actor, data )
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightSpecial)
-			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			local dir = actor.image_xscale
 			local sparks = data.fired == 1 and sprite_sparks1 or sprite_sparks2
 
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
@@ -566,6 +575,8 @@ stateKnightSpecial:onStep(function( actor, data )
 					ally:buff_apply(knightInvigorateBuff, 4 * 60)
 				end
 			end
+
+			allies:destroy()
 		end
 	end
 

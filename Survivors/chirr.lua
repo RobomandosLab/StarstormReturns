@@ -165,11 +165,11 @@ chirr:onStep(function( actor )
 			wings = obj_wings:create(actor.ghost_x, actor.ghost_y)
 			wingsData = wings:get_data()
 			wingsData.parent = actor
-			wings.image_xscale = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			wings.image_xscale = actor.image_xscale
 		else
 			wings.x = actor.x
 			wings.y = actor.y
-			wings.image_xscale = gm.cos(gm.degtorad(actor:skill_util_facing_direction()))
+			wings.image_xscale = actor.image_xscale
 		end
 	else
 		flying = false
@@ -187,13 +187,13 @@ chirr:onStep(function( actor )
 	if player_actor then  -- UNREASONABLE RIDICULOUS TETHER FIX
 		if #tamed < 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 1 then -- if your party has newly been made empty
 			has_full_party = 0
-			time_since_tether_override = os.clock()
+			time_since_tether_override = Global._current_frame
 			GM._mod_ActorSkillSlot_removeOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether , Skill.OVERRIDE_PRIORITY.cancel) -- sets the override skill to tether
 
 		elseif #tamed >= 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 0 then -- if your party has newly been made full
 			has_full_party = 1
 			GM._mod_ActorSkillSlot_addOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether, Skill.OVERRIDE_PRIORITY.cancel) -- removes the tether override skill
-			time_since_tether_override = os.clock()
+			time_since_tether_override = Global._current_frame
 		end
 	end
 end)
@@ -337,7 +337,7 @@ stateChirrSecondary:onStep(function( actor, data ) -- using the skill
 
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(chirrSecondary)
-			local dir = gm.cos(gm.degtorad(actor:skill_util_facing_direction())) -- explosions dont use directions, this is just used to make the x offset
+			local dir = actor.image_xscale -- explosions dont use directions, this is just used to make the x offset
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then -- if not using heaven cracker
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
@@ -614,7 +614,7 @@ stateChirrSpecial:clear_callbacks()
 stateChirrSpecial:onEnter(function( actor, data )
 	actor:sound_play(sound_shoot4, 1, 1)
 
-	obj_tame_heart:create(actor.x + 14 * gm.cos(gm.degtorad(actor:skill_util_facing_direction())), actor.y - 10) -- make the little heart
+	obj_tame_heart:create(actor.x + 14 * actor.image_xscale, actor.y - 10) -- make the little heart
 
 	if taming_target then
 		if taming_target.team ~= actor.team and not taming_target.enemy_party and taming_target.hp <= taming_target.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
@@ -652,7 +652,7 @@ end)
 local tether_tp_charge_time = .75*60
 
 stateChirrTether:onStep(function( actor, data ) -- track how long the tether skill is held to see what the skill should do after being let go
-	if os.clock() - time_since_tether_override > .1 then
+	if Global._current_frame - time_since_tether_override > 10 then
 		actor:skill_util_fix_hspeed()
 	
 		data.step = data.step + 1
@@ -705,6 +705,7 @@ stateChirrTether:onExit(function( actor, data )
 				end
 
 				tethered = closest_friend
+				nearby_allies:destroy()
 			else
 				tethered = nil
 			end
