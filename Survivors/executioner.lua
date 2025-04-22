@@ -165,7 +165,7 @@ end)
 stateExecutionerPrimary:onStep(function(actor, data)
 	actor.sprite_index2 = sprite_shoot1_half
 
-	actor:skill_util_strafe_update(0.33 * actor.attack_speed, 0.5)
+	actor:skill_util_strafe_update(0.22 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
