@@ -54,8 +54,9 @@ local sprite_log			= Resources.sprite_load(NAMESPACE, "ExecutionerLog", path.com
 local sound_shoot1			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
 local sound_shoot3			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
-local sound_shoot4a			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
-local sound_shoot4b			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+local sound_shoot4_1		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_1", path.combine(SOUND_PATH, "skill4_1.ogg"))
+local sound_shoot4_2		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_2", path.combine(SOUND_PATH, "skill4_2.ogg"))
+local sound_shoot4_3		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_3", path.combine(SOUND_PATH, "skill4_3.ogg"))
 
 -- particles.
 -- used for ion burst tracer
@@ -461,11 +462,18 @@ stateExecutionerSpecialPre:clear_callbacks()
 stateExecutionerSpecialPre:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.previous_frame = 0
+	data.fired = 0
 
 	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
 end)
 stateExecutionerSpecialPre:onStep(function(actor, data)
 	local drifting = math.abs(actor.pHspeed) > actor.pHmax
+	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) ) -- see stateExecutionerSpecial:onStep for why this is
+
+	if data.fired == 0 then
+		data.fired = 1
+		actor:sound_play(sound_shoot4_1, 1.0, true_speed)
+	end
 
 	if not drifting then
 		actor:skill_util_fix_hspeed()
@@ -496,7 +504,6 @@ stateExecutionerSpecialPre:onStep(function(actor, data)
 		end
 	end
 
-	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
 	actor:actor_animation_set(sprite, 0.25 * true_speed, false)
 	actor:set_immune(8)
 
@@ -523,6 +530,8 @@ stateExecutionerSpecial:onStep(function(actor, data)
 		particle = ionParticleS
 	end
 
+	-- make the atk speed non-linear and never go beyond 200% speed
+	-- makes it so the player can still do momemtum tech while having alot of atk speed
 	local true_speed = math.max(1, 2 - (1 / actor.attack_speed) )
 
 	actor:actor_animation_set(animation, 0.25 * true_speed, false)
@@ -532,7 +541,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 		actor.activity_type = 2 -- changes physics for the state. gravity is disabled and vertical velocity is uncapped.
 		actor.pVspeed = (actor.pVmax * -2) * true_speed
 		data.substate = 1
-		actor:sound_play(sound_shoot4a, 1.0, 1.0)
+		actor:sound_play(sound_shoot4_2, 1.0, true_speed)
 	elseif data.substate == 1 then -- decelerating, hanging in the air
 		local deceleration = 0.5 * true_speed * true_speed -- squaring attack speed seems to prevent height gain from attack speed, i dont know math lmao
 		actor.pVspeed = math.min(actor.pVspeed + deceleration, 0)
@@ -564,7 +573,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 			if data.recovery_attempts <= 3 then
 				actor.image_index = 0
 				data.substate = 1 -- go back and try again
-				actor:sound_play(sound_shoot4a, 1.0, 1.0)
+				actor:sound_play(sound_shoot4_2, 1.0, 1.0)
 			else
 				actor:skill_util_reset_activity_state() -- too many interruptions -- give up so we're not perma immune lmao
 			end
@@ -576,8 +585,13 @@ stateExecutionerSpecial:onStep(function(actor, data)
 				actor.image_index = 11
 				actor.activity_type = 1 -- return to standard state physics
 
-				actor:sound_play(sound_shoot4b, 1.0, 1.0)
+				actor:sound_play(sound_shoot4_3, 1.0, 1.0)
 				actor:screen_shake(15)
+
+				if data.scepter > 0 then
+					actor:sound_play(gm.constants.wChainLightning2, 1.0, 0.8)
+					actor:sound_play(gm.constants.wLightning, 1.0, 1.0)
+				end
 
 				for i=1, 9 do
 					particle:create(actor.x - 80 + math.random() * 160, actor.y - 60 + math.random() * 80, 1, Particle.SYSTEM.below)
