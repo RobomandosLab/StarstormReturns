@@ -52,6 +52,7 @@ objLaser:clear_callbacks()
 
 objLaser:onCreate(function(self)
 	local data = self:get_data()
+	self:instance_sync()
 	self.mask = sprite_laser_mask
 	self.sprite_index = sprite_laser_mask
 	self.image_alpha = 0
@@ -59,10 +60,8 @@ objLaser:onCreate(function(self)
 	self.direction = 0
 	self.speed = 0
 	data.parent = -4
-	data.target = -4
 	data.charge = 0
 	data.timer = 30
-	data.trailtimer = 0
 	data.color = Color.from_hex(0x81CADC)
 end)
 
@@ -96,24 +95,25 @@ objLaser:onStep(function(self)
 			if parent:exists() then
 				local attack = parent:fire_explosion_local(self.x, self.y - 500, (44 - math.max(22, data.charge * 0.4)) * 4, 1000, 1 * data.charge * 0.005)
 				attack.attack_info.y = self.y
+				local attack = parent:fire_explosion_local(parent.x, parent.y - 650, (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 4, 1009, 0.5 * data.charge * 0.005)
+				attack.attack_info.y = 0
 			end
-			
-			if data.charge <= 90 then
-				if math.random() >= 0.5 then
-					laserPar:set_direction(0, 0, 0, 0)
-				else
-					laserPar:set_direction(180, 180, 0, 0)
-				end
-				laserPar:create(self.x, self.y - math.random(500), 1, Particle.SYSTEM.middle)
-			end
-			
 			self:screen_shake(1)
 			self:sound_play(sound_laser_hit, ((110 - math.max(55, data.charge))) / 55 * 0.6, 0.9 + math.random() * 0.2)
 		end
-	end
-	
-	if data.charge == 1 then
-		self:screen_shake(5)
+		
+		if data.charge % 2 == 0 and data.charge <= 90 then
+			if math.random() >= 0.5 then
+				laserPar:set_direction(0, 0, 0, 0)
+			else
+				laserPar:set_direction(180, 180, 0, 0)
+			end
+			laserPar:create(self.x, self.y - math.random(1000), 1, Particle.SYSTEM.middle)
+		end
+		
+		if data.charge == 1 then
+			self:screen_shake(5)
+		end
 	end
 end)
 
@@ -128,16 +128,11 @@ objLaser:onDraw(function(self)
 		gm.draw_set_colour(data.color)
 		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
 		gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
-		gm.draw_set_colour(Color.WHITE)
-		gm.draw_set_alpha((30 - data.timer) / 30 * 0.9)
-		gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, false)
 		
 		gm.draw_set_colour(data.color)
 		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
 		gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
 		gm.draw_set_colour(Color.WHITE)
-		gm.draw_set_alpha((30 - data.timer) / 30 * 0.9)
-		gm.draw_rectangle(parent.x - width / 3, 0, parent.x + width / 3, parent.y - offset, false)
 		gm.draw_set_alpha(1)
 		
 		gm.draw_circle(parent.x, parent.y - offset, width, false)
@@ -187,6 +182,16 @@ objLaser:onDraw(function(self)
 	end
 end)
 
+objLaser:onSerialize(function(self, buffer)
+	buffer:write_half(self.speed)
+	buffer:write_instance(self:get_data().parent)
+end)
+
+objLaser:onDeserialize(function(self, buffer)
+	self.speed = buffer:read_half()
+	self:get_data().parent = buffer:read_instance()
+end)
+
 keeper.obj_sprite = sprite_idle
 keeper.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 keeper:clear_callbacks()
@@ -224,7 +229,7 @@ keeper:onCreate(function(actor)
 	actor.knockback_immune = true
 	actor.stun_immune = true
 	actor.z_range = 800
-	actor.y_range = 256
+	actor.y_range = 400
 	actor.x_range = 600
 	actor:get_data().attack_mode = 1
 
@@ -302,7 +307,15 @@ keeperPrimary:onActivate(function(actor)
 	if actor:get_data().attack_mode == 1 then
 		actor:enter_state(stateKeeperPrimaryA)
 	else
-		actor:enter_state(stateKeeperPrimaryB)
+		local target = actor.target.parent
+		local collisionlist = List.new()
+		actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
+		if #collisionlist == 0 then
+			actor:enter_state(stateKeeperPrimaryB)
+		else
+			actor:refresh_skill(Skill.SLOT.primary)
+		end
+		collisionlist:destroy()
 	end
 end)
 
@@ -312,7 +325,7 @@ stateKeeperPrimaryA:onEnter(function(actor, data)
 	data.trx = nil
 	data.try = nil
 	data.trmoving = 0
-	data.laser = nil
+	actor:get_data().laser = nil
 	actor:sound_play(sound_laser_fire, 1, 0.8 + math.random() * 0.2)
 end)
 
@@ -321,11 +334,9 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot1a, 0.16)
 	
 	local target = nil
-	if Instance.wrap(actor.target) then
-		if Instance.wrap(actor.target.parent) then 
-			if Instance.wrap(actor.target.parent):exists() then
-				target = Instance.wrap(actor.target.parent)
-			end
+	if actor.target and Instance.exists(actor.target) then
+		if actor.target.parent and Instance.exists(actor.target.parent) then
+			target = actor.target.parent
 		end
 	end
 	
@@ -361,14 +372,16 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 		
 		if target and target:exists() then
 			data.fired = 1
-			actor:get_data().laser = objLaser:create(data.trx, data.try)
-			actor:get_data().laser:get_data().parent = actor
-			actor:get_data().laser.speed = data.trmoving
+			if gm._mod_net_isHost() then
+				actor:get_data().laser = objLaser:create(data.trx, data.try)
+				actor:get_data().laser:get_data().parent = actor
+				actor:get_data().laser.speed = data.trmoving
+			end
 		end
 	end
  	
 	if actor:get_data().laser then
-		if Instance.wrap(actor:get_data().laser):exists() and actor.image_index >= 5 then
+		if Instance.exists(actor:get_data().laser) and actor.image_index >= 5 then
 			actor.image_index = 3
 		end
 	end
@@ -390,8 +403,10 @@ stateKeeperPrimaryB:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot1b, 0.16)
 	
 	local target = nil
-	if actor.target.parent and actor.target.parent:exists() then
-		target = actor.target.parent
+	if actor.target and Instance.exists(actor.target) then
+		if actor.target.parent and Instance.exists(actor.target.parent) then
+			target = actor.target.parent
+		end
 	end
 	
 	if actor.image_index >= 13 and data.fired == 0 then
@@ -421,18 +436,18 @@ stateKeeperPrimaryB:onStep(function(actor, data)
 			if data.trx and data.try then
 				local dif = data.trx - target.x
 				if data.trx < target.x then
-					data.trx = math.min(target.x, data.trx + math.abs(dif * 0.2))
+					data.trx = math.min(target.x, data.trx + math.abs(dif * 0.18))
 				end
 				if data.trx > target.x then
-					data.trx = math.max(target.x, data.trx - math.abs(dif * 0.2))
+					data.trx = math.max(target.x, data.trx - math.abs(dif * 0.18))
 				end
 				
 				dif = data.try - target.y
 				if data.try < target.y then
-					data.try = math.min(target.y, data.try + math.abs(dif * 0.2))
+					data.try = math.min(target.y, data.try + math.abs(dif * 0.18))
 				end
 				if data.try > target.y then
-					data.try = math.max(target.y, data.try - math.abs(dif * 0.2))
+					data.try = math.max(target.y, data.try - math.abs(dif * 0.18))
 				end 
 			else
 				data.trx = target.x
@@ -462,7 +477,15 @@ stateKeeperSecondaryB:clear_callbacks()
 
 keeperSecondary:onActivate(function(actor)
 	if actor:get_data().attack_mode == 1 then
-		actor:enter_state(stateKeeperSecondaryA)
+		local target = actor.target.parent
+		local collisionlist = List.new()
+		actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
+		if #collisionlist == 0 then
+			actor:enter_state(stateKeeperSecondaryA)
+		else
+			actor:refresh_skill(Skill.SLOT.primary)
+		end
+		collisionlist:destroy()
 	else
 		actor:enter_state(stateKeeperSecondaryB)
 	end
