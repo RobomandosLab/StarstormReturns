@@ -337,7 +337,7 @@ stateKnightSecondary:onEnter(function( actor, data )
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
-	actor:buff_apply(knightArmorBuff)
+	GM.apply_buff(actor, knightArmorBuff, 1, 1)
 	actor:freeze_active_skill(Skill.SLOT.secondary)
 
 	if knightShieldBash.value ~= GM._mod_ActorSkillSlot_getActiveSkill(actor:actor_get_skill_slot(Skill.SLOT.primary)).skill_id then
@@ -345,18 +345,13 @@ stateKnightSecondary:onEnter(function( actor, data )
 	end
 end)
 
+
 stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state down because its a bunch of stuff
 	-- set up strafing
 	actor.sprite_index2 = sprite_shoot2_half
 	actor:skill_util_strafe_update(.25, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
-
-	-- exits if you let go of the key earlier
-	if data.exit == 1 then
-		actor:skill_util_reset_activity_state()
-		actor:sound_play(sound_shoot2, .5, 0.8)
-	end
 
 	-- freezes the animation while being held
 	if actor.image_index2 > 3 then
@@ -383,15 +378,15 @@ stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state d
 	actor:freeze_active_skill(Skill.SLOT.secondary)
 
 	-- turns off the skill once you let go of the key
-	local holding = gm.bool(actor.x_skill)
-	if not holding then
-		actor.image_index2 = 4
-		data.exit = 1
+	if actor:is_authority() and not actor:control("skill2", 0) then
+		GM.actor_set_state_networked(actor, -1)
 	end
 end)
 
 stateKnightSecondary:onExit(function( actor, data )
-	actor:buff_remove(knightArmorBuff)
+	actor:sound_play(sound_shoot2, .5, 0.8)
+	GM.remove_buff(actor, knightArmorBuff, 1)
+
 	blocking = 0
 	actor.deflect = 0
 	print(parried_hits)
@@ -572,7 +567,7 @@ stateKnightSpecial:onStep(function( actor, data )
 
 			for _, ally in ipairs(allies) do
 				if ally.team == actor.team then -- checking to see who is actually our friend
-					ally:buff_apply(knightInvigorateBuff, 4 * 60)
+					GM.apply_buff(ally, knightInvigorateBuff, 4 * 60, 1)
 				end
 			end
 
