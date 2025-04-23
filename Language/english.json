@@ -22,6 +22,13 @@
 			"endQuote": "..and so he left, carrying new sense of humanity within.",
 			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>",
 		},
+		"nemesisMercenary" : {
+			"name" : "Nemesis Mercenary",
+			"nameUpper" : "NEMESIS MERCENARY",
+			"description" : "The <y>Nemesis Mercenary</c> was born with a special power.",
+			"endQuote": "..and so he left, loaded up for more.",
+			"story": "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>",
+		},
 	},
 
 	"skill" : {
@@ -76,6 +83,26 @@
 		"nemesisCommandoV2Boosted": {
 			"name": "Spanker",
 			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
+		},
+		"nemesisMercenaryZ": {
+			"name": "Attachment Stab",
+			"description": "Stab with your shotgun infront of you, damaging up to <y>3 enemies</c> for <y>130% damage</c>."
+		},
+		"nemesisMercenaryX": {
+			"name": "Quick Trigger",
+			"description": "Fire a shotgun forward dealing <y>500% damage</c>, <y>stunning</c> them."
+		},
+		"nemesisMercenaryC": {
+			"name": "Blinding Slide",
+			"description": "Quickly slide forwards. <b>You can attack while sliding</c>."
+		},
+		"nemesisMercenaryV": {
+			"name": "Devitalize",
+			"description": "Target the weakest enemy, attacking them for <y>850% damage</c>, dealing more damage to stunned enemies.</c> <b>You cannot be hit for the duration</c>."
+		},
+		"nemesisMercenaryVBoosted": {
+			"name": "Absolute Devitalization",
+			"description": "Target the weakest enemy, attacking them for <y>1100% damage</c>, dealing more damage to stunned enemies.</c> <b>You cannot be hit for the duration</c>."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
