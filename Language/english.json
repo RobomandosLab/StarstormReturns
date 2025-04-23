@@ -318,10 +318,31 @@
 			"priority": "<r>Volatile</c>",
 		},
 	},
-
+	
+	"artifact" : {
+		"multitude" : {
+			"name" : "Multitude",
+			"description": "Enemies come in hordes.",
+			"approaching": "A horde of enemies is approaching.",
+			"arriving": "Prepare yourself...",
+		},
+		"displacement" : {
+			"name" : "Displacement",
+			"description": "Stages are shuffled.",
+		},
+		"gathering" : {
+			"name" : "Gathering",
+			"description": "Gold drops are doubled but they must be picked up.",
+		}
+	},
+	
+	
 	"actor" : {
 		"Exploder.name" : "Exploder",
-		"Mimic.name" : "Security Chest"
+		"Mimic.name" : "Security Chest",
+		"Gatekeeper.name" : "Gatekeeper",
+		"Protector.name" : "Protector",
+		"Protector.text" : "Keeper of the Artifact"
 	},
 
 	"interactable" : {

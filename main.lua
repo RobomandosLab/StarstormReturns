@@ -15,6 +15,7 @@ local init = function()
 		"Survivors",
 		"Items",
 		"Equipments",
+		"Artifacts"
 	}
 
 	for _, folder in ipairs(folders) do
