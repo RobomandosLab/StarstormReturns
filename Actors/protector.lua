@@ -1,4 +1,4 @@
--- todo add comments later
+-- todo add comments NOW
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Protector")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Gatekeeper")
 
