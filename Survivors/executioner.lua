@@ -80,6 +80,9 @@ ionParticleS:set_speed(0.2, 0.5, -0.02, 0)
 ionParticleS:set_size(0.6, 1, 0, 0.01)
 ionParticleS:set_direction(0, 360, 0, 0)
 
+local buffFear = Buff.find("ror", "fear")
+local buffShadowClone = Buff.find("ror", "shadowClone")
+
 -- Okay, let's start Executing, some Monsters ..
 local executioner = Survivor.new(NAMESPACE, "executioner")
 local executioner_id = executioner.value
@@ -191,8 +194,7 @@ stateExecutionerPrimary:onStep(function(actor, data)
 			local dir = actor:skill_util_facing_direction()
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				for i=0, actor:buff_stack_count(buffShadowClone) do
 					local attack = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, gm.constants.sSparks1, Attack_Info.TRACER.commando1)
 					attack.climb = i * 8 * 1.35
 				end
@@ -328,8 +330,7 @@ stateExecutionerSecondary:onStep(function(actor, data)
 			local damage = actor:skill_get_damage(executionerSecondary)
 			local dir = actor:skill_util_facing_direction()
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			for i=0, actor:buff_stack_count(buffShadowClone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y, 1000, dir, damage, nil, sprite_ion_sparks, ion_tracer).attack_info
 				attack_info:set_stun(1.0)
 				attack_info.climb = i * 8 * 1.35
@@ -608,8 +609,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 						damage = actor:skill_get_damage(executionerSpecialScepter)
 					end
 
-					local buff_shadow_clone = Buff.find("ror", "shadowClone")
-					for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					for i=0, actor:buff_stack_count(buffShadowClone) do
 						local attack_info = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage).attack_info
 						attack_info.climb = i * 8 * 1.35
 						attack_info.y = actor.y
@@ -617,13 +617,12 @@ stateExecutionerSpecial:onStep(function(actor, data)
 					end
 
 					if data.scepter > 0 then
-						local fear = Buff.find("ror", "fear")
 						local victims = List.new()
 						actor:collision_rectangle_list(ax - 120, actor.y - 30, ax + 120, actor.y + 30, gm.constants.pActor, false, true, victims, false)
 
 						for _, victim in ipairs(victims) do
 							if victim.team ~= actor.team then
-								victim:buff_apply(fear, 2 * 60)
+								victim:buff_apply(buffFear, 2 * 60)
 							end
 						end
 
