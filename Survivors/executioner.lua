@@ -355,6 +355,76 @@ stateExecutionerSecondary:onGetInterruptPriority(function(actor, data)
 	end
 end)
 
+local objIonOrb = Object.new(NAMESPACE, "ExecutionerOrb")
+objIonOrb.obj_depth = -280
+
+objIonOrb:clear_callbacks()
+objIonOrb:onCreate(function(self)
+	self.target = -4
+	self.counter = 30
+	self.vspeed = -6 + math.random() * 3
+
+	self.charges = 1
+
+	self:instance_sync()
+end)
+objIonOrb:onStep(function(self)
+	if not Instance.exists(self.target) then
+		self:destroy()
+		return
+	end
+	if self.counter > 0 then
+		self.speed = math.max(0, self.speed - 0.2)
+		self.counter = self.counter - 1
+	else
+		local target = self.target
+
+		self.direction = gm.point_direction(self.x, self.y, target.x, target.y)
+		self.speed = math.min(12, self.speed + 0.4)
+
+		if self:distance_to_object(target) < 8 then
+			if gm._mod_net_isHost() then
+				for i=1, self.charges do
+					GM.actor_skill_add_stock_networked(target, Skill.SLOT.secondary)
+				end
+			end
+
+			local flash = GM.instance_create(0, 0, gm.constants.oEfFlash)
+			flash.parent = target
+			flash.rate = 0.08
+
+			self:destroy()
+		end
+	end
+end)
+objIonOrb:onDraw(function(self)
+	local radius = 6 + self.charges * 4
+	radius = radius + math.sin(Global._current_frame * 0.2) * 0.5
+
+	gm.gpu_set_blendmode(1)
+	gm.draw_set_colour(ION_TRACER_COLOR)
+	gm.draw_set_alpha(0.6)
+	gm.draw_circle(self.x, self.y, radius, false)
+	--gm.draw_circle(self.x, self.y, radius-2, true)
+	gm.draw_set_alpha(1)
+	gm.draw_set_colour(Color.WHITE)
+	for i=1, self.charges do
+		gm.draw_circle(self.x, self.y, radius + 3 - (i * 3), true)
+	end
+	gm.draw_circle(self.x, self.y, radius * 0.33, false)
+	gm.gpu_set_blendmode(0)
+end)
+objIonOrb:onSerialize(function(self, buffer)
+	buffer:write_instance(self.target)
+	buffer:write_float(self.vspeed)
+	buffer:write_byte(self.charges)
+end)
+objIonOrb:onDeserialize(function(self, buffer)
+	self.target = buffer:read_instance()
+	self.vspeed = buffer:read_float()
+	self.charges = buffer:read_byte()
+end)
+
 Callback.add(Callback.TYPE.onKillProc, "SSIonCharge", function(victim, killer)
 	if killer.object_index == gm.constants.oP and killer.class == executioner_id then
 		local charges = 1
@@ -364,9 +434,9 @@ Callback.add(Callback.TYPE.onKillProc, "SSIonCharge", function(victim, killer)
 		if GM.actor_is_boss(victim) then
 			charges = charges * 5
 		end
-		for i=1, charges do
-			GM.actor_skill_add_stock_networked(killer, 1)
-		end
+		local orb = objIonOrb:create(victim.x, victim.y)
+		orb.target = killer
+		orb.charges = charges
 	end
 end)
 
