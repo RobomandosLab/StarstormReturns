@@ -62,6 +62,7 @@ objLaser:onCreate(function(self)
 	data.parent = -4
 	data.charge = 0
 	data.timer = 30
+	data.pulse = 1
 	data.color = Color.from_hex(0x81CADC)
 end)
 
@@ -100,6 +101,11 @@ objLaser:onStep(function(self)
 			end
 			self:screen_shake(1)
 			self:sound_play(sound_laser_hit, ((110 - math.max(55, data.charge))) / 55 * 0.6, 0.9 + math.random() * 0.2)
+			data.pulse = 1.18
+		end
+		
+		if data.pulse > 1 then
+			data.pulse = data.pulse - 0.03
 		end
 		
 		if data.charge % 2 == 0 and data.charge <= 90 then
@@ -138,10 +144,10 @@ objLaser:onDraw(function(self)
 		gm.draw_circle(parent.x, parent.y - offset, width, false)
 	else
 		if data.charge > 10 then
-			local width = (44 - math.max(22, data.charge * 0.4)) * 2
-			local width2 = (44 / 2 - math.max(22 / 2, data.charge * 0.4 / 2)) * 2
-			local width3 = (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 2
-			local width4 = (44 / 3 - math.max(22 / 3, data.charge * 0.4 / 3)) * 2
+			local width = (44 - math.max(22, data.charge * 0.4)) * 2 * data.pulse
+			local width2 = (44 / 2 - math.max(22 / 2, data.charge * 0.4 / 2)) * 2 * data.pulse
+			local width3 = (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 2 * data.pulse
+			local width4 = (44 / 3 - math.max(22 / 3, data.charge * 0.4 / 3)) * 2 * data.pulse
 			
 			gm.draw_set_colour(data.color)
 			gm.draw_set_alpha(0.75)
@@ -158,7 +164,7 @@ objLaser:onDraw(function(self)
 			gm.draw_rectangle(parent.x - width4, 0, parent.x + width4, parent.y - offset, false)
 			gm.draw_set_alpha(1)
 			
-			gm.draw_circle(parent.x, parent.y - offset, width, false)
+			gm.draw_circle(parent.x, parent.y - offset, (44 - math.max(22, data.charge * 0.4)) * 2, false)
 		else
 			local width = 44 * (0.5 + 2 ^ -(data.charge / 10))
 			

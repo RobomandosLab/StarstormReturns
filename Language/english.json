@@ -340,7 +340,9 @@
 	"actor" : {
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest",
-		"Gatekeeper.name" : "Gatekeeper"
+		"Gatekeeper.name" : "Gatekeeper",
+		"Protector.name" : "Protector",
+		"Protector.text" : "Keeper of the Artifact"
 	},
 
 	"interactable" : {
