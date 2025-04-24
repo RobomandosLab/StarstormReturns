@@ -3,7 +3,7 @@ local spark_sprite = gm.constants.sSparks18s--Resources.sprite_load(NAMESPACE, "
 
 local RANGE_BASE = 90
 local RANGE_STACK = 21
-local DAMAGE_COEFFICIENT = 0.45
+local DAMAGE_COEFFICIENT = 0.5
 
 local TRAVEL_TIME = 1 / 10 -- 10 frames
 local COLOR_BRIGHT = Color.from_rgb(188, 17, 255)
@@ -24,6 +24,10 @@ gm.part_type_colour3(partMalice.value, COLOR_BRIGHT, Color.PURPLE, Color.PURPLE)
 
 malice:clear_callbacks()
 malice:onHitProc(function(actor, victim, stack, hit_info)
+	-- prevent proccing more than once per attack, cause it's REALLY powerful and laggy otherwise
+	if hit_info.attack_info.__ssr_maliced then return end
+	hit_info.attack_info.__ssr_maliced = true
+
 	local targets = List.wrap(gm.find_characters_circle(victim.x, victim.y, RANGE_BASE + (RANGE_STACK * stack - 1), true, victim.team, true))
 
 	local maliced_count = 0
@@ -47,6 +51,8 @@ malice:onHitProc(function(actor, victim, stack, hit_info)
 	end
 end)
 
+local __quality = 3
+
 objEfMalice:clear_callbacks()
 objEfMalice:onCreate(function(self)
 	self.damage = 0
@@ -56,6 +62,9 @@ objEfMalice:onCreate(function(self)
 
 	self.fract = 0
 	self.direction = math.random(360)
+
+	-- this is a bit silly but it seemed like a bad idea to read it in the step so lol
+	__quality = Global.__pref_graphics_quality
 
 	self:instance_sync()
 end)
@@ -74,8 +83,9 @@ objEfMalice:onStep(function(self)
 
 	local dx, dy = self.x - self.xprevious, self.y - self.yprevious
 
-	for i=0, 2 do
-		local f = i / 3
+	-- spawn 3 particles per step at max quality, and only 1 at min
+	for i=0, __quality - 1 do
+		local f = i / __quality
 		partMalice:create(self.x - dx * f, self.y - dy * f, 1, Particle.SYSTEM.above)
 	end
 
