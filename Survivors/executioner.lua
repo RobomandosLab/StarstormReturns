@@ -44,6 +44,7 @@ local sprite_drone_idle		= Resources.sprite_load(NAMESPACE, "DronePlayerExecutio
 local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerExecutionerShoot", path.combine(SPRITE_PATH, "droneShoot.png"), 5, 33, 13)
 
 local sprite_ion_sparks		= Resources.sprite_load(NAMESPACE, "ExecutionerIonSparks", path.combine(SPRITE_PATH, "ionSparks.png"), 4, 24, 14)
+local sprite_ion_sparks2	= Resources.sprite_load(NAMESPACE, "ExecutionerIonSparks2s", path.combine(SPRITE_PATH, "ionSparks2.png"), 4, 21, 21)
 local sprite_ion_tracer		= Resources.sprite_load(NAMESPACE, "ExecutionerIonTracer", path.combine(SPRITE_PATH, "ionTracer.png"), 5, 0, 2)
 local sprite_ion_particle	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticle", path.combine(SPRITE_PATH, "ionParticle.png"), 5, 8, 8)
 local sprite_ion_particleS	= Resources.sprite_load(NAMESPACE, "ExecutionerIonParticleS", path.combine(SPRITE_PATH, "ionParticleS.png"), 5, 8, 8)
@@ -680,7 +681,7 @@ stateExecutionerSpecial:onStep(function(actor, data)
 					end
 
 					for i=0, actor:buff_stack_count(buffShadowClone) do
-						local attack_info = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage).attack_info
+						local attack_info = actor:fire_explosion(ax, ay, 160, 32 + data.aoe_height, damage, nil, sprite_ion_sparks2).attack_info
 						attack_info.climb = i * 8 * 1.35
 						attack_info.y = actor.y
 						attack_info.execution = 1
