@@ -40,6 +40,11 @@ local sprite_shoot5PreAir	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5P
 local sprite_shoot5PreSlide	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5PreSlide", path.combine(SPRITE_PATH, "shoot5PreSlide.png"), 5, 39, 63)
 local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 18, 70, 82)
 
+local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot4B", path.combine(SPRITE_PATH, "shoot4b.png"), 9, 36, 33)
+local sprite_shoot5b		= Resources.sprite_load(NAMESPACE, "ExecutionerShoot5B", path.combine(SPRITE_PATH, "shoot5b.png"), 9, 36, 33)
+local sprite_axe_projectile	= Resources.sprite_load(NAMESPACE, "ExecutionerAxeProjectile", path.combine(SPRITE_PATH, "axeProjectile.png"), 4, 56, 51)
+local sprite_axe_projectileS= Resources.sprite_load(NAMESPACE, "ExecutionerAxeProjectileS", path.combine(SPRITE_PATH, "axeProjectileS.png"), 4, 56, 51)
+
 local sprite_drone_idle		= Resources.sprite_load(NAMESPACE, "DronePlayerExecutionerIdle", path.combine(SPRITE_PATH, "droneIdle.png"), 5, 11, 14)
 local sprite_drone_shoot	= Resources.sprite_load(NAMESPACE, "DronePlayerExecutionerShoot", path.combine(SPRITE_PATH, "droneShoot.png"), 5, 33, 13)
 
@@ -58,6 +63,8 @@ local sound_shoot3			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.c
 local sound_shoot4_1		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_1", path.combine(SOUND_PATH, "skill4_1.ogg"))
 local sound_shoot4_2		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_2", path.combine(SOUND_PATH, "skill4_2.ogg"))
 local sound_shoot4_3		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4_3", path.combine(SOUND_PATH, "skill4_3.ogg"))
+local sound_shoot4b_1		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4B_1", path.combine(SOUND_PATH, "skill4b_1.ogg"))
+local sound_shoot4b_2		= Resources.sfx_load(NAMESPACE, "ExecutionerShoot4B_2", path.combine(SOUND_PATH, "skill4b_2.ogg"))
 
 -- particles.
 -- used for ion burst tracer
@@ -714,6 +721,243 @@ Callback.add(Callback.TYPE.onAttackHandleEnd, "SSExecutionCDR", function(attack_
 	if attack_info.execution == 1 then
 		local kill_count = attack_info.kill_number
 		GM.actor_skill_reset_cooldowns(attack_info.parent, -60 * kill_count, true, false, true)
+	end
+end)
+
+local executionerSpecial2 = Skill.new(NAMESPACE, "executionerV2")
+executionerSpecial2.sprite = sprite_skills
+executionerSpecial2.subimage = 7
+executionerSpecial2.cooldown = 8 * 60
+executionerSpecial2.damage = 1.5
+executionerSpecial2.override_strafe_direction = true
+executionerSpecial2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+executioner:add_special(executionerSpecial2)
+
+local executionerSpecial2Scepter = Skill.new(NAMESPACE, "executionerV2Boosted")
+executionerSpecial2Scepter.sprite = sprite_skills
+executionerSpecial2Scepter.subimage = 8
+executionerSpecial2Scepter.cooldown = 8 * 60
+executionerSpecial2Scepter.damage = 1.5
+executionerSpecial2Scepter.override_strafe_direction = true
+executionerSpecial2Scepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+executionerSpecial2:set_skill_upgrade(executionerSpecial2Scepter)
+
+local stateExecutionerSpecial2 = State.new(NAMESPACE, "executionerSpecial2")
+
+local objExecutionerAxe = Object.new(NAMESPACE, "ExecutionerAxe")
+objExecutionerAxe.obj_sprite = sprite_axe_projectile
+objExecutionerAxe.obj_depth = -500
+
+local objEfAxeAfterImage = Object.new(NAMESPACE, "EfAxeAfterImage")
+
+executionerSpecial2:clear_callbacks()
+executionerSpecial2:onActivate(function(actor)
+	actor:enter_state(stateExecutionerSpecial2)
+end)
+executionerSpecial2Scepter:clear_callbacks()
+executionerSpecial2Scepter:onActivate(function(actor)
+	actor:enter_state(stateExecutionerSpecial2)
+end)
+
+stateExecutionerSpecial2:clear_callbacks()
+stateExecutionerSpecial2:onEnter(function(actor, data)
+	data.fired = 0
+	data.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+	actor.image_index = 0
+	actor:sound_play(sound_shoot4b_1, 1, 1)
+
+	if data.scepter > 0 then
+		actor.sprite_index = sprite_shoot5b
+	else
+		actor.sprite_index = sprite_shoot4b
+	end
+end)
+stateExecutionerSpecial2:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(actor.sprite_index, 0.2)
+
+	if data.fired == 0 and actor.image_index >= 4 then
+		data.fired = 1
+
+		local damage = actor:skill_get_damage(executionerSpecial2)
+		if data.scepter > 0 then
+			damage = actor:skill_get_damage(executionerSpecial2Scepter)
+		end
+
+		for i=0, actor:buff_stack_count(buffShadowClone) do
+			local projectile = objExecutionerAxe:create(actor.x + 30 * actor.image_xscale, actor.y - 30)
+			projectile.parent = actor
+			projectile.team = actor.team
+			projectile.direction = 90 - actor.image_xscale * 90
+			projectile.image_xscale = actor.image_xscale
+
+			projectile.tX = actor.x + 270 * actor.image_xscale
+			projectile.tY = actor.y
+
+			if data.scepter > 0 then
+				projectile.sprite_index = sprite_axe_projectileS
+
+				projectile = objExecutionerAxe:create(actor.x + 30 * actor.image_xscale, actor.y - 30)
+				projectile.parent = actor
+				projectile.team = actor.team
+				projectile.direction = 90 - actor.image_xscale * 90
+				projectile.image_xscale = actor.image_xscale
+				projectile.image_yscale = -1
+				projectile.sprite_index = sprite_axe_projectileS
+
+				projectile.tX = actor.x + 270 * actor.image_xscale
+				projectile.tY = actor.y
+			end
+		end
+
+		actor:screen_shake(5)
+		actor:sound_play(sound_shoot4b_2, 1, 1)
+		actor:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 0.9)
+		actor:sound_play(gm.constants.wSawmerang, 0.6, 0.6)
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+objExecutionerAxe:clear_callbacks()
+objExecutionerAxe:onCreate(function(self)
+	self.parent = -4
+	self.team = 1
+	self.image_speed = 0.75
+
+	self.tX = self.x
+	self.tY = self.y
+	self.hitstop = 0
+
+	self.time = 0.0
+
+	self:get_data().already_hit = {}
+end)
+objExecutionerAxe:onStep(function(self)
+	if not Instance.exists(self.parent) then
+		self:destroy()
+		return
+	end
+
+	local attack_rate = math.ceil(10 / self.parent.attack_speed)
+
+	if self.hitstop == 0 then
+		local actors = self:get_collisions(gm.constants.pActorCollisionBase)
+		local did_hit = false
+		local already_hit = self:get_data().already_hit
+		for _, hit in ipairs(actors) do
+			if self:attack_collision_canhit(hit) then
+				did_hit = true
+				if gm._mod_net_isHost() then
+					local dmg = 3
+					local proc = not already_hit[hit.id] -- only proc once per hit enemy
+
+					local actor = GM.attack_collision_resolve(hit)
+					if actor:buff_stack_count(buffFear) > 0 then
+						dmg = dmg * 2
+					end
+
+					local attack_info = self.parent:fire_direct(hit, dmg, self.direction, hit.x, hit.y, sprite_ion_sparks2, proc).attack_info
+					attack_info.execution = 1
+					attack_info.stun = 0.5
+
+					-- always direct knockback inwards -- effectively sucks victims into the grinder while hitting them
+					if hit.x > self.x then
+						attack_info.knockback_direction = -1
+					else
+						attack_info.knockback_direction = 1
+					end
+
+					already_hit[hit.id] = true
+				end
+
+				self:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 0.8 + math.random() * 0.2)
+				self:sound_play(gm.constants.wCrit, 0.8, 0.4 + math.random() * 0.2)
+				self:screen_shake(5)
+			end
+		end
+
+		if did_hit then
+			self.hitstop = attack_rate
+		end
+	end
+
+	if Global._current_frame % 3 == 0 then
+		local ef = gm.instance_create(self.x, self.y, gm.constants.oEfTrail)
+		ef.sprite_index = self.sprite_index
+		ef.image_index = self.image_index
+		ef.image_xscale = self.image_xscale
+		ef.image_blend = ION_TRACER_COLOR
+		ef.rate = 0.08
+		ef.depth = self.depth + 1
+	end
+
+	if math.random() < 0.5 then
+		local particle = ionParticle
+		if self.sprite_index == sprite_axe_projectileS then
+			particle = ionParticleS
+		end
+		particle:create(self.x + math.random(-48, 48), self.y + math.random(-48, 48), 1, Particle.SYSTEM.below)
+	end
+
+	if self.hitstop > 0 then
+		-- handle hitstop
+		self.hitstop = self.hitstop - 1
+
+		if self.hitstop == 0 then
+			-- jump forward a bit to compensate for hitstop
+			-- 0.75x multiplier effectively slows it by 25% while hitting stuff
+			self.time = self.time + 0.02 * attack_rate * 0.75
+		end
+	else
+		-- move forward normally
+		self.time = self.time + 0.02
+	end
+
+	local yscale = self.image_yscale
+
+	if self.time < 1 then
+		-- first half of lifetime -- arcing towards the sweetspot
+		local x1, y1 = self.xstart, self.ystart -- start point
+		local x4, y4 = self.tX, self.tY -- end point
+
+		local lx = (x1 + x4) / 2
+
+		-- 2 points inbetween that form the actual curve
+		local x2, y2 = lx, y1 - 160 * yscale
+		local x3, y3 = x4, y1 - 80 * yscale
+
+		local b = gm.Bezier_Point(self.time, x1, y1, x2, y2, x3, y3, x4, y4)
+		self.x = b[1]
+		self.y = b[2]
+	else
+		-- second half of lifetime -- returning to owner
+		local x1, y1 = self.tX, self.tY -- start point
+		local x4, y4 = self.parent.x, self.parent.y -- end point
+
+		local lx = (x1 + x4) / 2
+
+		-- 2 points inbetween that form the actual curve
+		local x2, y2 = x1, y1 + 80 * yscale
+		local x3, y3 = lx, y1 + 160 * yscale
+
+		local b = gm.Bezier_Point(self.time - 1, x1, y1, x2, y2, x3, y3, x4, y4)
+		self.x = b[1]
+		self.y = b[2]
+
+		if self.time > 2 or gm.point_distance(self.parent.x, self.parent.y, self.x, self.y) < 40 then
+			self:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 1.3)
+			self:destroy()
+			return
+		end
+	end
+
+	-- make projectile vibrate subtly during hitstop
+	if self.hitstop > 0 then
+		self.x = self.x + math.random(-4, 4)
+		self.y = self.y + math.random(-4, 4)
 	end
 end)
 
