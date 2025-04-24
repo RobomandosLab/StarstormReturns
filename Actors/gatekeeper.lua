@@ -8,7 +8,7 @@ local sprite_palette		= Resources.sprite_load(NAMESPACE, "GatekeeperPalette",		p
 local sprite_spawn			= Resources.sprite_load(NAMESPACE, "GatekeeperSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 22, 72, 106)
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle",		path.combine(SPRITE_PATH, "idle.png"), 1, 58, 90)
 local sprite_idle2			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle2",		path.combine(SPRITE_PATH, "idle2.png"), 1, 58, 90)
-local sprite_walk			= Resources.sprite_load(NAMESPACE, "GatekeeperWalk",		path.combine(SPRITE_PATH, "walk.png"), 6, 64, 91)
+local sprite_walk			= Resources.sprite_load(NAMESPACE, "GatekeeperWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 57, 90)
 local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 7, 60, 91)
 local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1b",		path.combine(SPRITE_PATH, "shoot1b.png"), 17, 60, 91)
 local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot2a",		path.combine(SPRITE_PATH, "shoot2a.png"), 5, 60, 91)
@@ -35,7 +35,15 @@ laserPar:set_sprite(sprite_laser_par, true, true, false)
 laserPar:set_alpha2(1, 0)
 laserPar:set_life(60, 60)
 laserPar:set_alpha1(0.9)
-laserPar:set_speed(9, 11, -8 / 30, 0)
+laserPar:set_speed(8, 9, -8 / 30, 0)
+
+local laserTrail = Particle.new(NAMESPACE, "GatekeeperLaserTrail")
+laserTrail:set_sprite(sprite_laser_par, true, true, false)
+laserTrail:set_alpha2(1, 0)
+laserTrail:set_life(60, 60)
+laserTrail:set_alpha1(0.9)
+laserTrail:set_speed(0, 0.3, 0.02, 0)
+laserTrail:set_direction(70, 110, 0, -1)
 
 local fortified = Buff.new(NAMESPACE, "GatekeeperFortified")
 fortified.show_icon = false
@@ -115,6 +123,9 @@ objLaser:onStep(function(self)
 				laserPar:set_direction(180, 180, 0, 0)
 			end
 			laserPar:create(self.x, self.y - math.random(1000), 1, Particle.SYSTEM.middle)
+		end
+		if data.charge % 2 == 0 and math.random(1, data.charge) / 2 <= 11 then
+			laserTrail:create(self.x, self.y - 8, 1, Particle.SYSTEM.middle)
 		end
 		
 		if data.charge == 1 then
