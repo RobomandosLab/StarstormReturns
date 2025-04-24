@@ -22,7 +22,7 @@ local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1
 local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
 local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 12, 28)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
-local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 2, 18, 10)
+local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 18, 10)
 local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 18, 60, 32)
 local sprite_shoot5			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot5", path.combine(SPRITE_PATH, "shoot5.png"), 18, 60, 32)
 local sprite_sparks			= Resources.sprite_load(NAMESPACE, "NemesisMercenarySparks", path.combine(SPRITE_PATH, "slash.png"), 5, 52, 50)
@@ -76,6 +76,30 @@ nemmerc.sprite_title = sprite_walk -- also used by skin system for walk sprite
 nemmerc.sprite_credits = sprite_credits
 nemmerc:clear_callbacks()
 
+nemmerc:onInit(function(actor)
+	actor:get_data().slide = 0
+	actor:get_data().slideDir = 0
+	actor:get_data().slidePrep = 0
+end)
+
+nemmerc:onStep(function(actor)
+	if actor:get_data().slide > 0 then
+		actor:get_data().slide = actor:get_data().slide - 1
+		actor.pHspeed = actor:get_data().slide / 50 * 2 * actor.pHmax * actor:get_data().slideDir + actor.pHmax * actor:get_data().slideDir
+		actor.moveLeft = 0
+		actor.moveRight = 0
+		actor.sprite_idle = sprite_idle2
+		actor.sprite_jump = sprite_idle2
+		actor.sprite_jump_peak = sprite_idle2
+		actor.sprite_fall = sprite_idle2
+	else
+		actor.sprite_idle = sprite_idle
+		actor.sprite_jump = sprite_jump
+		actor.sprite_jump_peak = sprite_jump_peak
+		actor.sprite_fall = sprite_fall
+	end
+end)
+
 local stab = nemmerc:get_primary()
 local trigger = nemmerc:get_secondary()
 local slide = nemmerc:get_utility()
@@ -105,8 +129,12 @@ stateStab:onEnter(function(actor, data)
 end)
 
 stateStab:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot1a, 0.2)
+	if actor:get_data().slide > 0 then
+		actor:actor_animation_set(sprite_shoot1b, 0.2)
+	else
+		actor:skill_util_fix_hspeed()
+		actor:actor_animation_set(sprite_shoot1a, 0.2)
+	end
 	
 	if actor.image_index >= 3 and data.fired == 0 then
 		data.fired = 1
@@ -156,8 +184,12 @@ stateTrigger:onEnter(function(actor, data)
 end)
 
 stateTrigger:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot2a, 0.2)
+	if actor:get_data().slide > 0 then
+		actor:actor_animation_set(sprite_shoot2b, 0.2)
+	else
+		actor:skill_util_fix_hspeed()
+		actor:actor_animation_set(sprite_shoot2a, 0.2)
+	end
 	
 	if data.fired == 0 then
 		data.fired = 1
@@ -170,7 +202,7 @@ stateTrigger:onStep(function(actor, data)
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack = actor:fire_bullet(actor.x, actor.y, 200, actor:skill_util_facing_direction(), damage, 0.4, gm.constants.sSparks4, Attack_Info.TRACER.enforcer1)
-				attack.attack_info:set_stun(5)
+				attack.attack_info:set_stun(2)
 				attack.attack_info.climb = i * 8
 			end
 		end
@@ -197,6 +229,63 @@ slide.is_utility = true
 slide.override_strafe_direction = true
 slide.ignore_aim_direction = true
 slide:clear_callbacks()
+
+local stateSlide = State.new(NAMESPACE, "blindingSlide")
+stateSlide:clear_callbacks()
+
+slide:onActivate(function(actor, skill)
+	actor:enter_state(stateSlide)
+end)
+
+stateSlide:onEnter(function(actor, data)
+	actor.image_index = 0
+	actor:get_data().slidePrep = 1
+	data.fired = 0
+	data.counter = 0
+	actor:sound_play(gm.constants.wMercenary_Parry_Release, 1, 0.9 + math.random() * 0.2)
+end)
+
+stateSlide:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot3, 0.3)
+	actor:skill_util_nudge_forward(1 * -actor.image_xscale)
+	
+	if data.fired == 0 then
+		if actor.invincible < 5 then
+			actor.invincible = 5
+		end
+	end
+	
+	if actor.image_index >= 6 and data.fired == 0 then
+		data.counter = 6
+		data.fired = 1
+		actor:sound_play(gm.constants.wCommandoSlide, 1, 0.9 + math.random() * 0.2)
+		actor:get_data().slide = 50
+		actor:get_data().slideDir = actor.image_xscale
+	end
+	
+	if data.counter > 0 and data.fired == 1 then
+		data.counter = data.counter - 1
+	elseif data.counter == 1 and data.fired == 1 then
+		actor:get_data().slidePrep = 0
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+stateSlide:onExit(function(actor, data)
+	actor:get_data().slidePrep = 0
+end)
+
+Callback.add(Callback.TYPE.onDamageBlocked, "SSRNemmercSlideReloadShotgun", function(actor, attacker, hit_info)
+	if actor.object_index == gm.constants.oP and actor.class == nemmerc_id then
+		if actor:get_data().slidePrep == 1 then
+			actor:refresh_skill(Skill.SLOT.secondary)
+			actor:get_data().slidePrep = 0
+			actor:sound_play(sound_shoot2b, 0.6, 0.9 + math.random() * 0.2)
+		end
+	end
+end)
 
 -- devitalize
 devit:set_skill_icon(sprite_skills, 3)
@@ -231,9 +320,9 @@ stateDevit:onStep(function(actor, data)
 	if actor.image_index >= 5 then
 		local target = nil
 		local enemies = List.new()
-		actor:collision_rectangle_list(actor.x, actor.y - 200, actor.x + 200 * actor.image_xscale, actor.y + 200, gm.constants.pActor, false, true, enemies, false)
+		actor:collision_rectangle_list(actor.x - 25 * actor.image_xscale, actor.y - 250, actor.x + 250 * actor.image_xscale, actor.y + 250, gm.constants.pActor, false, true, enemies, false)
 		for _, enemy in ipairs(enemies) do
-			if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 200 then
+			if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 250 then
 				if target == nil then
 					target = enemy
 				else
@@ -247,9 +336,9 @@ stateDevit:onStep(function(actor, data)
 		
 		if target == nil then
 			local enemies = List.new()
-			actor:collision_rectangle_list(actor.x, actor.y - 200, actor.x + 200 * actor.image_xscale, actor.y + 200, gm.constants.pActorCollisionBase, false, true, enemies, true)
+			actor:collision_rectangle_list(actor.x - 25 * actor.image_xscale, actor.y - 250, actor.x + 250 * actor.image_xscale, actor.y + 250, gm.constants.pActorCollisionBase, false, true, enemies, true)
 			for _, enemy in ipairs(enemies) do
-				if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 200 then
+				if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 250 then
 					if target == nil then
 						target = enemy
 					end
