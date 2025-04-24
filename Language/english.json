@@ -86,23 +86,23 @@
 		},
 		"nemesisMercenaryZ": {
 			"name": "Attachment Stab",
-			"description": "Stab with your shotgun infront of you, damaging up to <y>3 enemies</c> for <y>130% damage</c>."
+			"description": "Stab up to <y>3 enemies</c> with your shotgun, dealing <y>130% damage</c>."
 		},
 		"nemesisMercenaryX": {
 			"name": "Quick Trigger",
-			"description": "Fire a shotgun forward dealing <y>500% damage</c>, <y>stunning</c> them."
+			"description": "Fire your shotgun, <y>stunning</c> and hitting enemies nearby for <y>600% damage</c>."
 		},
 		"nemesisMercenaryC": {
 			"name": "Blinding Slide",
-			"description": "Quickly slide forwards. <b>You can attack while sliding</c>."
+			"description": "Quickly slide forwards. <b>Getting hit at the start reloads your shotgun.</c> \n<b>You can attack while sliding</c>."
 		},
 		"nemesisMercenaryV": {
 			"name": "Devitalize",
-			"description": "Target the weakest enemy, attacking them for <y>850% damage</c>, dealing more damage to stunned enemies.</c> <b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>30% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
-			"description": "Target the weakest enemy, attacking them for <y>1100% damage</c>, dealing more damage to stunned enemies.</c> <b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>30% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
