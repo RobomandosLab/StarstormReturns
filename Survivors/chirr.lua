@@ -1,3 +1,4 @@
+--[[
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Chirr")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Chirr")
 
@@ -712,3 +713,4 @@ stateChirrTether:onExit(function( actor, data )
 		end
 	end
 end)
+]]
