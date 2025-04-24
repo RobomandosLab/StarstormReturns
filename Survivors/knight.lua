@@ -337,7 +337,7 @@ stateKnightSecondary:onEnter(function( actor, data )
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
-	GM.apply_buff(actor, knightArmorBuff, 1, 1)
+	actor:buff_apply(knightArmorBuff, 1, 1)
 	actor:freeze_active_skill(Skill.SLOT.secondary)
 
 	if knightShieldBash.value ~= GM._mod_ActorSkillSlot_getActiveSkill(actor:actor_get_skill_slot(Skill.SLOT.primary)).skill_id then
@@ -385,7 +385,7 @@ end)
 
 stateKnightSecondary:onExit(function( actor, data )
 	actor:sound_play(sound_shoot2, .5, 0.8)
-	GM.remove_buff(actor, knightArmorBuff, 1)
+	actor:buff_remove(knightArmorBuff, 1)
 
 	blocking = 0
 	actor.deflect = 0
@@ -560,19 +560,19 @@ stateKnightSpecial:onStep(function( actor, data )
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y, 300, 300, damage, sprite_sparks3, sparks, true)
 			end
-
-			local allies = List.new() -- list to hold our friends
-
-			actor:collision_circle_list(actor.x, actor.y, 320, gm.constants.pActor, false, false, allies, false) -- this grabs all the actors in a radius
-
-			for _, ally in ipairs(allies) do
-				if ally.team == actor.team then -- checking to see who is actually our friend
-					GM.apply_buff(ally, knightInvigorateBuff, 4 * 60, 1)
-				end
-			end
-
-			allies:destroy()
 		end
+
+		local allies = List.new() -- list to hold our friends
+
+		actor:collision_circle_list(actor.x, actor.y, 320, gm.constants.pActor, false, false, allies, false) -- this grabs all the actors in a radius
+
+		for _, ally in ipairs(allies) do
+			if ally.team == actor.team then -- checking to see who is actually our friend
+				ally:buff_apply(knightInvigorateBuff, 4 * 60, 1)
+			end
+		end
+
+		allies:destroy()
 	end
 
 	actor:set_immune(3)
