@@ -371,7 +371,7 @@ stateDevit:onStep(function(actor, data)
 			data.fired = 1
 			actor:sound_play(sound_shoot4, 1, 0.9 + math.random() * 0.2)
 			actor:screen_shake(3)
-			if actor:is_authority() then
+			if gm._mod_net_isHost() then
 				local damage = actor:skill_get_damage(devit)
 				local sparks = sprite_sparks
 				if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
@@ -400,8 +400,46 @@ stateDevit:onGetInterruptPriority(function(actor, data)
 	end
 end)
 
+local devitalizeSync = Packet.new()
+devitalizeSync:onReceived(function(msg)
+	local x = msg:read_ushort()
+	local y = msg:read_ushort()
+	local parent = msg:read_instance()
+	local target = msg:read_instance()
+	local damage = msg:read_float()
+
+	if not parent:exists() then return end
+	
+	if target.stunned == true and Instance.exists(parent) then
+		particleBlood:set_direction(0, 360, 0, 0)
+		particleBlood:create(x, y, 25, Particle.SYSTEM.middle)
+		parent:screen_shake(2)
+	end
+	if target.hp - damage <= 0 and Instance.exists(parent) then
+		parent:refresh_skill(Skill.SLOT.special)
+	end
+end)
+
+local function sync_devit(x, y, parent, target, damage)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_devit called on client!")
+		return
+	end
+
+	local msg = devitalizeSync:message_begin()
+	msg:write_ushort(x)
+	msg:write_ushort(y)
+	msg:write_instance(parent)
+	msg:write_instance(target)
+	msg:write_float(damage)
+	msg:send_to_all()
+end
+
 Callback.add(Callback.TYPE.onAttackHit, "SSRNemmercDevitalize", function(hit_info)
 	if hit_info.attack_info.__ssr_nemmerc_devitalize == 1 then
+		if gm._mod_net_isOnline() then
+			sync_devit(hit_info.x, hit_info.y, hit_info.parent, hit_info.target, hit_info.damage)
+		end
 		if hit_info.target.stunned == true and Instance.exists(hit_info.parent) then
 			particleBlood:set_direction(0, 360, 0, 0)
 			particleBlood:create(hit_info.x, hit_info.y, 25, Particle.SYSTEM.middle)
