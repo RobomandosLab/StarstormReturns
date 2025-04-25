@@ -201,7 +201,7 @@ stateTrigger:onStep(function(actor, data)
 			
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y, 200, actor:skill_util_facing_direction(), damage, 0.4, gm.constants.sSparks4, Attack_Info.TRACER.enforcer1)
+				local attack = actor:fire_bullet(actor.x, actor.y, 200, actor:skill_util_facing_direction(), damage, 1, gm.constants.sSparks4, Attack_Info.TRACER.enforcer1)
 				attack.attack_info:set_stun(2)
 				attack.attack_info.climb = i * 8
 			end
@@ -246,18 +246,20 @@ stateSlide:onEnter(function(actor, data)
 end)
 
 stateSlide:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot3, 0.3)
-	actor:skill_util_nudge_forward(1 * -actor.image_xscale)
+	actor:actor_animation_set(sprite_shoot3, 0.3, false)
+	if actor:get_data().slide < 25 then
+		actor:skill_util_fix_hspeed()
+		actor:skill_util_nudge_forward(1 * -actor.image_xscale)
+	end
 	
 	if data.fired == 0 then
-		if actor.invincible < 5 then
-			actor.invincible = 5
+		if actor.invincible < 10 then
+			actor.invincible = 10
 		end
 	end
 	
 	if actor.image_index >= 6 and data.fired == 0 then
-		data.counter = 6
+		data.counter = 11
 		data.fired = 1
 		actor:sound_play(gm.constants.wCommandoSlide, 1, 0.9 + math.random() * 0.2)
 		actor:get_data().slide = 50
@@ -320,9 +322,9 @@ stateDevit:onStep(function(actor, data)
 	if actor.image_index >= 5 then
 		local target = nil
 		local enemies = List.new()
-		actor:collision_rectangle_list(actor.x - 25 * actor.image_xscale, actor.y - 250, actor.x + 250 * actor.image_xscale, actor.y + 250, gm.constants.pActor, false, true, enemies, false)
+		actor:collision_rectangle_list(actor.x - 25 * actor.image_xscale, actor.y - 500, actor.x + 500 * actor.image_xscale, actor.y + 500, gm.constants.pActor, false, true, enemies, false)
 		for _, enemy in ipairs(enemies) do
-			if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 250 then
+			if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 500 and enemy.stunned then
 				if target == nil then
 					target = enemy
 				else
@@ -333,6 +335,23 @@ stateDevit:onStep(function(actor, data)
 			end
 		end
 		enemies:destroy()
+		
+		if target == nil then
+			local enemies = List.new()
+			actor:collision_rectangle_list(actor.x - 25 * actor.image_xscale, actor.y - 250, actor.x + 250 * actor.image_xscale, actor.y + 250, gm.constants.pActor, false, true, enemies, true)
+			for _, enemy in ipairs(enemies) do
+				if enemy.team ~= actor.team and gm.point_distance(actor.x, actor.y, enemy.x, enemy.y) < 250 then
+					if target == nil then
+						target = enemy
+					else
+						if enemy.hp < target.hp then
+							target = enemy
+						end
+					end
+				end
+			end
+			enemies:destroy()
+		end
 		
 		if target == nil then
 			local enemies = List.new()
