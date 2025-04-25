@@ -139,6 +139,7 @@ stateStab:onStep(function(actor, data)
 	if actor.image_index >= 3 and data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(gm.constants.wMercenaryShoot1_2, 1, 0.9 + math.random() * 0.2)
+		actor:skill_util_nudge_forward(4 * actor.image_xscale)
 		
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(stab)
@@ -291,7 +292,7 @@ end)
 
 -- devitalize
 devit:set_skill_icon(sprite_skills, 3)
-devit.cooldown = 6 * 60
+devit.cooldown = 8 * 60
 devit.damage = 8.5
 devit.require_key_press = false
 devit.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
@@ -404,9 +405,9 @@ Callback.add(Callback.TYPE.onAttackHit, "SSRNemmercDevitalize", function(hit_inf
 		if hit_info.target.stunned == true and Instance.exists(hit_info.parent) then
 			particleBlood:set_direction(0, 360, 0, 0)
 			particleBlood:create(hit_info.x, hit_info.y, 25, Particle.SYSTEM.middle)
-			gm.draw_damage_networked(hit_info.x, hit_info.y - 16, hit_info.damage * 0.3, hit_info.critical, Color.from_hex(0xFC4E45), hit_info.parent.team, 0)
+			gm.draw_damage_networked(hit_info.x, hit_info.y - 16, hit_info.damage * 0.5, hit_info.critical, Color.from_hex(0xFC4E45), hit_info.parent.team, 0)
 			hit_info.parent:screen_shake(2)
-			hit_info.damage = hit_info.damage * 1.3
+			hit_info.damage = hit_info.damage * 1.5
 		end
 		if hit_info.target.hp - hit_info.damage <= 0 and Instance.exists(hit_info.parent) then
 			hit_info.parent:refresh_skill(Skill.SLOT.special)

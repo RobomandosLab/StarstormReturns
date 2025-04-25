@@ -98,11 +98,11 @@
 		},
 		"nemesisMercenaryV": {
 			"name": "Devitalize",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>30% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>30% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
