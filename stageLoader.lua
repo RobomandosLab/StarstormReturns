@@ -77,7 +77,7 @@ basin_stage:set_log_icon(EnvironmentWhistlingBasin)
 
 --Main Menu
 basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
---[[
+
 --- TORRID OUTLANDS ---
 Resources.sprite_load(NAMESPACE, "Tile16Outlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Tile16Outlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "MoonOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "MoonOutlands.png"), 1, 0, 0)
@@ -118,5 +118,3 @@ outlands_stage:add_interactable({
     "droneRecycler"
 })
 
-outlands_stage:set_log_icon(EnvPlaceholder)
-]]
