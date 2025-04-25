@@ -88,7 +88,7 @@ Resources.sprite_load(NAMESPACE, "Clouds1TorridOutlands", path.combine(PATH.."/S
 Resources.sprite_load(NAMESPACE, "CanyonsBack1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
 
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
-outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Music", "musicTorridOutlands.ogg"))
+outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
 outlands_stage.token_name = "Torrid Outlands"
 outlands_stage.token_subname = "Silent Sunburn" 
 outlands_stage:set_index(3)
