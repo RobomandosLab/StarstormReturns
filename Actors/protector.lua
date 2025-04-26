@@ -520,3 +520,24 @@ stateProtectorSecondaryB:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot2b, 0.15)
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+local objArtifactSpawn = Object.new(NAMESPACE, "artifactSpawn")
+
+local objProtectorSpawn = Object.new(NAMESPACE, "protectorSpawn")
+objProtectorSpawn:clear_callbacks()
+
+objProtectorSpawn:onStep(function(self)
+	local spawn = true
+	for _, button in ipairs(Instance.find_all(gm.constants.oArtifactButton)) do
+		if button.activated == 0 then
+			spawn = false
+			break
+		end
+	end
+	
+	if spawn then
+		local inst = Instance.find(objArtifactSpawn) 
+		protector:create(inst.x, inst.y)
+		self:destroy()
+	end
+end)
