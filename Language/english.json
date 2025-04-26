@@ -321,16 +321,19 @@
 	
 	"artifact" : {
 		"multitude" : {
+			"pickupName" : "Artifact of Multitude",
 			"name" : "Multitude",
 			"description": "Enemies come in hordes.",
 			"approaching": "A horde of enemies is approaching.",
 			"arriving": "Prepare yourself...",
 		},
 		"displacement" : {
+			"pickupName" : "Artifact of Displacement",
 			"name" : "Displacement",
 			"description": "Stages are shuffled.",
 		},
 		"gathering" : {
+			"pickupName" : "Artifact of Gathering",
 			"name" : "Gathering",
 			"description": "Gold drops are doubled but they must be picked up.",
 		}

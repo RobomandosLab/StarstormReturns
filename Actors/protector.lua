@@ -114,6 +114,10 @@ objLaser:onStep(function(self)
 			self:screen_shake(5)
 		end
 	end
+	
+	if Instance.exists(parent) and parent.image_index >= 5 then
+		parent.image_index = 3
+	end
 end)
 
 objLaser:onDraw(function(self)
@@ -345,35 +349,66 @@ stateProtectorPrimaryA:onStep(function(actor, data)
 			end
 		end
 	end
- 	
-	if actor:get_data().laser and actor:get_data().laser2 and actor:get_data().laser3 then
-		if Instance.exists(actor:get_data().laser) or Instance.exists(actor:get_data().laser2) or Instance.exists(actor:get_data().laser3) then
-			if actor.image_index >= 5 then
-				actor.image_index = 3
-			end
-		end
-	end
 	
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+local targetSync = Packet.new()
+targetSync:onReceived(function(msg)
+	local target = msg:read_instance()
+	local actor = msg:read_instance()
+	
+	if not Instance.exists(target) then return end
+	
+	actor.actor_state_current_data_table.targetvalue = target.value
+end)
+
+local function sync_target(target, actor)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_target called on client!")
+		return
+	end
+
+	local msg = targetSync:message_begin()
+	msg:write_instance(target)
+	msg:write_instance(actor)
+	msg:send_to_all()
+end
 
 stateProtectorPrimaryB:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.trx = nil
 	data.try = nil
 	data.fired = 0
+	
+	if gm._mod_net_isHost() and gm._mod_net_isOnline() then
+		sync_target(actor.target.parent, actor)
+	end
+	if actor.target and Instance.exists(actor.target) then
+		if actor.target.parent and Instance.exists(actor.target.parent) then
+			data.targetvalue = actor.target.parent.value
+		end
+	end
 end)
 
 stateProtectorPrimaryB:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1b, 0.16)
 	
-	local target = nil
-	if actor.target and Instance.exists(actor.target) then
-		if actor.target.parent and Instance.exists(actor.target.parent) then
-			target = actor.target.parent
+	if gm._mod_net_isHost() then
+		if actor.target and Instance.exists(actor.target) then
+			if actor.target.parent and Instance.exists(actor.target.parent) then
+				if data.targetvalue ~= actor.target.parent.value then
+					data.targetvalue = actor.target.parent.value
+					if gm._mod_net_isOnline() then
+						sync_target(actor.target.parent.value, actor)
+					end
+				end
+			end
 		end
 	end
+	
+	local target = Instance.wrap(data.targetvalue)
 	
 	if actor.image_index >= 13 and data.fired == 0 then
 		data.fired = 1
@@ -390,7 +425,7 @@ stateProtectorPrimaryB:onStep(function(actor, data)
 			
 			local missile = missileType:create(xx, yy)
 			missile.parent = actor
-			missile.target = actor.target.parent
+			missile.target = target
 			missile.targetx = data.trx
 			missile.targety = data.try
 			missile.team = actor.team
@@ -402,7 +437,7 @@ stateProtectorPrimaryB:onStep(function(actor, data)
 			
 			local missile = missileType:create(xx, yy)
 			missile.parent = actor
-			missile.target = actor.target.parent
+			missile.target = target
 			missile.targetx = x2
 			missile.targety = y2
 			missile.team = actor.team
@@ -424,7 +459,7 @@ stateProtectorPrimaryB:onStep(function(actor, data)
 			
 			local missile = missileType:create(xx, yy)
 			missile.parent = actor
-			missile.target = actor.target.parent
+			missile.target = target
 			missile.targetx = data.trx
 			missile.targety = data.try
 			missile.team = actor.team
@@ -436,7 +471,7 @@ stateProtectorPrimaryB:onStep(function(actor, data)
 			
 			local missile = missileType:create(xx, yy)
 			missile.parent = actor
-			missile.target = actor.target.parent
+			missile.target = target
 			missile.targetx = x2
 			missile.targety = y2
 			missile.team = actor.team

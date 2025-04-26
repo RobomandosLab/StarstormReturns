@@ -101,7 +101,7 @@ objLaser:onStep(function(self)
 		end
 		
 		if data.charge % 6 == 0 then
-			if parent:exists() then
+			if Instance.exists(parent) then
 				local attack = parent:fire_explosion_local(self.x, self.y - 500, (44 - math.max(22, data.charge * 0.4)) * 4, 1000, 1 * data.charge * 0.005)
 				attack.attack_info.y = self.y
 				local attack = parent:fire_explosion_local(parent.x, parent.y - 650, (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 4, 1009, 0.5 * data.charge * 0.005)
@@ -132,6 +132,10 @@ objLaser:onStep(function(self)
 			self:screen_shake(5)
 		end
 	end
+	
+	if Instance.exists(parent) and parent.image_index >= 5 then
+		parent.image_index = 3
+	end
 end)
 
 objLaser:onDraw(function(self)
@@ -139,62 +143,64 @@ objLaser:onDraw(function(self)
 	local parent = Instance.wrap(data.parent)
 	local offset = 150
 	
-	if data.timer > 0 then
-		local width = 44 - gm.round(data.timer * 1.46)
-		
-		gm.draw_set_colour(data.color)
-		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
-		gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
-		
-		gm.draw_set_colour(data.color)
-		gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
-		gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
-		gm.draw_set_colour(Color.WHITE)
-		gm.draw_set_alpha(1)
-		
-		gm.draw_circle(parent.x, parent.y - offset, width, false)
-	else
-		if data.charge > 10 then
-			local width = (44 - math.max(22, data.charge * 0.4)) * 2 * data.pulse
-			local width2 = (44 / 2 - math.max(22 / 2, data.charge * 0.4 / 2)) * 2 * data.pulse
-			local width3 = (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 2 * data.pulse
-			local width4 = (44 / 3 - math.max(22 / 3, data.charge * 0.4 / 3)) * 2 * data.pulse
+	if parent and Instance.exists(parent) then
+		if data.timer > 0 then
+			local width = 44 - gm.round(data.timer * 1.46)
 			
 			gm.draw_set_colour(data.color)
-			gm.draw_set_alpha(0.75)
+			gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
 			gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
-			gm.draw_set_colour(Color.WHITE)
-			gm.draw_set_alpha(0.9)
-			gm.draw_rectangle(self.x - width2, 0, self.x + width2, self.y - 1, false)
 			
 			gm.draw_set_colour(data.color)
-			gm.draw_set_alpha(0.75)
-			gm.draw_rectangle(parent.x - width3, 0, parent.x + width3, parent.y - offset, false)
-			gm.draw_set_colour(Color.WHITE)
-			gm.draw_set_alpha(0.9)
-			gm.draw_rectangle(parent.x - width4, 0, parent.x + width4, parent.y - offset, false)
-			gm.draw_set_alpha(1)
-			
-			gm.draw_circle(parent.x, parent.y - offset, (44 - math.max(22, data.charge * 0.4)) * 2, false)
-		else
-			local width = 44 * (0.5 + 2 ^ -(data.charge / 10))
-			
-			gm.draw_set_colour(data.color)
-			gm.draw_set_alpha(0.75)
-			gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
-			gm.draw_set_colour(Color.WHITE)
-			gm.draw_set_alpha(0.9)
-			gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, false)
-			
-			gm.draw_set_colour(data.color)
-			gm.draw_set_alpha(0.75)
+			gm.draw_set_alpha((30 - data.timer) / 30 * 0.75)
 			gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
 			gm.draw_set_colour(Color.WHITE)
-			gm.draw_set_alpha(0.9)
-			gm.draw_rectangle(parent.x - width / 3, 0, parent.x + width / 3, parent.y - offset, false)
 			gm.draw_set_alpha(1)
 			
 			gm.draw_circle(parent.x, parent.y - offset, width, false)
+		else
+			if data.charge > 10 then
+				local width = (44 - math.max(22, data.charge * 0.4)) * 2 * data.pulse
+				local width2 = (44 / 2 - math.max(22 / 2, data.charge * 0.4 / 2)) * 2 * data.pulse
+				local width3 = (44 / 1.5 - math.max(22 / 1.5, data.charge * 0.4 / 1.5)) * 2 * data.pulse
+				local width4 = (44 / 3 - math.max(22 / 3, data.charge * 0.4 / 3)) * 2 * data.pulse
+				
+				gm.draw_set_colour(data.color)
+				gm.draw_set_alpha(0.75)
+				gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
+				gm.draw_set_colour(Color.WHITE)
+				gm.draw_set_alpha(0.9)
+				gm.draw_rectangle(self.x - width2, 0, self.x + width2, self.y - 1, false)
+				
+				gm.draw_set_colour(data.color)
+				gm.draw_set_alpha(0.75)
+				gm.draw_rectangle(parent.x - width3, 0, parent.x + width3, parent.y - offset, false)
+				gm.draw_set_colour(Color.WHITE)
+				gm.draw_set_alpha(0.9)
+				gm.draw_rectangle(parent.x - width4, 0, parent.x + width4, parent.y - offset, false)
+				gm.draw_set_alpha(1)
+			
+				gm.draw_circle(parent.x, parent.y - offset, (44 - math.max(22, data.charge * 0.4)) * 2, false)
+			else
+				local width = 44 * (0.5 + 2 ^ -(data.charge / 10))
+			
+				gm.draw_set_colour(data.color)
+				gm.draw_set_alpha(0.75)
+				gm.draw_rectangle(self.x - width, 0, self.x + width, self.y - 1, false)
+				gm.draw_set_colour(Color.WHITE)
+				gm.draw_set_alpha(0.9)
+				gm.draw_rectangle(self.x - width / 2, 0, self.x + width / 2, self.y - 1, false)
+				
+				gm.draw_set_colour(data.color)
+				gm.draw_set_alpha(0.75)
+				gm.draw_rectangle(parent.x - width / 1.5, 0, parent.x + width / 1.5, parent.y - offset, false)
+				gm.draw_set_colour(Color.WHITE)
+				gm.draw_set_alpha(0.9)
+				gm.draw_rectangle(parent.x - width / 3, 0, parent.x + width / 3, parent.y - offset, false)
+				gm.draw_set_alpha(1)
+				
+				gm.draw_circle(parent.x, parent.y - offset, width, false)
+			end
 		end
 	end
 end)
@@ -264,7 +270,7 @@ keeper:onStep(function(actor)
 	end
 end)
 
-keeper:onDraw(function(actor)
+keeper:onDraw(function(actor) 
 	local stdata = actor.actor_state_current_data_table
 	local color = Color.from_hex(0x81CADC)
 	
@@ -320,19 +326,60 @@ local stateKeeperPrimaryB = State.new(NAMESPACE, "gatekeeperPrimaryB")
 stateKeeperPrimaryA:clear_callbacks()
 stateKeeperPrimaryB:clear_callbacks()
 
-keeperPrimary:onActivate(function(actor)
-	if actor:get_data().attack_mode == 1 then
+local primarySync = Packet.new()
+primarySync:onReceived(function(msg)
+	local actor = msg:read_instance()
+	local state = msg:read_byte()
+	
+	if not actor:exists() then return end
+	
+	if state == 1 then
 		actor:enter_state(stateKeeperPrimaryA)
+	elseif state == 2 then
+		actor:enter_state(stateKeeperPrimaryB)
 	else
-		local target = actor.target.parent
-		local collisionlist = List.new()
-		actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
-		if #collisionlist == 0 then
+		actor:refresh_skill(Skill.SLOT.primary)
+	end
+end)
+
+local function sync_primary(actor, state)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_primary called on client!")
+		return
+	end
+
+	local msg = primarySync:message_begin()
+	msg:write_instance(actor)
+	msg:write_byte(state)
+	msg:send_to_all()
+end
+
+keeperPrimary:onActivate(function(actor)
+	if gm._mod_net_isHost() then
+		local state = 3
+		if actor:get_data().attack_mode == 1 then
+			state = 1
+		else
+			local target = actor.target.parent
+			local collisionlist = List.new()
+			actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
+			if #collisionlist == 0 then
+				state = 2
+			end
+			collisionlist:destroy()
+		end
+		
+		if state == 1 then
+			actor:enter_state(stateKeeperPrimaryA)
+		elseif state == 2 then
 			actor:enter_state(stateKeeperPrimaryB)
 		else
 			actor:refresh_skill(Skill.SLOT.primary)
 		end
-		collisionlist:destroy()
+		
+		if gm._mod_net_isOnline() then
+			sync_primary(actor, state)
+		end
 	end
 end)
 
@@ -396,60 +443,96 @@ stateKeeperPrimaryA:onStep(function(actor, data)
 			end
 		end
 	end
- 	
-	if actor:get_data().laser then
-		if Instance.exists(actor:get_data().laser) and actor.image_index >= 5 then
-			actor.image_index = 3
-		end
-	end
 	
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+local targetSync = Packet.new()
+targetSync:onReceived(function(msg)
+	local target = msg:read_instance()
+	local actor = msg:read_instance()
+	
+	if not Instance.exists(target) then return end
+	
+	actor.actor_state_current_data_table.targetvalue = target.value
+end)
+
+local function sync_target(target, actor)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_target called on client!")
+		return
+	end
+
+	local msg = targetSync:message_begin()
+	msg:write_instance(target)
+	msg:write_instance(actor)
+	msg:send_to_all()
+end
 
 stateKeeperPrimaryB:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.trx = nil
 	data.try = nil
 	data.fired = 0
-	data.tracer = 0
 	data.locked = 0
+	
+	if gm._mod_net_isHost() and gm._mod_net_isOnline() then
+		sync_target(actor.target.parent, actor)
+	end
+	if actor.target and Instance.exists(actor.target) then
+		if actor.target.parent and Instance.exists(actor.target.parent) then
+			data.targetvalue = actor.target.parent.value
+		end
+	end
 end)
 
 stateKeeperPrimaryB:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1b, 0.16)
 	
-	local target = nil
-	if actor.target and Instance.exists(actor.target) then
-		if actor.target.parent and Instance.exists(actor.target.parent) then
-			target = actor.target.parent
+	if gm._mod_net_isHost() then
+		if actor.target and Instance.exists(actor.target) then
+			if actor.target.parent and Instance.exists(actor.target.parent) then
+				if data.targetvalue ~= actor.target.parent.value then
+					data.targetvalue = actor.target.parent.value
+					if gm._mod_net_isOnline() then
+						sync_target(actor.target.parent.value, actor)
+					end
+				end
+			end
 		end
 	end
 	
+	local target = Instance.wrap(data.targetvalue)
+	
 	if actor.image_index >= 13 and data.fired == 0 then
 		data.fired = 1
+		actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
 		
 		if data.trx and data.try then
-			local xx = actor.x - 35 * actor.image_xscale
-			local yy = actor.y + 9
-			local angle = gm.point_direction(xx, yy, data.trx, data.try)
-			local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer,  true)
-			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
+			if gm._mod_net_isHost() then
+				local xx = actor.x - 35 * actor.image_xscale
+				local yy = actor.y + 9
+				local angle = gm.point_direction(xx, yy, data.trx, data.try)
+				local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer,  true)
+			end
 		end
 	elseif actor.image_index >= 15 and data.fired == 1 then
 		data.fired = 2
+		actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
 		
 		if data.trx and data.try then
-			local xx = actor.x + 35 * actor.image_xscale
-			local yy = actor.y + 9
-			local angle = gm.point_direction(xx, yy, data.trx, data.try)
-			local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer, true)
-			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
+			if gm._mod_net_isHost() then
+				local xx = actor.x + 35 * actor.image_xscale
+				local yy = actor.y + 9
+				local angle = gm.point_direction(xx, yy, data.trx, data.try)
+				local attack = actor:fire_bullet(xx, yy, 5000, angle, 1, 1, gm.constants.sSparks2, tracer, true)
+			end
 		end
 	end
 	
 	if data.locked == 0 and data.fired < 2 then
-		if target and target:exists() then
+		if target and Instance.exists(target) then
 			if data.trx and data.try then
 				local dif = data.trx - target.x
 				if data.trx < target.x then
@@ -492,28 +575,67 @@ local stateKeeperSecondaryB = State.new(NAMESPACE, "gatekeeperSecondaryB")
 stateKeeperSecondaryA:clear_callbacks()
 stateKeeperSecondaryB:clear_callbacks()
 
-keeperSecondary:onActivate(function(actor)
-	if actor:get_data().attack_mode == 1 then
-		local target = actor.target.parent
-		local collisionlist = List.new()
-		actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
-		if #collisionlist == 0 then
-			actor:enter_state(stateKeeperSecondaryA)
-		else
-			actor:refresh_skill(Skill.SLOT.primary)
-		end
-		collisionlist:destroy()
-	else
+local secondarySync = Packet.new()
+secondarySync:onReceived(function(msg)
+	local actor = msg:read_instance()
+	local state = msg:read_byte()
+	if not actor:exists() then return end
+	
+	if state == 1 then
+		actor:enter_state(stateKeeperSecondaryA)
+	elseif state == 2 then
 		actor:enter_state(stateKeeperSecondaryB)
+	else
+		actor:refresh_skill(Skill.SLOT.secondary)
+	end
+end)
+
+local function sync_secondary(actor, state)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_secondary called on client!")
+		return
+	end
+
+	local msg = secondarySync:message_begin()
+	msg:write_instance(actor)
+	msg:write_byte(state)
+	msg:send_to_all()
+end
+
+keeperSecondary:onActivate(function(actor)
+	if gm._mod_net_isHost() then
+		local state = 3
+		if actor:get_data().attack_mode == 1 then
+			local target = actor.target.parent
+			local collisionlist = List.new()
+			actor:collision_line_list(actor.x, actor.y + 9, target.x, target.y, gm.constants.pBlock, false, false, collisionlist, false)
+			if #collisionlist == 0 then
+				state = 1
+			end
+			collisionlist:destroy()
+		else
+			state = 2
+		end
+		
+		if state == 1 then
+			actor:enter_state(stateKeeperSecondaryA)
+		elseif state == 2 then
+			actor:enter_state(stateKeeperSecondaryB)
+		else
+			actor:refresh_skill(Skill.SLOT.secondary)
+		end
+		if gm._mod_net_isOnline() then
+			sync_secondary(actor, state)
+		end
 	end
 end)
 
 stateKeeperSecondaryA:onEnter(function(actor, data)
-	actor.sprite_idle = sprite_idle2
 	actor.image_index = 0
-	actor:get_data().attack_mode = 2
 	actor:refresh_skill(Skill.SLOT.primary)
 	actor:buff_apply(fortified, 9999)
+	actor:get_data().attack_mode = 2
+	actor.sprite_idle = sprite_idle2
 end)
 
 stateKeeperSecondaryA:onStep(function(actor, data)
@@ -523,11 +645,11 @@ stateKeeperSecondaryA:onStep(function(actor, data)
 end)
 
 stateKeeperSecondaryB:onEnter(function(actor, data)
-	actor.sprite_idle = sprite_idle
 	actor.image_index = 0
-	actor:get_data().attack_mode = 1
 	actor:refresh_skill(Skill.SLOT.primary)
 	actor:buff_remove(fortified)
+	actor:get_data().attack_mode = 1
+	actor.sprite_idle = sprite_idle
 end)
 
 stateKeeperSecondaryB:onStep(function(actor, data)
