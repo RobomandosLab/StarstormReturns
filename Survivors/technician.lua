@@ -489,6 +489,7 @@ vending_shoot_packet:onReceived(function(message, player)
 	local recipient = message:read_instance()
 	inst:get_data().playanim = 1
 	if recipient.state == 0 and drinkSprites[recipient.class] then
+		player:get_data().current_drink_sprite = drinkSprites[player.class][data.upgraded and 2 or 1]
 		recipient:enter_state(stateDrink)
 	end
 end)
