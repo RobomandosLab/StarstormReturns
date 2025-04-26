@@ -80,6 +80,7 @@ basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
 
 --- TORRID OUTLANDS ---
 Resources.sprite_load(NAMESPACE, "Tile16Outlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Tile16Outlands.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "BackTilesOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "BackTilesOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "MoonOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "MoonOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "Arch2TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Arch2TorridOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "Arch1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Arch1TorridOutlands.png"), 1, 0, 0)
@@ -91,6 +92,8 @@ local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
 outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
 outlands_stage.token_name = "Torrid Outlands"
 outlands_stage.token_subname = "Silent Sunburn" 
+outlands_stage.teleporter_index = 0
+outlands_stage.interactable_spawn_points = 900
 outlands_stage:set_index(3)
 
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands1.rorlvl"))
