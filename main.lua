@@ -6,7 +6,6 @@ PATH = _ENV["!plugins_mod_folder_path"]
 NAMESPACE = "ssr"
 
 local init = function()
-	require("stageLoader") --temporary
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
 		"Actors",
@@ -28,6 +27,7 @@ local init = function()
 			end
 		end
 	end
+	require("stageLoader") --temporaryoh 
 
 	-- once we have loaded everything, enable hot/live reloading.
 	-- this variable may be used by content code to make sure it behaves correctly when hotloading
