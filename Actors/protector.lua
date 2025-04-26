@@ -521,9 +521,9 @@ stateProtectorSecondaryB:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-local objArtifactSpawn = Object.new(NAMESPACE, "artifactSpawn")
+local objArtifactSpawn = Object.new(NAMESPACE, "artifactSpawnBasin")
 
-local objProtectorSpawn = Object.new(NAMESPACE, "protectorSpawn")
+local objProtectorSpawn = Object.new(NAMESPACE, "protectorSpawnBasin")
 objProtectorSpawn:clear_callbacks()
 
 objProtectorSpawn:onStep(function(self)
