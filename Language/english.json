@@ -47,11 +47,11 @@
 		},
 		"executionerV2": {
 			"name": "Skullsplitter",
-			"description": "Throw a projected axe in a circular arc for <y>300% damage</c> per tick. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+			"description": "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 		"executionerV2Boosted": {
 			"name": "Skullbuster",
-			"description": "Throw two projected axes in a circular arc for <y>300% damage</c> per tick. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",

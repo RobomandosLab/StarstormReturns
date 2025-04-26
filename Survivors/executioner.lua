@@ -721,7 +721,7 @@ end)
 local executionerSpecial2 = Skill.new(NAMESPACE, "executionerV2")
 executionerSpecial2:set_skill_icon(sprite_skills, 9)
 executionerSpecial2.cooldown = 8 * 60
-executionerSpecial2.damage = 1.5
+executionerSpecial2.damage = 2.5
 executionerSpecial2.override_strafe_direction = true
 executionerSpecial2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
@@ -730,7 +730,7 @@ executioner:add_special(executionerSpecial2)
 local executionerSpecial2Scepter = Skill.new(NAMESPACE, "executionerV2Boosted")
 executionerSpecial2Scepter:set_skill_icon(sprite_skills, 10)
 executionerSpecial2Scepter.cooldown = 8 * 60
-executionerSpecial2Scepter.damage = 1.5
+executionerSpecial2Scepter.damage = 2.5
 executionerSpecial2Scepter.override_strafe_direction = true
 executionerSpecial2Scepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
@@ -784,6 +784,7 @@ stateExecutionerSpecial2:onStep(function(actor, data)
 			projectile.team = actor.team
 			projectile.direction = 90 - actor.image_xscale * 90
 			projectile.image_xscale = actor.image_xscale
+			projectile.damage_coeff = damage
 
 			projectile.tX = actor.x + 270 * actor.image_xscale
 			projectile.tY = actor.y
@@ -798,6 +799,7 @@ stateExecutionerSpecial2:onStep(function(actor, data)
 				projectile.image_xscale = actor.image_xscale
 				projectile.image_yscale = -1
 				projectile.sprite_index = sprite_axe_projectileS
+				projectile.damage_coeff = damage
 
 				projectile.tX = actor.x + 270 * actor.image_xscale
 				projectile.tY = actor.y
@@ -817,6 +819,7 @@ objExecutionerAxe:clear_callbacks()
 objExecutionerAxe:onCreate(function(self)
 	self.parent = -4
 	self.team = 1
+	self.damage_coeff = 1
 	self.image_speed = 0.75
 
 	self.tX = self.x
@@ -843,7 +846,7 @@ objExecutionerAxe:onStep(function(self)
 			if self:attack_collision_canhit(hit) then
 				did_hit = true
 				if gm._mod_net_isHost() then
-					local dmg = 3
+					local dmg = self.damage_coeff
 					local proc = not already_hit[hit.id] -- only proc once per hit enemy
 
 					local actor = GM.attack_collision_resolve(hit)
