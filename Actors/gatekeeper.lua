@@ -657,3 +657,32 @@ stateKeeperSecondaryB:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot2b, 0.15)
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+local monsterCardGatekeeper = Monster_Card.new(NAMESPACE, "gatekeeper")
+monsterCardGatekeeper.object_id = keeper_id
+monsterCardGatekeeper.spawn_cost = 780
+monsterCardGatekeeper.spawn_type = Monster_Card.SPAWN_TYPE.classic
+monsterCardGatekeeper.can_be_blighted = true
+
+if HOTLOADING then return end
+
+local stages = {
+	"ror-templeOfTheElders",
+	"ror-riskOfRain",
+}
+
+local postLoopStages = {
+	"ror-desolateForest",
+	"ror-skyMeadow",
+	"ror-sunkenTombs",
+}
+
+for _, s in ipairs(stages) do
+	local stage = Stage.find(s)
+	stage:add_monster(monsterCardGatekeeper)
+end
+
+for _, s in ipairs(postLoopStages) do
+	local stage = Stage.find(s)
+	stage:add_monster_loop(monsterCardGatekeeper)
+end

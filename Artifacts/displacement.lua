@@ -47,13 +47,3 @@ gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, 
 	end
 end)
 
-Object.find(NAMESPACE, "Protector"):onDestroy(function(actor)
-	local spawn = Instance.find(Object.find(NAMESPACE, "artifactSpawnBasin"))
-	if spawn then
-		local inst = Object.find("ror-Artifact1"):create(spawn.x, spawn.y)
-		inst.text1 = Language.translate_token("artifact.gathering.pickupName")
-		inst.sprite_index = pickup
-		inst.artifact_id = displacement.value
-	end
-end)
-

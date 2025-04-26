@@ -230,12 +230,10 @@ protector:onCreate(function(actor)
 	actor:set_default_skill(Skill.SLOT.primary, protectorPrimary)
 	actor:set_default_skill(Skill.SLOT.secondary, protectorSecondary)
 	
-	if gm._mod_net_isHost() then
-		local arr = Array.new({actor})
-		local party = GM.actor_create_enemy_party_from_ids(arr)
-		local director = GM._mod_game_getDirector()
-		director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
-	end
+	local arr = Array.new({actor})
+	local party = GM.actor_create_enemy_party_from_ids(arr)
+	local director = GM._mod_game_getDirector()
+	director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
 
 	actor:init_actor_late()
 	actor:move_contact_solid(270, -1)
@@ -415,68 +413,72 @@ stateProtectorPrimaryB:onStep(function(actor, data)
 		
 		if data.trx and data.try then
 			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
-			local xx = actor.x - 35 * actor.image_xscale
-			local yy = actor.y + 9
-			
-			local missileType = Object.find("ror-EfMissileEnemy")
-			if actor.team == 1 then
-				missileType = Object.find("ror-EfMissile")
+			if gm._mod_net_isHost() then
+				local xx = actor.x - 35 * actor.image_xscale
+				local yy = actor.y + 9
+				
+				local missileType = Object.find("ror-EfMissileEnemy")
+				if actor.team == 1 then
+					missileType = Object.find("ror-EfMissile")
+				end
+				
+				local missile = missileType:create(xx, yy)
+				missile.parent = actor
+				missile.target = target
+				missile.targetx = data.trx
+				missile.targety = data.try
+				missile.team = actor.team
+				missile.damage = actor.damage
+				missile.firing = true
+				
+				local x2 = data.trx + target.pHspeed * gm.point_distance(actor.x, actor.y,data.trx, data.try) / 8
+				local y2 = data.try + target.pVspeed * 5
+				
+				local missile = missileType:create(xx, yy)
+				missile.parent = actor
+				missile.target = target
+				missile.targetx = x2
+				missile.targety = y2
+				missile.team = actor.team
+				missile.damage = actor.damage
+				missile.firing = true
 			end
-			
-			local missile = missileType:create(xx, yy)
-			missile.parent = actor
-			missile.target = target
-			missile.targetx = data.trx
-			missile.targety = data.try
-			missile.team = actor.team
-			missile.damage = actor.damage
-			missile.firing = true
-			
-			local x2 = data.trx + target.pHspeed * gm.point_distance(actor.x, actor.y,data.trx, data.try) / 8
-			local y2 = data.try + target.pVspeed * 5
-			
-			local missile = missileType:create(xx, yy)
-			missile.parent = actor
-			missile.target = target
-			missile.targetx = x2
-			missile.targety = y2
-			missile.team = actor.team
-			missile.damage = actor.damage
-			missile.firing = true
 		end
 	elseif actor.image_index >= 15 and data.fired == 1 then
 		data.fired = 2
 		
 		if data.trx and data.try then
 			actor:sound_play(sound_laser_fire2, 0.6, 0.9 + math.random() * 0.2)
-			local xx = actor.x + 35 * actor.image_xscale
-			local yy = actor.y + 9
-			
-			local missileType = Object.find("ror-EfMissileEnemy")
-			if actor.team == 1 then
-				missileType = Object.find("ror-EfMissile")
+			if gm._mod_net_isHost() then
+				local xx = actor.x + 35 * actor.image_xscale
+				local yy = actor.y + 9
+				
+				local missileType = Object.find("ror-EfMissileEnemy")
+				if actor.team == 1 then
+					missileType = Object.find("ror-EfMissile")
+				end
+				
+				local missile = missileType:create(xx, yy)
+				missile.parent = actor
+				missile.target = target
+				missile.targetx = data.trx
+				missile.targety = data.try
+				missile.team = actor.team
+				missile.damage = actor.damage
+				missile.firing = true
+				
+				local x2 = data.trx + target.pHspeed * gm.point_distance(actor.x, actor.y,data.trx, data.try) / 8
+				local y2 = data.try + target.pVspeed * 5
+				
+				local missile = missileType:create(xx, yy)
+				missile.parent = actor
+				missile.target = target
+				missile.targetx = x2
+				missile.targety = y2
+				missile.team = actor.team
+				missile.damage = actor.damage
+				missile.firing = true
 			end
-			
-			local missile = missileType:create(xx, yy)
-			missile.parent = actor
-			missile.target = target
-			missile.targetx = data.trx
-			missile.targety = data.try
-			missile.team = actor.team
-			missile.damage = actor.damage
-			missile.firing = true
-			
-			local x2 = data.trx + target.pHspeed * gm.point_distance(actor.x, actor.y,data.trx, data.try) / 8
-			local y2 = data.try + target.pVspeed * 5
-			
-			local missile = missileType:create(xx, yy)
-			missile.parent = actor
-			missile.target = target
-			missile.targetx = x2
-			missile.targety = y2
-			missile.team = actor.team
-			missile.damage = actor.damage
-			missile.firing = true
 		end
 	end
 	
@@ -562,17 +564,19 @@ local objProtectorSpawn = Object.new(NAMESPACE, "protectorSpawnBasin")
 objProtectorSpawn:clear_callbacks()
 
 objProtectorSpawn:onStep(function(self)
-	local spawn = true
-	for _, button in ipairs(Instance.find_all(gm.constants.oArtifactButton)) do
-		if button.activated == 0 then
-			spawn = false
-			break
+	if gm._mod_net_isHost() then
+		local spawn = true
+		for _, button in ipairs(Instance.find_all(gm.constants.oArtifactButton)) do
+			if button.activated == 0 then
+				spawn = false
+				break
+			end
 		end
-	end
-	
-	if spawn then
-		local inst = Instance.find(objArtifactSpawn) 
-		protector:create(inst.x, inst.y)
-		self:destroy()
+		
+		if spawn then
+			local inst = Instance.find(objArtifactSpawn) 
+			protector:create(inst.x, inst.y)
+			self:destroy()
+		end
 	end
 end)
