@@ -27,6 +27,12 @@
 			"description" : "The <y>Nemesis Mercenary</c> was born with a special power.",
 			"endQuote": "..and so he left, loaded up for more.",
 			"story": "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
+		},
+		"technician": {
+			"name": "Technician",
+			"nameUpper": "TECHNICIAN",
+			"description": "",
+			"endQuote": "..and so he left, by switching the ship off and on again."
 		}
 	},
 	"skill" : {
@@ -101,6 +107,38 @@
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
 			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+		},
+		"technicianZ": {
+			"name": "Fine Tune",
+			"description": "Strike forward with a wrench for <y>210% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
+		},
+		"technicianZ2": {
+			"name": "Troubleshoot",
+			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>100% damage.\n<y>Hitting gadgets</c> 3 times <r>temporarily <b>upgrades them."
+		},
+		"technicianX": {
+			"name": "Forced Shutdown",
+			"description": "Toss out a <y>stunning</c> bomb dealing <y>700% damage</c> on reactivation.\nPassively pulls in enemies when <b>upgraded."
+		},
+		"technicianX2": {
+			"name": "The Red Button",
+			"description": "Detonate the dropped bomb for <y>700% damage, stunning enemies."
+		},
+		"technicianC": {
+			"name": "24/7 Energy",
+			"description": "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."
+		},
+		"technicianC2": {
+			"name": "Radial Amplifier",
+			"description": "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
+		},
+		"technicianV": {
+			"name": "Backup Firewall",
+			"description": "Place a turret firing forward for <y>220% damage per second.</c>\nFires rapidly for <y>350% damage per second</c> when <b>upgraded."
+		},
+		"technicianVBoosted": {
+			"name": "Backup Firewall 2.0",
+			"description": "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires missiles for <y>4x100% damage</c> when <b>upgraded."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
