@@ -83,13 +83,9 @@
 			"name": "Spanker",
 			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
-		"peace": {
-			"name": "<#a4eae4>Peace!",
-			"description": "Cannot use this skill."
-		},
 		"technicianZ": {
 			"name": "Fine Tune",
-			"description": "Strike forward with a wrench for <y>150% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
+			"description": "Strike forward with a wrench for <y>210% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
 		},
 		"technicianZ2": {
 			"name": "Troubleshoot",
@@ -107,14 +103,22 @@
 			"name": "24/7 Energy",
 			"description": "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."
 		},
+		"technicianC2": {
+			"name": "Radial Amplifier",
+			"description": "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
+		},
 		"technicianV": {
 			"name": "Backup Firewall",
 			"description": "Place a turret firing forward for <y>220% damage per second.</c>\nFires rapidly for <y>350% damage per second</c> when <b>upgraded."
 		},
 		"technicianVBoosted": {
 			"name": "Backup Firewall 2.0",
-			"description": "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires extremely rapidly for <y>530% damage per second</c> when <b>upgraded."
-		}
+			"description": "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires missiles for <y>4x100% damage</c> when <b>upgraded."
+		},
+		"peace": {
+			"name": "<#a4eae4>Peace!",
+			"description": "Cannot use this skill."
+		},
 	},
 
 	"item" : {
@@ -263,7 +267,7 @@
 		"malice" : {
 			"name": "Malice",
 			"pickup" : "Damage spreads to nearby enemies.",
-			"description": "Attacks <p>spread to nearby enemies</c> for <y>45% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
+			"description": "Attacks <p>spread to nearby enemies</c> for <y>50% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
 			"destination" : "P24,\nRomeo,\nPol-A Station",
 			"date" : "02/11/2056",
 			"story" : "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
@@ -298,8 +302,8 @@
 		},
 		"balloon" : {
 			"name": "Balloon",
-			"pickup" : "Lower your gravity.",
-			"description": "Decrease <b>gravity</c> while holding the jump button by <b>35% <c_stack>(-15% per stack)</c>.",
+			"pickup" : "Lower gravity outside of danger.",
+			"description": "Decrease <b>gravity</c> while holding the jump button by <b>35% <c_stack>(-15% per stack)</c>. Pops when damaged. Recovers when outside of danger for <b>7</c> seconds.",
 			"destination" : "55 Mo.,\nPaare Plaza,\nEarth",
 			"date" : "06/31/2056",
 			"story" : "When I was younger I used to love balloons. They're quite fun to watch in places with an atmosphere. However, this one is of special value to me, as it was of the first ones to be made out of reinforced rubber, back in the '22s. I hope you take care of it, it might cost a fortune in a few more years (if it's still floating, of course!).",
