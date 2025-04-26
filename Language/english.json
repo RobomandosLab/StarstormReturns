@@ -1,16 +1,34 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Typhoon",
-		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
+		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes."
 	},
-
 	"survivor" : {
 		"executioner" : {
 			"name" : "Executioner",
 			"nameUpper" : "EXECUTIONER",
-
+			"description" : "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
+			"endQuote" : "..and so he left, bloodlust unfulfilled.",
+			"story": "<ul>Passenger Details:</c>\n<y>[Military Class]</c>\n\n<ul>Luggage and Equipment:</c>\nOfficer boarded with EXN Acting Officer carbonweave uniform, civilian-grade plated oversuit and an issued service pistol. At military checkpoint, passenger's armament was noted to have an additional under-barrel \nmodification- and was cleared after an agreement was made to store it in a secure container. The passenger also cleared one ION 204X series battery customized with propulsion orifices. As a safety measure, passenger's \ntechnological goods were temporarily fitted with electrical auto-nullifiers and returned to them.\n\n<b>[SECURITY RECALL]</c>\n\n<ul>[Note E1a]</c> Several reports of Passenger making entire security checkpoint crew uneasy. Light surveillance will be required until further notice.\n<ul>[Note E1b]</c> Passenger would often reply in sounds rather than speech before opting to use Universal Sign Language.\n<ul>[Event E1]</c> Contracted commando performs security check in Passenger's quarters.\n<ul>[Event E1a]</c> Contracted commando requests 24 hour private surveillance in hall leading to Passenger's quarters.\n<ul>[Event E2]</c> Passenger asked to move tables during mealtime after another Passenger sent a formal complaint to onboard security.",
+			"id" : "Travel ID: 4383354378334FF3D34D",
+			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
+			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa"
+		},
+		"nemesisCommando" : {
+			"name" : "Nemesis Commando",
+			"nameUpper" : "NEMESIS COMMANDO",
+			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			"endQuote": "..and so he left, carrying new sense of humanity within.",
+			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>"
+		},
+		"nemesisMercenary" : {
+			"name" : "Nemesis Mercenary",
+			"nameUpper" : "NEMESIS MERCENARY",
+			"description" : "The <y>Nemesis Mercenary</c> was born with a special power.",
+			"endQuote": "..and so he left, loaded up for more.",
+			"story": "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
+		}
 	},
-
 	"skill" : {
 		"executionerZ": {
 			"name": "Service Pistol",
@@ -32,7 +50,62 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
-
+		"nemesisCommandoZ": {
+			"name": "Blade of Cessation",
+			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
+		},
+		"nemesisCommandoX": {
+			"name": "Single Tap",
+			"description": "Shoot an enemy for <y>200% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
+		},
+		"nemesisCommandoX2": {
+			"name": "Distant Gash",
+			"description": "Slash in a line forward for <y>90% damage</c>, <r>wounding</c> enemies for 6 seconds."
+		},
+		"nemesisCommandoC": {
+			"name": "Tactical Roll",
+			"description": "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
+		},
+		"nemesisCommandoV": {
+			"name": "Flush Out",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoVBoosted": {
+			"name": "Cluster Bomb",
+			"description": "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies and <y>spitting into 3</c> grenades for <y>3x150% damage.</c>\nHold to <b>cook</c> the grenade. Press the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		"nemesisCommandoV2": {
+			"name": "Devastator",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle."
+		},
+		"nemesisCommandoV2Boosted": {
+			"name": "Spanker",
+			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
+		},
+		"nemesisMercenaryZ": {
+			"name": "Attachment Stab",
+			"description": "Stab up to <y>3 enemies</c> with your shotgun, dealing <y>130% damage</c>."
+		},
+		"nemesisMercenaryX": {
+			"name": "Quick Trigger",
+			"description": "Fire your shotgun, <y>stunning</c> and hitting enemies nearby for <y>600% damage</c>."
+		},
+		"nemesisMercenaryC": {
+			"name": "Blinding Slide",
+			"description": "Quickly slide forwards. <b>Getting hit at the start reloads your shotgun.</c> \n<b>You can attack while sliding</c>."
+		},
+		"nemesisMercenaryV": {
+			"name": "Devitalize",
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+		},
+		"nemesisMercenaryVBoosted": {
+			"name": "Absolute Devitalization",
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+		},
+		"peace": {
+			"name": "<#a4eae4>Peace!",
+			"description": "Cannot use this skill."
+		}
 	},
 
 	"item" : {
@@ -114,7 +187,7 @@
 			"description": "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>. Using your secondary skill increases <g>health regeneration</c> by <g>2 <c_stack>(+1 per stack) <g>hp </c>per second for 3 seconds.",
 			"destination": "Romeo 33,\nBatang Ai National Park,\nEarth",
 			"date": "4/12/2057",
-			"story" : "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers.",
+			"story" : "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers."
 		},
 		"moltenCoin" : {
 			"name" : "Molten Coin",
@@ -268,8 +341,8 @@
 			"destination" : "Room 2B,\nSomnus Hotel,\nEarth",
 			"date" : "10/5/2056",
 			"story" : "Save this for me until I get back home, I didn't need it. In fact, we became friends! I can't wait to tell you all about it soon. It's been a long trip and an unexpected series of events. I've told them about you and they want me to invite you over the next time. How's that, huh!? Love you.",
-			"priority": "<r>Volatile</c>",
-		},
+			"priority": "<r>Volatile</c>"
+		}
 	},
 
 	"actor" : {
@@ -279,7 +352,7 @@
 
 	"interactable" : {
 		"MimicInactive.text" : "..?",
-		"MimicInactive.name" : "Large Chest?",
+		"MimicInactive.name" : "Large Chest?"
 	},
 
 	"elite" : {
