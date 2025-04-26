@@ -5,7 +5,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 22, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
+local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 11)
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorExecutioner", path.combine(SPRITE_PATH, "credits.png"), 1, 6, 12)
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "ExecutionerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 17)
@@ -148,9 +148,7 @@ local executionerUtility = executioner:get_utility()
 local executionerSpecial = executioner:get_special()
 
 -- Service Pistol
-executionerPrimary.sprite = sprite_skills
-executionerPrimary.subimage = 0
-
+executionerPrimary:set_skill_icon(sprite_skills, 0)
 executionerPrimary.cooldown = 5
 executionerPrimary.damage = 1.0
 executionerPrimary.require_key_press = false
@@ -231,8 +229,7 @@ stateExecutionerPrimary:onGetInterruptPriority(function(actor, data)
 end)
 
 -- Ion Burst
-executionerSecondary.sprite = sprite_skills
-executionerSecondary.subimage = 2
+executionerSecondary:set_skill_icon(sprite_skills, 2)
 executionerSecondary.cooldown = -1
 executionerSecondary.damage = 3.2
 executionerSecondary.max_stock = 10
@@ -449,8 +446,7 @@ Callback.add(Callback.TYPE.onKillProc, "SSIonCharge", function(victim, killer)
 end)
 
 -- Crowd Dispersion
-executionerUtility.sprite = sprite_skills
-executionerUtility.subimage = 6
+executionerUtility:set_skill_icon(sprite_skills, 6)
 executionerUtility.cooldown = 7 * 60
 executionerUtility.is_utility = true
 executionerUtility.override_strafe_direction = true
@@ -507,8 +503,7 @@ stateExecutionerUtility:onStep(function(actor, data)
 end)
 
 -- Execution
-executionerSpecial.sprite = sprite_skills
-executionerSpecial.subimage = 7
+executionerSpecial:set_skill_icon(sprite_skills, 7)
 executionerSpecial.cooldown = 8 * 60
 executionerSpecial.damage = 10
 executionerSpecial.require_key_press = true
@@ -518,8 +513,7 @@ executionerSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRI
 local executionerSpecialScepter = Skill.new(NAMESPACE, "executionerVBoosted")
 executionerSpecial:set_skill_upgrade(executionerSpecialScepter)
 
-executionerSpecialScepter.sprite = sprite_skills
-executionerSpecialScepter.subimage = 8
+executionerSpecialScepter:set_skill_icon(sprite_skills, 8)
 executionerSpecialScepter.cooldown = 8 * 60
 executionerSpecialScepter.damage = 15
 executionerSpecialScepter.require_key_press = true
@@ -725,8 +719,7 @@ Callback.add(Callback.TYPE.onAttackHandleEnd, "SSExecutionCDR", function(attack_
 end)
 
 local executionerSpecial2 = Skill.new(NAMESPACE, "executionerV2")
-executionerSpecial2.sprite = sprite_skills
-executionerSpecial2.subimage = 7
+executionerSpecial2:set_skill_icon(sprite_skills, 9)
 executionerSpecial2.cooldown = 8 * 60
 executionerSpecial2.damage = 1.5
 executionerSpecial2.override_strafe_direction = true
@@ -735,8 +728,7 @@ executionerSpecial2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PR
 executioner:add_special(executionerSpecial2)
 
 local executionerSpecial2Scepter = Skill.new(NAMESPACE, "executionerV2Boosted")
-executionerSpecial2Scepter.sprite = sprite_skills
-executionerSpecial2Scepter.subimage = 8
+executionerSpecial2Scepter:set_skill_icon(sprite_skills, 10)
 executionerSpecial2Scepter.cooldown = 8 * 60
 executionerSpecial2Scepter.damage = 1.5
 executionerSpecial2Scepter.override_strafe_direction = true
