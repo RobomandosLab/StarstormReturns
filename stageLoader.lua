@@ -94,7 +94,7 @@ outlands_stage.token_name = "Torrid Outlands"
 outlands_stage.token_subname = "Silent Sunburn" 
 outlands_stage.teleporter_index = 0
 outlands_stage.interactable_spawn_points = 900
-outlands_stage:set_index(3)°
+outlands_stage:set_index(3)
 
 outlands_stage:clear_rooms()
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands1.rorlvl"))
