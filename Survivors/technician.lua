@@ -489,7 +489,7 @@ vending_shoot_packet:onReceived(function(message, player)
 	local recipient = message:read_instance()
 	inst:get_data().playanim = 1
 	if recipient.state == 0 and drinkSprites[recipient.class] then
-		player:get_data().current_drink_sprite = drinkSprites[player.class][data.upgraded and 2 or 1]
+		recipient:get_data().current_drink_sprite = drinkSprites[recipient.class][data.upgraded and 2 or 1]
 		recipient:enter_state(stateDrink)
 	end
 end)
@@ -776,7 +776,7 @@ Callback.add(Callback.TYPE.onAttackHit, "SSOnHitExposed", function(hit_info)
 	local expose = 0
 	if hit_info.target:buff_stack_count(buff_exposed) >= 1 then expose = 1 end
 	if hit_info.target:buff_stack_count(buff_exposed_2) >= 1 then expose = 2 end
-	if not hit_info.attack_info.__ssr_technician_is_expose and expose >= 1 and gm._mod_net_isHost() then
+	if not hit_info.attack_info.__ssr_technician_is_expose and hit_info.inflictor and expose >= 1 and gm._mod_net_isHost() then
 		local attack_info = hit_info.inflictor:fire_direct(hit_info.target, hit_info.damage * 0.15 / hit_info.inflictor.damage, hit_info.attack_info.direction, hit_info.target.x - 10, hit_info.target.y).attack_info
 		attack_info.__ssr_technician_is_expose = expose
 		attack_info.damage_color = expose == 2 and color_tech_orange or color_tech_red
