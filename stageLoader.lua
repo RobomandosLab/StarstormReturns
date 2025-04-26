@@ -120,4 +120,3 @@ outlands_stage:add_interactable({
     "equipmentActivator",
     "droneRecycler"
 })
-
