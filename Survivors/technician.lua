@@ -40,9 +40,6 @@ local sprite_shoot5				= Resources.sprite_load(NAMESPACE, "TechnicianShoot4S", p
 local sprite_drink_technician_1	= Resources.sprite_load(NAMESPACE, "TechnicianDrink", path.combine(SPRITE_PATH, "Drink/technician_drink_1.png"), 12, 9, 13)
 local sprite_drink_technician_2	= Resources.sprite_load(NAMESPACE, "TechnicianDrinkUp", path.combine(SPRITE_PATH, "Drink/technician_drink_2.png"), 12, 9, 13)
 
-local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "TechnicianSparks", path.combine(SPRITE_PATH, "sparks2.png"), 4, 24, 14)
-local sprite_tracer2			= Resources.sprite_load(NAMESPACE, "TechnicianIonTracer", path.combine(SPRITE_PATH, "tracer2.png"), 5, 0, 2)
-
 local sprite_turretaI			= Resources.sprite_load(NAMESPACE, "TechnicianTurretaIdle", path.combine(SPRITE_PATH, "turreta.png"), 4, 12, 14)
 local sprite_turretashoot		= Resources.sprite_load(NAMESPACE, "TechnicianTurretaShoot", path.combine(SPRITE_PATH, "turretashoot.png"), 4, 17, 14)
 local sprite_turretexplosion	= Resources.sprite_load(NAMESPACE, "TechnicianTurretExplosion", path.combine(SPRITE_PATH, "turretexplosion.png"), 4, 20, 20)
