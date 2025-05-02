@@ -14,7 +14,7 @@ local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryWalk
 local sprite_jump			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryJump", path.combine(SPRITE_PATH, "jump.png"), 1, 11, 20)
 local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryJumpPeak", path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 14, 20)
 local sprite_fall			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryFall", path.combine(SPRITE_PATH, "fall.png"), 1, 16, 20)
-local sprite_climb			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 14)
+local sprite_climb			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 13, 29)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryDeath", path.combine(SPRITE_PATH, "death.png"), 10, 18, 16)
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
 
