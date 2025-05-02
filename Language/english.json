@@ -409,7 +409,9 @@
 		"Mimic.name" : "Security Chest",
 		"Gatekeeper.name" : "Gatekeeper",
 		"Protector.name" : "Protector",
-		"Protector.text" : "Keeper of the Artifact"
+		"Protector.text" : "Keeper of the Artifact",
+		"nemmandoEnemy.name" : "Nemesis Commando",
+		"nemmandoEnemy.text" : "Lone Echo"
 	},
 
 	"interactable" : {
