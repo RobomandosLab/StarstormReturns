@@ -56,6 +56,14 @@
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
+		"executionerV2": {
+			"name": "Skullsplitter",
+			"description": "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"executionerV2Boosted": {
+			"name": "Skullbuster",
+			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
 			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
