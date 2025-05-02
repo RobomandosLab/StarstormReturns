@@ -193,14 +193,14 @@ nemmando:onCreate(function(actor)
 	local aura = nemmandoAura:create(actor.x, actor.y)
 	aura.parent = actor
 	
-	actor:get_data().music_id = Global.music_name
+	actor.music_id = Global.music_name
 	Global.music_name = canticum_vitae_cope
 	
 	actor:init_actor_late()
 end)
 
 nemmando:onDestroy(function(actor)
-	Global.music_name = actor:get_data().music_id
+	Global.music_name = actor.music_id
 end)
 
 local z = State.new(NAMESPACE, "nemCommandoEnemyPrimary")
@@ -926,7 +926,7 @@ objRocket:onDestroy(function(inst)
 end)
 
 local function spawnNemmando()
-	if Helper.chance(0.1) and GM._mod_game_getDirector().stages_passed > 0 not GM._mod_game_getDirector():get_data().nemmandoSpawned then
+	if Helper.chance(0.1) and GM._mod_game_getDirector().stages_passed > 0 and not GM._mod_game_getDirector().nemmandoSpawned then
 		local player = Instance.find(gm.constants.oP)
 		local blockList = List.new()
 		player:collision_ellipse_list(player.x - 1000, player.y - 1000, player.x + 1000, player.x + 1000, gm.constants.oB, false, true, blockList, true)
@@ -938,7 +938,7 @@ local function spawnNemmando()
 			gm.audio_play_sound(gm.constants.wImpPortal1, 1, false)
 			gm.audio_play_sound(gm.constants.wTeleporter_Complete, 1, false)
 			nemmando:create(blockList[#blockList].x, blockList[#blockList].y - 16)
-			GM._mod_game_getDirector():get_data().nemmandoSpawned = true
+			GM._mod_game_getDirector().nemmandoSpawned = true
 		end
 		blockList:destroy()
 	end
