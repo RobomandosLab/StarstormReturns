@@ -174,6 +174,8 @@ end)
 stateExecutionerPrimary:onStep(function(actor, data)
 	actor.sprite_index2 = sprite_shoot1_half
 
+	-- first arg: speed for attack animation, in sprite frames per game frame
+	-- second arg: multiplier for movement speed while strafing
 	actor:skill_util_strafe_update(0.22 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
