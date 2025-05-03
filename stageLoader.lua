@@ -106,6 +106,7 @@ outlands_stage:add_monster({
     "bison",
     "spitter",
     "colossus",
+    "clayMan",
     "toxicBeast",
     "scavenger"
 })
