@@ -88,6 +88,10 @@ Resources.sprite_load(NAMESPACE, "CanyonsBack2TorridOutlands", path.combine(PATH
 Resources.sprite_load(NAMESPACE, "Clouds1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Clouds1TorridOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "CanyonsBack1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
 
+--Menu Resources
+local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "EnvironmentTorridOutlands_PLACEHOLDER.png"))
+local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "GroundStripTorridOutlands.png"))
+
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
 outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
 outlands_stage.token_name = "Torrid Outlands"
@@ -99,6 +103,7 @@ outlands_stage:set_index(3)
 outlands_stage:clear_rooms()
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands1.rorlvl"))
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands2.rorlvl"))
+outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands3.rorlvl"))
 
 outlands_stage:add_monster({
     "wisp",
@@ -123,3 +128,9 @@ outlands_stage:add_interactable({
     "equipmentActivator",
     "droneRecycler"
 })
+
+--Environment Log
+outlands_stage:set_log_icon(EnvironmentTorridOutlands)
+
+--Main Menu
+outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
