@@ -104,6 +104,7 @@ outlands_stage:clear_rooms()
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands1.rorlvl"))
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands2.rorlvl"))
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands3.rorlvl"))
+outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands4.rorlvl"))
 
 outlands_stage:add_monster({
     "wisp",
