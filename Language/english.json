@@ -419,5 +419,14 @@
 
 	"elite" : {
 		"poison.name" : "Poisoning %s"
+	},
+	"stage" : {
+		"whistlingBasin.name" : "Whistling Basin",
+		"whistlingBasin.subname" : "Dwindling Oasis",
+		"whistlingBasin.story" : "This planet continues to hold nothing but surprises for me. Considering the actions of its denizens prior to coming here, I would never have thought such sprawling and decadent architecture could be built by such creatures. Incredibly deep ebony pillars and arches constructed of beautiful stone that rise from the ground, all adorned with carvings placed by intentional hands. All along the walls are these amazingly intricate displays of deceptively simple shapes. The most peculiarly turquoise foliage attack the structures, climbing subtly along their bases. It seems the preconceived notion of savagery I held for this planet is waning. Even still, my guard is held high. It's too soon for me to rest, despite protests from my aching muscles.",
+
+		"torridOutlands.name" : "Torrid Outlands",
+		"torridOutlands.subname" : "Torrid Outlands",
+		"torridOutlands.story" : "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
 	}
 }
