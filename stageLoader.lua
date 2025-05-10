@@ -87,6 +87,7 @@ Resources.sprite_load(NAMESPACE, "Arch1TorridOutlands", path.combine(PATH.."/Spr
 Resources.sprite_load(NAMESPACE, "CanyonsBack2TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack2TorridOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "Clouds1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Clouds1TorridOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "CanyonsBack1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "EelBone", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "skeelton.png"), 1, 0, 0)
 
 --Menu Resources
 local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "EnvironmentTorridOutlands_PLACEHOLDER.png"))
