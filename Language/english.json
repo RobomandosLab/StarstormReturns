@@ -97,8 +97,8 @@
 			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 		"nemesisMercenaryZ": {
-			"name": "Attachment Stab",
-			"description": "Stab up to <y>3 enemies</c> with your shotgun, dealing <y>130% damage</c>."
+			"name": "Lascerate",
+			"description": "Injure enemies with your shotgun's attachment for <y>130% damage</c>."
 		},
 		"nemesisMercenaryX": {
 			"name": "Quick Trigger",
@@ -110,11 +110,11 @@
 		},
 		"nemesisMercenaryV": {
 			"name": "Devitalize",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"technicianZ": {
 			"name": "Fine Tune",

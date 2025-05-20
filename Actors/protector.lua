@@ -33,6 +33,14 @@ laserPar:set_life(60, 60)
 laserPar:set_alpha1(0.9)
 laserPar:set_speed(9, 11, -8 / 30, 0)
 
+local laserTrail = Particle.new(NAMESPACE, "ProtectorLaserTrail")
+laserTrail:set_sprite(sprite_laser_par, true, true, false)
+laserTrail:set_alpha2(1, 0)
+laserTrail:set_life(60, 60)
+laserTrail:set_alpha1(0.9)
+laserTrail:set_speed(0, 0.3, 0.02, 0)
+laserTrail:set_direction(70, 110, 0, -1)
+
 local fortified = Buff.new(NAMESPACE, "ProtectorFortified")
 fortified.show_icon = false
 fortified:clear_callbacks()
@@ -108,6 +116,10 @@ objLaser:onStep(function(self)
 				laserPar:set_direction(180, 180, 0, 0)
 			end
 			laserPar:create(self.x, self.y - math.random(1000), 1, Particle.SYSTEM.middle)
+		end
+		if data.charge % 2 == 0 and math.random(1, data.charge) / 2 <= 11 then
+			local width = gm.round(22 * (0.5 + 2 ^ -(data.charge / 10))) -- half the laser's width. width decreases with time from 44 pixels to 0 using this formula. we put 22 instead of 44 because this is half of that. idk how to explain better sorry
+			laserTrail:create(self.x + math.random(-width, width), self.y - 8, 1, Particle.SYSTEM.middle)
 		end
 		
 		if data.charge == 1 then
