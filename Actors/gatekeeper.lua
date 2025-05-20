@@ -679,10 +679,10 @@ local postLoopStages = {
 
 for _, s in ipairs(stages) do
 	local stage = Stage.find(s)
-	stage:add_monster(monsterCardGatekeeper)
+	--stage:add_monster(monsterCardGatekeeper)
 end
 
 for _, s in ipairs(postLoopStages) do
 	local stage = Stage.find(s)
-	stage:add_monster_loop(monsterCardGatekeeper)
+	--stage:add_monster_loop(monsterCardGatekeeper)
 end
