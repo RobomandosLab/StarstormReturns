@@ -1,13 +1,9 @@
-Turn and face the strange:
+# SSR Changelog *spoilers below!!*
 
-### 0.0.3
-- Added items: Brass Knuckles, Detritive Trematode, Wonder Herb, Watch Metronome
-
-### 0.0.2
-- First closed alpha :)
-- Restructured project to have individual content classes, proper lang loading, overall better organization.
-- Disabled Executioner due to basically being a template.
-- Added items: Armed Backpack, Fork, Dormant Fungus
-
-### 0.0.1
-- WIP Executioner; basic body setup + script; no skills.
+## 0.1
+- Initial release!
+- Adds Nemesis Commando, Executioner, and Nemesis Mercenary.
+- Adds a bunch of items from SS1/SS2!
+- Adds a few new stages!
+- Adds "Typhoon" difficulty.
+- Adds the mimic, gatekeeper, protector, and exploder.  
