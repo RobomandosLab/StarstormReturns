@@ -12,7 +12,7 @@ Starstorm Returns is a work-in-progress mod for Risk of Rain Returns that remast
 - Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
 - Battery: Programmer
-- TRYAGAIN211: Programmer
+- [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Programmer
 - EarthZebra: Programmer
 - Opal: Pixel artist & programmer
 - Altzeus: Music & programmer
