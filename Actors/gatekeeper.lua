@@ -6,7 +6,7 @@ local sprite_mask			= Resources.sprite_load(NAMESPACE, "GatekeeperMask",		path.c
 local sprite_laser_mask		= Resources.sprite_load(NAMESPACE, "GatekeeperLaserMask",	path.combine(SPRITE_PATH, "laserMask.png"), 1, 6, 20)
 local sprite_palette		= Resources.sprite_load(NAMESPACE, "GatekeeperPalette",		path.combine(SPRITE_PATH, "palette.png"))
 local sprite_spawn			= Resources.sprite_load(NAMESPACE, "GatekeeperSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 22, 72, 106)
-local sprite_idle			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle",		path.combine(SPRITE_PATH, "idle.png"), 1, 58, 90)
+local sprite_idle			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle",		path.combine(SPRITE_PATH, "idle.png"), 8, 58, 90, 0.8)
 local sprite_idle2			= Resources.sprite_load(NAMESPACE, "GatekeeperIdle2",		path.combine(SPRITE_PATH, "idle2.png"), 1, 58, 90)
 local sprite_walk			= Resources.sprite_load(NAMESPACE, "GatekeeperWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 57, 90)
 local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "GatekeeperShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 7, 60, 91)
@@ -125,7 +125,8 @@ objLaser:onStep(function(self)
 			laserPar:create(self.x, self.y - math.random(1000), 1, Particle.SYSTEM.middle)
 		end
 		if data.charge % 2 == 0 and math.random(1, data.charge) / 2 <= 11 then
-			laserTrail:create(self.x, self.y - 8, 1, Particle.SYSTEM.middle)
+			local width = gm.round(22 * (0.5 + 2 ^ -(data.charge / 10)))
+			laserTrail:create(self.x + math.random(-width, width), self.y - 8, 1, Particle.SYSTEM.middle)
 		end
 		
 		if data.charge == 1 then

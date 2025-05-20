@@ -2,7 +2,7 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisMercenary")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisMercenary")
 
 local sprite_loadout		= Resources.sprite_load(NAMESPACE, "NemesisMercenarySelect", path.combine(SPRITE_PATH, "select.png"), 19, 28, 0)
-local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
+local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryPortrait", path.combine(SPRITE_PATH, "portrait.png"), 4)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemesisMercenaryPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "NemesisMercenarySkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemesisMercenary", path.combine(SPRITE_PATH, "credits.png"), 1, 8, 10)
@@ -20,7 +20,7 @@ local sprite_decoy			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryDecoy",
 
 local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 9, 14, 20)
 local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
-local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 12, 28)
+local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 13, 56)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 18, 10)
 local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 18, 60, 32)
@@ -149,7 +149,6 @@ stateStab:onStep(function(actor, data)
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
 					local attack = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 100, 65, damage, nil, gm.constants.sSparks9)
 					attack.attack_info.climb = i * 8
-					attack.max_hit_number = 3
 				end
 			end
 		end
@@ -186,10 +185,10 @@ end)
 
 stateTrigger:onStep(function(actor, data)
 	if actor:get_data().slide > 0 then
-		actor:actor_animation_set(sprite_shoot2b, 0.2)
+		actor:actor_animation_set(sprite_shoot2b, 0.22)
 	else
 		actor:skill_util_fix_hspeed()
-		actor:actor_animation_set(sprite_shoot2a, 0.2)
+		actor:actor_animation_set(sprite_shoot2a, 0.22)
 	end
 	
 	if data.fired == 0 then

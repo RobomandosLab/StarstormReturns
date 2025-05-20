@@ -90,7 +90,7 @@
 		},
 		"nemesisMercenaryZ": {
 			"name": "Lascerate",
-			"description": "Injure up to <y>3 enemies</c> with your shotgun's attachment, dealing <y>130% damage</c>."
+			"description": "Injure enemies with your shotgun's attachment for <y>130% damage</c>."
 		},
 		"nemesisMercenaryX": {
 			"name": "Quick Trigger",
@@ -102,11 +102,11 @@
 		},
 		"nemesisMercenaryV": {
 			"name": "Devitalize",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"technicianZ": {
 			"name": "Fine Tune",
