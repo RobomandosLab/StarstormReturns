@@ -185,7 +185,7 @@ end)
 
 stateTrigger:onStep(function(actor, data)
 	if actor:get_data().slide > 0 then
-		actor:actor_animation_set(sprite_shoot2b, 0.22)
+		actor:actor_animation_set(sprite_shoot2b, 0.22) -- 0.22 here because uhhh idk 0.2 felt a bit too slow i guess??
 	else
 		actor:skill_util_fix_hspeed()
 		actor:actor_animation_set(sprite_shoot2a, 0.22)
@@ -203,7 +203,7 @@ stateTrigger:onStep(function(actor, data)
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack = actor:fire_bullet(actor.x, actor.y, 200, actor:skill_util_facing_direction(), damage, 1, gm.constants.sSparks4, Attack_Info.TRACER.enforcer1)
 				attack.attack_info:set_stun(2)
-				attack.attack_info.climb = i * 8
+				attack.attack_info.climb = i * 8 -- 8 is here because the second damage number will be 8 pixels above the first one thats how vanilla does it
 			end
 		end
 	end
