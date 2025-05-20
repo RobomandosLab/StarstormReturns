@@ -3,8 +3,7 @@
 Starstorm Returns is a work-in-progress mod for Risk of Rain Returns that remasters the original Starstorm mod for Risk of Rain 1. It adds new survivors, enemies, stages, difficulties, and items to the game.
 
 ## Feedback, Bug Reports, and Known Issues
-- Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns)
-
+- Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or by telling a developer in the Starstorm 1, or Risk of Rain Returns Discord servers.
 
 
 ## Credits & Thanks
