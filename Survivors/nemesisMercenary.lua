@@ -185,7 +185,7 @@ end)
 
 stateTrigger:onStep(function(actor, data)
 	if actor:get_data().slide > 0 then
-		actor:actor_animation_set(sprite_shoot2b, 0.22) -- 0.22 here because uhhh idk 0.2 felt a bit too slow i guess??
+		actor:actor_animation_set(sprite_shoot2b, 0.22) -- 0.22 here because uhhh idk 0.2 felt a bit too slow i guess?? oh right i forgot to say this is animation speed, 0.25 is 15fps i think
 	else
 		actor:skill_util_fix_hspeed()
 		actor:actor_animation_set(sprite_shoot2a, 0.22)
