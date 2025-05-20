@@ -20,7 +20,7 @@ local sprite_decoy			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryDecoy",
 
 local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 9, 14, 20)
 local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
-local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 13, 56)
+local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 6, 13, 56)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
 local sprite_shoot3			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 18, 10)
 local sprite_shoot4			= Resources.sprite_load(NAMESPACE, "NemesisMercenaryShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 18, 60, 32)
