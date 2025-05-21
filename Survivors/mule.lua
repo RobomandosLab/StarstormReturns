@@ -7,6 +7,7 @@ local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "MulePortraitSmal
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "MuleSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 local sprite_credits 		= Resources.sprite_load(NAMESPACE, "MuleCredits", path.combine(SPRITE_PATH, "credits.png"), 1, 12, 22)
 local sprite_log			= Resources.sprite_load(NAMESPACE, "MuleLog", path.combine(SPRITE_PATH, "log.png"), 1)
+local sprite_wave_mask		= Resources.sprite_load(NAMESPACE, "MuleShockwaveMask", path.combine(SPRITE_PATH, "wave_mask.png"), 1, 8, 8)
 
 local sprite_idle 			= Resources.sprite_load(NAMESPACE, "MuleIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 20, 26)
 local sprite_walk			= Resources.sprite_load(NAMESPACE, "MuleWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 22, 28)
@@ -97,6 +98,84 @@ mule:onInit(function(actor)
 	actor:get_data().z_count = 0
 end)
 
+local objWave = Object.new(NAMESPACE, "MuleShockwave")
+objWave.obj_depth = 1
+objWave:clear_callbacks()
+
+objWave:onCreate(function(self)
+	local data = self:get_data()
+	self.mask = sprite_wave_mask
+	self.sprite_index = sprite_wave_mask
+	self.image_alpha = 0
+	self.direction = 0
+	self.speed = 4.8
+	self.parent = -4
+	data.timer = 140
+	data.color = Color.from_hex(0xE7967E)
+end)
+
+objWave:onStep(function(self)
+	local data = self:get_data()
+	
+	for s = 0, 32 do 
+		if self:is_colliding(gm.constants.pBlock, self.x, self.y) then
+			self.y = self.y - 1
+		end
+	end
+	
+	self:move_contact_solid(270, -1)
+	
+	if self:is_colliding(gm.constants.pBlock) then
+		self.explode = 1
+		self:destroy()
+	end
+	
+	local parent = self.parent
+	if Instance.exists(parent) and parent:is_authority() then
+		local actors = self:get_collisions(gm.constants.pActorCollisionBase)
+
+		for _, actor in ipairs(actors) do
+			if parent:attack_collision_canhit(actor) then
+				self.explode = 1
+				self:destroy()
+				break
+			end
+		end
+	end
+	
+	if data.timer < 0 then
+		self:destroy()
+	else
+		data.timer = data.timer - 1
+		
+		if data.timer % 7 == 0 then
+			local sparks = gm.instance_create(self.x, self.y - 6, gm.constants.oEfExplosion)
+			sparks.depth = -12
+			sparks.sprite_index = gm.constants.sMinerShoot2Dust2
+			sparks.image_xscale = 1 - ((self.direction * 2) / 180)
+			sparks.image_yscale = 1
+		end
+	end
+end)
+
+objWave:onDestroy(function(self)
+	local data = self:get_data()
+	local parent = self.parent
+	
+	if self.explode == 1 then
+		if Instance.exists(parent) and parent:is_authority() then
+			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4.1, nil, nil).attack_info
+			attack_info.knockup = 4
+		end
+
+		self:screen_shake(4)
+		local sparks = gm.instance_create(self.x, self.y + 8, gm.constants.oEfExplosion)
+		sparks.sprite_index = gm.constants.sBoss1Shoot1Pillar
+		sparks.image_yscale = 1
+		self:sound_play(gm.constants.wSmite, 0.5, 1.3 + math.random() * 0.2)
+	end
+end)
+
 local primary = mule:get_primary()
 local secondary = mule:get_secondary()
 local utility = mule:get_utility()
@@ -108,7 +187,6 @@ primary:set_skill_icon(sprite_skills, 0)
 primary.cooldown = 10
 primary.require_key_press = true
 primary.is_primary = true
-primary.hold_facing_direction = true
 
 local statePrimary = State.new(NAMESPACE, "mulePrimary")
 
@@ -207,6 +285,13 @@ statePrimary:onStep(function(actor, data)
 						attack_info.knockup = 3
 					end
 				end
+			end
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local wave = objWave:create(actor.x + i * 6 * actor.image_xscale, actor.y)
+				wave.direction = actor:skill_util_facing_direction()
+				wave.depth = wave.depth + i
+				wave.parent = actor
 			end
 		elseif data.fired == 1 and actor.image_index >= 1 then
 			data.fired = 3
