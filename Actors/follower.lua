@@ -13,17 +13,22 @@ local sprite_death		= Resources.sprite_load(NAMESPACE, "FollowerDeath",		path.co
 
 local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "FollowerShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 17, 38, 65)
 local sprite_spark		= Resources.sprite_load(NAMESPACE, "FollowerSpark",		path.combine(SPRITE_PATH, "spark.png"), 4, 12, 12)
+local sprite_shot_mask	= Resources.sprite_load(NAMESPACE, "LampShotMask",		path.combine(SPRITE_PATH, "projectileMask.png"), 1, 3, 3)
 
 local sprite_buff		= Resources.sprite_load(NAMESPACE, "BuffLamp",			path.combine(PATH, "Sprites/Buffs/lamp.png"), 1, 13, 13)
 
 gm.elite_generate_palettes(sprite_palette)
 
 local sound_spawn		= Resources.sfx_load(NAMESPACE, "FollowerSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
---local sound_hit			= Resources.sfx_load(NAMESPACE, "ExploderHit",		path.combine(SOUND_PATH, "hit.ogg"))
+--local sound_hit			= Resources.sfx_load(NAMESPACE, "FollowerHit",		path.combine(SOUND_PATH, "hit.ogg"))
 local sound_death		= Resources.sfx_load(NAMESPACE, "FollowerDeath",	path.combine(SOUND_PATH, "death.ogg"))
 local sound_shoot		= Resources.sfx_load(NAMESPACE, "FollowerShoot",	path.combine(SOUND_PATH, "shoot.ogg"))
 
 local particleSpark = Particle.find("ror", "Spark")
+local particleTrail = Particle.new(NAMESPACE, "LampShotTrail")
+particleTrail:set_sprite(gm.constants.sPixel, true, true, 0)
+particleTrail:set_life(15, 25)
+particleTrail:set_blend(true)
 
 local follower = Object.new(NAMESPACE, "Follower", Object.PARENT.enemyClassic)
 local follower_id = follower.value
@@ -31,20 +36,13 @@ local follower_id = follower.value
 follower.obj_sprite = sprite_idle
 follower.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 
-local efFollowerAttack = Object.new(NAMESPACE, "EfFollowerAttack")
-local efFollowerTelegraph = Object.new(NAMESPACE, "EfFollowerTelegraph")
-efFollowerAttack.obj_depth = 9
-efFollowerTelegraph.obj_depth = 10
+local objLampShot = Object.new(NAMESPACE, "LampShot")
+objLampShot.obj_depth = -10 -- depth of most enemy projectiles
 
 local EFFECT_COLOR = 0x9EE4F7
-local FOLLOWER_ALLY_SEARCH_RADIUS = 750
-local FOLLOWER_ALLY_SEARCH_GIVE_UP_THRESHOLD = 20
 
 local skillPrimary = Skill.new(NAMESPACE, "followerPrimary")
 local statePrimary = State.new(NAMESPACE, "followerPrimary")
-local buffLamp = Buff.new(NAMESPACE, "lamp")
-
-local _current_ally_check_frame_offset = 0
 
 follower:clear_callbacks()
 follower:onCreate(function(actor)
@@ -70,56 +68,10 @@ follower:onCreate(function(actor)
 	actor:enemy_stats_init(10, 120, 8, 14)
 	actor.pHmax_base = 1.7
 
-	actor.ai_max_distance_y = 500
-	actor.y_range = 500
-	actor.z_range = 500
+	actor.z_range = 600
 	actor:set_default_skill(Skill.SLOT.primary, skillPrimary)
 
-	actor.ally_check_frame_offset = _current_ally_check_frame_offset
-	_current_ally_check_frame_offset = _current_ally_check_frame_offset + 1
-
 	actor:init_actor_late()
-end)
-follower:onStep(function(actor)
-	if not actor:is_authority() then return end
-	if Global.time_stop ~= 0 then return end
-	if actor.actor_state_current_id ~= -1 then return end
-	if (Global._current_frame + actor.ally_check_frame_offset) % 30 ~= 0 then return end
-
-	local should_find_ally = false
-	local target = actor.target
-
-	if not Instance:exists(target) or target.parent.team ~= actor.team then
-		should_find_ally = true
-	end
-
-	if should_find_ally then
-		local allies = List.wrap(actor:find_characters_circle(actor.x, actor.y, FOLLOWER_ALLY_SEARCH_RADIUS, true, actor.team, true))
-		local current_candidate
-		local current_distance = math.huge
-
-		-- only search through 20 potential allies, as otherwise it gets exceedingly slow
-		for i=1, math.min(#allies, FOLLOWER_ALLY_SEARCH_GIVE_UP_THRESHOLD) do
-			local candidate = allies[i]
-			local viable = true
-			-- theoretically faster, doesn't seem to make a big difference though?
-			--local dx, dy = actor.x - candidate.x, actor.y - candidate.y
-			--local distance = dx*dx + dy*dy
-			local distance = gm.point_distance(actor.x, actor.y, candidate.x, candidate.y)
-			if candidate:get_object_index_self() == follower_id then
-				viable = false
-			elseif candidate:buff_stack_count(buffLamp) > 0 then
-				viable = false
-			end
-			if viable and current_distance > distance then
-				current_candidate = candidate.target_marker
-				current_distance = distance
-			end
-		end
-		if current_candidate then
-			actor.target = current_candidate
-		end
-	end
 end)
 
 skillPrimary.cooldown = 6 * 60
@@ -134,54 +86,24 @@ statePrimary:clear_callbacks()
 statePrimary:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
-	data.telegraphed = 0
 
-	data.attack_x = actor.x
-	data.attack_y = actor.y
-
-	-- `target` is an oActorTargetPlayer/oActorTargetEnemy object here, NOT the actor instance itself
-	local target = actor.target
-	if Instance.exists(target) then
-		local direction = math.random(360)
-		local distance = math.random(45)
-
-		data.attack_x = target.x + gm.lengthdir_x(distance, direction)
-		data.attack_y = target.y + gm.lengthdir_y(distance, direction)
-	end
 	actor.interrupt_sound = actor:sound_play(sound_shoot, 1.0, (0.9 + math.random() * 0.2))
 end)
 statePrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1, 0.2)
 
-	local target = actor.target
-	if Instance.exists(target) and target.parent.team == actor.team then
-		data.attack_x = target.x
-		data.attack_y = target.y
-	end
-
-	if data.telegraphed == 0 then
-		local ef = efFollowerTelegraph:create(data.attack_x, data.attack_y)
-		data.telegraphed = 1
-	end
-
 	if actor.image_index >= 8 + data.fired * 2 and data.fired < 2 then
-		if gm._mod_net_isHost() then
-			local end_x, end_y = data.attack_x, data.attack_y
-
-			actor:fire_explosion(end_x, end_y, 20, 20, actor:skill_get_damage(skillPrimary), sprite_spark)
-
-			if Instance.exists(target) and target.parent.team == actor.team then
-				target.parent:buff_apply(buffLamp, 4 * 60)
-				GM.actor_heal_networked(target.parent, actor.damage, false)
-			end
-
-			local ef = efFollowerAttack:create(actor.x - 10 * actor.image_xscale, actor.y-44)
-			ef.end_x = end_x
-			ef.end_y = end_y
-		end
-
 		actor:sound_play(gm.constants.wChainLightning2, 0.8, 0.7 + data.fired * 0.2 + math.random() * 0.2)
+
+		local s = objLampShot:create(actor.x - 13 * actor.image_xscale, actor.y - 44)
+		s.target_hspeed = 4 * actor.image_xscale
+		s.parent = actor
+		s.team = actor.team
+
+		if actor.elite_type ~= -1 then
+			s.image_blend = actor.image_blend -- projectile inherits elite's colour
+		end
 
 		data.fired = data.fired + 1
 	end
@@ -189,67 +111,102 @@ statePrimary:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-efFollowerAttack:clear_callbacks()
-efFollowerAttack:onCreate(function(self)
-	self.end_x = self.x
-	self.end_y = self.y
+objLampShot:clear_callbacks()
+objLampShot:onCreate(function(self)
+	self.parent = -4
+	self.target_hspeed = 0
+	self.team = 2
+	self.image_blend = EFFECT_COLOR
 
-	self.lifetime = 18
-	self.sparked = 0
+	self.attack_speed = 1
 
-	self:instance_sync()
+	self.mask_index = sprite_shot_mask
+
+	self.timer = 0
 end)
-efFollowerAttack:onStep(function(self)
-	if self.sparked == 0 then
-		particleSpark:create(self.end_x, self.end_y, 4)
-		self.sparked = 1
-	end
-
-	self.lifetime = self.lifetime - 1
-	if self.lifetime <= 0 then
+objLampShot:onStep(function(self)
+	-- disappears when its parent is gone
+	if not Instance.exists(self.parent) then
 		self:destroy()
+		return
 	end
-end)
-efFollowerAttack:onDraw(function(self)
-	local alpha = self.lifetime / 18
-	gm.draw_set_alpha(alpha)
-	gm.draw_set_colour(EFFECT_COLOR)
-	gm.draw_lightning(self.x, self.y, self.end_x, self.end_y, EFFECT_COLOR)
 
-	gm.draw_set_alpha(alpha * 0.2)
-	for i=1, 3 do
-		gm.draw_circle(self.end_x, self.end_y, 18 * i + math.random(4), false)
+	-- handle timestop!
+	local data = self:get_data()
+	if Global.time_stop > 0 then
+		if not data.stopped then
+			data.stopped = true
+			data.hspeed = self.hspeed
+			data.vspeed = self.vspeed
+			self.hspeed = 0
+			self.vspeed = 0
+		end
+		return
+	else
+		if data.stopped then
+			data.stopped = false
+			self.hspeed = data.hspeed
+			self.vspeed = data.vspeed
+		end
 	end
-	gm.draw_set_alpha(1)
-end)
-efFollowerAttack:onSerialize(function(self, msg)
-	msg:write_short(self.end_x)
-	msg:write_short(self.end_y)
-end)
-efFollowerAttack:onDeserialize(function(self, msg)
-	self.end_x = msg:read_short()
-	self.end_y = msg:read_short()
-end)
 
-efFollowerTelegraph:clear_callbacks()
-efFollowerTelegraph:onCreate(function(self)
-	self.lifetime = 45
-	self.radius = 0
-end)
-efFollowerTelegraph:onStep(function(self)
-	self.lifetime = self.lifetime - 1
-	if self.lifetime <= 0 then
+	if math.random() < 0.2 then
+		particleTrail:create_colour(self.x + math.random(-5, 5), self.y + math.random(-5, 5), self.image_blend, 1)
+	end
+
+	-- accelerate towards desired horizontal speed
+	if math.abs(self.hspeed) < math.abs(self.target_hspeed) then
+		self.hspeed = self.hspeed + gm.sign(self.target_hspeed) * 0.1
+	end
+
+	self.vspeed = math.sin(self.timer * 0.1) * 2.5
+
+	self.timer = self.timer + 1
+	if self.timer > 60 * 3 then
 		self:destroy()
+		return
 	end
 
-	self.radius = self.radius + 0.2
-	if self.radius > 4 then
-		self.radius = 0
+	local actors = self:get_collisions(gm.constants.pActorCollisionBase)
+
+	for _, actor in ipairs(actors) do
+		if self:attack_collision_canhit(actor) then
+			self:destroy() -- onDestroy handles firing attack
+			return
+		end
 	end
 end)
-efFollowerTelegraph:onDraw(function(self)
-	gm.draw_missile_indicator(self.x, self.y, self.radius * 3)
+objLampShot:onDestroy(function(self)
+	if not Instance.exists(self.parent) then return end
+
+	self.parent:fire_explosion_local(self.x, self.y, 20, 20, 0.5, sprite_spark)
+	particleSpark:create(self.x, self.y, 3)
 end)
+objLampShot:onDraw(function(self)
+	if self.image_blend == 0 then
+		-- blighted elites have a blend of 0 -- black
+		-- with additive blending, this would make the projectile invisible, so handle it separately
+		gm.draw_set_colour(0)
+		gm.draw_set_alpha(0.25)
+		gm.draw_circle(self.x, self.y, 16 + math.random(4), false)
+		gm.draw_set_alpha(1)
+		gm.draw_circle(self.x, self.y, 4, false)
+	else
+		gm.draw_set_colour(self.image_blend)
+
+		gm.gpu_set_blendmode(1)
+		gm.draw_set_alpha(0.1)
+		gm.draw_circle(self.x, self.y, 16 + math.random(4), false)
+		gm.draw_set_alpha(1)
+		gm.draw_circle(self.x, self.y, 4, false)
+		gm.gpu_set_blendmode(0)
+	end
+	--gm.draw_set_alpha(1)
+end)
+
+-- figure out what to do with this later
+--[[
+local buffLamp = Buff.new(NAMESPACE, "lamp")
 
 buffLamp.icon_sprite = sprite_buff
 buffLamp:clear_callbacks()
@@ -296,6 +253,7 @@ buffLamp:onPostDraw(function(actor, stack)
 	end
 	gm.draw_set_alpha(1)
 end)
+]]--
 
 local monsterCard = Monster_Card.new(NAMESPACE, "follower")
 monsterCard.object_id = follower_id
@@ -303,6 +261,7 @@ monsterCard.spawn_cost = 28
 monsterCard.spawn_type = Monster_Card.SPAWN_TYPE.classic
 
 if HOTLOADING then return end
+
 
 -- TODO: evaluate a better approach for populating stages..?
 local stages = {
@@ -319,8 +278,4 @@ end
 for _, s in ipairs(stages_loop) do
 	local stage = Stage.find(s)
 	stage:add_monster_loop(monsterCard)
-end
-
-for _, stage in ipairs(Stage.find_all()) do
-	stage:add_monster(monsterCard)
 end
