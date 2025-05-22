@@ -83,7 +83,7 @@ mule:set_animations({
 	drone_shoot = sprite_drone_shoot,
 })
 
-mule:set_cape_offset(0, -8, 0, -8)
+mule:set_cape_offset(0, -14, 0, -8)
 mule:set_primary_color(Color.from_rgb(211,176,122))
 
 mule.sprite_loadout = sprite_loadout
@@ -126,7 +126,6 @@ objWave:onStep(function(self)
 	self:move_contact_solid(270, -1)
 	
 	if self:is_colliding(gm.constants.pBlock) then
-		self.explode = 1
 		self:destroy()
 	end
 	
@@ -184,7 +183,7 @@ local special = mule:get_special()
 -- INTERFERENCE REMOVAL
 primary:set_skill_icon(sprite_skills, 0)
 
-primary.cooldown = 10
+primary.cooldown = 5
 primary.require_key_press = true
 primary.is_primary = true
 
@@ -210,10 +209,11 @@ end)
 
 statePrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
+	actor:freeze_active_skill(Skill.SLOT.primary)
 	
 	if data.fired < 1 then
 	
-		if data.charging_sound == -1 then
+		if data.charging_sound == -1 and actor.image_index >= 0.5 then
 			data.charging_sound = gm.audio_play_sound(sound_shoot1a, 1, false, 0.4, 0, (0.9 + math.random() * 0.2))
 		end
 		
@@ -254,6 +254,7 @@ statePrimary:onStep(function(actor, data)
 		if data.fired == 2 and actor.image_index >= 1 then
 			data.fired = 3
 			actor:screen_shake(7)
+			actor:skill_util_nudge_forward(10 * actor.image_xscale)
 			actor:sound_play(sound_shoot1c, 1, (0.9 + math.random() * 0.2))
 			actor:get_data().z_count = actor:get_data().z_count + 1
 			
@@ -263,7 +264,6 @@ statePrimary:onStep(function(actor, data)
 			end
 			
 			if gm._mod_net_isHost() then
-				local dmg = 1.7 * data.strength
 				local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
 				local cracker_shot = false
 
@@ -275,10 +275,10 @@ statePrimary:onStep(function(actor, data)
 				local buff_shadow_clone = Buff.find("ror", "shadowClone")
 				for i=0, actor:buff_stack_count(buff_shadow_clone) do
 					if cracker_shot then
-						attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), dmg, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
+						attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), 10, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
 						attack_info.climb = i * 8
 					else
-						local attack_info = actor:fire_explosion(actor.x + 50 * actor.image_xscale, actor.y, 120, 60, dmg, nil, nil).attack_info
+						local attack_info = actor:fire_explosion(actor.x + 50 * actor.image_xscale, actor.y, 120, 60, 10, nil, nil).attack_info
 						attack_info.climb = i * 8
 						attack_info.knockback = attack_info.knockback + 1.5 * data.strength
 						attack_info.knockback_direction = actor.image_xscale
@@ -288,7 +288,7 @@ statePrimary:onStep(function(actor, data)
 			end
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local wave = objWave:create(actor.x + i * 6 * actor.image_xscale, actor.y)
+				local wave = objWave:create(actor.x + i * 32 * actor.image_xscale, actor.y)
 				wave.direction = actor:skill_util_facing_direction()
 				wave.depth = wave.depth + i
 				wave.parent = actor
@@ -296,6 +296,7 @@ statePrimary:onStep(function(actor, data)
 		elseif data.fired == 1 and actor.image_index >= 1 then
 			data.fired = 3
 			actor:screen_shake(2)
+			actor:skill_util_nudge_forward(1.6 * actor.image_xscale * data.strength)
 			actor:sound_play(sound_shoot1b, 1, (0.9 + math.random() * 0.2))
 			actor:get_data().z_count = actor:get_data().z_count + 1
 			data.attack_side = (data.attack_side + 1) % 2
