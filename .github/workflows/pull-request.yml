@@ -15,6 +15,7 @@ jobs:
       REPO_NAME: ${{ github.event.repository.name }}
       ZIP_NAME: ${{ github.repository_owner }}-${{ github.event.repository.name }}.zip
       PR_NUMBER: ${{ github.event.number }}
+      BRANCH_NAME: ${{ github.head_ref }}
 
     steps:
     - name: Checkout repository
@@ -28,6 +29,7 @@ jobs:
         echo "Organization Name: $ORG_NAME"
         echo "Repository Name: $REPO_NAME"
         echo "Pull Request Number: $PR_NUMBER"
+        echo "Branch Name: $BRANCH_NAME"
         echo "Zip File Name: $ZIP_NAME"
 
         # Exclude .py files and other specified patterns
@@ -37,8 +39,8 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: "pr-${{ env.PR_NUMBER }}-${{ github.sha }}"
-        releaseName: "Prerelease PR #${{ env.PR_NUMBER }}"
+        tag: "pr-${{ env.PR_NUMBER }}-${{ github.event.pull_request.head.sha }}"
+        releaseName: "Prerelease ${{ env.BRANCH_NAME }} PR #${{ env.PR_NUMBER }}"
         artifacts: ${{ env.ZIP_NAME }}
         artifactContentType: application/zip
         draft: false

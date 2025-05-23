@@ -1,10 +1,10 @@
 {
 	"name": "Starstorm Returns",
-	"version_number": "0.0.3",
-	"website_url": "https://www.youtube.com/watch?v=wBW4LtSi2QE",
-	"description": "Content mod featuring survivors, enemies, items, stages, and more!",
+	"version_number": "0.1.0",
+	"website_url": "https://github.com/RobomandosLab/StarstormReturns",
+	"description": "A remaster of Starstorm 1, adding new survivors, items, artifacts, stages, enemies and much more to Risk of Rain Returns.",
 	"dependencies": [
-		"ReturnOfModding-ReturnOfModding-1.0.56",
-		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.13"
+		"ReturnOfModding-ReturnOfModding-1.0.70",
+		"RoRRModdingToolkit-RoRR_Modding_Toolkit-1.2.18"
 	]
 }
