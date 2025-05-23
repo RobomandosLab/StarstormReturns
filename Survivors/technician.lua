@@ -9,7 +9,7 @@ local object_missile = Object.find("ror", "EfMissile")
 local particle_spark = Particle.find("ror", "Spark")
 
 -- assets.
-local sprite_loadout			= Resources.sprite_load(NAMESPACE, "TechnicianSelect", path.combine(SPRITE_PATH, "select.png"), 4, 28, 0)
+local sprite_loadout			= Resources.sprite_load(NAMESPACE, "TechnicianSelect", path.combine(SPRITE_PATH, "select.png"), 18, 28, 0)
 local sprite_portrait			= Resources.sprite_load(NAMESPACE, "TechnicianPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "TechnicianSkills", path.combine(SPRITE_PATH, "skills.png"), 7)
