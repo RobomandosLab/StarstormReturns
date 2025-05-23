@@ -1,6 +1,8 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Follower")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Follower")
 
+local EFFECT_COLOR = 0x9EE4F7
+
 local sprite_mask		= Resources.sprite_load(NAMESPACE, "FollowerMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 10, 26)
 local sprite_palette	= Resources.sprite_load(NAMESPACE, "FollowerPalette",	path.combine(SPRITE_PATH, "palette.png"))
 local sprite_spawn		= Resources.sprite_load(NAMESPACE, "FollowerSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 9, 21, 59)
@@ -14,8 +16,6 @@ local sprite_death		= Resources.sprite_load(NAMESPACE, "FollowerDeath",		path.co
 local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "FollowerShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 17, 38, 65)
 local sprite_spark		= Resources.sprite_load(NAMESPACE, "FollowerSpark",		path.combine(SPRITE_PATH, "spark.png"), 4, 12, 12)
 local sprite_shot_mask	= Resources.sprite_load(NAMESPACE, "LampShotMask",		path.combine(SPRITE_PATH, "projectileMask.png"), 1, 3, 3)
-
-local sprite_buff		= Resources.sprite_load(NAMESPACE, "BuffLamp",			path.combine(PATH, "Sprites/Buffs/lamp.png"), 1, 13, 13)
 
 gm.elite_generate_palettes(sprite_palette)
 
@@ -31,15 +31,12 @@ particleTrail:set_life(15, 25)
 particleTrail:set_blend(true)
 
 local follower = Object.new(NAMESPACE, "Follower", Object.PARENT.enemyClassic)
-local follower_id = follower.value
 
 follower.obj_sprite = sprite_idle
 follower.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
 
 local objLampShot = Object.new(NAMESPACE, "LampShot")
 objLampShot.obj_depth = -10 -- depth of most enemy projectiles
-
-local EFFECT_COLOR = 0x9EE4F7
 
 local skillPrimary = Skill.new(NAMESPACE, "followerPrimary")
 local statePrimary = State.new(NAMESPACE, "followerPrimary")
@@ -75,7 +72,6 @@ follower:onCreate(function(actor)
 end)
 
 skillPrimary.cooldown = 6 * 60
-skillPrimary.damage = 0.75
 
 skillPrimary:clear_callbacks()
 skillPrimary:onActivate(function(actor)
@@ -179,7 +175,7 @@ end)
 objLampShot:onDestroy(function(self)
 	if not Instance.exists(self.parent) then return end
 
-	self.parent:fire_explosion_local(self.x, self.y, 20, 20, 0.5, sprite_spark)
+	self.parent:fire_explosion_local(self.x, self.y, 20, 20, 0.75, sprite_spark)
 	particleSpark:create(self.x, self.y, 3)
 end)
 objLampShot:onDraw(function(self)
@@ -204,59 +200,8 @@ objLampShot:onDraw(function(self)
 	--gm.draw_set_alpha(1)
 end)
 
--- figure out what to do with this later
---[[
-local buffLamp = Buff.new(NAMESPACE, "lamp")
-
-buffLamp.icon_sprite = sprite_buff
-buffLamp:clear_callbacks()
-buffLamp:onApply(function(actor, stack)
-	if stack == 1 then
-		local data = actor:get_data()
-		data._preserve_can_jump = actor.can_jump
-		data._preserve_can_drop = actor.can_drop
-		actor.can_jump = true
-		actor.can_drop = true
-
-		if actor.leap_max_distance then
-			data._preserve_leap_max_distance = actor.leap_max_distance
-			actor.leap_max_distance = actor.leap_max_distance + 2
-		end
-	end
-end)
-buffLamp:onRemove(function(actor, stack)
-	if stack == 1 then
-		local data = actor:get_data()
-		actor.can_jump = data._preserve_can_jump
-		actor.can_drop = data._preserve_can_drop
-		data._preserve_can_jump = nil
-		data._preserve_can_drop = nil
-
-		if data._preserve_leap_max_distance then
-			actor.leap_max_distance = data._preserve_leap_max_distance
-			data._preserve_leap_max_distance = nil
-		end
-	end
-end)
-buffLamp:onStatRecalc(function(actor, stack)
-	actor.pHmax = actor.pHmax + 0.6 * stack
-end)
-buffLamp:onPostDraw(function(actor, stack)
-	local radius = 0.3 * math.max(gm.sprite_get_width(actor.sprite_idle), gm.sprite_get_height(actor.sprite_idle))
-
-	local fade = math.min(1, GM.get_buff_time(actor, buffLamp) / 60)
-
-	gm.draw_set_alpha(0.12 * fade)
-	gm.draw_set_colour(EFFECT_COLOR)
-	for i=1, 3 do
-		gm.draw_circle(actor.ghost_x, actor.ghost_y, radius * i + math.random(4), false)
-	end
-	gm.draw_set_alpha(1)
-end)
-]]--
-
 local monsterCard = Monster_Card.new(NAMESPACE, "follower")
-monsterCard.object_id = follower_id
+monsterCard.object_id = follower.value
 monsterCard.spawn_cost = 28
 monsterCard.spawn_type = Monster_Card.SPAWN_TYPE.classic
 
