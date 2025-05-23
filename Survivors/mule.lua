@@ -112,24 +112,24 @@ snare:clear_callbacks()
 
 snare:onApply(function(actor, stack)
 	actor.pHspeed = 0
+	actor.pHmax = 0
 	if not GM.actor_is_boss(actor) then
-		actor.activity = 46
-		actor.pHspeed = 0
+		actor.activity = 50
+		actor.__activity_handler_state = 50
+		actor.state = 0
 	end
 end)
 
 snare:onPostStep(function(actor, stack)
 	actor.pHspeed = 0
+	actor.pHmax = 0
 	if not GM.actor_is_boss(actor) then
-		actor.activity = 46
+		actor.activity = 50
+		actor.__activity_handler_state = 50
 		if actor.sprite_idle then
 			actor.sprite_index = actor.sprite_idle
 		end
 	end
-end)
-
-snare:onStatRecalc(function(actor, stack)
-	actor.pHmax = actor.pHmax - 4
 end)
 
 snare:onRemove(function(actor, stack)
@@ -292,7 +292,6 @@ end)
 
 statePrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	--actor:freeze_active_skill(Skill.SLOT.primary)
 	
 	if data.fired < 1 then
 	
