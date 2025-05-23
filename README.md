@@ -1,13 +1,16 @@
-![SSR Title](./Assets/title.png)
+![SSR Title](https://raw.githubusercontent.com/RobomandosLab/StarstormReturns/refs/heads/main/Sprites/Menu/title.png)
 
-Starstorm Returns is a work-in-progress mod for Risk of Rain Returns that remasters the original Starstorm mod for Risk of Rain 1. It adds new survivors, enemies, stages, difficulties, and items to the game.
+Starstorm Returns is a work-in-progress mod for RoRR that remasters the original RoR1 Starstorm mod . It adds new survivors, enemies, stages, difficulties, and items.
 
 ## Feedback, Bug Reports, and Known Issues
 - Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or by telling a developer in the Starstorm 1, or Risk of Rain Returns Discord servers.
 
 ## FAQ
 ### Is the mod finished?
-No......
+No
+
+### Is it Multiplayer compatible?
+Should be! Please report any issues you find.
 
 ## Credits & Thanks
 - Neik: Creator of Starstorm 1
@@ -35,6 +38,7 @@ No......
 - Neik for creating a wonderful mod and community we have loved and enjoyed
 - Dee for design help and development guidance
 - Swuff for helping kickstart the codebase
+- Starstorm 2 team for their design guidance and support
 - Starstorm fans everywhere
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback

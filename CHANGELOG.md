@@ -6,4 +6,4 @@
 - Adds a bunch of items from SS1/SS2!
 - Adds a few new stages!
 - Adds "Typhoon" difficulty.
-- Adds the mimic, gatekeeper, protector, and exploder.  
+- Adds the mimic, and exploder.  
