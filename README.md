@@ -5,9 +5,14 @@ Starstorm Returns is a work-in-progress mod for Risk of Rain Returns that remast
 ## Feedback, Bug Reports, and Known Issues
 - Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or by telling a developer in the Starstorm 1, or Risk of Rain Returns Discord servers.
 
+## FAQ
+### Is the mod finished?
+No......
 
 ## Credits & Thanks
 - Neik: Creator of Starstorm 1
+- Hobart: Morale support
+- Bread: Github Detective
 - Buns: Project management
 - Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
@@ -27,6 +32,9 @@ Starstorm Returns is a work-in-progress mod for Risk of Rain Returns that remast
 - [Gummies](https://bsky.app/profile/gummies139.bsky.social): Pixel artist
 
 ## Special Thanks
-- Neik for creating a wonderful mod and community we have loved and enjoyed.
+- Neik for creating a wonderful mod and community we have loved and enjoyed
 - Dee for design help and development guidance
 - Swuff for helping kickstart the codebase
+- Starstorm fans everywhere
+- Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
+- Risk of Rain Discord, and RoRRModcord for playtesting and feedback
