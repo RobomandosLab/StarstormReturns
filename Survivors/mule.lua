@@ -10,11 +10,16 @@ local sprite_log			= Resources.sprite_load(NAMESPACE, "MuleLog", path.combine(SP
 local sprite_wave_mask		= Resources.sprite_load(NAMESPACE, "MuleShockwaveMask", path.combine(SPRITE_PATH, "wave_mask.png"), 1, 8, 8)
 
 local sprite_idle 			= Resources.sprite_load(NAMESPACE, "MuleIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 20, 26)
+local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 7, 6)
 local sprite_walk			= Resources.sprite_load(NAMESPACE, "MuleWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 22, 28)
+local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 11, 6)
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "MuleClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 25, 51)
 local sprite_jump			= Resources.sprite_load(NAMESPACE, "MuleJump", path.combine(SPRITE_PATH, "jump_start.png"), 1, 22, 32)
+local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 9, 10)
 local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "MuleJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 22, 32)
+local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 9, 10)
 local sprite_fall			= Resources.sprite_load(NAMESPACE, "MuleFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 22, 32)
+local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 9, 10)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "MuleDeath", path.combine(SPRITE_PATH, "death.png"), 10, 45, 55)
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
 
@@ -102,6 +107,14 @@ mule.sprite_credits = sprite_credits
 mule:clear_callbacks()
 mule:onInit(function(actor)
 	actor:get_data().z_count = 0
+	
+	actor.sprite_idle_half		= Array.new({sprite_idle,		sprite_idle_half, 0})
+	actor.sprite_walk_half		= Array.new({sprite_walk,		sprite_walk_half, 0, sprite_walk_back})
+	actor.sprite_jump_half		= Array.new({sprite_jump,		sprite_jump_half, 0})
+	actor.sprite_jump_peak_half	= Array.new({sprite_jump_peak,	sprite_jump_peak_half, 0})
+	actor.sprite_fall_half		= Array.new({sprite_fall,		sprite_fall_half, 0})
+
+	actor:survivor_util_init_half_sprites()
 end)
 
 local snare = Buff.new(NAMESPACE, "muleSnare")
@@ -126,7 +139,10 @@ snare:onPostStep(function(actor, stack)
 	if not GM.actor_is_boss(actor) then
 		actor.activity = 50
 		actor.__activity_handler_state = 50
-		if actor.sprite_idle then
+		if actor.sprite_climb and GM.actor_state_is_climb_state(actor.actor_state_current_id) then
+			actor.sprite_index = actor.sprite_climb
+			actor.image_index = 0
+		elseif actor.sprite_idle then
 			actor.sprite_index = actor.sprite_idle
 		end
 	end
@@ -139,13 +155,23 @@ snare:onRemove(function(actor, stack)
 end)
 
 local trap = Buff.new(NAMESPACE, "muleTrap")
-trap.icon_sprite = sprite_trap_debuff
-trap.icon_frame_speed = 0.25
-trap.show_icon = true
+trap.show_icon = false
 trap.is_debuff = true
 trap:clear_callbacks()
 
+trap:onApply(function(actor, stack)
+	actor:get_data().trapspeed = 0
+end)
+
 trap:onPostDraw(function(actor, stack)
+	actor:get_data().trapspeed = actor:get_data().trapspeed + 0.25
+	
+	if actor:get_data().trapspeed > 8 then
+		actor:get_data().trapspeed = 0 
+	end
+	
+	gm.draw_sprite(sprite_trap_debuff, actor:get_data().trapspeed, actor.x, actor.y)
+	
 	for _, victim in ipairs(actor:get_data().trapped_enemies) do
 		if Instance.exists(victim) then
 			local parent = victim.trap_parent
@@ -167,11 +193,12 @@ trap:onPostDraw(function(actor, stack)
 				
 				gm.draw_set_alpha(0.8)
 				gm.draw_set_colour(Color.from_rgb(205, 205, 205))
-				gm.draw_line_width(victim.x, victim.y, parent.x, parent.y + victim:get_data().trap_offset_a, 3)
+				gm.draw_line_width(victim.x, victim.y, parent.x, parent.y + victim:get_data().trap_offset_a, 2)
 				
 				if victim:get_data().trap_offset_c then
-					gm.draw_line_width(victim.x, victim.y, victim:get_data().trap_offset_b, victim:get_data().trap_offset_c, 3)
+					gm.draw_line_width(victim.x, victim.y, victim:get_data().trap_offset_b, victim:get_data().trap_offset_c, 2)
 				end
+				gm.draw_set_alpha(1)
 			end
 		end
 	end
@@ -179,6 +206,7 @@ end)
 
 trap:onRemove(function(actor, stack)
 	actor:get_data().trapped_enemies:destroy()
+	actor:get_data().trapspeed = nil
 end)
 
 local objWave = Object.new(NAMESPACE, "MuleShockwave")
@@ -247,7 +275,7 @@ objWave:onDestroy(function(self)
 	if self.explode == 1 then
 		if Instance.exists(parent) and parent:is_authority() then
 			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4, nil, nil).attack_info
-			attack_info.knockup = 8
+			attack_info.knockup = 4
 		end
 
 		self:screen_shake(4)
@@ -278,7 +306,7 @@ primary:onActivate(function(actor)
 end)
 
 statePrimary:clear_callbacks()
-statePrimary:onEnter(function(actor, data)
+statePrimary:onEnter(function(actor, data)	
 	data.fired = 0
 	data.strength = 1.6
 	actor:actor_animation_set(sprite_shoot1charge, 0.06)
@@ -360,7 +388,7 @@ statePrimary:onStep(function(actor, data)
 						attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), 10, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
 						attack_info.climb = i * 8
 					else
-						local attack_info = actor:fire_explosion(actor.x + 50 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
+						local attack_info = actor:fire_explosion(actor.x + 20 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
 						attack_info.climb = i * 8
 						attack_info.knockback = attack_info.knockback + 9
 						attack_info.knockback_direction = actor.image_xscale
@@ -402,8 +430,6 @@ statePrimary:onStep(function(actor, data)
 					else
 						local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
 						attack_info.climb = i * 8
-						attack_info.knockback = attack_info.knockback + 2 * data.strength
-						attack_info.knockback_direction = actor.image_xscale
 					end
 				end
 			end
@@ -419,7 +445,7 @@ end)
 -- IMMOBILIZE
 secondary:set_skill_icon(sprite_skills, 1)
 
-secondary.cooldown = 5 * 60
+secondary.cooldown = 6 * 60
 secondary.damage = 1.25
 
 local stateSecondary = State.new(NAMESPACE, "muleSecondary")
