@@ -620,7 +620,7 @@ vending_shoot_packet:onReceived(function(message, player)
 	local recipient = message:read_instance()
 	inst:get_data().playanim = 1
 	if recipient.actor_state_current_id == -1 and drinkSprites[recipient.class] then
-		recipient:sound_play(sound_vendingDrink)
+		recipient:sound_play(sound_vendingDrink, 1, 1)
 		recipient.__ssr_current_drink_sprite = drinkSprites[recipient.class][inst:get_data().upgraded and 2 or 1]
 		recipient:enter_state(stateDrink)
 	end
