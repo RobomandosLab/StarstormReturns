@@ -412,10 +412,8 @@
 	"actor" : {
 		"Exploder.name" : "Exploder",
 		"Follower.name" : "Follower",
-	},
-	
-	"actor" : {
-		"Exploder.name" : "Exploder",
+		"Wayfarer.name" : "Wayfarer",
+		"Wayfarer.text" : "Usher of Light",
 		"Mimic.name" : "Security Chest",
 		"Gatekeeper.name" : "Gatekeeper",
 		"Protector.name" : "Protector",
