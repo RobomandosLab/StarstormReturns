@@ -31,7 +31,7 @@
 		"technician": {
 			"name": "Technician",
 			"nameUpper": "TECHNICIAN",
-			"description": "",
+			"description": "The <y>Technician</c> is excellent at setting up and maintaining zones of enemy denial. <y>Forced Shutdown</c> can <y>forcibly lock down an area</c> when upgraded. <y>Upgrading</c> gadgets improves their effectiveness, but be careful when doing so in dangerous situations!",
 			"endQuote": "..and so he left, by switching the ship off and on again."
 		}
 	},
