@@ -246,8 +246,8 @@ objWave:onDestroy(function(self)
 	
 	if self.explode == 1 then
 		if Instance.exists(parent) and parent:is_authority() then
-			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4.1, nil, nil).attack_info
-			attack_info.knockup = 4
+			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4, nil, nil).attack_info
+			attack_info.knockup = 8
 		end
 
 		self:screen_shake(4)
@@ -266,7 +266,7 @@ local special = mule:get_special()
 -- INTERFERENCE REMOVAL
 primary:set_skill_icon(sprite_skills, 0)
 
-primary.cooldown = 5
+primary.cooldown = 10
 primary.require_key_press = true
 primary.is_primary = true
 
@@ -292,7 +292,7 @@ end)
 
 statePrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:freeze_active_skill(Skill.SLOT.primary)
+	--actor:freeze_active_skill(Skill.SLOT.primary)
 	
 	if data.fired < 1 then
 	
@@ -323,9 +323,9 @@ statePrimary:onStep(function(actor, data)
 					gm.client_message_send(43, 1, gm.sign(actor.image_xscale))
 				end
 			end
-			actor:actor_animation_set(sprite_shoot1a, 0.25)
+			actor:actor_animation_set(sprite_shoot1a, 0.2)
 			if data.attack_side == 1 then
-				actor:actor_animation_set(sprite_shoot1b, 0.25)
+				actor:actor_animation_set(sprite_shoot1b, 0.2)
 			end
 			actor.image_index = 0
 			data.fired = 1
@@ -363,9 +363,9 @@ statePrimary:onStep(function(actor, data)
 					else
 						local attack_info = actor:fire_explosion(actor.x + 50 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
 						attack_info.climb = i * 8
-						attack_info.knockback = attack_info.knockback + 1.5 * data.strength
+						attack_info.knockback = attack_info.knockback + 9
 						attack_info.knockback_direction = actor.image_xscale
-						attack_info.knockup = 3
+						attack_info.knockup = 6
 					end
 				end
 			end
@@ -386,7 +386,7 @@ statePrimary:onStep(function(actor, data)
 			actor:get_data().z_count = actor:get_data().z_count + 1
 			data.attack_side = (data.attack_side + 1) % 2
 			if gm._mod_net_isHost() then
-				local dmg = 1.7 * data.strength
+				local dmg = 1.25 * data.strength
 				local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
 				local cracker_shot = false
 
@@ -403,7 +403,7 @@ statePrimary:onStep(function(actor, data)
 					else
 						local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
 						attack_info.climb = i * 8
-						attack_info.knockback = attack_info.knockback + 1.5 * data.strength
+						attack_info.knockback = attack_info.knockback + 2 * data.strength
 						attack_info.knockback_direction = actor.image_xscale
 					end
 				end
@@ -420,7 +420,7 @@ end)
 -- IMMOBILIZE
 secondary:set_skill_icon(sprite_skills, 1)
 
-secondary.cooldown = 4 * 60
+secondary.cooldown = 5 * 60
 secondary.damage = 1.25
 
 local stateSecondary = State.new(NAMESPACE, "muleSecondary")
@@ -511,11 +511,14 @@ stateUtility:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
 	data.sound = 0
-	actor.pHspeed = 0
 end)
 
 stateUtility:onStep(function(actor, data)
 	actor:actor_animation_set(sprite_shoot3, 0.25, false)
+	
+	if actor.image_index < 4 then
+		actor:skill_util_fix_hspeed()
+	end
 	
 	if actor.image_index >= 4 and actor.image_index < 10 then 
 		actor.pHspeed = actor.pHmax * actor.image_xscale * math.sqrt(10 - actor.image_index) * 1.5
