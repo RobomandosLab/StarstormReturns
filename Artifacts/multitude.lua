@@ -20,6 +20,13 @@ Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
 			break
 		end
 	end
+	-- apply the same thing to divine teleporters
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporterEpic)) do
+		if teleporter.time >= teleporter.maxtime then
+			spawn = false
+			break
+		end
+	end
 	
 	-- If Providence or his Wurms are present, disable spawns
 	if Instance.find(gm.constants.oBoss1):exists() or Instance.find(gm.constants.oWurmHead):exists() then
@@ -73,6 +80,13 @@ Callback.add(Callback.TYPE.onDraw, "MultitudeWarningMessage", function()
 	
 	-- tbh not sure why in ss1 it uses a different method here for determining whether it should display or not, but who cares, it works
 	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporter)) do
+		if teleporter.active >= 2 then
+			spawn = false
+			break
+		end
+	end
+	-- apply the same thing to divine teleporters
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporterEpic)) do
 		if teleporter.active >= 2 then
 			spawn = false
 			break

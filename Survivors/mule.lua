@@ -50,7 +50,7 @@ local sound_shoot3			= Resources.sfx_load(NAMESPACE, "MuleShoot3", path.combine(
 local sound_shoot4a			= Resources.sfx_load(NAMESPACE, "MuleShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
 local sound_shoot4b			= Resources.sfx_load(NAMESPACE, "MuleShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
 local sound_shoot4c			= Resources.sfx_load(NAMESPACE, "MuleShoot4c", path.combine(SOUND_PATH, "skill4c.ogg"))
-local sound_shoot4e			= Resources.sfx_load(NAMESPACE, "MuleShoot4d", path.combine(SOUND_PATH, "skill4d.ogg"))
+local sound_shoot4d			= Resources.sfx_load(NAMESPACE, "MuleShoot4d", path.combine(SOUND_PATH, "skill4d.ogg"))
 local sound_shoot4e			= Resources.sfx_load(NAMESPACE, "MuleShoot4e", path.combine(SOUND_PATH, "skill4e.ogg"))
 local sound_drone_death		= Resources.sfx_load(NAMESPACE, "MuleDroneDeath", path.combine(SOUND_PATH, "drone_death.ogg"))
 
@@ -295,6 +295,7 @@ local special = mule:get_special()
 primary:set_skill_icon(sprite_skills, 0)
 
 primary.cooldown = 10
+primary.damage = 1.6
 primary.require_key_press = true
 primary.is_primary = true
 
@@ -328,7 +329,7 @@ statePrimary:onStep(function(actor, data)
 		end
 		
 		if actor.image_index < 5 and actor.sprite_index == sprite_shoot1charge then
-			data.strength = 1.6 + 0.6 * math.min(4, math.floor(actor.image_index))
+			data.strength = actor:skill_get_damage(primary) + 0.6 * math.min(4, math.floor(actor.image_index))
 		end
 		
 		if actor.image_index >= 5 and actor.sprite_index == sprite_shoot1charge then
@@ -430,6 +431,7 @@ statePrimary:onStep(function(actor, data)
 					else
 						local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
 						attack_info.climb = i * 8
+						attack_info.knockback_direction = actor.image_xscale
 					end
 				end
 			end
@@ -444,9 +446,8 @@ end)
 
 -- IMMOBILIZE
 secondary:set_skill_icon(sprite_skills, 1)
-
-secondary.cooldown = 6 * 60
 secondary.damage = 1.25
+secondary.cooldown = 6 * 60
 
 local stateSecondary = State.new(NAMESPACE, "muleSecondary")
 
@@ -471,7 +472,7 @@ stateSecondary:onStep(function(actor, data)
 		if actor:is_authority() then
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_bullet(actor.x, actor.y - 4, 1300, actor:skill_util_facing_direction(), 1.25, nil, sprite_sparks3).attack_info
+				local attack_info = actor:fire_bullet(actor.x, actor.y - 4, 1300, actor:skill_util_facing_direction(), actor:skill_get_damage(secondary), nil, sprite_sparks3).attack_info
 				attack_info.climb = i * 8
 				attack_info.mule_immobilize = 1
 			end
@@ -558,11 +559,9 @@ stateUtility:onStep(function(actor, data)
 		data.fired = data.fired + 1
 
 		if actor:is_authority() then
-			local damage = actor:skill_get_damage(utility)
-
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
-				local attack_info = actor:fire_explosion(actor.x, actor.y, 160, 100, damage, nil, sprite_sparks2).attack_info
+				local attack_info = actor:fire_explosion(actor.x, actor.y, 160, 100, actor:skill_get_damage(utility), nil, sprite_sparks2).attack_info
 				attack_info.climb = i * 8
 				attack_info.knockback = 5
 				attack_info.knockback_direction = actor.image_xscale
@@ -578,7 +577,158 @@ end)
 
 -- FAIL-SAFE ASSISTANCE
 special:set_skill_icon(sprite_skills, 3)
-
 special.cooldown = 20 * 60
+
+local scepter = Skill.new(NAMESPACE, "muleVBoosted")
+scepter:set_skill_icon(sprite_skills, 4)
+scepter.cooldown = 20 * 60
+special:set_skill_upgrade(scepter)
+
+local stateSpecial = State.new(NAMESPACE, "muleSpecial")
+
+special:clear_callbacks()
+special:onActivate(function(actor)
+	actor:enter_state(stateSpecial)
+end)
+
+scepter:clear_callbacks()
+scepter:onActivate(function(actor)
+	actor:enter_state(stateSpecial)
+end)
+
+-- this sucks but whatever lmao
+local function muleSoundHeal(self)
+	local chance = math.random()
+	
+	if chance > 0.75 then
+		self:sound_play(sound_shoot4b, 1, 0.9 + math.random() * 0.2)
+	elseif chance > 0.5 then
+		self:sound_play(sound_shoot4c, 1, 0.9 + math.random() * 0.2)
+	elseif chance > 0.25 then
+		self:sound_play(sound_shoot4d, 1, 0.9 + math.random() * 0.2)
+	else
+		self:sound_play(sound_shoot4e, 1, 0.9 + math.random() * 0.2)
+	end
+end
+
+local objDrone = Object.new(NAMESPACE, "muleDrone")
+objDrone.obj_sprite = sprite_drone_idle
+objDrone.obj_depth = 2
+objDrone:clear_callbacks()
+
+objDrone:onCreate(function(self)
+	local data = self:get_data()
+	
+	self.image_speed = 0.3
+	data.timer = 0
+	data.life = 500
+	data.regen = 0.07
+	data.base_sprite = sprite_shoot4drone
+	data.heal_sprite = sprite_shoot4heal
+	data.healing = 0
+end)
+
+objDrone:onStep(function(self)
+	local data = self:get_data()
+	local parent = data.parent
+	
+	if parent and Instance.exists(parent) then
+		local float = math.sin(Global._current_frame * 0.1) * 8
+		local xx = self.x + ((parent.ghost_x + (24 * (parent.image_xscale * -1))) - self.x) * 0.1
+		local yy = self.y + (parent.ghost_y - 48 - float - self.y) * 0.1
+		if data.timer > 84 and data.regen and parent.hp > 0 then
+			self.sprite_index = data.heal_sprite
+			self.image_index = 0
+			data.healing = 1
+			xx = self.x + ((parent.ghost_x + (6 * (parent.image_xscale * -1))) - self.x) * 0.1
+			yy = self.y + (parent.ghost_y - 4 - float - self.y) * 0.1
+		end
+		self.x = xx 
+		self.y = yy
+		self.image_xscale = parent.image_xscale
+		if data.timer >= 95 then
+			data.timer = 0
+			if data.regen then
+				Particle.find("ror", "Spark"):create(parent.ghost_x + 8 * parent.image_xscale, parent.ghost_y - 6, 3, Particle.SYSTEM.middle)
+				muleSoundHeal(self)
+				if parent.maxhp > parent.hp then
+					parent:heal(data.regen)
+					parent:sound_play(gm.constants.wHANDShoot2_2, 0.5, 0.9 + math.random() * 0.2)
+					local flash = GM.instance_create(parent.x, parent.y, gm.constants.oEfFlash)
+					flash.parent = parent
+					flash.image_blend = Color.from_rgb(189, 231, 90)
+					flash.rate = 0.05
+					flash.image_alpha = 0.5
+				else
+					parent:add_barrier(data.regen)
+					parent:sound_play(gm.constants.wHANDShoot2_2, 0.5, 0.9 + math.random() * 0.2)
+					local flash = GM.instance_create(parent.x, parent.y, gm.constants.oEfFlash)
+					flash.parent = parent
+					flash.image_blend = Color.from_rgb(255, 255, 155)
+					flash.rate = 0.05
+					flash.image_alpha = 0.5
+				end
+			end
+		else
+			data.timer = data.timer + 1
+		end
+	end
+	
+	if not (data.healing == 1 and self.sprite_index == data.heal_sprite and self.image_index < 4) then
+		self.sprite_index = data.base_sprite
+	end
+	
+	if data.life and data.life > 0 then
+		data.life = data.life - 1
+	else
+		local sparks = Object.find("ror", "efSparks"):create(self.x, self.y)
+		sparks.sprite_index = gm.constants.sEfExplosive
+		self:sound_play(sound_drone_death, 1, 0.9 + math.random() * 0.2)
+		self:screen_shake(2)
+		self:destroy()
+	end
+end)
+
+stateSpecial:clear_callbacks()
+stateSpecial:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+	data.sound = 0
+end)
+
+stateSpecial:onStep(function(actor, data)
+	actor:actor_animation_set(sprite_shoot4, 0.27, false)
+	actor:skill_util_fix_hspeed()
+	
+	if actor.image_index < 9 then
+		actor.invincible = actor.invincible + 2
+	end
+	
+	if actor.image_index >= 1 and data.sound == 0 then
+		data.sound = 1
+		actor:sound_play(sound_shoot4a, 1.0, 0.9 + math.random() * 0.2)
+	end
+	
+	if actor.image_index >= 9 and data.fired == 0 then
+		data.fired = 1
+
+		--if actor:is_authority() then
+			local drone = objDrone:create(actor.x - (6 * actor.image_xscale * -1), actor.y - 24)
+			drone:get_data().parent = actor
+			drone:get_data().life = 500
+			if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
+				drone:get_data().regen = actor.maxhp * (0.1)
+				drone:get_data().base_sprite = sprite_shoot4drone
+				drone:get_data().heal_sprite = sprite_shoot4heal
+			else
+				drone:get_data().regen = actor.maxhp * (0.07)
+				drone:get_data().base_sprite = sprite_shoot4drone
+				drone:get_data().heal_sprite = sprite_shoot4heal
+			end
+		--end		
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
+end)
 
 local muleLog = Survivor_Log.new(mule, sprite_log)
