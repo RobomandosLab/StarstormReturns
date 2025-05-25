@@ -107,10 +107,10 @@ Callback.add(Callback.TYPE.onDraw, "MultitudeWarningMessage", function()
 	local actor = Player.get_client()
 	if spawn and director:get_data().multitudeTime then
 		if director:get_data().multitudeTime < timeRequired - 200 then
-			if director:get_data().multitudeTime > timeRequired - 1000 then
+			if director:get_data().multitudeTime > timeRequired - 500 then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1) -- makes the text use normal white font
 				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.arriving")) -- the line itself is in the language file
-			elseif director:get_data().multitudeTime > timeRequired - 2000 then
+			elseif director:get_data().multitudeTime > timeRequired - 1000 then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
 				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.approaching"))
 			end
