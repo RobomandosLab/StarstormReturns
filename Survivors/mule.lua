@@ -623,7 +623,7 @@ objDrone:onCreate(function(self)
 	
 	self.image_speed = 0.3
 	data.timer = 0
-	data.life = 500
+	data.life = 300
 	data.regen = 0.07
 	data.base_sprite = sprite_shoot4drone
 	data.heal_sprite = sprite_shoot4heal
@@ -638,7 +638,7 @@ objDrone:onStep(function(self)
 		local float = math.sin(Global._current_frame * 0.1) * 8
 		local xx = self.x + ((parent.ghost_x + (24 * (parent.image_xscale * -1))) - self.x) * 0.1
 		local yy = self.y + (parent.ghost_y - 48 - float - self.y) * 0.1
-		if data.timer > 84 and data.regen and parent.hp > 0 then
+		if data.timer > 44 and data.regen and parent.hp > 0 then
 			self.sprite_index = data.heal_sprite
 			self.image_index = 0
 			data.healing = 1
@@ -648,7 +648,7 @@ objDrone:onStep(function(self)
 		self.x = xx 
 		self.y = yy
 		self.image_xscale = parent.image_xscale
-		if data.timer >= 95 then
+		if data.timer >= 55 then
 			data.timer = 0
 			if data.regen then
 				Particle.find("ror", "Spark"):create(parent.ghost_x + 8 * parent.image_xscale, parent.ghost_y - 6, 3, Particle.SYSTEM.middle)
@@ -706,10 +706,6 @@ stateSpecial:onStep(function(actor, data)
 		actor:actor_animation_set(sprite_shoot4, 0.27, false)
 	end
 	
-	if actor.image_index < 9 then
-		actor.invincible = actor.invincible + 2
-	end
-	
 	if actor.image_index >= 1 and data.sound == 0 then
 		data.sound = 1
 		actor:sound_play(sound_shoot4a, 1.0, 0.9 + math.random() * 0.2)
@@ -721,7 +717,7 @@ stateSpecial:onStep(function(actor, data)
 		--if actor:is_authority() then
 			local drone = objDrone:create(actor.x - (6 * actor.image_xscale * -1), actor.y - 24)
 			drone:get_data().parent = actor
-			drone:get_data().life = 500
+			drone:get_data().life = 300
 			if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
 				drone:get_data().regen = actor.maxhp * (0.1)
 				drone:get_data().base_sprite = sprite_shoot4droneboosted
