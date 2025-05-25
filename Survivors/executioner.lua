@@ -22,7 +22,8 @@ local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "ExecutionerFallHalf"
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 12, 18)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 11, 38, 17)
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
---local sprite_palette		= Resources.sprite_load(NAMESPACE, "ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette		= Resources.sprite_load(NAMESPACE, "ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette_select	= Resources.sprite_load(NAMESPACE, "ExecutionerPaletteSelect", path.combine(SPRITE_PATH, "paletteSelect.png"))
 
 local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
@@ -119,6 +120,16 @@ executioner:set_animations({
 	drone_idle = sprite_drone_idle,
 	drone_shoot = sprite_drone_shoot,
 })
+
+executioner:set_palettes(sprite_palette, sprite_pallete_select, sprite_pallete_select)
+
+local sprite_loadout_PAL1			= Resources.sprite_load(NAMESPACE, "ExecutionerSelect_PAL1", path.combine(SPRITE_PATH, "select_PAL1.png"), 22, 28, 0)
+local sprite_portrait_PAL1			= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait_PAL1", path.combine(SPRITE_PATH, "portrait_PAL1.png"), 3)
+local sprite_portrait_small_PAL1	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall_PAL1", path.combine(SPRITE_PATH, "portraitSmall_PAL1.png"))
+executioner:add_skin("executionerGreen", 1, sprite_loadout_PAL1, sprite_portrait_PAL1, sprite_portrait_small_PAL1)
+
+executioner:add_skin("executionerRed", 2, sprite_loadout, sprite_portrait, sprite_portrait_small)
+executioner:add_skin("executionerPurple", 3, sprite_loadout, sprite_portrait, sprite_portrait_small)
 
 executioner:set_cape_offset(0, -8, 0, -5)
 executioner:set_primary_color(Color.from_rgb(175, 113, 126))
