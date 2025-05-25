@@ -10,22 +10,22 @@ local sprite_log				= Resources.sprite_load(NAMESPACE, "MuleLog", path.combine(S
 local sprite_wave_mask			= Resources.sprite_load(NAMESPACE, "MuleShockwaveMask", path.combine(SPRITE_PATH, "wave_mask.png"), 1, 8, 8)
 
 local sprite_idle 				= Resources.sprite_load(NAMESPACE, "MuleIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 20, 26)
-local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 7, 6)
+local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 6)
 local sprite_walk				= Resources.sprite_load(NAMESPACE, "MuleWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 22, 28)
-local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 11, 6)
+local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 14, 7)
 local sprite_climb				= Resources.sprite_load(NAMESPACE, "MuleClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 25, 51)
 local sprite_jump				= Resources.sprite_load(NAMESPACE, "MuleJump", path.combine(SPRITE_PATH, "jump_start.png"), 1, 22, 32)
-local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 9, 10)
+local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 12, 6)
 local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "MuleJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 22, 32)
-local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 9, 10)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 12, 6)
 local sprite_fall				= Resources.sprite_load(NAMESPACE, "MuleFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 22, 32)
-local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 9, 10)
+local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 12, 6)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "MuleDeath", path.combine(SPRITE_PATH, "death.png"), 10, 45, 55)
 local sprite_decoy				= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
 
 local sprite_shoot1a			= Resources.sprite_load(NAMESPACE, "MuleShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 21, 34)
 local sprite_shoot1b			= Resources.sprite_load(NAMESPACE, "MuleShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 21, 34)
-local sprite_shoot1c			= Resources.sprite_load(NAMESPACE, "MuleShoot1_33", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 21, 34)
+local sprite_shoot1c			= Resources.sprite_load(NAMESPACE, "MuleShoot1_3", path.combine(SPRITE_PATH, "shoot1_3.png"), 9, 39, 36)
 local sprite_shoot2				= Resources.sprite_load(NAMESPACE, "MuleShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 7, 30, 33)
 local sprite_shoot1charge		= Resources.sprite_load(NAMESPACE, "MuleShoot1Charge", path.combine(SPRITE_PATH, "shoot1_charge.png"), 6, 21, 28)
 local sprite_shoot3				= Resources.sprite_load(NAMESPACE, "MuleShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 15, 48, 33)
@@ -111,7 +111,7 @@ mule:onInit(function(actor)
 	actor:get_data().z_count = 0
 	
 	actor.sprite_idle_half		= Array.new({sprite_idle,		sprite_idle_half, 0})
-	actor.sprite_walk_half		= Array.new({sprite_walk,		sprite_walk_half, 0, sprite_walk_back})
+	actor.sprite_walk_half		= Array.new({sprite_walk,		sprite_walk_half, 0, sprite_walk})
 	actor.sprite_jump_half		= Array.new({sprite_jump,		sprite_jump_half, 0})
 	actor.sprite_jump_peak_half	= Array.new({sprite_jump_peak,	sprite_jump_peak_half, 0})
 	actor.sprite_fall_half		= Array.new({sprite_fall,		sprite_fall_half, 0})
@@ -301,43 +301,57 @@ primary.damage = 1.6
 primary.require_key_press = true
 primary.is_primary = true
 
-local statePrimary = State.new(NAMESPACE, "mulePrimary")
+local statePrimaryCharge = State.new(NAMESPACE, "mulePrimaryCharge")
+local statePrimaryPunch = State.new(NAMESPACE, "mulePrimaryPunch")
+local statePrimarySlam = State.new(NAMESPACE, "mulePrimarySlam")
 
 primary:clear_callbacks()
 primary:onActivate(function(actor)
-	actor:enter_state(statePrimary)
+	actor:enter_state(statePrimaryCharge)
 end)
 
-statePrimary:clear_callbacks()
-statePrimary:onEnter(function(actor, data)	
+statePrimaryCharge:clear_callbacks()
+statePrimaryCharge:onEnter(function(actor, data)	
 	data.fired = 0
 	data.strength = 1.6
-	actor:actor_animation_set(sprite_shoot1charge, 0.06)
-	actor.image_index = 0
+	actor.image_index2 = 0
 	data.charging_sound = -1
 	
 	if not data.attack_side then
 		data.attack_side = 0
 	end
+	
+	actor:skill_util_strafe_init()
 end)
 
-statePrimary:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
+statePrimaryCharge:onStep(function(actor, data)
+	actor.sprite_index2 = sprite_shoot1charge
+	actor:skill_util_strafe_update(0.06 * actor.attack_speed, 0.5)
+	actor:skill_util_step_strafe_sprites()
+	
+	if actor.sprite_index == actor.sprite_walk_half[2] then
+		local walk_offset = 0
+		local leg_frame = math.floor(actor.image_index)
+		if leg_frame == 0 or leg_frame == 1 or leg_frame == 4 or leg_frame == 5 then
+			walk_offset = -1
+		elseif leg_frame == 2 or leg_frame == 6 then
+			walk_offset = 1
+		end
+		actor.ydisp = walk_offset -- ydisp controls upper body offset
+	end
 	
 	if data.fired < 1 then
 	
-		if data.charging_sound == -1 and actor.image_index >= 0.5 then
+		if data.charging_sound == -1 and actor.image_index2 >= 0.5 then
 			data.charging_sound = gm.audio_play_sound(sound_shoot1a, 1, false, 0.4, 0, (0.9 + math.random() * 0.2))
 		end
 		
-		if actor.image_index < 5 and actor.sprite_index == sprite_shoot1charge then
+		if actor.image_index2 < 5 and actor.sprite_index2 == sprite_shoot1charge then
 			data.strength = actor:skill_get_damage(primary) + 0.6 * math.min(4, math.floor(actor.image_index))
 		end
 		
-		if actor.image_index >= 5 and actor.sprite_index == sprite_shoot1charge then
-			data.fired = 2
-			actor:actor_animation_set(sprite_shoot1c, 0.2)
-			actor.image_index = 0
+		if actor.image_index2 >= 5 and actor.sprite_index2 == sprite_shoot1charge then
+			data.fired = 1
 		end
 		
 		local release = not actor:control("skill1", 0)
@@ -345,7 +359,7 @@ statePrimary:onStep(function(actor, data)
 			release = gm.bool(actor.activity_var2)
 		end
 
-		if release and data.fired < 1 and actor.sprite_index == sprite_shoot1charge then
+		if release and data.fired < 1 and actor.sprite_index2 == sprite_shoot1charge then
 			if gm._mod_net_isOnline() then
 				if gm._mod_net_isHost() then
 					gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, gm.sign(actor.image_xscale))
@@ -353,88 +367,66 @@ statePrimary:onStep(function(actor, data)
 					gm.client_message_send(43, 1, gm.sign(actor.image_xscale))
 				end
 			end
-			actor:actor_animation_set(sprite_shoot1a, 0.2)
-			if data.attack_side == 1 then
-				actor:actor_animation_set(sprite_shoot1b, 0.2)
-			end
-			actor.image_index = 0
-			data.fired = 1
+			actor:enter_state(statePrimaryPunch)
 		end
 	else
-		if gm.audio_is_playing(data.charging_sound) then
-			gm.audio_stop_sound(data.charging_sound)
-		end
-		if data.fired == 2 and actor.image_index >= 1 then
-			data.fired = 3
-			actor:screen_shake(7)
-			actor:skill_util_nudge_forward(10 * actor.image_xscale)
-			actor:sound_play(sound_shoot1c, 1, (0.9 + math.random() * 0.2))
-			actor:get_data().z_count = actor:get_data().z_count + 1
-			
-			if not gm.bool(actor.free) then
-				par_fire4:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
-				par_debris:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
-			end
-			
-			if gm._mod_net_isHost() then
-				local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
-				local cracker_shot = false
+		actor:enter_state(statePrimarySlam)
+	end
+end)
 
-				if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
-					cracker_shot = true
-					actor:get_data().z_count = 0
-				end
-				
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					if cracker_shot then
-						attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), 10, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
-						attack_info.climb = i * 8
-					else
-						local attack_info = actor:fire_explosion(actor.x + 20 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
-						attack_info.climb = i * 8
-						attack_info.knockback = attack_info.knockback + 9
-						attack_info.knockback_direction = actor.image_xscale
-						attack_info.knockup = 6
-					end
-				end
-			end
-			if not gm.bool(actor.free) then
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					local wave = objWave:create(actor.x + i * 32 * actor.image_xscale, actor.y)
-					wave.direction = actor:skill_util_facing_direction()
-					wave.depth = wave.depth + i
-					wave.parent = actor
-				end
-			end
-		elseif data.fired == 1 and actor.image_index >= 1 then
-			data.fired = 3
-			actor:screen_shake(2)
-			actor:skill_util_nudge_forward(1.6 * actor.image_xscale * data.strength)
-			actor:sound_play(sound_shoot1b, 1, (0.9 + math.random() * 0.2))
-			actor:get_data().z_count = actor:get_data().z_count + 1
-			data.attack_side = (data.attack_side + 1) % 2
-			if gm._mod_net_isHost() then
-				local dmg = 1.25 * data.strength
-				local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
-				local cracker_shot = false
+statePrimaryCharge:onExit(function(actor, data)
+	actor:skill_util_strafe_exit()
+	actor:get_data().strength = data.strength
+	if gm.audio_is_playing(data.charging_sound) then
+		gm.audio_stop_sound(data.charging_sound)
+	end
+end)
 
-				if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
-					cracker_shot = true
-					actor:get_data().z_count = 0
-				end
+statePrimaryPunch:clear_callbacks()
+statePrimaryPunch:onEnter(function(actor, data)	
+	data.fired = 0
+	data.strength = actor:get_data().strength
+	actor.image_index = 0
+	
+	if not data.attack_side then
+		data.attack_side = 0
+	end
+	
+	actor:actor_animation_set(sprite_shoot1a, 0.2)
+	if data.attack_side == 1 then
+		actor:actor_animation_set(sprite_shoot1b, 0.2)
+	end
+end)
+
+statePrimaryPunch:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	
+	if data.fired == 0 and actor.image_index >= 1 then
+		data.fired = 1
+		actor:screen_shake(2)
+		actor:skill_util_nudge_forward(1.6 * actor.image_xscale * data.strength)
+		actor:sound_play(sound_shoot1b, 1, (0.9 + math.random() * 0.2))
+		actor:get_data().z_count = actor:get_data().z_count + 1
+		data.attack_side = (data.attack_side + 1) % 2
+		if gm._mod_net_isHost() then
+			local dmg = 1.25 * data.strength
+			local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
+			local cracker_shot = false
+
+			if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
+				cracker_shot = true
+				actor:get_data().z_count = 0
+			end
 				
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
-					if cracker_shot then
-						attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), dmg, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
-						attack_info.climb = i * 8
-					else
-						local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
-						attack_info.climb = i * 8
-						attack_info.knockback_direction = actor.image_xscale
-					end
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				if cracker_shot then
+					attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), dmg, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
+					attack_info.climb = i * 8
+				else
+					local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
+					attack_info.climb = i * 8
+					attack_info.knockback_direction = actor.image_xscale
 				end
 			end
 		end
@@ -443,7 +435,68 @@ statePrimary:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-statePrimary:onExit(function(actor, data)
+statePrimaryPunch:onExit(function(actor, data)
+	actor:get_data().strength = nil
+end)
+
+statePrimarySlam:clear_callbacks()
+statePrimarySlam:onEnter(function(actor, data)	
+	data.fired = 0
+	actor.image_index = 0
+	actor:actor_animation_set(sprite_shoot1c, 0.2)
+end)
+
+statePrimarySlam:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	
+	if data.fired == 0 and actor.image_index >= 3 then
+		data.fired = 1
+		actor:screen_shake(7)
+		actor:skill_util_nudge_forward(10 * actor.image_xscale)
+		actor:sound_play(sound_shoot1c, 1, (0.9 + math.random() * 0.2))
+		actor:get_data().z_count = actor:get_data().z_count + 1
+		
+		if not gm.bool(actor.free) then
+			par_fire4:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
+			par_debris:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
+		end
+			
+		if gm._mod_net_isHost() then
+			local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
+			local cracker_shot = false
+
+			if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
+				cracker_shot = true
+				actor:get_data().z_count = 0
+			end
+			
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				if cracker_shot then
+					attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), 10, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
+					attack_info.climb = i * 8
+				else
+					local attack_info = actor:fire_explosion(actor.x + 20 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
+					attack_info.climb = i * 8
+					attack_info.knockback = attack_info.knockback + 9
+					attack_info.knockback_direction = actor.image_xscale
+					attack_info.knockup = 6
+				end
+			end
+		end
+		
+		if not gm.bool(actor.free) then
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local wave = objWave:create(actor.x + i * 32 * actor.image_xscale, actor.y)
+				wave.direction = actor:skill_util_facing_direction()
+				wave.depth = wave.depth + i
+				wave.parent = actor
+			end
+		end
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
 end)
 
 -- IMMOBILIZE
