@@ -108,8 +108,6 @@ mule.sprite_credits = sprite_credits
 
 mule:clear_callbacks()
 mule:onInit(function(actor)
-	actor:get_data().z_count = 0
-	
 	actor.sprite_idle_half		= Array.new({sprite_idle,		sprite_idle_half, 0})
 	actor.sprite_walk_half		= Array.new({sprite_walk,		sprite_walk_half, 0, sprite_walk})
 	actor.sprite_jump_half		= Array.new({sprite_jump,		sprite_jump_half, 0})
@@ -223,12 +221,13 @@ objWave:onCreate(function(self)
 	self.direction = 0
 	self.speed = 4.8
 	self.parent = -4
+	self.team = 1
 	data.timer = 140
-	data.color = Color.from_hex(0xE7967E)
 end)
 
 objWave:onStep(function(self)
 	local data = self:get_data()
+	local parent = self.parent
 	
 	for s = 0, 32 do 
 		if self:is_colliding(gm.constants.pBlock, self.x, self.y) then
@@ -242,14 +241,11 @@ objWave:onStep(function(self)
 		self:destroy()
 	end
 	
-	local parent = self.parent
-	if Instance.exists(parent) and parent:is_authority() then
-		local actors = self:get_collisions(gm.constants.pActorCollisionBase)
-
-		for _, actor in ipairs(actors) do
+	local explode = false
+	if Instance.exists(parent) and not explode then
+		for _, actor in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do
 			if parent:attack_collision_canhit(actor) then
-				self.explode = 1
-				self:destroy()
+				explode = true
 				break
 			end
 		end
@@ -268,23 +264,20 @@ objWave:onStep(function(self)
 			sparks.image_yscale = 1
 		end
 	end
-end)
-
-objWave:onDestroy(function(self)
-	local data = self:get_data()
-	local parent = self.parent
 	
-	if self.explode == 1 then
-		if Instance.exists(parent) and parent:is_authority() then
-			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4, nil, nil).attack_info
-			attack_info.knockup = 4
-		end
-
+	if explode == true then
 		self:screen_shake(4)
 		local sparks = gm.instance_create(self.x, self.y + 8, gm.constants.oEfExplosion)
 		sparks.sprite_index = gm.constants.sBoss1Shoot1Pillar
 		sparks.image_yscale = 1
 		self:sound_play(gm.constants.wSmite, 0.5, 1.3 + math.random() * 0.2)
+		
+		if Instance.exists(parent) and parent:is_authority() then
+			local attack_info = parent:fire_explosion(self.x, self.y, 32, 32, 4, nil, nil).attack_info
+			attack_info.knockup = 4
+		end
+		
+		self:destroy()
 	end
 end)
 
@@ -347,13 +340,13 @@ statePrimaryCharge:onStep(function(actor, data)
 		end
 		
 		if actor.image_index2 < 5 and actor.sprite_index2 == sprite_shoot1charge then
-			data.strength = actor:skill_get_damage(primary) + 0.6 * math.min(4, math.floor(actor.image_index))
+			data.strength = actor:skill_get_damage(primary) + 0.6 * math.min(4, math.floor(actor.image_index2))
 		end
 		
-		if actor.image_index2 >= 5 and actor.sprite_index2 == sprite_shoot1charge then
+		if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) and actor.sprite_index2 == sprite_shoot1charge then
 			data.fired = 1
 		end
-		
+
 		local release = not actor:control("skill1", 0)
 		if not actor:is_authority() then
 			release = gm.bool(actor.activity_var2)
@@ -406,25 +399,12 @@ statePrimaryPunch:onStep(function(actor, data)
 		actor:screen_shake(2)
 		actor:skill_util_nudge_forward(1.6 * actor.image_xscale * data.strength)
 		actor:sound_play(sound_shoot1b, 1, (0.9 + math.random() * 0.2))
-		actor:get_data().z_count = actor:get_data().z_count + 1
 		data.attack_side = (data.attack_side + 1) % 2
-		if gm._mod_net_isHost() then
-			local dmg = 1.25 * data.strength
-			local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
-			local cracker_shot = false
-
-			if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
-				cracker_shot = true
-				actor:get_data().z_count = 0
-			end
-				
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				if cracker_shot then
-					attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), dmg, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
-					attack_info.climb = i * 8
-				else
-					local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, dmg, nil, sprite_sparks1).attack_info
+		if actor:is_authority() then
+			if not GM.skill_util_update_heaven_cracker(actor, 1.25 * data.strength, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, 1.25 * data.strength, nil, sprite_sparks1).attack_info
 					attack_info.climb = i * 8
 					attack_info.knockback_direction = actor.image_xscale
 				end
@@ -454,28 +434,16 @@ statePrimarySlam:onStep(function(actor, data)
 		actor:screen_shake(7)
 		actor:skill_util_nudge_forward(10 * actor.image_xscale)
 		actor:sound_play(sound_shoot1c, 1, (0.9 + math.random() * 0.2))
-		actor:get_data().z_count = actor:get_data().z_count + 1
 		
 		if not gm.bool(actor.free) then
 			par_fire4:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
 			par_debris:create(actor.x + 40 * actor.image_xscale, actor.y + 8, 2, Particle.SYSTEM.middle)
 		end
 			
-		if gm._mod_net_isHost() then
-			local heaven_cracker_count = actor:item_stack_count(Item.find("ror", "heavenCracker"))
-			local cracker_shot = false
-
-			if heaven_cracker_count > 0 and actor:get_data().z_count >= 5 - heaven_cracker_count then
-				cracker_shot = true
-				actor:get_data().z_count = 0
-			end
-			
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
-				if cracker_shot then
-					attack_info = actor:fire_bullet(actor.x + 20 * actor.image_xscale, actor.y - 8, 700, actor:skill_util_facing_direction(), 10, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
-					attack_info.climb = i * 8
-				else
+		if actor:is_authority() then
+			if not GM.skill_util_update_heaven_cracker(actor, 1.25 * data.strength, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
 					local attack_info = actor:fire_explosion(actor.x + 20 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
 					attack_info.climb = i * 8
 					attack_info.knockback = attack_info.knockback + 9
@@ -492,6 +460,7 @@ statePrimarySlam:onStep(function(actor, data)
 				wave.direction = actor:skill_util_facing_direction()
 				wave.depth = wave.depth + i
 				wave.parent = actor
+				wave.team = actor.team
 			end
 		end
 	end
@@ -524,7 +493,7 @@ stateSecondary:onStep(function(actor, data)
 	if data.fired == 0 and actor.image_index >= 1 then
 		data.fired = 1
 		actor:sound_play(sound_shoot2a, 1, 0.9 + math.random() * 0.2)
-		if actor:is_authority() then
+		if gm._mod_net_isHost then
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y - 4, 1300, actor:skill_util_facing_direction(), actor:skill_get_damage(secondary), nil, sprite_sparks3).attack_info
@@ -537,9 +506,57 @@ stateSecondary:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
+local immobilizeSync = Packet.new()
+immobilizeSync:onReceived(function(msg)
+	local actor = msg:read_instance()
+
+	if not actor:exists() then return end
+	
+	GM.apply_buff(actor, trap, 3 * 60, 1)
+		
+	local victims = List.new()
+	
+	actor:get_data().trapped_enemies = List.new()
+	actor:get_data().trapped_enemies:clear()
+	
+	actor:collision_ellipse_list(actor.x - 280, actor.y - 200, actor.x + 280, actor.y + 200, gm.constants.pActor, false, false, victims, true)
+	local count = 0
+	for _, victim in ipairs(victims) do
+		if victim.team == actor.team then
+			GM.apply_buff(victim, snare, 3 * 60, 1)
+			victim.trap_parent = actor
+			victim:get_data().trap_offset_a = nil
+			victim:get_data().trap_offset_b = nil
+			victim:get_data().trap_offset_c = nil
+			actor:get_data().trapped_enemies:add(victim.value)
+			count = count + 1
+			if count > 4 then
+				break
+			end
+		end
+	end
+	
+	victims:destroy()
+end)
+
+local function sync_immobilize(actor)
+	if not gm._mod_net_isHost() then
+		log.warning("sync_immobilize called on client!")
+		return
+	end
+
+	local msg = immobilizeSync:message_begin()
+	msg:write_instance(actor)
+	msg:send_to_all()
+end
+
 Callback.add(Callback.TYPE.onAttackHit, "muleInflictImmobilize", function(hit_info)
 	if hit_info.attack_info.mule_immobilize == 1 then
 		actor = hit_info.target
+		if gm._mod_net_isOnline() then
+			sync_immobilize(actor)
+		end
+		
 		GM.apply_buff(actor, trap, 3 * 60, 1)
 		
 		actor:sound_play(sound_shoot2b, 1, 0.9 + math.random() * 0.2)
@@ -687,6 +704,10 @@ objDrone:onStep(function(self)
 	local data = self:get_data()
 	local parent = data.parent
 	
+	if parent.dead then
+		data.life = 0
+	end
+	
 	if parent and Instance.exists(parent) then
 		local float = math.sin(Global._current_frame * 0.1) * 8
 		local xx = self.x + ((parent.ghost_x + (24 * (parent.image_xscale * -1))) - self.x) * 0.1
@@ -707,16 +728,24 @@ objDrone:onStep(function(self)
 				Particle.find("ror", "Spark"):create(parent.ghost_x + 8 * parent.image_xscale, parent.ghost_y - 6, 3, Particle.SYSTEM.middle)
 				muleSoundHeal(self)
 				if parent.maxhp > parent.hp then
-					parent:heal(data.regen)
+					if gm._mod_net_isHost() then
+						parent:heal(data.regen)
+					end
+					
 					parent:sound_play(gm.constants.wHANDShoot2_2, 0.5, 0.9 + math.random() * 0.2)
+					
 					local flash = GM.instance_create(parent.x, parent.y, gm.constants.oEfFlash)
 					flash.parent = parent
 					flash.image_blend = Color.from_rgb(189, 231, 90)
 					flash.rate = 0.05
 					flash.image_alpha = 0.5
 				else
-					parent:add_barrier(data.regen)
+					if gm._mod_net_isHost() then
+						parent:add_barrier(data.regen)
+					end
+					
 					parent:sound_play(gm.constants.wHANDShoot2_2, 0.5, 0.9 + math.random() * 0.2)
+					
 					local flash = GM.instance_create(parent.x, parent.y, gm.constants.oEfFlash)
 					flash.parent = parent
 					flash.image_blend = Color.from_rgb(255, 255, 155)
@@ -733,7 +762,7 @@ objDrone:onStep(function(self)
 		self.sprite_index = data.base_sprite
 	end
 	
-	if data.life and data.life > 0 then
+	if data.life > 0 then
 		data.life = data.life - 1
 	else
 		local sparks = Object.find("ror", "efSparks"):create(self.x, self.y)
@@ -767,20 +796,18 @@ stateSpecial:onStep(function(actor, data)
 	if actor.image_index >= 9 and data.fired == 0 then
 		data.fired = 1
 
-		--if actor:is_authority() then
-			local drone = objDrone:create(actor.x - (6 * actor.image_xscale * -1), actor.y - 24)
-			drone:get_data().parent = actor
-			drone:get_data().life = 300
-			if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
-				drone:get_data().regen = actor.maxhp * (0.1)
-				drone:get_data().base_sprite = sprite_shoot4droneboosted
-				drone:get_data().heal_sprite = sprite_shoot4healboosted
-			else
-				drone:get_data().regen = actor.maxhp * (0.07)
-				drone:get_data().base_sprite = sprite_shoot4drone
-				drone:get_data().heal_sprite = sprite_shoot4heal
-			end
-		--end		
+		local drone = objDrone:create(actor.x - (6 * actor.image_xscale * -1), actor.y - 24)
+		drone:get_data().parent = actor
+		drone:get_data().life = 300
+		if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
+			drone:get_data().regen = actor.maxhp * (0.1)
+			drone:get_data().base_sprite = sprite_shoot4droneboosted
+			drone:get_data().heal_sprite = sprite_shoot4healboosted
+		else
+			drone:get_data().regen = actor.maxhp * (0.07)
+			drone:get_data().base_sprite = sprite_shoot4drone
+			drone:get_data().heal_sprite = sprite_shoot4heal
+		end	
 	end
 	
 	actor:skill_util_exit_state_on_anim_end()
