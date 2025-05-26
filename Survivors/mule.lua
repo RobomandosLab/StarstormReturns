@@ -360,10 +360,14 @@ statePrimaryCharge:onStep(function(actor, data)
 					gm.client_message_send(43, 1, gm.sign(actor.image_xscale))
 				end
 			end
-			actor:enter_state(statePrimaryPunch)
+			if actor:is_authority() then
+				GM.actor_set_state_networked(actor, statePrimaryPunch)
+			end
 		end
 	else
-		actor:enter_state(statePrimarySlam)
+		if actor:is_authority() then
+			GM.actor_set_state_networked(actor, statePrimarySlam)
+		end
 	end
 end)
 
