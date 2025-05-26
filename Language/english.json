@@ -416,6 +416,7 @@
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest",
 		"Gatekeeper.name" : "Gatekeeper",
+		"Admonitor.name" : "Clay Admonitor",
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
 	},
