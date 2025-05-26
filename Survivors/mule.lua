@@ -304,11 +304,12 @@ primary:onActivate(function(actor)
 end)
 
 statePrimaryCharge:clear_callbacks()
-statePrimaryCharge:onEnter(function(actor, data)	
+statePrimaryCharge:onEnter(function(actor, data)
+	actor.image_index2 = 0
 	data.fired = 0
 	data.strength = 1.6
-	actor.image_index2 = 0
 	data.charging_sound = -1
+	data.bullshitfixtimer = 0
 	
 	if not data.attack_side then
 		data.attack_side = 0
@@ -321,6 +322,7 @@ statePrimaryCharge:onStep(function(actor, data)
 	actor.sprite_index2 = sprite_shoot1charge
 	actor:skill_util_strafe_update(0.06 * actor.attack_speed, 0.5)
 	actor:skill_util_step_strafe_sprites()
+	data.bullshitfixtimer = data.bullshitfixtimer + 1
 	
 	if actor.sprite_index == actor.sprite_walk_half[2] then
 		local walk_offset = 0
@@ -352,7 +354,7 @@ statePrimaryCharge:onStep(function(actor, data)
 			release = gm.bool(actor.activity_var2)
 		end
 
-		if release and data.fired < 1 and actor.sprite_index2 == sprite_shoot1charge then
+		if release and data.fired < 1 and actor.sprite_index2 == sprite_shoot1charge and data.bullshitfixtimer > 1 then
 			if gm._mod_net_isOnline() then
 				if gm._mod_net_isHost() then
 					gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, gm.sign(actor.image_xscale))
@@ -380,7 +382,7 @@ statePrimaryCharge:onExit(function(actor, data)
 end)
 
 statePrimaryPunch:clear_callbacks()
-statePrimaryPunch:onEnter(function(actor, data)	
+statePrimaryPunch:onEnter(function(actor, data)
 	data.fired = 0
 	data.strength = actor:get_data().strength
 	actor.image_index = 0
