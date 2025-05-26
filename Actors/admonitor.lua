@@ -157,18 +157,24 @@ monsterCardPuncher.spawn_cost = 160
 monsterCardPuncher.spawn_type = Monster_Card.SPAWN_TYPE.classic
 monsterCardPuncher.can_be_blighted = true
 
-if HOTLOADING then return end
-
 local stages = {
+	"ror-templeOfTheElders",
+	"ror-riskOfRain",
+}
+
+local postLoopStages = {
 	"ror-sunkenTombs",
 	"ror-ancientValley",
 	"ror-boarBeach",
 	"ror-magmaBarracks",
-	"ror-templeOfTheElders",
-	"ssr-whistlingBasin",
 }
 
 for _, s in ipairs(stages) do
+	local stage = Stage.find(s)
+	stage:add_monster(monsterCardPuncher)
+end
+
+for _, s in ipairs(postLoopStages) do
 	local stage = Stage.find(s)
 	stage:add_monster_loop(monsterCardPuncher)
 end

@@ -48,7 +48,8 @@ basin_stage:add_monster({
 })
 basin_stage:add_monster_loop({
     "impOverlord",
-    "lemrider"
+    "lemrider",
+	Monster_Card.find(NAMESPACE, "admonitor")
 })
 
 basin_stage:add_interactable({
@@ -119,7 +120,8 @@ outlands_stage:add_monster({
     "colossus",
     "clayMan",
     "toxicBeast",
-    "scavenger"
+    "scavenger",
+	Monster_Card.find(NAMESPACE, "admonitor")
 })
 
 outlands_stage:add_interactable({
