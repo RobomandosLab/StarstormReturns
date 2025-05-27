@@ -10,17 +10,17 @@ local sprite_log				= Resources.sprite_load(NAMESPACE, "MuleLog", path.combine(S
 local sprite_wave_mask			= Resources.sprite_load(NAMESPACE, "MuleShockwaveMask", path.combine(SPRITE_PATH, "wave_mask.png"), 1, 8, 8)
 
 local sprite_idle 				= Resources.sprite_load(NAMESPACE, "MuleIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 20, 26)
-local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 6)
+local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 26)
 local sprite_walk				= Resources.sprite_load(NAMESPACE, "MuleWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 22, 28)
 local sprite_walk_back			= Resources.sprite_load(NAMESPACE, "MuleWalkBack", path.combine(SPRITE_PATH, "walk_back.png"), 8, 22, 27)
-local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 14, 7)
+local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 14, 28)
 local sprite_climb				= Resources.sprite_load(NAMESPACE, "MuleClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 25, 51)
 local sprite_jump				= Resources.sprite_load(NAMESPACE, "MuleJump", path.combine(SPRITE_PATH, "jump_start.png"), 1, 22, 32)
-local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 12, 6)
+local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 12, 32)
 local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "MuleJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 22, 32)
-local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 12, 6)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 12, 32)
 local sprite_fall				= Resources.sprite_load(NAMESPACE, "MuleFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 22, 32)
-local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 12, 6)
+local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 12, 32)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "MuleDeath", path.combine(SPRITE_PATH, "death.png"), 10, 45, 55)
 local sprite_decoy				= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
 
@@ -292,7 +292,7 @@ primary:set_skill_icon(sprite_skills, 0)
 
 primary.cooldown = 10
 primary.damage = 1.6
-primary.require_key_press = true
+primary.require_key_press = false
 primary.is_primary = true
 
 local statePrimaryCharge = State.new(NAMESPACE, "mulePrimaryCharge")
