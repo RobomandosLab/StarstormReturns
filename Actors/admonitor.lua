@@ -8,7 +8,7 @@ local sprite_mask		= Resources.sprite_load(NAMESPACE, "AdmonitorMask",		path.com
 local sprite_palette	= Resources.sprite_load(NAMESPACE, "AdmonitorPalette",	path.combine(SPRITE_PATH, "palette.png"))
 local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 13, 28, 40)
 local sprite_idle		= Resources.sprite_load(NAMESPACE, "AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27)
-local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 26, 40)
+local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
 local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
 local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
 local sprite_fall		= Resources.sprite_load(NAMESPACE, "AdmonitorFall",		path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
@@ -143,7 +143,7 @@ Callback.add(Callback.TYPE.onAttackHit, "SSRPuncherPush", function(hit_info)
 	if hit_info.attack_info.__ssr_puncher_push then
 		if hit_info.target and GM.actor_is_classic(hit_info.target) then
 			if gm._mod_net_isOnline() then
-				sync_puncher_push(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- we use a packet to sync the effect for clients in multiplayer
+				sync_puncher_push(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the effect for clients in multiplayer
 			end
 			hit_info.target:get_data().puncher_push = hit_info.attack_info.__ssr_puncher_push
 			GM.apply_buff(hit_info.target, push, 3 * 60, 1)
