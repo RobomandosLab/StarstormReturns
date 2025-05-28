@@ -851,14 +851,14 @@ objExecutionerAxe:onStep(function(self)
 					local dmg = self.damage_coeff
 					local proc = not already_hit[hit.id] -- only proc once per hit enemy
 
-					local actor = GM.attack_collision_resolve(hit)
-					if actor:buff_stack_count(buffFear) > 0 then
-						dmg = dmg * 2
-					end
-
 					local attack_info = self.parent:fire_direct(hit, dmg, self.direction, hit.x, hit.y, sprite_ion_sparks2, proc).attack_info
 					attack_info.execution = 1
 					attack_info.stun = 0.5
+
+					local actor = GM.attack_collision_resolve(hit)
+					if actor:buff_stack_count(buffFear) > 0 then
+						attack_info:set_critical(true)
+					end
 
 					-- always direct knockback inwards -- effectively sucks victims into the grinder while hitting them
 					if hit.x > self.x then
@@ -905,8 +905,8 @@ objExecutionerAxe:onStep(function(self)
 
 		if self.hitstop == 0 then
 			-- jump forward a bit to compensate for hitstop
-			-- 0.75x multiplier effectively slows it by 25% while hitting stuff
-			self.time = self.time + 0.02 * attack_rate * 0.75
+			-- 0.6x multiplier effectively slows it by 40% while hitting stuff
+			self.time = self.time + 0.02 * attack_rate * 0.6
 		end
 	else
 		-- move forward normally
