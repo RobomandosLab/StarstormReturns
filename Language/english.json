@@ -415,6 +415,7 @@
 	"actor" : {
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest",
+		"DroneHack.name" : "Hacking Drone",
 		"Gatekeeper.name" : "Gatekeeper",
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
@@ -422,7 +423,9 @@
 
 	"interactable" : {
 		"MimicInactive.text" : "..?",
-		"MimicInactive.name" : "Large Chest?"
+		"MimicInactive.name" : "Large Chest?",
+		"DroneHackItem.text" : "Repair Hacking Drone",
+		"DroneHackItem.name" : "Broken Hacking Drone"
 	},
 
 	"elite" : {
