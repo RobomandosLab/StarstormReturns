@@ -39,8 +39,6 @@ thunderDrone:onCreate(function( inst )
     inst.drone_upgrade_type_id = Object.find(NAMESPACE, "GildedThunderDrone").value
     inst.interactable_child = thunderDronePickup.value 
 
-    gm._mod_instance_set_mask(inst.value, gm.constants.sPMask)
-
     inst.persistent = 1
     inst:instance_sync()
 end)
@@ -48,22 +46,15 @@ end)
 thunderDrone:onStep(function( inst )
 	local master = inst.master
 
-    if not Instance.exists(master) then
-        return
-    end
-
-    if master.dead then
-        inst.hp = -1
-        inst:actor_death(true)
-        return
-    end
+    if not Instance.exists(master) then return end 
+    if master.dead then inst:destroy() return end
 
     if inst.state == 1 and inst.returning == 0 then
         if not Instance.exists(inst.target) then return end
         if not Instance.exists(master) then return end
         
-        inst.x = GM.lerp(inst.x, inst.target.x, inst.chase_motion_lerp * 0.25 * (inst.drone_move_rate / (1/9)))
-        inst.y = GM.lerp(inst.y, inst.target.y - 150, inst.chase_motion_lerp * 0.1 * (inst.drone_move_rate / (1/9)))
+        inst.x = GM.lerp(inst.x, inst.target.x, inst.chase_motion_lerp * 0.25 * (inst.drone_move_rate * 9))
+        inst.y = GM.lerp(inst.y, inst.target.y - 150, inst.chase_motion_lerp * 0.1 * (inst.drone_move_rate * 9))
         inst.chase_motion_lerp = math.min(1, inst.chase_motion_lerp + 0.1)
 
         if Global._current_frame - inst.fire_frame >= math.max(1, 100/inst.attack_speed) and math.abs(inst.x - inst.target.x) < 15 and math.abs(inst.y - inst.target.y) < 175 and inst.charging == 0 then
