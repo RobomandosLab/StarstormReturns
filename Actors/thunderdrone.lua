@@ -22,11 +22,10 @@ thunderDrone:onCreate(function( inst )
     inst.sprite_idle_broken = sprite_idle_broken
     inst.sprite_shoot1 = sprite_attack
     inst.sprite_shoot1_broken = sprite_attack_broken
-    inst:drone_stats_init(800)
+    inst:drone_stats_init(600)
     inst:init_actor_late()
 
     inst.x_range = 600
-    inst.x_range_min = 40
     inst.fire_frame = Global._current_frame
 
     inst.returning = 0
@@ -61,9 +60,7 @@ thunderDrone:onStep(function( inst )
             inst.charging = 1
         end
 
-        local xdist = math.abs(inst.x - master.x)
-        local ydist = math.abs(inst.y - master.y)
-        local dist = math.sqrt(xdist^2 + ydist^2)
+        local dist = gm.point_distance(inst.x, inst.y, master.x, master.y)
 
         if dist > 800 then
             inst.returning = 1

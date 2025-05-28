@@ -40,7 +40,7 @@ shockDrone:onCreate(function( inst ) -- this is setup for the drone object itsel
     inst.sprite_idle_broken = sprite_idle_broken
     inst.sprite_shoot1 = sprite_attack
     inst.sprite_shoot1_broken = sprite_attack_broken
-    inst:drone_stats_init(400) -- this sets the base health value used by the drone (drones only need their health set)
+    inst:drone_stats_init(350) -- this sets the base health value used by the drone (drones only need their health set)
     inst:init_actor_late()
 
     inst.x_range = 600 -- this just dictates when the drone is able to see an enemy
@@ -97,9 +97,7 @@ shockDrone:onStep(function( inst )
 
 
         -- this is a bit of code that allows the drone to return to its owner if the owner gets too far away
-        local xdist = math.abs(inst.x - master.x)
-        local ydist = math.abs(inst.y - master.y)
-        local dist = math.sqrt(xdist^2 + ydist^2)
+        local dist = gm.point_distance(inst.x, inst.y, master.x, master.y)
 
         if dist > 800 then
             inst.returning = 1
@@ -141,7 +139,7 @@ end)
 local drone_card = Interactable_Card.new(NAMESPACE, "shockDronePickup")
 drone_card.object_id = shockDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 120 -- credits needed to spawn it
+drone_card.spawn_cost = 100 -- credits needed to spawn it
 drone_card.spawn_weight = 6 -- i dont fully understand this value but it functions sorta like rarity to my understanding
 drone_card.default_spawn_rarity_override = 1 -- all the vanilla drones use this value
 

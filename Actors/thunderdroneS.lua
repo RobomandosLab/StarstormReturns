@@ -22,7 +22,6 @@ gildedThunderDrone:onCreate(function( inst )
     inst:init_actor_late()
 
     inst.x_range = 600
-    inst.x_range_min = 40
     inst.fire_frame = Global._current_frame
 
     inst.returning = 0
@@ -55,9 +54,7 @@ gildedThunderDrone:onStep(function( inst )
             inst.charging = 1
         end
 
-        local xdist = math.abs(inst.x - master.x)
-        local ydist = math.abs(inst.y - master.y)
-        local dist = math.sqrt(xdist^2 + ydist^2)
+        local dist = gm.point_distance(inst.x, inst.y, master.x, master.y)
 
         if dist > 800 then
             inst.returning = 1
