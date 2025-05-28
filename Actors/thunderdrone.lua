@@ -39,7 +39,6 @@ thunderDrone:onCreate(function( inst )
     inst.interactable_child = thunderDronePickup.value 
 
     inst.persistent = 1
-    inst:instance_sync()
 end)
 
 thunderDrone:onStep(function( inst )

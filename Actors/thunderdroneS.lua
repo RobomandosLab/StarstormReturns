@@ -33,7 +33,6 @@ gildedThunderDrone:onCreate(function( inst )
     inst.recycle_tier = 3.0
 
     inst.persistent = 1
-    inst:instance_sync()
 end)
 
 gildedThunderDrone:onStep(function( inst )

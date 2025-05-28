@@ -1,3 +1,7 @@
+-- I AM GOING TO GO AHEAD AND PREFACE ALL THE DRONES IN THIS FAMILY WITH A MASSIVE DISCLAIMER:
+-- CUSTOM DRONES ARE WEIRD AND MESSY. IF YOU HAVE A BIT OF NUANCE TO YOUR DRONES BEHAVIOR, OR A SEQUENCE IN MIND, THINGS WILL GET ROUGH.
+-- I WILL DO MY ABSOLUTE BEST TO EXPLAIN THIS NIGHTMARE SCRIPT, BEAR WITH ME.
+
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/DuplicatorDrone")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/DuplicatorDrone")
 
@@ -28,15 +32,19 @@ fabricatorDrone:onCreate(function( inst )
 
     inst.x_range = 0
     inst.fire_frame = -2700 -- this ensures the drone will start ready to go
-    inst.search_frame = Global._current_frame
-    inst.item = nil
+    inst.search_frame = Global._current_frame -- this is a standard thing i use to check cooldowns
+
+    inst.item = nil -- variable to hold the item thats gonna be duped
+    inst.item_id = nil -- this is to specifically store the id to dupe
+    inst.duplicating = 0 -- this number acts as a sort of second state for the drone, telling it what part of the dupe sequence its in
+    inst.dupe_step = 0 -- this is used while its locking on to an item
+    inst.cooldown = 45 * 60 -- cooldown between dupes
 
     inst.recycle_tier = 0.0
     inst.drone_upgrade_type_id = Object.find(NAMESPACE, "DuplicatorDrone").value
     inst.interactable_child = fabricatorDronePickup.value 
 
     inst.persistent = 1
-    inst:instance_sync()
 end)
 
 fabricatorDrone:onStep(function( inst )
@@ -45,21 +53,22 @@ fabricatorDrone:onStep(function( inst )
     if not Instance.exists(master) then return end
     if master.dead then inst:destroy() return end
 
-    if Global._current_frame - inst.fire_frame >= 45 * 60 then
-        if inst.item then
-            local item = Item.wrap(inst.item.item_id)
-            item:create(inst.x, inst.y, inst.master).item_stack_kind = Item.STACK_KIND.temporary_blue
-
-            inst.item = nil
-            inst.fire_frame = Global._current_frame
+    if Global._current_frame - inst.fire_frame >= inst.cooldown then -- if the drone is off cooldown
+        if inst.item and inst.duplicating == 0 then -- if theres an available item and the drone isnt duping, start duping
+            inst.duplicating = 1
         end
 
-        inst.sprite_index = inst.hp/inst.maxhp >= 0.5 and sprite_idle or sprite_idle_broken
+        -- this part is just for sprites
+        inst.sprite_idle = sprite_idle 
+        inst.sprite_idle_broken = sprite_idle_broken
     else
-        inst.sprite_index = inst.hp/inst.maxhp >= 0.5 and sprite_idle_cd or sprite_idle_broken_cd
+        inst.sprite_idle = sprite_idle_cd
+        inst.sprite_idle_broken = sprite_idle_broken_cd
     end
 
-    if Global._current_frame - inst.search_frame >= 2 * 60 then 
+    -- this is the search loop, it runs every 2 seconds 
+    -- if the drone isnt in the middle of duping something and is off cooldown it looks for the nearest item
+    if Global._current_frame - inst.search_frame >= 2 * 60 and Global._current_frame - inst.fire_frame >= inst.cooldown and inst.duplicating == 0 then
         local pickups = Instance.find_all(gm.constants.pPickupItem)
         local nearest = nil
         local sdist = nil
@@ -67,9 +76,9 @@ fabricatorDrone:onStep(function( inst )
         for _, pickup in ipairs(pickups) do
             local dist = gm.point_distance(master.x, master.y, pickup.x, pickup.y)
 
-            if dist <= 150 then
+            if dist <= 150 then -- if an item is sufficiently close by
                 if nearest then
-                    if dist < sdist then
+                    if dist < sdist then -- this looks for specifically the closest nearby item
                         nearest = pickup
                         sdist = dist
                     end
@@ -80,11 +89,78 @@ fabricatorDrone:onStep(function( inst )
             end
         end
 
-        if nearest then
+        if nearest then -- updates the drones target item appropriately
             inst.item = nearest
         else
             inst.item = nil
         end
+    end
+
+    -- this is the transitionary state that starts the dupe animation and locks in the dupe itself
+    if inst.duplicating == 2 then 
+        if Instance.exists(inst.item) then
+            inst.image_index = 0
+            inst.sprite_index = inst.sprite_shoot1
+            inst.item_id = inst.item.item_id -- this stores the id in case you pick up the item after going to dupe it
+            inst.duplicating = 3
+        else
+            inst.duplicating = 0
+            inst.item = nil
+            inst.item_id = nil
+        end
+    end
+
+    -- this is just to sync the dupe with the drones animation because it looks cool
+    if inst.sprite_index == inst.sprite_shoot1 or inst.sprite_index == inst.sprite_shoot1_broken then
+        if inst.image_index >= 18 and inst.duplicating == 3 then
+            local item = Item.wrap(inst.item_id) -- get item
+            item:create(inst.x, inst.y, inst.master).item_stack_kind = Item.STACK_KIND.temporary_blue -- spawn item
+
+            inst.duplicating = 0
+            inst.item = nil
+            inst.item_id = nil
+            inst.fire_frame = Global._current_frame
+        end
+    end
+end)
+
+fabricatorDrone:onDraw(function( inst )
+	if inst.duplicating == 1 then
+        if not Instance.exists(inst.item) then -- exit if the pickup disappears
+            inst.duplicating = 2
+            inst.dupe_step = 0
+        end
+        
+        if inst.dupe_step >= 200 then -- go to next stage if 200 frames have passed
+            inst.duplicating = 2
+            inst.dupe_step = 0
+        end
+
+        if gm.point_distance(inst.master.x, inst.master.y, inst.item.x, inst.item.y) >= 300 then -- if you walk away, stop duping
+            inst.duplicating = 0
+            inst.dupe_step = 0
+            inst.item = nil
+            return
+        end
+
+        -- this is just draw code for the effect
+        gm.draw_set_alpha(0.5)
+        gm.gpu_set_blendmode(1)
+
+        gm.draw_set_colour(Color.TEXT_YELLOW)
+		gm.draw_line_width(inst.x, inst.y, inst.item.x, inst.item.y, 5 + math.random() * 2)
+		gm.draw_circle(inst.item.x, inst.item.y, 4 + math.random() * 8, false)
+		gm.draw_circle(inst.x, inst.y, 2 + math.random() * 4, false)
+
+		gm.draw_set_colour(Color.WHITE)
+		gm.draw_line_width(inst.x, inst.y, inst.item.x, inst.item.y, 2)
+		gm.draw_circle(inst.item.x, inst.item.y, 8, true)
+		gm.draw_circle(inst.x, inst.y, 4, true)
+
+        gm.draw_set_alpha(1)
+        gm.gpu_set_blendmode(0)
+
+        inst.dupe_step = inst.dupe_step + 1
     end
 end)
 

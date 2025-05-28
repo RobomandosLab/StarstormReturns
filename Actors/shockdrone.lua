@@ -54,7 +54,6 @@ shockDrone:onCreate(function( inst ) -- this is setup for the drone object itsel
     inst.interactable_child = shockDronePickup.value -- this is the interactable you want to give you the drone
 
     inst.persistent = 1 -- drone doesnt despawn
-    inst:instance_sync()
 end)
 
 shockDrone:onStep(function( inst )
