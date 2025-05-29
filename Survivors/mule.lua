@@ -820,4 +820,4 @@ stateSpecial:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-local muleLog = Survivor_Log.new(mule, sprite_log)
+--local muleLog = Survivor_Log.new(mule, sprite_log)
