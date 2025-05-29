@@ -6,7 +6,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Admonitor")
 
 local sprite_mask		= Resources.sprite_load(NAMESPACE, "AdmonitorMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 11, 26)
 local sprite_palette	= Resources.sprite_load(NAMESPACE, "AdmonitorPalette",	path.combine(SPRITE_PATH, "palette.png"))
-local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 13, 28, 40)
+local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 15, 58, 39)
 local sprite_idle		= Resources.sprite_load(NAMESPACE, "AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27)
 local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
 local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
