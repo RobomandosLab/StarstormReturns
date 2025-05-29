@@ -31,14 +31,14 @@ fabricatorDrone:onCreate(function( inst )
     inst:init_actor_late()
 
     inst.x_range = 0
-    inst.fire_frame = -2700 -- this ensures the drone will start ready to go
+    inst.fire_frame = -1800 -- this ensures the drone will start ready to go
     inst.search_frame = Global._current_frame -- this is a standard thing i use to check cooldowns
 
     inst.item = nil -- variable to hold the item thats gonna be duped
     inst.item_id = nil -- this is to specifically store the id to dupe
     inst.duplicating = 0 -- this number acts as a sort of second state for the drone, telling it what part of the dupe sequence its in
     inst.dupe_step = 0 -- this is used while its locking on to an item
-    inst.cooldown = 45 * 60 -- cooldown between dupes
+    inst.cooldown = 30 * 60 -- cooldown between dupes
 
     inst.recycle_tier = 0.0
     inst.drone_upgrade_type_id = Object.find(NAMESPACE, "DuplicatorDrone").value
@@ -76,7 +76,7 @@ fabricatorDrone:onStep(function( inst )
         for _, pickup in ipairs(pickups) do
             local dist = gm.point_distance(master.x, master.y, pickup.x, pickup.y)
 
-            if dist <= 150 then -- if an item is sufficiently close by
+            if dist <= 150 and pickup.item_stack_kind == Item.STACK_KIND.normal then -- if an item is sufficiently close by
                 if nearest then
                     if dist < sdist then -- this looks for specifically the closest nearby item
                         nearest = pickup
@@ -178,9 +178,11 @@ end)
 local drone_card = Interactable_Card.new(NAMESPACE, "fabricatorDronePickup")
 drone_card.object_id = fabricatorDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 90
-drone_card.spawn_weight = 6
+drone_card.spawn_cost = 80
+drone_card.spawn_weight = 5
 drone_card.default_spawn_rarity_override = 1
+
+if HOTLOADING then return end
 
 local stages = Stage.find_all()
 for _, stage in ipairs(stages) do

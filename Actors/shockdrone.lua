@@ -53,6 +53,8 @@ shockDrone:onCreate(function( inst ) -- this is setup for the drone object itsel
     inst.drone_upgrade_type_id = Object.find(NAMESPACE, "ThunderDrone").value -- this is the drone you want it to turn into upon being upgraded
     inst.interactable_child = shockDronePickup.value -- this is the interactable you want to give you the drone
 
+    print(Stage.find("ssr-torridOutlands"))
+
     inst.persistent = 1 -- drone doesnt despawn
 end)
 
@@ -138,11 +140,30 @@ end)
 local drone_card = Interactable_Card.new(NAMESPACE, "shockDronePickup")
 drone_card.object_id = shockDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 100 -- credits needed to spawn it
+drone_card.spawn_cost = 90 -- credits needed to spawn it
 drone_card.spawn_weight = 6 -- i dont fully understand this value but it functions sorta like rarity to my understanding
 drone_card.default_spawn_rarity_override = 1 -- all the vanilla drones use this value
 
-local stages = Stage.find_all()
-for _, stage in ipairs(stages) do
+if HOTLOADING then return end
+
+local stages = {
+    "ror-skyMeadow",
+    "ror-ancientValley",
+    "ror-dampCaverns"
+}
+
+local loop_stages = {
+    "ror-desolateForest",
+    "ror-driedLake"
+}
+
+
+for _, s in ipairs(stages) do
+    local stage = Stage.find(s)
     stage:add_interactable(drone_card)
+end
+
+for _, s in ipairs(loop_stages) do
+    local stage = Stage.find(s)
+    stage:add_interactable_loop(drone_card)
 end

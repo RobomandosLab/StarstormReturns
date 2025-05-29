@@ -164,7 +164,23 @@ Callback.add(Callback.TYPE.onAttackHit, "SSThunderDroneHit", function( hit_info 
     end
 end)
 
-local stages = Stage.find_all()
-for _, stage in ipairs(stages) do
+if HOTLOADING then return end
+
+local stages = {
+    "ror-riskOfRain"
+}
+
+local loop_stages = {
+    "ror-magmaBarracks"
+}
+
+
+for _, s in ipairs(stages) do
+    local stage = Stage.find(s)
     stage:add_interactable(drone_card)
+end
+
+for _, s in ipairs(loop_stages) do
+    local stage = Stage.find(s)
+    stage:add_interactable_loop(drone_card)
 end

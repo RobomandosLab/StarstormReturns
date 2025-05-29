@@ -18,6 +18,29 @@ gildedDuplicatorDrone.obj_depth = -202
 gildedDuplicatorDrone.obj_sprite = sprite_idle
 
 
+local function GetNextTier( tier )
+    if tier < 2 then
+        return tier + 1
+    elseif tier == 2 then
+        return 4
+    elseif tier == 4 then
+        return 4
+    else
+        return nil
+    end
+end
+
+local function GetRandomItem( tier, categories )
+	local rand = Item.get_random(tier)
+    if rand.loot_tags & categories ~= 0 then
+        return rand
+    else
+        return GetRandomItem(tier, categories)
+    end
+end
+
+
+
 gildedDuplicatorDrone:onCreate(function( inst )
     inst.sprite_idle = sprite_idle
     inst.sprite_idle_broken = sprite_idle_broken
@@ -27,14 +50,14 @@ gildedDuplicatorDrone:onCreate(function( inst )
     inst:init_actor_late()
 
     inst.x_range = 0
-    inst.fire_frame = -1800 -- this ensures the drone will start ready to go
+    inst.fire_frame = -3600 -- this ensures the drone will start ready to go
     inst.search_frame = Global._current_frame -- this is a standard thing i use to check cooldowns
 
     inst.item = nil -- variable to hold the item thats gonna be duped
     inst.item_id = nil -- this is to specifically store the id to dupe
     inst.duplicating = 0 -- this number acts as a sort of second state for the drone, telling it what part of the dupe sequence its in
     inst.dupe_step = 0 -- this is used while its locking on to an item
-    inst.cooldown = 30 * 60 -- cooldown between dupes
+    inst.cooldown = 60 * 60 -- cooldown between dupes
 
     inst.recycle_tier = 2.0
 
@@ -70,7 +93,7 @@ gildedDuplicatorDrone:onStep(function( inst )
         for _, pickup in ipairs(pickups) do
             local dist = gm.point_distance(master.x, master.y, pickup.x, pickup.y)
 
-            if dist <= 150 then -- if an item is sufficiently close by
+            if dist <= 150 and pickup.item_stack_kind == Item.STACK_KIND.normal and GetNextTier(Item.wrap(pickup.item_id).tier) then -- if an item is sufficiently close by
                 if nearest then
                     if dist < sdist then -- this looks for specifically the closest nearby item
                         nearest = pickup
@@ -95,7 +118,11 @@ gildedDuplicatorDrone:onStep(function( inst )
         if Instance.exists(inst.item) then
             inst.image_index = 0
             inst.sprite_index = inst.sprite_shoot1
+
             inst.item_id = inst.item.item_id -- this stores the id in case you pick up the item after going to dupe it
+            inst.item:destroy()
+            inst.item = nil
+
             inst.duplicating = 3
         else
             inst.duplicating = 0
@@ -108,12 +135,13 @@ gildedDuplicatorDrone:onStep(function( inst )
     if inst.sprite_index == inst.sprite_shoot1 or inst.sprite_index == inst.sprite_shoot1_broken then
         if inst.image_index >= 18 and inst.duplicating == 3 then
             local item = Item.wrap(inst.item_id) -- get item
-            item:create(inst.x, inst.y, inst.master) -- spawn item
-            item:create(inst.x, inst.y, inst.master)
-            item:create(inst.x, inst.y, inst.master)
+            local tier = GetNextTier(item.tier)
+            local rand = GetRandomItem(tier, item.loot_tags & 7)
+            rand:create(inst.x, inst.y, inst.master)
+            rand:create(inst.x, inst.y, inst.master)
+            rand:create(inst.x, inst.y, inst.master)
 
             inst.duplicating = 0
-            inst.item = nil
             inst.item_id = nil
             inst.fire_frame = Global._current_frame
         end
