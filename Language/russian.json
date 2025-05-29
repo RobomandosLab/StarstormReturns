@@ -15,11 +15,11 @@
 			"arrival" : "<y>Пункт назначения:</c>\nСтиллуотер-Бей,\nНьюдредж,\nЕвропа"
 		},
 		"mule" : {
-			"name" : "MULE",
-			"nameUpper" : "MULE",
-			"description" : "EVERY <y>MULE</c> UNIT IS ADEQUATELY EQUIPPED AND READY FOR DUTY. BUILT WITH HIGH QUALITY MATERIALS FOR MAXIMUM WORK PERFORMANCE. THIS MODEL INCLUDES THE <y>FORAGER SET OF TOOLS</c>, PERFECT FOR <y>HUNTING</c>, <y>EXPLORATION</c> AND OTHER DANGEROUS TASKS FOR THE COMMON USER. IN ORDER TO INITIALIZE PLEASE STATE A DIRECTIVE ON SYSTEM BOOT.",
-			"endQuote" : "..and so it left, pistons creaking, directive unstated.",
-			"story": "PSA: The MULE units are neither sentient nor pets. Calling them 'Molly' will not impact the MULE unit's programming.",
+			"name" : "МУЛ",
+			"nameUpper" : "МУЛ",
+			"description" : "КАЖДАЯ МОДЕЛЬ <y>МУЛА</c> ОБОРУДОВАНА И ГОТОВА К РАБОТЕ. СОЗДАНЫ ИЗ ВЫСОКОКАЧЕСТВЕННЫХ МАТЕРИАЛОВ ДЛЯ МАКСИМАЛЬНОЙ ПРОИЗВОДИТЕЛЬНОСТИ РАБОТЫ. ДАННАЯ МОДЕЛЬ ВКЛЮЧАЕТ <y>НАБОР ИНСТРУМЕНТОВ ДЛЯ ДОБЫЧИ РЕСУРСОВ</c>, ИДЕАЛЬНАЯ ДЛЯ <y>ОХОТЫ</c>, <y>ИССЛЕДОВАНИЯ</c> И ДРУГИХ ПОРУЧЕНИЙ, ОПАСНЫХ ДЛЯ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ. ДЛЯ ИНИЦИАЛИЗАЦИИ УКАЖИТЕ ДИРЕКТИВУ ПРИ ЗАГРУЗКЕ СИСТЕМЫ.",
+			"endQuote" : "..и он улетел, со скрипом поршней, без директивы.",
+			"story": "ОБЩЕСТВЕННОЕ ОБЪЯВЛЕНИЕ: Модели МУЛ не разумны, и не являются домашними животными. Они не запрограммированы откликаться на имя 'Молли'.",
 			"id" : "",
 			"departure" : "",
 			"arrival" : ""
@@ -75,24 +75,24 @@
 			"description": "Вы кидаете два проецируемых топора дугой, нанося <y>1500% урона</c> в секунду. Урон <y>удвоен</c> против <y>испуганных</c> врагов.\nКазни <y>ускоряют перезарядку навыков на одну секунду."
 		},
 		"muleZ": {
-			"name": "INTERFERENCE REMOVAL",
-			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+			"name": "УДАЛЕНИЕ ПОМЕХ",
+			"description": "ВЫ БЬЁТЕ ВРАГОВ, НАНОСЯ <y>200% УРОНА</c>. УДЕРЖИВАЙТЕ, ЧТОБЫ ЗАРЯДИТЬ УДАР ОБ ЗЕМЛЮ, НАНОСЯЩИЙ <y>1400% УРОНА</c>."
 		},
 		"muleX": {
-			"name": "IMMOBILIZE",
-			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+			"name": "СВЯЗЫВАНИЕ",
+			"description": "ВЫ СТРЕЛЯЕТЕ ЛОВУШКОЙ, НАНОСЯ <y>125% УРОНА</c>. ЛОВУШКА <b>ОБЕЗДВИЖИВАЕТ</c> ДО <y>5 ВРАГОВ</c> РЯДОМ С ЦЕЛЬЮ."
 		},
 		"muleC": {
-			"name": "TORQUE CALIBRATION",
-			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+			"name": "КАЛИБРАЦИЯ ПОРШНЕЙ",
+			"description": "<y>ВЫ КРУТИТЕСЬ ВПЕРЕД</c>, НАНОСЯ <y>4X100% УРОНА</c>. ПОСЛЕДНИЙ УДАР <y>ОГЛУШАЕТ</c>."
 		},
 		"muleV": {
-			"name": "FAIL-SAFE ASSISTANCE",
-			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+			"name": "БЕЗОПАСНАЯ ПОМОЩЬ",
+			"description": "ВЫ ЗАПУСКАЕТЕ ПЕРСОНАЛЬНЫЙ РЕМОНТНЫЙ ДРОН НА 8 СЕКУНД. ОН <g>ИСЦЕЛЯЕТ ВАС НА 5X7% ОТ ВАШЕГО МАКСИМАЛЬНОГО ЗДОРОВЬЯ</c>. ПРИ ПОЛНОМ ЗДОРОВЬЕ, <g>ДАЕТ БАРЬЕР</c>."
 		},
 		"muleVBoosted": {
-			"name": "FAIL-SAFE ASSISTANCE 2.0",
-			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+			"name": "БЕЗОПАСНАЯ ПОМОЩЬ 2.0",
+			"description": "ВЫ ЗАПУСКАЕТЕ ПЕРСОНАЛЬНЫЙ РЕМОНТНЫЙ ДРОН НА 8 СЕКУНД. ОН <g>ИСЦЕЛЯЕТ ВАС НА 5X10% ОТ ВАШЕГО МАКСИМАЛЬНОГО ЗДОРОВЬЯ</c>. ПРИ ПОЛНОМ ЗДОРОВЬЕ, <g>ДАЕТ БАРЬЕР</c>."
 		},
 		"nemesisCommandoZ": {
 			"name": "Клинок Прекращения",
