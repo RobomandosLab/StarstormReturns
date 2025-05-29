@@ -2,7 +2,7 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Executioner")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Executioner")
 
 -- sprites.
-local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 22, 28, 0)
+local sprite_loadout		= Resources.sprite_load(NAMESPACE, "ExecutionerSelect", path.combine(SPRITE_PATH, "select.png"), 23, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "ExecutionerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Resources.sprite_load(NAMESPACE, "ExecutionerSkills", path.combine(SPRITE_PATH, "skills.png"), 11)
