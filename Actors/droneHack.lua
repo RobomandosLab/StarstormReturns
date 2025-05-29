@@ -203,6 +203,7 @@ if HOTLOADING then return end
 
 local stages = {
 	"ror-dampCaverns",
+	"ror-sunkenTombs",
 	"ror-hiveCluster",
 	"ror-magmaBarracks",
 }
