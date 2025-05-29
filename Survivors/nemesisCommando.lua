@@ -1,7 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
-local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", path.combine(SPRITE_PATH, "select.png"), 25, 28, 0)
+local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", path.combine(SPRITE_PATH, "select.png"), 34, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemCommandoPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall", path.combine(SPRITE_PATH, "portraitTiny.png"))
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
