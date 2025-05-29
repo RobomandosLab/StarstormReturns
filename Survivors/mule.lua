@@ -40,9 +40,9 @@ local sprite_drone_idle			= Resources.sprite_load(NAMESPACE, "MulePlayerDroneIdl
 local sprite_drone_shoot		= Resources.sprite_load(NAMESPACE, "MulePlayerDroneShoot", path.combine(SPRITE_PATH, "playerdroneshoot.png"), 5, 33, 13)
 local sprite_trap_debuff		= Resources.sprite_load(NAMESPACE, "MuleTrapDebuff", path.combine(SPRITE_PATH, "trap_debuff.png"), 8, 18, 18)
 local sprite_snare_debuff		= Resources.sprite_load(NAMESPACE, "MuleSnareDebuff", path.combine(SPRITE_PATH, "snare_debuff.png"), 1, 18, 12)
-local sprite_sparks1			= Resources.sprite_load(NAMESPACE, "MuleSparks1", path.combine(SPRITE_PATH, "sparks1.png"), 3, 10, 16)
-local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "MuleSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 14, 10)
-local sprite_sparks3			= Resources.sprite_load(NAMESPACE, "MuleSparks3", path.combine(SPRITE_PATH, "sparks3.png"), 4, 8, 16)
+local sprite_sparks1			= Resources.sprite_load(NAMESPACE, "MuleSparks1", path.combine(SPRITE_PATH, "sparks1.png"), 3, 13, 25)
+local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "MuleSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 27, 24)
+local sprite_sparks3			= Resources.sprite_load(NAMESPACE, "MuleSparks3", path.combine(SPRITE_PATH, "sparks3.png"), 4, 22, 16)
 
 local sound_shoot1a				= Resources.sfx_load(NAMESPACE, "MuleShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
 local sound_shoot1b				= Resources.sfx_load(NAMESPACE, "MuleShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
@@ -339,7 +339,7 @@ statePrimaryCharge:onStep(function(actor, data)
 	if data.fired < 1 then
 	
 		if data.charging_sound == -1 and actor.image_index2 >= 0.5 then
-			data.charging_sound = gm.audio_play_sound(sound_shoot1a, 1, false, 0.4, 0, (0.9 + math.random() * 0.2))
+			data.charging_sound = actor:sound_play(sound_shoot1a, 1, (0.9 + math.random() * 0.2))
 		end
 		
 		if actor.image_index2 < 5 and actor.sprite_index2 == sprite_shoot1charge then
