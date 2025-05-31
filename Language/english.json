@@ -14,6 +14,16 @@
 			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
 			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa"
 		},
+		"mule" : {
+			"name" : "MULE",
+			"nameUpper" : "MULE",
+			"description" : "EVERY <y>MULE</c> UNIT IS ADEQUATELY EQUIPPED AND READY FOR DUTY. BUILT WITH HIGH QUALITY MATERIALS FOR MAXIMUM WORK PERFORMANCE. THIS MODEL INCLUDES THE <y>FORAGER SET OF TOOLS</c>, PERFECT FOR <y>HUNTING</c>, <y>EXPLORATION</c> AND OTHER DANGEROUS TASKS FOR THE COMMON USER. IN ORDER TO INITIALIZE PLEASE STATE A DIRECTIVE ON SYSTEM BOOT.",
+			"endQuote" : "..and so it left, pistons creaking, directive unstated.",
+			"story": "PSA: The MULE units are neither sentient nor pets. Calling them 'Molly' will not impact the MULE unit's programming.",
+			"id" : "",
+			"departure" : "",
+			"arrival" : ""
+		},
 		"nemesisCommando" : {
 			"name" : "Nemesis Commando",
 			"nameUpper" : "NEMESIS COMMANDO",
@@ -63,6 +73,26 @@
 		"executionerV2Boosted": {
 			"name": "Skullbuster",
 			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"muleZ": {
+			"name": "INTERFERENCE REMOVAL",
+			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		"muleX": {
+			"name": "IMMOBILIZE",
+			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		"muleC": {
+			"name": "TORQUE CALIBRATION",
+			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		"muleV": {
+			"name": "FAIL-SAFE ASSISTANCE",
+			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleVBoosted": {
+			"name": "FAIL-SAFE ASSISTANCE 2.0",
+			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
 		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
@@ -416,6 +446,7 @@
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest",
 		"Gatekeeper.name" : "Gatekeeper",
+		"Admonitor.name" : "Clay Admonitor",
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
 	},
@@ -434,7 +465,7 @@
 		"whistlingBasin.story" : "This planet continues to hold nothing but surprises for me. Considering the actions of its denizens prior to coming here, I would never have thought such sprawling and decadent architecture could be built by such creatures. Incredibly deep ebony pillars and arches constructed of beautiful stone that rise from the ground, all adorned with carvings placed by intentional hands. All along the walls are these amazingly intricate displays of deceptively simple shapes. The most peculiarly turquoise foliage attack the structures, climbing subtly along their bases. It seems the preconceived notion of savagery I held for this planet is waning. Even still, my guard is held high. It's too soon for me to rest, despite protests from my aching muscles.",
 
 		"torridOutlands.name" : "Torrid Outlands",
-		"torridOutlands.subname" : "Torrid Outlands",
+		"torridOutlands.subname" : "Silent Sunburn",
 		"torridOutlands.story" : "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
 	}
 }
