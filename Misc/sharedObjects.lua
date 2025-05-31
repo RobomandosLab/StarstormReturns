@@ -2,17 +2,22 @@
 
 obj_sparks = Object.new(NAMESPACE, "sparks")
 obj_sparks:set_sprite(gm.constants.sSparks2)
-obj_sparks:set_depth(1)
+obj_sparks.obj_depth = 1
 obj_sparks:onCreate(function(inst)
-	inst:get_data().frame_index = 0
+	inst.frame_index = 0
+	inst.image_yscale = math.random(0, 1) * 2 - 1
 	inst.image_speed = 0.33
 end)
 obj_sparks:onStep(function(inst)
-	local data = inst:get_data()
-	data.frame_index = data.frame_index + inst.image_speed
-	inst.image_index = data.frame_index
-	if data.frame_index >= gm.sprite_get_number(inst.sprite_index) then
+	inst.frame_index = inst.frame_index + inst.image_speed
+	inst.image_index = inst.frame_index
+	if inst.frame_index >= gm.sprite_get_number(inst.sprite_index) then
 		inst:destroy()
+	end
+end)
+obj_sparks:onDraw(function(inst)
+	if inst.skinnable then
+		inst:actor_skin_skinnable_draw_self()
 	end
 end)
 
@@ -52,5 +57,10 @@ end)
 obj_sprite_layer:onStep(function(inst)
 	if not inst.parent or not Instance.exists(inst.parent) then
 		inst:destroy()
+	end
+end)
+obj_sprite_layer:onDraw(function(inst)
+	if inst.skinnable then
+		inst:actor_skin_skinnable_draw_self()
 	end
 end)

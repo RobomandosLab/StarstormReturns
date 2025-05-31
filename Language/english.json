@@ -33,6 +33,16 @@
 			"nameUpper": "TECHNICIAN",
 			"description": "The <y>Technician</c> is excellent at setting up and maintaining zones of enemy denial. <y>Forced Shutdown</c> can <y>forcibly lock down an area</c> when upgraded. <y>Upgrading</c> gadgets improves their effectiveness, but be careful when doing so in dangerous situations!",
 			"endQuote": "..and so he left, by switching the ship off and on again."
+		},
+		"swapNemesis": {
+			"name": "Nemesis Survivors",
+			"nameUpper": "NEMESIS SURVIVORS",
+			"description": "Swap to the familiar yet twisted <r>Nemesis survivors.</c>"
+		},
+		"swapNormal": {
+			"name": "Normal Survivors",
+			"nameUpper": "NORMAL SURVIVORS",
+			"description": "Swap to the regular set of survivors."
 		}
 	},
 	"skill" : {
@@ -118,19 +128,19 @@
 		},
 		"technicianZ": {
 			"name": "Fine Tune",
-			"description": "Strike forward with a wrench for <y>210% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
+			"description": "Strike forward with a wrench for <y>150% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 30 seconds."
 		},
 		"technicianZ2": {
 			"name": "Troubleshoot",
-			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>100% damage.\n<y>Hitting gadgets</c> 3 times <r>temporarily <b>upgrades them."
+			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>150% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 20 seconds."
 		},
 		"technicianX": {
 			"name": "Forced Shutdown",
-			"description": "Toss out a <y>stunning</c> bomb dealing <y>700% damage</c> on reactivation.\nPassively pulls in enemies when <b>upgraded."
+			"description": "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
 		},
 		"technicianX2": {
 			"name": "The Red Button",
-			"description": "Detonate the dropped bomb for <y>700% damage, stunning enemies."
+			"description": "Detonate the dropped bomb for <y>400% damage.</c>\n<y>Stuns</c> enemies when <b>upgraded."
 		},
 		"technicianC": {
 			"name": "24/7 Energy",

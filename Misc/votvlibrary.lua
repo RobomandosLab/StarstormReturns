@@ -20,13 +20,14 @@ function move_point_contact_solid(x, y, angle, amount)
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
 	local yy = math.sin(math.rad(angle))
-	while totalMoved <= amount do
+	while totalMoved < amount do
 		x = x + xx * 32
 		y = y + yy * 32
-		totalMoved = totalMoved + xx * 32 + yy * 32
-		if totalMoved > amount then
+		totalMoved = totalMoved + 32
+		if totalMoved >= amount then
 			x = x - xx * (totalMoved - amount)
 			y = y - yy * (totalMoved - amount)
+			break
 		end
 		if is_point_colliding_stage(x, y) then
 			for i = 0, 31 do
@@ -129,9 +130,9 @@ function move_contact_air(inst, angle, amount)
 	return x, y
 end
 
-function move_in_direction(inst, angle, amount)
-	inst.x = inst.x + math.cos(math.rad(angle)) * amount
-	inst.y = inst.y + math.sin(math.rad(angle)) * amount
+function move_in_direction(inst, angle, amount, isDeg)
+	inst.x = inst.x + math.cos(isDeg and math.rad(angle) or angle) * amount
+	inst.y = inst.y + math.sin(isDeg and math.rad(angle) or angle) * amount
 end
 
 --Kinda useless but whatever... Feels better anyways
@@ -177,4 +178,9 @@ function tableToString(t)
         return str
     end
     return serialize(t)
+end
+
+function setNoProc(attack_info) --Simple, makes the attack not proc and makes the damage number yellow
+	attack_info.proc = false
+	attack_info.damage_color = Color.from_hex(0xC9B736)
 end
