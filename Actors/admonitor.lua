@@ -9,9 +9,9 @@ local sprite_palette	= Resources.sprite_load(NAMESPACE, "AdmonitorPalette",	path
 local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 15, 58, 39)
 local sprite_idle		= Resources.sprite_load(NAMESPACE, "AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27)
 local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
-local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
-local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
-local sprite_fall		= Resources.sprite_load(NAMESPACE, "AdmonitorFall",		path.combine(SPRITE_PATH, "jump.png"), 1, 28, 40)
+local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 26, 33)
+local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 26, 33)
+local sprite_fall		= Resources.sprite_load(NAMESPACE, "AdmonitorFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 26, 33)
 local sprite_death		= Resources.sprite_load(NAMESPACE, "AdmonitorDeath",	path.combine(SPRITE_PATH, "death.png"), 13, 24, 40)
 local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "AdmonitorShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 22, 50, 40)
 
