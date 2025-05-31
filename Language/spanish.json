@@ -9,15 +9,25 @@
 			"nameUpper" : "VERDUGO",
 			"description" : "El <y>Verdugo</c> es un luchador ágil especializado en contar cabezas. Usando Proyectores Iónicos, el Verdugo crea ilusiones las cuales hacen huir a los enemigos aterrorizados, al mismo tiempo que proyecta un hacha para acabar con los más fuertes. Asegúrate de encadenar eliminaciones con <y>Ráfaga Iónica</c> y <y>Ejecución</c> para mantener el daño constante.",
 			"endQuote" : "..y se marchó, pero sin su sed de sangre saciada.",
-			"story": "<ul>Passenger Details:</c>\n<y>[Military Class]</c>\n\n<ul>Luggage and Equipment:</c>\nOfficer boarded with EXN Acting Officer carbonweave uniform, civilian-grade plated oversuit and an issued service pistol. At military checkpoint, passenger's armament was noted to have an additional under-barrel \nmodification- and was cleared after an agreement was made to store it in a secure container. The passenger also cleared one ION 204X series battery customized with propulsion orifices. As a safety measure, passenger's \ntechnological goods were temporarily fitted with electrical auto-nullifiers and returned to them.\n\n<b>[SECURITY RECALL]</c>\n\n<ul>[Note E1a]</c> Several reports of Passenger making entire security checkpoint crew uneasy. Light surveillance will be required until further notice.\n<ul>[Note E1b]</c> Passenger would often reply in sounds rather than speech before opting to use Universal Sign Language.\n<ul>[Event E1]</c> Contracted commando performs security check in Passenger's quarters.\n<ul>[Event E1a]</c> Contracted commando requests 24 hour private surveillance in hall leading to Passenger's quarters.\n<ul>[Event E2]</c> Passenger asked to move tables during mealtime after another Passenger sent a formal complaint to onboard security.",
+			"story": "<ul>Detalles del pasajero:</c>\n<y>[Clase Militar]</c>\n\n<ul>Equipaje:</c>\nOficial abordó con uniforme de fibra de carbono del Oficial Actuante de EXN, sobretraje civil con placas de grado básico y una pistola de servicio emitida.\nEn el punto de control militar, se observó que el armamento del pasajero tenía una modificación adicional bajo el cañón, y fue autorizado tras acordar que se almacenaría en un contenedor seguro.\nEl pasajero también fue autorizado con una batería ION serie 204X personalizada con orificios de propulsión.\nComo medida de seguridad, los bienes tecnológicos del pasajero fueron equipados temporalmente con anuladores eléctricos automáticos y luego devueltos.\n\n<b>[REGISTRO DE SEGURIDAD]</c>\n\n<ul>[Nota E1a]</c> Se han reportado varios casos en los que el Pasajero pone nervioso al personal completo del punto de control de seguridad. Se requerirá vigilancia ligera hasta nuevo aviso.\n<ul>[Nota E1b]</c> El Pasajero respondía frecuentemente con sonidos en lugar de habla antes de optar por utilizar Lengua de Señas Universal.\n<ul>[Suceso E1]</c> Comando contratado realiza revisión de seguridad en los aposentos del Pasajero.\n<ul>[Suceso EM1a]</c> Comando contratado solicita vigilancia privada de 24 horas en el pasillo que conduce a los aposentos del Pasajero.\n<ul>[Suceso E2]</c> Se le pidió al Pasajero que cambiara de mesa durante la comida tras recibir una queja formal de otro Pasajero a la seguridad a bordo.",
 			"id" : "Travel ID: 4383354378334FF3D34D",
-			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
-			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa"
+			"departure" : "<y>Origen:</c>\nVieja Alcatraz,\nRustborough,\nMarte",
+			"arrival" : "<y>Destino:</c>\nBahía Stillwater,\nNewdredge,\nEuropa"
+		},
+		"mule" : {
+			"name" : "MONTACARGAS",
+			"nameUpper" : "MONTACARGAS",
+			"description" : "CADA UNIDAD <y>MONTACARGAS</c> ESTÁ DEBIDAMENTE EQUIPADA Y LISTA PARA EL SERVICIO. CONSTRUIDA CON MATERIALES DE ALTA CALIDAD PARA UN RENDIMIENTO MÁXIMO EN EL TRABAJO. ESTE MODELO INCLUYE EL <y>CONJUNTO DE HERRAMIENTAS FORRAJERO</c>, PERFECTO PARA <y>CAZA</c>, <y>EXPLORACIÓN</c> Y OTRAS TAREAS PELIGROSAS DESTINADAS AL USUARIO COMÚN. PARA INICIALIZAR, INDIQUE UNA DIRECTIVA DURANTE EL ARRANQUE DEL SISTEMA.",
+			"endQuote" : "..y se marchó, pistones chirriando, dirección indefinida.",
+			"story": "AVISO: Las unidades MONTACARGAS no son conscientes ni mascotas. Llamarlas ''Molly'' no afectará en absoluto la programación de la unidad MONTACARGAS.",
+			"id" : "",
+			"departure" : "",
+			"arrival" : ""
 		},
 		"nemesisCommando" : {
 			"name" : "Comando Némesis",
 			"nameUpper" : "COMANDO NÉMESIS",
-			"description" : "El <y>Comando Némesis</c> es un personaje flexible con el arsenal suficiente para enfrentarse a cualquier situación. <y>Hiere</c> a los enemigos usando <y>Hoja del Cese</c> como preparación para infligir un daño devastador con el resto de tus habilidades. Utiliza <y>Inmersión Táctica</c> para entrar y salir del combate cuerpo a cuerpo, y convertir hasta el peor escenario en una ventaja.",
+			"description" : "El <y>Comando Némesis</c> es un personaje flexible con el arsenal suficiente para enfrentarse a cualquier situación. <y>Hiere</c> a los enemigos usando <y>Corte Cesador</c> como preparación para infligir un daño devastador con el resto de tus habilidades. Utiliza <y>Evasión Táctica</c> para entrar y salir del combate cuerpo a cuerpo, y convertir hasta el peor escenario en una ventaja.",
 			"endQuote": "..y se marchó, llevando consigo un nuevo sentido de humanidad.",
 			"story": "<p>MI OC ORIGINAL, NO ROBAR</c>"
 		},
@@ -31,7 +41,7 @@
 		"technician": {
 			"name": "Técnico",
 			"nameUpper": "TÉCNICO",
-			"description": "El <y>Técnico</c> es experto en hacer y mantener zonas que bloquean el avance de los enemigos. <y>Cierre Forzoso</c> puede <y>bloquear una zona forzadamente</c> al ser mejorado. <y>Mejorar</c> dispositivos mejora su efectividad, ¡pero ten cuidado haciendolo en entornos peligrosos!",
+			"description": "El <y>Técnico</c> es experto en hacer y mantener zonas que bloquean el avance de los enemigos. <y>Cierre Forzoso</c> puede <y>bloquear una zona forzadamente</c> al ser mejorado. <y>Mejorar</c> dispositivos aumenta su efectividad, ¡pero ten cuidado haciendolo en entornos peligrosos!",
 			"endQuote": "..y se marchó, simplemente reiniciando la nave."
 		}
 	},
@@ -64,8 +74,28 @@
 			"name": "Revientacráneos",
 			"description": "Lanza dos hachas proyectadas en un arco circular que inflingen <y>1500% de daño</c> por segundo. Los enemigos <y>aterrorizados</c> reciben el <y>doble</c> de daño.\nCada ejecución exitosa <y>reduce por un segundo la recarga de las habilidades."
 		},
+		"muleZ": {
+			"name": "ELIMINACIÓN DE INTERFERENCIAS",
+			"description": "GOLPEA A LOS ENEMIGOS INFLINGIENDO <y>200% DE DAÑO</c>. MANTEN PRESIONADO PARA CARGAR Y APLASTAR A LOS ENEMIGOS INFLINGIENDO <y>1400% DE DAÑO</c>."
+		},
+		"muleX": {
+			"name": "INMOBILIZAR",
+			"description": "DISPARA UNA TRAMPA QUE INFLINGE <y>125% DE DAÑO</c>. LA TRAMPA <b>ATRAPA</c> HASTA <y>5 ENEMIGOS</c> EN LA PROXIMIDAD DEL OBJETIVO."
+		},
+		"muleC": {
+			"name": "RECALIBRACIÓN DE ENGRANAJES",
+			"description": "<y>GIRA HACIA DELANTE</c> INFLINGIENDO <y>4X100% DE DAÑO</c>. EL ULTIMO GOLPE <y>ATURDE</c>."
+		},
+		"muleV": {
+			"name": "ASISTENCIA A PRUEBA DE ERRORES",
+			"description": "DESPLIEGA UN DRON DE REPARACIÓN PERSONAL DURANTE 8 SEGUNDOS. EL DRON <g>CURA 5x7% DE TU SALUD TOTAL</c>. SI ESTÁS A SALUD COMPLETA, <g>OTORGA BARRERA EN SU LUGAR</c>."
+		},
+		"muleVBoosted": {
+			"name": "ASISTENCIA A PRUEBA DE ERRORES 2.0",
+			"description": "LANZA UN DRON DE REPARACIÓN DURANTE 8 SEGUNDOS. EL DRON <g>CURA 5x10% DE TU SALUD TOTAL</c>. SI ESTÁS A SALUD COMPLETA, <g>OTORGA BARRERA EN SU LUGAR</c>.</c>."
+		},
 		"nemesisCommandoZ": {
-			"name": "Hoja del Cese",
+			"name": "Corte Cesador",
 			"description": "Desgarra a los enemigos cercanos con un tajo que inflinge <y>120% de daño</c>, <r>hiriendolos</c> durante 6 segundos. <r>No se puede acumular</c>.\nLos enemigos <r>heridos</c> reciben un <y>50% más de daño</c> de <b>todas las fuentes.</c>"
 		},
 		"nemesisCommandoX": {
@@ -77,7 +107,7 @@
 			"description": "Corta en línea recta hacia delante e inflige <y>90% de daño</c>, <r>hiriendo</c> a los enemigos golpeados durante 6 segundos."
 		},
 		"nemesisCommandoC": {
-			"name": "Inmersión Táctica",
+			"name": "Evasión Táctica",
 			"description": "Rapidamente <y>rueda hacia delante</c> una corta distancia.\n<b>No puedes ser dañado</c> mientras estes rodando. <b>Puedes acumular hasta 2.</c>"
 		},
 		"nemesisCommandoV": {
@@ -85,7 +115,7 @@
 			"description": "Lanza una <y>granada</c> que inflinge <y>700% de daño</c>. Manten presionado para <b>cocinar</c> la granada.\nPulsa la dirección <b>abajo</c> para <y>lanzarla</c> en un arco bajo."
 		},
 		"nemesisCommandoVBoosted": {
-			"name": "Cluster Bomb",
+			"name": "Bombardeo",
 			"description": "Lanza una <y>granada</c> que inflinge <y>700% de daño</c>, <y>aturdiendo</c> enemigos y <y>dividiendose en 3</c> granadas que inflingen <y>3x150% de daño.</c>\nManten presionado para <b>cocinar</c> la granada.\nPulsa la dirección <b>abajo</c> para <y>lanzarla</c> en un arco bajo."
 		},
 		"nemesisCommandoV2": {
@@ -133,7 +163,7 @@
 			"description": "Detona la bomba lanzada inflingiendo <y>700% de daño y aturde a los enemigos."
 		},
 		"technicianC": {
-			"name": "Energia refrescante",
+			"name": "Energia Refrescante",
 			"description": "Coloca una <b>máquina expendedora</c> que mejora tu <b>movimiento</c> y <y>velocidad de ataque</c>.</c>\nAdicionalmente aumenta la <y>probabilidad de ataque crítico</c> cuando es <b>mejorada."
 		},
 		"technicianC2": {
@@ -141,11 +171,11 @@
 			"description": "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
 		},
 		"technicianV": {
-			"name": "Cortafuegos auxiliar",
+			"name": "Cortafuegos Auxiliar",
 			"description": "Coloca una torreta disparando hacia delante que inflinge <y>220% de daño por segundo.</c>\nDispara rápidamente e inflinge <y>350% de daño por segundo</c> cuando es <b>mejorada."
 		},
 		"technicianVBoosted": {
-			"name": "Cortafuegos auxiliar 2.0",
+			"name": "Cortafuegos Auxiliar 2.0",
 			"description": "Coloca una torreta disparando rápidamente que inflinge <y>350% de daño por segundo.</c>\nDispara misiles que inflingen <y>4x100% de daño</c> cuando <b>es mejorada."
 		},
 		"peace": {
@@ -415,6 +445,7 @@
 	"actor" : {
 		"Exploder.name" : "Estallador",
 		"Mimic.name" : "Cofre de seguridad",
+		"Admonitor.name" : "Admonitor de Arcilla",
 		"Gatekeeper.name" : "Centinela",
 		"Protector.name" : "Protector",
 		"Protector.text" : "Guardián del Artefacto"
@@ -434,7 +465,7 @@
 		"whistlingBasin.story" : "Este planeta sigue reservándome sorpresas. Teniendo en cuenta las acciones de sus habitantes antes de llegar aquí, nunca habría imaginado que tales criaturas pudieran construir una arquitectura tan extensa y decadente. Impresionantes pilares de ébano profundo y arcos hechos de piedra hermosa que se alzan desde el suelo, todos adornados con grabados realizados por manos deliberadas. A lo largo de las paredes, hay unas exhibiciones increíblemente intrincadas de formas que, aunque parecen simples, esconden complejidad. Un follaje turquesa, extrañamente peculiar, ataca las estructuras, trepando sutilmente por sus bases. Parece que la idea preconcebida de salvajismo que tenía sobre este planeta está desapareciendo. Aun así, mantengo la guardia alta. Es demasiado pronto para descansar, a pesar de las protestas de mis músculos doloridos.",
 
 		"torridOutlands.name" : "Tierras Torridas",
-		"torridOutlands.subname" : "Silent Sunburn",
+		"torridOutlands.subname" : "Quemadura Silenciosa",
 		"torridOutlands.story" : "Incluso con mi traje, puedo sentir los pulsantes rayos solares impactar y doblar la atmósfera de este planeta maldito por los dioses. Cada vez me cuesta más mantener la cordura con este calor, y la condensación que empieza a empañar las paredes de mi casco tampoco ayuda. Aunque, sin él, mis pulmones estarían a medio llenar de todo el polvo y los restos que he levantado durante mis andanzas-“buscar el lado positivo”, como dicen. Con el sol en lo alto, siquiera imaginar recorrer mi entorno con cierta facilidad es un sueño imposible. Me resulta fácil tropezar con cactus y rocas en mi delirio, encontrando breves refugios dentro de esos extensos túneles y cuevas que salpican la superficie. Con el terreno tan abrupto ralentizando mi avance, el sudor que me gotea por la frente hacia los ojos será, con seguridad, el menor de mis problemas."
 	}
 }
