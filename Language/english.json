@@ -19,7 +19,7 @@
 			"nameUpper" : "NEMESIS COMMANDO",
 			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
 			"endQuote": "..and so he left, carrying new sense of humanity within.",
-			"story": "<b>UNREGISTERED FIELD DATA LOG: DATA LAST MODIFIED ON [##090??!?]</c> \n<r>[ERROR 0x00000ce: Data Package Corrupted, viewing a restore point.]</c> \n\n<ul>[Entry 1] -</c> Patrol group just picked up a wounded straggler a few miles off from camp. Word going around is he “showed up out of nowhere,” (as if I'm buying that), what with nothing in the surrounding area to trace his origin. Regardless of the validity of their claims, a survivor's a survivor. As I'm writing this, we're carrying him back. He's certainly not making it easy on us, though, considering the sheer heft of his gear- he's lugging some unorthodox modifications to a standard Commando armor rig. It looks to be- or maybe was originally- the initial issue of the Mk. 1 model (even though I'm pretty sure they stopped producing those years ago?). \n\n<ul>[Entry 2] -</c> Update- buddy's got some scarily heavy artillery on hand for a Commando unit- a rocket launcher still warm to the touch and some almost certainly alien grenades- I sure as hell haven't seen anything like them. He’s out cold right now, and from what we can tell looking through his helmet he's well-battered. His left arm seems especially stiff- his hand's clamped shut around the handle of his vibroblade. Some of us tried to get a good look at it just now, but it's almost like his fist is fused to the damn thing. Amongst other things on his person, it's thoroughly coated in this crusted black.. substance. We don't know if it was the result of a fight between a few more survivors, or evidence for some kind of self defe??!0049### \n<r>[End of legible data.]</c> \n\n<ul>[Entry 2a] -</c> I dont know how much time I have left as im typing this it woke up and camp is DESTROYED people wont stop bleeding we dont even know if it was human with what it can do noone knows what to do now it went straight for Adrian \nwe dont even know what set it off??? what did WE do to deserve all of this??? why did that THING attack U!??!?##$0959090302???! \n<r>[End of legible data.]</c> \n\n<p>Th?e ga??dflies s?warm t?his nob?le b?eas?t as i?t gra?zes. \n\nYou?r plag??ue upo?n it?s sur?fa?ce wi?ll be un?do?ne.. \n\nBy t??he?se toi?lin??g han?d?s.</c>",
+			"story": "<b>UNREGISTERED FIELD DATA LOG: DATA LAST MODIFIED ON [##090??!?]</c> \n<r>[ERROR 0x00000ce: Data Package Corrupted, viewing a restore point.]</c> \n\n<ul>[Entry 1] -</c> Patrol group just picked up a wounded straggler a few miles off from camp. Word going around is he “showed up out of nowhere,” (as if I'm buying that), what with nothing in the surrounding area to trace his origin. Regardless of the validity of their claims, a survivor's a survivor. As I'm writing this, we're carrying him back. He's certainly not making it easy on us, though, considering the sheer heft of his gear- he's lugging some unorthodox modifications to a standard Commando armor rig. It looks to be- or maybe was originally- the initial issue of the Mk. 1 model (even though I'm pretty sure they stopped producing those years ago?). \n\n<ul>[Entry 2] -</c> Update- buddy's got some scarily heavy artillery on hand for a Commando unit- a rocket launcher still warm to the touch and some almost certainly alien grenades- I sure as hell haven't seen anything like them. He’s out cold right now, and from what we can tell looking through his helmet he's well-battered. His left arm seems especially stiff- his hand's clamped shut around the handle of his vibroblade. Some of us tried to get a good look at it just now, but it's almost like his fist is fused to the damn thing. Amongst other things on his person, it's thoroughly coated in this crusted black.. substance. We don't know if it was the result of a fight between a few more survivors, or evidence for some kind of self defe??!0049### \n<r>[End of legible data.]</c> \n\n<ul>[Entry 2a] -</c> I dont know how much time I have left as im typing this it woke up and camp is DESTROYED people wont stop bleeding we dont even know if it was human with what it can do noone knows what to do now it went straight for Adrian \nwe dont even know what set it off??? what did WE do to deserve all of this??? why did that THING attack U!??!?##$0959090302???! \n<r>[End of legible data.]</c> \n\n<p>Th?e ga?dflies swarm thi?s nob?le beas?t as it gra?zes.\n\nYour plag??ue upon it?s surfa?ce wi?ll be undo?ne by the?se toiling hand?s.",
 		},
 		"nemesisMercenary" : {
 			"name" : "Nemesis Mercenary",
@@ -142,15 +142,19 @@
 			"name": "Forced Shutdown",
 			"description": "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
 		},
-		"technicianX2": {
+		"technicianXD": {
 			"name": "The Red Button",
 			"description": "Detonate the dropped bomb for <y>500% damage.</c>\n<y>Stuns</c> enemies when <b>upgraded."
+		},
+		"technicianX2": {
+			"name": "",
+			"description": ""
 		},
 		"technicianC": {
 			"name": "24/7 Energy",
 			"description": "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."
 		},
-		"technicianC2": {
+		"technicianC": {
 			"name": "Radial Amplifier",
 			"description": "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
 		},

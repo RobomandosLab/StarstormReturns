@@ -60,7 +60,6 @@ local sprite_turretcshoot		= Resources.sprite_load(NAMESPACE, "TechnicianTurretc
 local sprite_turretc_mis1		= Resources.sprite_load(NAMESPACE, "TechnicianTurretcMissile1", path.combine(SPRITE_PATH, "turretc_mis1.png"), 4, 21, 17)
 local sprite_turretc_mis2		= Resources.sprite_load(NAMESPACE, "TechnicianTurretcMissile2", path.combine(SPRITE_PATH, "turretc_mis2.png"), 5, 21, 19)
 local sprite_turretc_mis3		= Resources.sprite_load(NAMESPACE, "TechnicianTurretcMissile3", path.combine(SPRITE_PATH, "turretc_mis3.png"), 5, 29, 32)
---local sprite_turretexplosion	= Resources.sprite_load(NAMESPACE, "TechnicianTurretExplosion", path.combine(SPRITE_PATH, "turretexplosion.png"), 4, 20, 20)
 
 local sprite_vending1			= Resources.sprite_load(NAMESPACE, "TechnicianVendingMachine", path.combine(SPRITE_PATH, "vendinga.png"), 10, 21, 34)
 local sprite_vending2			= Resources.sprite_load(NAMESPACE, "TechnicianVendingMachine2", path.combine(SPRITE_PATH, "vendingb.png"), 10, 19, 37)
@@ -84,8 +83,7 @@ local amplifier_mask 			= Resources.sprite_load(NAMESPACE, "TechnicianAmplifierM
 
 local mine_explosion 			= Resources.sprite_load(NAMESPACE, "TechnicianMineExplosion", path.combine(SPRITE_PATH, "mineExplosion.png"), 7, 63, 92)
 
---local sound_hit_machine		= Resources.sfx_load(NAMESPACE, "BrassKnuckles", path.combine(PATH, "Sounds/Items/brassKnuckles.ogg"))
-
+local sound_select				= Resources.sfx_load(NAMESPACE, "TechnicianSelect", path.combine(SOUND_PATH, "select.ogg"))
 local sound_shoot1				= Resources.sfx_load(NAMESPACE, "TechnicianShoot1", path.combine(SOUND_PATH, "shoot1.ogg"))
 local sound_shoot1T				= Resources.sfx_load(NAMESPACE, "TechnicianShoot1T", path.combine(SOUND_PATH, "shoot1T.ogg"))
 local sound_shoot2				= Resources.sfx_load(NAMESPACE, "TechnicianShoot2", path.combine(SOUND_PATH, "shoot2.ogg"))
@@ -113,6 +111,7 @@ local explosion1				= gm.constants.sEfBombExplode -- WWWWWWWWWWWWWWWWWWWWWWWOOOO
 local explosion2				= gm.constants.sMinerExplosion
 local explosion3				= gm.constants.sDroneDeath
 local soundImpact				= gm.constants.wTurtleExplosion
+local soundCommandoSelect		= gm.constants.wUI_Survivors_Commando
 
 local WRENCH_BLAST_OFFSET_X = get_tiles(0.8)
 local WRENCH_BLAST_OFFSET_Y = -get_tiles(0.1)
@@ -208,7 +207,7 @@ local technicianPrimary = technician:get_primary()
 local technicianSecondary = technician:get_secondary()
 local technicianUtility = technician:get_utility()
 local technicianSpecial = technician:get_special()
-local technicianSecondary_2 = Skill.new(NAMESPACE, "technicianX2")
+local technicianSecondary_Det = Skill.new(NAMESPACE, "technicianXD")
 
 local technicianPrimaryAlt = Skill.new(NAMESPACE, "technicianZ2")
 local technicianUtilityAlt = Skill.new(NAMESPACE, "technicianC2")
@@ -233,8 +232,10 @@ technician:onInit(function(actor)
 	actor.sprite_jump_peak_half = jump_peak_half
 	actor.sprite_fall_half = fall_half
 	
+	--Skill overrides aren't removed when transitioning between stages so this does that
+	--Otherwise the skill stocks of it get all messed up and secondary does nothing because there's no mine to detonate
 	actor:add_callback("onStageStart", "SSOnStageStartTech", function(actor)
-		actor:remove_skill_override(Skill.SLOT.secondary, technicianSecondary_2, 1)
+		actor:remove_skill_override(Skill.SLOT.secondary, technicianSecondary_Det, 1)
 	end)
 
 	actor:survivor_util_init_half_sprites()
@@ -268,12 +269,10 @@ end
 
 local machine_temp_visual_packet = Packet.new()
 machine_temp_visual_packet:onReceived(function(message, player)
-	--print("yes I'm working")
 	local inst = message:read_instance()
-	local isFinal = message:read_byte()
+	local isFinal = message:read_byte() --Plays a different sound when downgrading finishes
 	machineFlash(inst, color_tech_red)
 	gm.sound_play_at(gm.bool(isFinal) and sound_downgrade or sound_downgradeBeep, 1, 1, inst.x, inst.y)
-	--Yep that's literally it
 end)
 
 local machine_update_temp = function(inst)
@@ -326,7 +325,6 @@ end)
 
 local turret_shoot_packet_host = Packet.new()
 turret_shoot_packet_host:onReceived(function(message, player)
-	--print("yes I'm also working")
 	local inst = message:read_instance()
 	local owner = message:read_instance()
 	inst.playanim = 1
@@ -356,7 +354,6 @@ local obj_turret = Object.new(NAMESPACE, "turret", Object.PARENT.actor)
 obj_turret:set_sprite(sprite_turretaI)
 obj_turret:clear_callbacks()
 obj_turret:onCreate(function(inst)
-	--inst.sprite_palette = sprite_palette
 	inst.mask_index = turret_mask
 	inst.idle = sprite_turretaI
 	inst.shoot = sprite_turretashoot
@@ -387,16 +384,11 @@ obj_turret:onStep(function(inst)
 		inst.ff = inst.ff + 1
 		inst.y = inst.oy - math.sin(inst.ff / 20) * 2 - 2
 		
-		--print(data.upgrade_progress)
-		
-		-- print("TRY AGAIN!")
 		inst.scepter = inst.parent:item_stack_count(item_scepter)
 		if not inst.init then
 			local xx, _ = move_point_contact_solid(inst.x, inst.y, 90 - 90 * inst.image_xscale, 800)
 			inst.range = math.abs(xx - inst.x)
-			--print(data.range)
 			inst.init = 1
-			--print("xx "..(xx).." inst.x "..(inst.x))
 			
 			obj_sprite_layer.obj_depth = -12
 			inst.skin_layer = obj_sprite_layer:create(inst.x, inst.y)
@@ -406,7 +398,6 @@ obj_turret:onStep(function(inst)
 			inst.skin_layer:actor_skin_skinnable_init()
 			inst.skin_layer:actor_skin_skinnable_set_skin(inst.parent)
 			inst.skin_layer.skinnable = 1
-			--Helper.log_struct(inst.skin_layer)
 		end
 		
 		machine_update_temp(inst)
@@ -463,7 +454,6 @@ obj_turret:onStep(function(inst)
 		
 		if inst.playanim then
 			inst.image_speed = 0.2 * inst.attack_speed
-			--print(data.parent:buff_stack_count(buff_vending))
 			inst.sprite_index = inst.shoot
 			if inst.image_index >= gm.sprite_get_number(inst.shoot) - 1 then
 				inst.playanim = nil
@@ -473,7 +463,6 @@ obj_turret:onStep(function(inst)
 			inst.image_speed = 0.2
 		end
 		if gm._mod_net_isHost() and doResync then
-			--print("tried resync")
 			inst:instance_resync()
 		end
 		
@@ -542,14 +531,12 @@ obj_turret:onStep(function(inst)
 						attack_info.climb = i * 8 * 1.35
 					end
 					gm.sound_play_at(inst.upgradeState >= 1 and sound_turretShoot2 or sound_turretShoot1, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
-					--print(gm._mod_net_isHost())
 					if not Net.is_single() then
 						if gm._mod_net_isHost() then
 							local buffer = turret_shoot_packet:message_begin()
 							buffer:write_instance(inst)
 							buffer:send_to_all()
 						else
-							--print("yes I'm also working 2.0")
 							local buffer = turret_shoot_packet_host:message_begin()
 							buffer:write_instance(inst)
 							buffer:write_instance(inst.parent)
@@ -565,7 +552,6 @@ obj_turret:onStep(function(inst)
 							missile.team = inst.team
 							missile.damage = inst.parent.damage
 							missile.sync = true
-							--Helper.log_struct(missile)
 							inst.missileDis.image_index = 0
 							inst.secondarystocks = inst.secondarystocks - 1
 							inst.secondarycooldown = inst.extrasecondarycooldown
@@ -610,7 +596,6 @@ obj_turret:onStep(function(inst)
 					inst.secondarystocks = inst.basesecondarystocks
 				end
 			end
-			-- print(data.cooldown.." LOUD INCORRECT BUZZER")
 		end
 		
 		if inst.skin_layer then
@@ -677,7 +662,6 @@ stateDrink:clear_callbacks()
 stateDrink:onEnter(function(actor, data)
 	actor.image_index2 = 0
 	data.sprite = actor.__ssr_current_drink_sprite or drinkSprites[technician_id][1]
-	--print(drinkSprites[actor.class][1])
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
 end)
@@ -732,8 +716,6 @@ obj_vending:onCreate(function(inst)
 end)
 obj_vending:onStep(function(inst)
 	if inst.parent and Instance.exists(inst.parent) then
-		-- print("TRY AGAIN!")
-		-- print(data.hits_taken.. "hits taken")
 		local height = inst.bbox_bottom - inst.bbox_top
 		for i = 1, (math.floor((inst.vspeed + inst.gravity) / height) + 1) do
 			if is_colliding_stage(inst, inst.x, inst.y + inst.vspeed + inst.gravity - height * (i - 1)) then
@@ -812,10 +794,6 @@ obj_vending:onStep(function(inst)
 				inst:instance_resync()
 			end
 			for _, player in ipairs(inst:get_collisions(gm.constants.oP)) do
-				-- print(player)
-				-- print(player:buff_stack_count(data.buff).. " buffmaxxing")
-				-- print(player.team.. " this is our team")
-				-- print(inst.team.. " vending team")
 				if player.team == inst.team and player:buff_stack_count(inst.buff) <= 0 then
 					gm.sound_play_at(sound_vendingDispense, 1, 1, inst.x, inst.y)
 					player:buff_remove(buff_vending)
@@ -825,7 +803,6 @@ obj_vending:onStep(function(inst)
 						player.__ssr_current_drink_sprite = drinkSprites[player.class][inst.upgraded and 2 or 1]
 						player:enter_state(stateDrink)
 					end
-					--print(player.state)
 					inst.playanim = 1
 					if not Net.is_single() then
 						local buffer = vending_shoot_packet:message_begin()
@@ -875,24 +852,21 @@ obj_mine_pull:onStep(function(inst)
 	inst.ff = inst.ff + 1
 	local targets = List.wrap(gm.find_characters_circle(inst.x, inst.y, MACHINE_MINE_PULL_RADIUS, true, inst.team == 1 and 2 or 1, true))
 	for _, target in ipairs(targets) do
-		if inst:attack_collision_canhit(target) and not GM.actor_state_is_climb_state(target.actor_state_current_id) then
-			-- move_contact_solid(target, 360 - gm.point_direction(inst.x, inst.y, target.x, target.y), 1)--(0.5 + 0.5 * data.life / 120) * (1 - gm.point_distance(inst.x, inst.y, target.x, target.y) / MACHINE_MINE_PULL_RADIUS))
+		--Check if we should pull the target
+		--Pulling is weird with ropes so climbing enemies are excluded
+		--And intangible enemies are usually doing special behavior so best not to interrupt
+		if target.team ~= inst.team and not target.intangible and not GM.actor_state_is_climb_state(target.actor_state_current_id) then
 			local lastx = target.x
 			local lasty = target.y
 			local strength = math.max(1, math.ceil((0.5 + 2.5 * (1 - inst.life / MACHINE_MINE_PULL_LIFE) + math.max(-1.5 + 3 * (1 - inst.life / MACHINE_MINE_PULL_LIFE), 0)) * (0.2 + 0.8 * (1 - gm.point_distance(inst.x, inst.y, target.x, target.y) / MACHINE_MINE_PULL_RADIUS))))
-			if GM.actor_is_classic(target) then
+			if GM.actor_is_classic(target) then --Classic enemies (Eg. NOT Jellyfish or Archer Bugs) are pulled horizontally to the center of the pull
 				target:move_contact_solid(180 + gm.point_direction(inst.x, target.y, target.x, target.y), strength)
-				--if target.y < inst.y then
-					--target:move_contact_solid(180 + gm.point_direction(target.x, inst.y, target.x, target.y), strength)
-				--end
-			elseif not GM.actor_is_boss(target) then
-				--print("i'm not classic")
+			elseif not GM.actor_is_boss(target) then --Non-boss, non-classic enemies are pulled directly to the center
 				target.x = target.x - math.cos(math.rad(gm.point_direction(inst.x, inst.y, target.x, target.y))) * strength
 				target.y = target.y + math.sin(math.rad(gm.point_direction(inst.x, inst.y, target.x, target.y))) * strength
-				--move_in_direction(target, gm.point_direction(inst.x, inst.y, target.x, target.y), 100)
-				--target.y = (target.pVspeed > 0 and math.min(target.y, inst.y) or math.max(target.y, inst.y))
 			end
 			
+			--Prevent overshooting on both axes
 			if lastx < inst.x and target.x >= inst.x then
 				target.x = math.min(target.x, inst.x)
 			elseif lastx > inst.x and target.x <= inst.x then
@@ -918,8 +892,6 @@ obj_mine_pull:onDraw(function(inst)
 	gm.draw_set_colour(color_tech_blue)
 	local a = inst.ff > int1 and (int1 * int2 - (inst.ff - int1) * int1 / (MACHINE_MINE_PULL_LIFE - int1) * int2) or (inst.ff * int2)
 	local t = math.min(inst.ff > int1 and (1 - (inst.ff - int1) / (MACHINE_MINE_PULL_LIFE - int1)) or (inst.ff / int1), 1)
-	--local a = (data.ff * 5)
-	--local t = math.min(data.ff / int1, 1)
 	gm.draw_circle(math.floor(inst.x + 0.5), math.floor(inst.y + 0.5), a + (MACHINE_MINE_PULL_RADIUS - a) * t, true)
 	gm.draw_set_alpha(1)
 end)
@@ -1151,9 +1123,6 @@ local healable_survivors = {
 local healable_objects = { Object.find("ror", "EngiTurret"), Object.find("ror", "EngiTurretB") }
 
 Callback.add(Callback.TYPE.onAttackHit, "SSOnHitTechnician", function(hit_info)
-	--Helper.log_struct(hit_info)
-	--print(hit_info.attack_info.__ssr_technician_no_expose_proc)
-	--print("Target id: "..hit_info.inflictor.id)
 	local expose = 0
 	if hit_info.target:buff_stack_count(buff_exposed) >= 1 then expose = 1 end
 	if hit_info.target:buff_stack_count(buff_exposed_2) >= 1 then expose = 2 end
@@ -1162,7 +1131,6 @@ Callback.add(Callback.TYPE.onAttackHit, "SSOnHitTechnician", function(hit_info)
 		attack_info.__ssr_technician_is_expose = expose
 		attack_info.damage_color = expose == 2 and color_tech_orange or color_tech_red
 		attack_info.climb = 8 * 1.35
-		--Helper.log_struct(attack_info)
 	end
 	
 	if hit_info.attack_info.__wrench_hit then
@@ -1175,27 +1143,47 @@ Callback.add(Callback.TYPE.onAttackHit, "SSOnHitTechnician", function(hit_info)
 		sparks.sprite_index = (hit_info.attack_info.__wrench_hit == 3 and sprite_sparks5 or sprite_sparks4)
 		sparks.image_speed = 0.33
 		sparks.image_xscale = gm.sign(hit_info.target.x - hit_info.inflictor.x)
-		--sparks:actor_skin_skinnable_init()
-		--sparks:actor_skin_skinnable_set_skin(hit_info.target)
-		--sparks.skinnable = 1
+		sparks.depth = hit_info.target.depth - 1
 	end
 end)
 
 --Hook from Needles
 gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, result, args)
-	--print("HIIIII")
-	--print(#args)
-	--for i = 1, #args do
-	--	print(args[i].value)
-	--end
-	--Helper.log_struct(args[1]) --Hit Info
-	--Helper.log_struct(args[6]) --Player
 	local _hit_info = args[1]
 	local _damage = args[4]
 	local _critical = args[5]
 	if _hit_info and _hit_info.value and (_hit_info.value.attack_info.__ssr_technician_is_expose or 0) >= 2 and not gm.bool(_critical.value) then
 		_critical.value = true
 		_damage.value = _damage.value * 2
+	end
+end)
+
+----TEMPORARY: Will be removed when a proper solution is added to the api
+--Plays the survivor's selection sound when being selected in the character select screen
+local localSelectMenu
+local playedSound = false
+gm.pre_script_hook(gm.constants.game_lobby_start, function(self, other, result, args)
+	local function WaitForInit()
+		localSelectMenu = Instance.find(Object.find("ror", "SelectMenu"))
+	end
+	Alarm.create(WaitForInit, 25)
+end)
+
+gm.pre_script_hook(gm.constants._ui_update, function(self, other, result, args)
+	if not Instance.exists(localSelectMenu) then return end
+	
+	if localSelectMenu.choice == technician.value then
+		if not playedSound then
+			gm.sound_play_at(sound_select, 1, 1, 1000, 100)
+			
+			if gm.audio_is_playing(soundCommandoSelect) then
+				gm.audio_stop_sound(soundCommandoSelect)
+			end
+			
+			playedSound = true
+		end
+	else
+		playedSound = false
 	end
 end)
 
@@ -1257,16 +1245,11 @@ stateTechnicianPrimary:onStep(function(actor, data)
 				actor:collision_rectangle_list(x, y, x2, y2, gm.constants.oCustomObject, false, true, machinesHit, false)
 				actor:collision_rectangle_list(x, y, x2, y2, gm.constants.oCustomObject_pNPC, false, true, machinesHit, false)
 				-- ^ finding all machines in machines table that collides with the explosion to upgrade
-				-- print(" Machines ")
-				-- print(tableToString(machines))
-				-- print(" Machines Hit ")
-				-- print(tableToString(machinesHit))
 				for _, machineObj in ipairs(machines) do
 					for _, instance in ipairs(machinesHit) do
 						if machineObj.value == instance.__object_index then
 							if instance.team == actor.team then
 								upgrade_machine(instance, 1, WRENCH_DOWNGRADE_TIME)
-								--print((machineData.hits_taken).. " Hits Taken ")
 							end
 						end
 					end
@@ -1509,17 +1492,17 @@ technicianSecondary.use_delay = 10
 technicianSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
 
 -- big red button
-technicianSecondary_2.sprite = sprite_skills
-technicianSecondary_2.subimage = 2
+technicianSecondary_Det.sprite = sprite_skills
+technicianSecondary_Det.subimage = 2
   
-technicianSecondary_2.cooldown = 0.5 * 60
-technicianSecondary_2.damage = 1.0 --This damage isn't used for anything, only the original skill is
-technicianSecondary_2.require_key_press = true
-technicianSecondary_2.does_change_activity_state = true
-technicianSecondary_2.hold_facing_direction = true
-technicianSecondary_2.auto_restock = false --Makes stocks not regenerate by themselves
-technicianSecondary_2.use_delay = 10
-technicianSecondary_2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+technicianSecondary_Det.cooldown = 0.5 * 60
+technicianSecondary_Det.damage = 1.0 --This damage isn't used for anything, only the original skill is
+technicianSecondary_Det.require_key_press = true
+technicianSecondary_Det.does_change_activity_state = true
+technicianSecondary_Det.hold_facing_direction = true
+technicianSecondary_Det.auto_restock = false --Makes stocks not regenerate by themselves
+technicianSecondary_Det.use_delay = 10
+technicianSecondary_Det.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
 
 local state_technician_secondary = State.new(NAMESPACE, "technician_secondary")
 
@@ -1538,11 +1521,8 @@ state_technician_secondary:onStep(function(actor, data)
 	
 	if actor.image_index >= 3 and not data.used then
 		actor.tech_saved_stock = actor:get_default_skill(Skill.SLOT.secondary).stock
-		--actor.tech_saved_max_stock = actor:get_default_skill(Skill.SLOT.secondary).max_stock
-		actor:add_skill_override(Skill.SLOT.secondary, technicianSecondary_2, 1) --Replaces the secondary with a new secondary (Remote Detonator)
+		actor:add_skill_override(Skill.SLOT.secondary, technicianSecondary_Det, 1) --Replaces the secondary with a new secondary (Remote Detonator)
 		actor:get_active_skill(Skill.SLOT.secondary).stock = math.max(actor.tech_saved_stock, 1)
-		--if actor.tech_saved_stock <= 0 then actor:get_active_skill(Skill.SLOT.secondary).max_stock = 1 end
-		--actor:override_active_skill_cooldown(Skill.SLOT.secondary, actor:get_active_skill(Skill.SLOT.secondary).cooldown_base * (1 - actor.cdr))
 		
 		gm.sound_play_at(sound_shoot2, 1, 1, actor.x, actor.y)
 		
@@ -1563,11 +1543,10 @@ end)
 
 -- blows up mine with mind...
 
-technicianSecondary_2:clear_callbacks()
-technicianSecondary_2:onActivate(function(actor)
-	actor:remove_skill_override(Skill.SLOT.secondary, technicianSecondary_2, 1)
+technicianSecondary_Det:clear_callbacks()
+technicianSecondary_Det:onActivate(function(actor)
+	actor:remove_skill_override(Skill.SLOT.secondary, technicianSecondary_Det, 1)
 	actor:get_default_skill(Skill.SLOT.secondary).stock = actor.tech_saved_stock
-	--actor:get_default_skill(Skill.SLOT.secondary).max_stock = actor.tech_saved_max_stock
 	actor:override_default_skill_cooldown(Skill.SLOT.secondary, actor:get_default_skill(Skill.SLOT.secondary).cooldown_base * (1 - actor.cdr))
 	
 	if gm._mod_net_isHost() then
@@ -1579,7 +1558,7 @@ technicianSecondary_2:onActivate(function(actor)
 		end
 	end
 end)
-technicianSecondary_2:onStep(function(actor)
+technicianSecondary_Det:onStep(function(actor)
 	actor:freeze_default_skill(Skill.SLOT.secondary)
 end)
 
@@ -1593,9 +1572,6 @@ technicianUtility.require_key_press = true
 technicianUtility.override_strafe_direction = true
 technicianUtility.ignore_aim_direction = true
 
---local stateTechnicianUtility = State.new(NAMESPACE, "technicianUtility")
---stateTechnicianUtility.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
-
 technicianUtility:clear_callbacks()
 technicianUtility:onActivate(function(actor)
 	if gm._mod_net_isHost() then
@@ -1604,7 +1580,6 @@ technicianUtility:onActivate(function(actor)
 			local oldestID = math.huge
 			local oldestInst = nil
 			for _, vending in ipairs(vendings) do
-				--print(vending.id)
 				if vending.parent.id == actor.id and vending.id < oldestID then
 					oldestID = vending.id
 					oldestInst = vending
@@ -1619,36 +1594,8 @@ technicianUtility:onActivate(function(actor)
 		vending_inst.team = actor.team
 		vending_inst.image_xscale = actor.image_xscale
 		vending_inst:actor_skin_skinnable_set_skin(actor)
-		-- move_contact_solid(vending_inst, 90)
 	end
-	
-	--actor:enter_state(stateTechnicianUtility)
 end)
---[[stateTechnicianUtility:clear_callbacks()
-stateTechnicianUtility:onEnter(function(actor, data)
-	actor.image_index = 0
-	data.created = nil
-end)
-stateTechnicianUtility:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	local animation = sprite_shoot3
-	if not data.created and actor.image_index >= 4 and gm._mod_net_isHost() then
-		local vendings, _ = Instance.find_all(obj_vending)
-		for _, vending in ipairs(vendings) do
-			if vending.parent.id == actor.id then
-				vending:destroy()
-			end
-		end
-		local vending_inst = obj_vending:create(actor.x, actor.y - 4)
-		vending_inst.parent = actor
-		vending_inst.team = actor.team
-		vending_inst.image_xscale = actor.image_xscale
-		-- move_contact_solid(vending_inst, 90)
-		data.created = 1
-	end
-	actor:actor_animation_set(animation, 0.25, true)
-	actor:skill_util_exit_state_on_anim_end()
-end)]]
 
 -- Radial Amplifier
 technicianUtilityAlt.sprite = sprite_skills
@@ -1697,7 +1644,6 @@ technicianSpecial.sprite = sprite_skills
 technicianSpecial.subimage = 4
 technicianSpecial.cooldown = 9 * 60
 technicianSpecial.damage = 1.8
--- technicianSpecial.damage2 = 0.7
 technicianSpecial.require_key_press = true
 technicianSpecial.does_change_activity_state = true
 technicianSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
@@ -1709,7 +1655,7 @@ technicianSpecial:set_skill_upgrade(technicianSpecialScepter)
 technicianSpecialScepter.sprite = sprite_skills
 technicianSpecialScepter.subimage = 5
 technicianSpecialScepter.cooldown = 9 * 60
-technicianSpecialScepter.damage = 15
+technicianSpecialScepter.damage = 1.8
 technicianSpecialScepter.require_key_press = true
 technicianSpecialScepter.does_change_activity_state = true
 technicianSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill

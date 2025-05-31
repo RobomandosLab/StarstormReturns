@@ -9,6 +9,7 @@ function is_point_colliding_stage(x, y)
 	return true
 end
 
+--Same thing, but with an instance instead
 function is_colliding_stage(inst, x, y)
 	return inst:is_colliding(gm.constants.pBlock, x or inst.x, y or inst.y)
 end
@@ -49,13 +50,14 @@ function move_point_contact_air(x, y, angle, amount)
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
 	local yy = math.sin(math.rad(angle))
-	while totalMoved <= amount do
+	while totalMoved < amount do
 		x = x + xx * 32
 		y = y + yy * 32
-		totalMoved = totalMoved + xx * 32 + yy * 32
-		if totalMoved > amount then
+		totalMoved = totalMoved + 32
+		if totalMoved >= amount then
 			x = x - xx * (totalMoved - amount)
 			y = y - yy * (totalMoved - amount)
+			break
 		end
 		if not is_point_colliding_stage(x, y) then
 			for i = 0, 31 do
@@ -73,16 +75,17 @@ function move_point_contact_air(x, y, angle, amount)
 	return x, y
 end
 
+--Same as move_point_contact_solid, but with an instance instead
 function move_contact_solid(inst, angle, amount)
 	amount = amount or 1000
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
 	local yy = math.sin(math.rad(angle))
-	while totalMoved <= amount do
+	while totalMoved < amount do
 		inst.x = inst.x + xx * 32
 		inst.y = inst.y + yy * 32
-		totalMoved = totalMoved + xx * 32 + yy * 32
-		if totalMoved > amount then
+		totalMoved = totalMoved + 32
+		if totalMoved >= amount then
 			inst.x = inst.x - xx * (totalMoved - amount)
 			inst.y = inst.y - yy * (totalMoved - amount)
 		end
@@ -100,17 +103,17 @@ function move_contact_solid(inst, angle, amount)
 	return x, y
 end
 
-
+--Same as move_point_contact_air, but with an instance instead
 function move_contact_air(inst, angle, amount)
 	amount = amount or 1000
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
 	local yy = math.sin(math.rad(angle))
-	while totalMoved <= amount do
+	while totalMoved < amount do
 		inst.x = inst.x + xx * 32
 		inst.y = inst.y + yy * 32
-		totalMoved = totalMoved + xx * 32 + yy * 32
-		if totalMoved > amount then
+		totalMoved = totalMoved + 32
+		if totalMoved >= amount then
 			inst.x = inst.x - xx * (totalMoved - amount)
 			inst.y = inst.y - yy * (totalMoved - amount)
 		end
@@ -128,11 +131,6 @@ function move_contact_air(inst, angle, amount)
 		end
 	end
 	return x, y
-end
-
-function move_in_direction(inst, angle, amount, isDeg)
-	inst.x = inst.x + math.cos(isDeg and math.rad(angle) or angle) * amount
-	inst.y = inst.y + math.sin(isDeg and math.rad(angle) or angle) * amount
 end
 
 --Kinda useless but whatever... Feels better anyways
@@ -163,24 +161,8 @@ function progress_achievement(achievement, value)
 	gm.achievement_add_progress(achievement.value, value)
 end
 
-function tableToString(t)
-    local function serialize(tbl, indent)
-        local str = ""
-        indent = indent or ""
-        for k, v in pairs(tbl) do
-            str = str .. indent .. k .. ": "
-            if type(v) == "table" then
-                str = str .. "\n" .. serialize(v, indent .. "  ")
-            else
-                str = str .. tostring(v) .. "\n"
-            end
-        end
-        return str
-    end
-    return serialize(t)
-end
-
-function setNoProc(attack_info) --Simple, makes the attack not proc and makes the damage number yellow
+--Simple, makes the attack not proc the damage number yellow
+function setNoProc(attack_info)
 	attack_info.proc = false
 	attack_info.damage_color = Color.from_hex(0xC9B736)
 end
