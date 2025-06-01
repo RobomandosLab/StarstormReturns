@@ -500,7 +500,7 @@ stateSecondary:onStep(function(actor, data)
 	if data.fired == 0 and actor.image_index >= 1 then
 		data.fired = 1
 		actor:sound_play(sound_shoot2a, 1, 0.9 + math.random() * 0.2)
-		if gm._mod_net_isHost then
+		if gm._mod_net_isHost() then
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i=0, actor:buff_stack_count(buff_shadow_clone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y - 4, 1300, actor:skill_util_facing_direction(), actor:skill_get_damage(secondary), nil, sprite_sparks3).attack_info
