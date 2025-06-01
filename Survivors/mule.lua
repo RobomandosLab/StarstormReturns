@@ -1,7 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/MULE")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/MULE")
 
-local sprite_loadout			= Resources.sprite_load(NAMESPACE, "MuleSelect", path.combine(SPRITE_PATH, "select.png"), 16, 28, 0)
+local sprite_loadout			= Resources.sprite_load(NAMESPACE, "MuleSelect", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0)
 local sprite_portrait 			= Resources.sprite_load(NAMESPACE, "MulePortrait", path.combine(SPRITE_PATH, "portrait.png"), 4)
 local sprite_portrait_small 	= Resources.sprite_load(NAMESPACE, "MulePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "MuleSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
@@ -22,7 +22,7 @@ local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHal
 local sprite_fall				= Resources.sprite_load(NAMESPACE, "MuleFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 22, 32)
 local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 12, 32)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "MuleDeath", path.combine(SPRITE_PATH, "death.png"), 10, 45, 55)
-local sprite_decoy				= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
+local sprite_decoy				= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 17, 17)
 
 local sprite_shoot1a			= Resources.sprite_load(NAMESPACE, "MuleShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 21, 34)
 local sprite_shoot1b			= Resources.sprite_load(NAMESPACE, "MuleShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 21, 34)
