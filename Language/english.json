@@ -154,7 +154,7 @@
 			"name": "24/7 Energy",
 			"description": "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."
 		},
-		"technicianC": {
+		"technicianC2": {
 			"name": "Radial Amplifier",
 			"description": "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
 		},
