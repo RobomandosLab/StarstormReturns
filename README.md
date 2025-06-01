@@ -12,7 +12,7 @@ No
 ### Is it Multiplayer compatible?
 Should be! Please report any issues you find.
 
-## Credits & Thanks
+## Credits
 - Neik: Creator of Starstorm 1
 - Hobart: Morale support
 - Bread: Github Detective
@@ -20,19 +20,21 @@ Should be! Please report any issues you find.
 - Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
 - Battery: Programmer
-- [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Programmer
+- [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
 - EarthZebra: Programmer
-- Opal: Pixel artist & programmer
-- Altzeus: Music & programmer
-- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel artist
-- isDahMaster: Pixel artist
-- [Beebo](https://bsky.app/profile/beebogreebo.bsky.social): Pixel artist
-- [TangoKnight](https://bsky.app/profile/tangoknight.bsky.social): Pixel artist
-- Redacted: Pixel artist
-- [Dontio](https://ko-fi.com/donito): Pixel artist
-- [Meursault](https://ko-fi.com/fyrebw28545): Pixel artist
-- [RicottaKitten](https://bsky.app/profile/boreeddddd.bsky.social): Pixel artist
-- [Gummies](https://bsky.app/profile/gummies139.bsky.social): Pixel artist
+- AnAwesomeDudette: Writer & Programmer
+- Opal: Pixel Artist & Programmer
+- Altzeus: Music & Programmer
+- Redacted: Writer & Lead Pixel Artist
+- DigBug: Writer & Pixel Artist
+- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist
+- isDahMaster: Pixel Artist
+- [Beebo](https://bsky.app/profile/beebogreebo.bsky.social): Pixel Artist
+- [TangoKnight](https://bsky.app/profile/tangoknight.bsky.social): Writer & Pixel Artist
+- [Dontio](https://ko-fi.com/donito): Pixel Artist
+- [Meursault](https://ko-fi.com/fyrebw28545): Pixel Artist
+- [RicottaKitten](https://bsky.app/profile/boreeddddd.bsky.social): Pixel Artist
+- [Gummies](https://bsky.app/profile/gummies139.bsky.social): Pixel Artist
 
 ## Special Thanks
 - Neik for creating a wonderful mod and community we have loved and enjoyed
@@ -42,3 +44,4 @@ Should be! Please report any issues you find.
 - Starstorm fans everywhere
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
+- SwedishFish75 for Spanish Translation
