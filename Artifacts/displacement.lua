@@ -10,16 +10,18 @@ displacement:set_sprites(loadout, pickup)
 
 local potentialEnvs = List.new() -- this is where we will put environments that are available for random selection
 local validEnvs = List.new() -- this is where we will put all valid environments (no boar beach cuz its a secret and no risk of rain cuz its a final environment for example)
-for i = 1, 5 do -- go through 5 tiers of stages, we exclude tier 6 because we dont want to randomly go to risk of rain
-	local envs = List.wrap(gm._mod_stage_get_pool_list(i)) -- get all environments in a tier
-	for _, env in ipairs(envs) do
-		validEnvs:add(env) -- add each environment to validEnvs
-	end
-end
-	
 	
 gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, args)
 	if not displacement.active then return end
+	
+	validEnvs:clear()
+	for i = 1, 5 do -- go through 5 tiers of stages, we exclude tier 6 because we dont want to randomly go to risk of rain
+		local envs = List.wrap(gm._mod_stage_get_pool_list(i)) -- get all environments in a tier
+		for _, env in ipairs(envs) do
+			validEnvs:add(env) -- add each environment to validEnvs
+		end
+	end
+	
 	if not validEnvs:contains(result.value) then return end -- if the original environment isnt a valid one, dont run the rest of the code
 	
 	-- reset the list of potential environments every time you wouldve visited a tier 1 environment (so essentially after looping or starting the game)

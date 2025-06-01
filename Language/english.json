@@ -14,12 +14,22 @@
 			"departure" : "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
 			"arrival" : "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa"
 		},
+		"mule" : {
+			"name" : "MULE",
+			"nameUpper" : "MULE",
+			"description" : "EVERY <y>MULE</c> UNIT IS ADEQUATELY EQUIPPED AND READY FOR DUTY. BUILT WITH HIGH QUALITY MATERIALS FOR MAXIMUM WORK PERFORMANCE. THIS MODEL INCLUDES THE <y>FORAGER SET OF TOOLS</c>, PERFECT FOR <y>HUNTING</c>, <y>EXPLORATION</c> AND OTHER DANGEROUS TASKS FOR THE COMMON USER. IN ORDER TO INITIALIZE PLEASE STATE A DIRECTIVE ON SYSTEM BOOT.",
+			"endQuote" : "..and so it left, pistons creaking, directive unstated.",
+			"story": "PSA: The MULE units are neither sentient nor pets. Calling them 'Molly' will not impact the MULE unit's programming.",
+			"id" : "",
+			"departure" : "",
+			"arrival" : ""
+		},
 		"nemesisCommando" : {
 			"name" : "Nemesis Commando",
 			"nameUpper" : "NEMESIS COMMANDO",
-			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Roll</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
 			"endQuote": "..and so he left, carrying new sense of humanity within.",
-			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>"
+			"story": "<b>UNREGISTERED FIELD DATA LOG: DATA LAST MODIFIED ON [##090??!?]</c> \n<r>[ERROR 0x00000ce: Data Package Corrupted, viewing a restore point.]</c> \n\n<ul>[Entry 1] -</c> Patrol group just picked up a wounded straggler a few miles off from camp. Word going around is he “showed up out of nowhere,” (as if I'm buying that), what with nothing in the surrounding area to trace his origin. Regardless of the validity of their claims, a survivor's a survivor. As I'm writing this, we're carrying him back. He's certainly not making it easy on us, though, considering the sheer heft of his gear- he's lugging some unorthodox modifications to a standard Commando armor rig. It looks to be- or maybe was originally- the initial issue of the Mk. 1 model (even though I'm pretty sure they stopped producing those years ago?). \n\n<ul>[Entry 2] -</c> Update- buddy's got some scarily heavy artillery on hand for a Commando unit- a rocket launcher still warm to the touch and some almost certainly alien grenades- I sure as hell haven't seen anything like them. He’s out cold right now, and from what we can tell looking through his helmet he's well-battered. His left arm seems especially stiff- his hand's clamped shut around the handle of his vibroblade. Some of us tried to get a good look at it just now, but it's almost like his fist is fused to the damn thing. Amongst other things on his person, it's thoroughly coated in this crusted black.. substance. We don't know if it was the result of a fight between a few more survivors, or evidence for some kind of self defe??!0049### \n<r>[End of legible data.]</c> \n\n<ul>[Entry 2a] -</c> I dont know how much time I have left as im typing this it woke up and camp is DESTROYED people wont stop bleeding we dont even know if it was human with what it can do noone knows what to do now it went straight for Adrian \nwe dont even know what set it off??? what did WE do to deserve all of this??? why did that THING attack U!??!?##$0959090302???! \n<r>[End of legible data.]</c> \n\n<p>Th?e ga?dflies swarm thi?s nob?le beas?t as it gra?zes.\n\nYour plag??ue upon it?s surfa?ce wi?ll be undo?ne by the?se toiling hand?s.",
 		},
 		"nemesisMercenary" : {
 			"name" : "Nemesis Mercenary",
@@ -31,8 +41,22 @@
 		"technician": {
 			"name": "Technician",
 			"nameUpper": "TECHNICIAN",
-			"description": "",
-			"endQuote": "..and so he left, by switching the ship off and on again."
+			"description": "The <y>Technician</c> is excellent at setting up and maintaining zones of enemy denial. <y>Forced Shutdown</c> can <y>forcibly lock down an area</c> when upgraded. <y>Upgrading</c> gadgets improves their effectiveness, but be careful when doing so in dangerous situations!",
+			"endQuote": "..and so he left, by switching the ship off and on again.",
+			"story": "<ul>Passenger Details:\n<g>[Employee Class]\n\n<ul>Employee Details:</c>\nEmployee contracted to work on-site for the full duration of the scheduled voyage of the UES Contact Light, to perform maintenance on machinery should technical issues arise aboard the ship. Employee qualified with 6 years of hands-on experience in software and hardware engineering.\n\n<ul>Luggage & Equipment:</c>\nEmployee boarded with a Durarend welding spacesuit rated with strong vacuum resistance, and additionally leather and cloth attire made for planetary wear. Employee notified that clothes may tear in the case of a vacuum event. Security flagged the sizable wrench they held for appearing impractical for use while potentially dangerous. Upon questioning, the employee indicated that it was \"custom-built ... for the toughest jobs.\" Following procedure, the wrench was moved to an automated lockbox in loading bay 1a. Remaining inspection of carry-ons revealed several standard-issue wrenches, 3 color-coded USBs, a 2047 model GeForm Laptop, tool boxes, and a welding tool. USBs were inspected on company-owned QPuting Disposable Computer installed with ReoVirus Detector v1.6.2. No traces of malware were detected and stored files are UPG format containing blueprints of various devices. Employee permitted to pass with no further difficulties.\n\n<b>[SECURITY RECALL]</c>\n<ul>[Event T1]</c> Employee forcibly removed from cabin during liftoff preparations when refusing to leave after conversating with ship pilot for multiple hours.\n<ul>[Event T2]</c> Employee observed stealing sodas from a vending machine.\n<ul>[Event T3]</c> Automated lockdown originating in loading bay 4a resolved by employee.\n<ul>[Event T4]</c> Escape pod B-08 status shifted from ERROR to ALERT after the employee was requested by ship personnel to troubleshoot. Security personnel instructed to investigate.\n<ul>[Event T1a] Employee additionally reported to have tampered with cabin control panel to make it \"easier to cruise.\" Scheduled launch delayed and employee instructed to revert any modifications made.",
+			"id" : "Travel ID: 54E4F4C434F59474E454",
+			"departure" : "<y>Departure:</c>\nUES Shipping Dock 5,\nRedview,\nMars",
+			"arrival" : "<y>Destination:</c>\nUES Shipping Dock 0,\nRedview,\nMars"
+		},
+		"swapNemesis": {
+			"name": "Nemesis Survivors",
+			"nameUpper": "NEMESIS SURVIVORS",
+			"description": "Swap to the familiar yet twisted <r>Nemesis survivors.</c>"
+		},
+		"swapNormal": {
+			"name": "Normal Survivors",
+			"nameUpper": "NORMAL SURVIVORS",
+			"description": "Swap to the regular set of survivors."
 		}
 	},
 	"skill" : {
@@ -55,6 +79,74 @@
 		"executionerVBoosted": {
 			"name": "Crowd Execution",
 			"description": "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"executionerV2": {
+			"name": "Skullsplitter",
+			"description": "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"executionerV2Boosted": {
+			"name": "Skullbuster",
+			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		"muleZ": {
+			"name": "INTERFERENCE REMOVAL",
+			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		"muleX": {
+			"name": "IMMOBILIZE",
+			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		"muleC": {
+			"name": "TORQUE CALIBRATION",
+			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		"muleV": {
+			"name": "FAIL-SAFE ASSISTANCE",
+			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleVBoosted": {
+			"name": "FAIL-SAFE ASSISTANCE 2.0",
+			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleZ": {
+			"name": "INTERFERENCE REMOVAL",
+			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		"muleX": {
+			"name": "IMMOBILIZE",
+			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		"muleC": {
+			"name": "TORQUE CALIBRATION",
+			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		"muleV": {
+			"name": "FAIL-SAFE ASSISTANCE",
+			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleVBoosted": {
+			"name": "FAIL-SAFE ASSISTANCE 2.0",
+			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleZ": {
+			"name": "INTERFERENCE REMOVAL",
+			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		"muleX": {
+			"name": "IMMOBILIZE",
+			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		"muleC": {
+			"name": "TORQUE CALIBRATION",
+			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		"muleV": {
+			"name": "FAIL-SAFE ASSISTANCE",
+			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleVBoosted": {
+			"name": "FAIL-SAFE ASSISTANCE 2.0",
+			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
 		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
@@ -89,8 +181,8 @@
 			"description": "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 		"nemesisMercenaryZ": {
-			"name": "Attachment Stab",
-			"description": "Stab up to <y>3 enemies</c> with your shotgun, dealing <y>130% damage</c>."
+			"name": "Lascerate",
+			"description": "Injure enemies with your shotgun's attachment for <y>130% damage</c>."
 		},
 		"nemesisMercenaryX": {
 			"name": "Quick Trigger",
@@ -102,27 +194,31 @@
 		},
 		"nemesisMercenaryV": {
 			"name": "Devitalize",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"nemesisMercenaryVBoosted": {
 			"name": "Absolute Devitalization",
-			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>50% extra damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			"description": "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		"technicianZ": {
 			"name": "Fine Tune",
-			"description": "Strike forward with a wrench for <y>210% damage.\n<y>Hitting gadgets</c> 3 times <b>upgrades them."
+			"description": "Strike forward with a wrench for <y>180% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 30 seconds."
 		},
 		"technicianZ2": {
 			"name": "Troubleshoot",
-			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>100% damage.\n<y>Hitting gadgets</c> 3 times <r>temporarily <b>upgrades them."
+			"description": "Throw a wrench forward, piercing up to 3 enemies for <y>180% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 20 seconds."
 		},
 		"technicianX": {
 			"name": "Forced Shutdown",
-			"description": "Toss out a <y>stunning</c> bomb dealing <y>700% damage</c> on reactivation.\nPassively pulls in enemies when <b>upgraded."
+			"description": "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
+		},
+		"technicianXD": {
+			"name": "The Red Button",
+			"description": "Detonate the dropped bomb for <y>500% damage.</c>\n<y>Stuns</c> enemies when <b>upgraded."
 		},
 		"technicianX2": {
-			"name": "The Red Button",
-			"description": "Detonate the dropped bomb for <y>700% damage, stunning enemies."
+			"name": "",
+			"description": ""
 		},
 		"technicianC": {
 			"name": "24/7 Energy",
@@ -408,6 +504,7 @@
 		"Exploder.name" : "Exploder",
 		"Mimic.name" : "Security Chest",
 		"Gatekeeper.name" : "Gatekeeper",
+		"Admonitor.name" : "Clay Admonitor",
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
 	},
@@ -426,7 +523,7 @@
 		"whistlingBasin.story" : "This planet continues to hold nothing but surprises for me. Considering the actions of its denizens prior to coming here, I would never have thought such sprawling and decadent architecture could be built by such creatures. Incredibly deep ebony pillars and arches constructed of beautiful stone that rise from the ground, all adorned with carvings placed by intentional hands. All along the walls are these amazingly intricate displays of deceptively simple shapes. The most peculiarly turquoise foliage attack the structures, climbing subtly along their bases. It seems the preconceived notion of savagery I held for this planet is waning. Even still, my guard is held high. It's too soon for me to rest, despite protests from my aching muscles.",
 
 		"torridOutlands.name" : "Torrid Outlands",
-		"torridOutlands.subname" : "Torrid Outlands",
+		"torridOutlands.subname" : "Silent Sunburn",
 		"torridOutlands.story" : "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
 	}
 }

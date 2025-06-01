@@ -1,7 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisCommando")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisCommando")
 
-local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", path.combine(SPRITE_PATH, "select.png"), 25, 28, 0)
+local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", path.combine(SPRITE_PATH, "select.png"), 34, 28, 0)
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemCommandoPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall", path.combine(SPRITE_PATH, "portraitTiny.png"))
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
@@ -55,10 +55,12 @@ local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMa
 
 local sprite_log			= Resources.sprite_load(NAMESPACE, "NemCommandoLog", path.combine(SPRITE_PATH, "log.png"))
 
+local sound_select			= Resources.sfx_load(NAMESPACE, "UISurvivorsNemCommando", path.combine(SOUND_PATH, "select.ogg"))
 local sound_slash			= Resources.sfx_load(NAMESPACE, "NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))
-local sound_grenade_prime	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadePrimeA", path.combine(SOUND_PATH, "grenade_prime.ogg"))
-local sound_grenade_throw	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeThrowA", path.combine(SOUND_PATH, "grenade_throw.ogg"))
-local sound_grenade_bounce	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeBounceA", path.combine(SOUND_PATH, "grenade_bounce.ogg"))
+local sound_grenade_prime	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadePrime", path.combine(SOUND_PATH, "grenade_prime.ogg"))
+local sound_grenade_throw	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeThrow", path.combine(SOUND_PATH, "grenade_throw.ogg"))
+local sound_grenade_bounce	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeBounce", path.combine(SOUND_PATH, "grenade_bounce.ogg"))
+local sound_rocket_fire		= Resources.sfx_load(NAMESPACE, "NemCommandoRocketFire", path.combine(SOUND_PATH, "rocket_fire.ogg"))
 
 -- secondary skill tracer
 local particleTracer = Particle.find("ror", "WispGTracer")
@@ -75,6 +77,7 @@ local nemCommando_id = nemesisCommando
 
 nemCommando.sprite_portrait = sprite_portrait
 nemCommando.sprite_portrait_small = sprite_portrait_small
+nemCommando.select_sound_id = sound_select
 
 local ATTACK_TAG_APPLY_WOUND = 1
 local ATTACK_TAG_EXTEND_WOUND = 2
@@ -883,7 +886,7 @@ stateNemCommandoSpecial2:onEnter(function(actor, data)
 	else
 		actor.sprite_index = sprite_shoot4b
 	end
-	actor:sound_play(gm.constants.wHANDShoot2_1, 1, 0.5)
+	actor:sound_play(sound_rocket_fire, 1, 1)
 end)
 stateNemCommandoSpecial2:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
@@ -950,13 +953,9 @@ objRocket:onCreate(function(inst)
 	inst.scepter = 0
 
 	inst.lifetime = 3 * 60
-	inst.woosh_sound = -1
 end)
-objRocket:onStep(function(inst)
-	if inst.woosh_sound == -1 then
-		inst.woosh_sound = gm.sound_play_at(gm.constants.wFwoosh, 1, 0.1 + math.random() * 0.1, inst.x + inst.hspeed * 120, inst.y)
-	end
 
+objRocket:onStep(function(inst)
 	local dir = inst.direction
 	local xoff = gm.lengthdir_x(16, dir)
 	local yoff = gm.lengthdir_y(16, dir)
@@ -996,10 +995,6 @@ objRocket:onDestroy(function(inst)
 	inst:sound_play(gm.constants.wWormExplosion, 1, 0.6 + math.random() * 0.2)
 	inst:sound_play(gm.constants.wExplosiveShot, 1, 1.25 + math.random() * 0.1)
 	inst:screen_shake(10)
-
-	if gm.audio_is_playing(inst.woosh_sound) then
-		gm.audio_stop_sound(inst.woosh_sound)
-	end
 
 	particleRubble1:create(inst.x, inst.y, 15)
 	particleSpark:create(inst.x, inst.y, 6)

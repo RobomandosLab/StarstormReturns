@@ -1,13 +1,24 @@
-Turn and face the strange:
+# SSR Changelog *spoilers below!!*
 
-### 0.0.3
-- Added items: Brass Knuckles, Detritive Trematode, Wonder Herb, Watch Metronome
+## 0.1.1
+- Add a returning survivor: MULE!
+- README/Credit updates
+- Updated sprites for: Molten Coin, Ice Tool, Guarding Amulet,
+- Tweaked Executioner's Skullsplitter:
+- Instead of doing regular double damage, now critically strikes against feared enemies,
+- Speed reduction while hitting increased to 40% (from 25%)
+- Fixed colour issues with select animations for Executioner and Nemesis Commando,
+- Nemesis Commando now has a new select animation + sound
+- Halved the time that multitude's text last
+- Add Russian translation (Azuline)
+- Add Spanish translation (swedishfish75)
+- Add 3 skins for Technician
+- Various stat changes, bug fixes, and qol fixes for Technician
 
-### 0.0.2
-- First closed alpha :)
-- Restructured project to have individual content classes, proper lang loading, overall better organization.
-- Disabled Executioner due to basically being a template.
-- Added items: Armed Backpack, Fork, Dormant Fungus
-
-### 0.0.1
-- WIP Executioner; basic body setup + script; no skills.
+## 0.1.0
+- Initial release!
+- Adds Nemesis Commando, Executioner, and Technician.
+- Adds a bunch of items from SS1/SS2!
+- Adds a few new stages!
+- Adds "Typhoon" difficulty.
+- Adds the mimic, and exploder.  
