@@ -55,6 +55,7 @@ local sprite_rocket_mask	= Resources.sprite_load(NAMESPACE, "NemCommandoRocketMa
 
 local sprite_log			= Resources.sprite_load(NAMESPACE, "NemCommandoLog", path.combine(SPRITE_PATH, "log.png"))
 
+local sound_select			= Resources.sfx_load(NAMESPACE, "UISurvivorsNemCommando", path.combine(SOUND_PATH, "select.ogg"))
 local sound_slash			= Resources.sfx_load(NAMESPACE, "NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))
 local sound_grenade_prime	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadePrime", path.combine(SOUND_PATH, "grenade_prime.ogg"))
 local sound_grenade_throw	= Resources.sfx_load(NAMESPACE, "NemCommandoGrenadeThrow", path.combine(SOUND_PATH, "grenade_throw.ogg"))
@@ -76,6 +77,7 @@ local nemCommando_id = nemesisCommando
 
 nemCommando.sprite_portrait = sprite_portrait
 nemCommando.sprite_portrait_small = sprite_portrait_small
+nemCommando.select_sound_id = sound_select
 
 local ATTACK_TAG_APPLY_WOUND = 1
 local ATTACK_TAG_EXTEND_WOUND = 2
