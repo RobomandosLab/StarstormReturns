@@ -8,6 +8,9 @@ local pickup = Resources.sprite_load(NAMESPACE, "ArtifactOfMultitudePickup", pat
 local multitude = Artifact.new(NAMESPACE, "multitude")
 multitude:set_sprites(loadout, pickup)
 
+local ARRIVING_TIME = 500 -- time before the horde arrives, used to display "prepare yourself...", time measured in game ticks (1 / 60 of a second)
+local APPROACHING_TIME = 1000 -- time before the horde arrives, used to display "a horde of enemies is approaching", time measured in game ticks (1 / 60 of a second)
+
 Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
 	if not multitude.active then return end
 	
@@ -15,6 +18,13 @@ Callback.add(Callback.TYPE.onStep, "MultitudeWave", function()
 	
 	-- if the teleporter is charged already, disable spawns
 	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporter)) do
+		if teleporter.time >= teleporter.maxtime then
+			spawn = false
+			break
+		end
+	end
+	-- apply the same thing to divine teleporters
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporterEpic)) do
 		if teleporter.time >= teleporter.maxtime then
 			spawn = false
 			break
@@ -78,6 +88,13 @@ Callback.add(Callback.TYPE.onDraw, "MultitudeWarningMessage", function()
 			break
 		end
 	end
+	-- apply the same thing to divine teleporters
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporterEpic)) do
+		if teleporter.active >= 2 then
+			spawn = false
+			break
+		end
+	end
 	
 	if Instance.find(gm.constants.oBoss1):exists() or Instance.find(gm.constants.oWurmHead):exists() then
 		spawn = false
@@ -93,10 +110,10 @@ Callback.add(Callback.TYPE.onDraw, "MultitudeWarningMessage", function()
 	local actor = Player.get_client()
 	if spawn and director:get_data().multitudeTime then
 		if director:get_data().multitudeTime < timeRequired - 200 then
-			if director:get_data().multitudeTime > timeRequired - 1000 then
+			if director:get_data().multitudeTime > timeRequired - ARRIVING_TIME then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1) -- makes the text use normal white font
 				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.arriving")) -- the line itself is in the language file
-			elseif director:get_data().multitudeTime > timeRequired - 2000 then
+			elseif director:get_data().multitudeTime > timeRequired - APPROACHING_TIME then
 				gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
 				gm.scribble_draw(actor.ghost_x, actor.ghost_y - 60, Language.translate_token("artifact.multitude.approaching"))
 			end
