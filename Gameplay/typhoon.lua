@@ -2,7 +2,7 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Menu")
 local SOUND_PATH = path.combine(PATH, "Sounds/Menu")
 
 local sprite_small = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon", path.combine(SPRITE_PATH, "DifficultyTyphoon.png"), 5, 11, 9)
-local sprite_large = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon2X", path.combine(SPRITE_PATH, "DifficultyTyphoon_2x.png"), 4, 22, 20)
+local sprite_large = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon2x", path.combine(SPRITE_PATH, "DifficultyTyphoon2x.png"), 4, 22, 20)
 
 local sound_select = Resources.sfx_load(NAMESPACE, "UI_Diff_Typhoon", path.combine(SOUND_PATH, "UI_Diff_Typhoon.ogg"))
 

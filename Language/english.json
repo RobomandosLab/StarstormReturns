@@ -1,7 +1,15 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Typhoon",
-		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes."
+		"typhoon.description" : "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes.",
+		"easyEthereal.name" : "Deluge",
+		"normalEthereal.name" : "Tempest",
+		"hardEthereal.name" : "Cyclone",
+		"typhoonEthereal.name" : "Hurricane",
+	},
+	"alert" : {
+		"difficultyUp" : "Difficulty Up",
+		"storm" : "A storm is approaching..",
 	},
 	"survivor" : {
 		"executioner" : {
@@ -510,6 +518,8 @@
 	},
 
 	"interactable" : {
+		"TeleporterEthereal.text" : "Activate Ethereal Teleporter.",
+		"TeleporterEthereal2.text" : "This will radically increase the difficulty!",
 		"MimicInactive.text" : "..?",
 		"MimicInactive.name" : "Large Chest?"
 	},
