@@ -182,24 +182,29 @@ drone_card.spawn_cost = 120
 drone_card.spawn_weight = 4
 drone_card.default_spawn_rarity_override = 1
 
-if HOTLOADIND then return end
+local stages_loaded = 0
+Callback.add(Callback.TYPE.onGameStart, "SSRDuplicatorDroneAddStages", function( )
+	if stages_loaded == 0 then
+        stages_loaded = 1
 
-local stages = {
-    "ror-templeOfTheElders"
-}
+        local stages = {
+            "ror-templeOfTheElders"
+        }
 
-local loop_stages = {
-    "ror-hiveCluster",
-    "ror-dampCaverns"
-}
+        local loop_stages = {
+            "ror-hiveCluster",
+            "ror-dampCaverns"
+        }
 
 
-for _, s in ipairs(stages) do
-    local stage = Stage.find(s)
-    stage:add_interactable(drone_card)
-end
+        for _, s in ipairs(stages) do
+            local stage = Stage.find(s)
+            stage:add_interactable(drone_card)
+        end
 
-for _, s in ipairs(loop_stages) do
-    local stage = Stage.find(s)
-    stage:add_interactable_loop(drone_card)
-end
+        for _, s in ipairs(loop_stages) do
+            local stage = Stage.find(s)
+            stage:add_interactable_loop(drone_card)
+        end
+    end
+end)

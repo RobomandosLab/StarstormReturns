@@ -120,8 +120,6 @@ gildedDuplicatorDrone:onStep(function( inst )
             inst.sprite_index = inst.sprite_shoot1
 
             inst.item_id = inst.item.item_id -- this stores the id in case you pick up the item after going to dupe it
-            inst.item:destroy()
-            inst.item = nil
 
             inst.duplicating = 3
         else
@@ -143,6 +141,7 @@ gildedDuplicatorDrone:onStep(function( inst )
 
             inst.duplicating = 0
             inst.item_id = nil
+            inst.item = nil
             inst.fire_frame = Global._current_frame
         end
     end

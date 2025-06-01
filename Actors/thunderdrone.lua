@@ -164,23 +164,19 @@ Callback.add(Callback.TYPE.onAttackHit, "SSThunderDroneHit", function( hit_info 
     end
 end)
 
-if HOTLOADING then return end
+local stages_loaded = 0
+Callback.add(Callback.TYPE.onGameStart, "SSRThunderDroneAddStages", function( )
+	if stages_loaded == 0 then
+        stages_loaded = 1
 
-local stages = {
-    "ror-riskOfRain"
-}
+        local loop_stages = {
+            "ror-sunkenTombs",
+            "ror-magmaBarracks"
+        }
 
-local loop_stages = {
-    "ror-magmaBarracks"
-}
-
-
-for _, s in ipairs(stages) do
-    local stage = Stage.find(s)
-    stage:add_interactable(drone_card)
-end
-
-for _, s in ipairs(loop_stages) do
-    local stage = Stage.find(s)
-    stage:add_interactable_loop(drone_card)
-end
+        for _, s in ipairs(loop_stages) do
+            local stage = Stage.find(s)
+            stage:add_interactable_loop(drone_card)
+        end
+    end
+end)

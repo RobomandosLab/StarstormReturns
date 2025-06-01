@@ -178,13 +178,18 @@ end)
 local drone_card = Interactable_Card.new(NAMESPACE, "fabricatorDronePickup")
 drone_card.object_id = fabricatorDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 80
+drone_card.spawn_cost = 75
 drone_card.spawn_weight = 5
 drone_card.default_spawn_rarity_override = 1
 
-if HOTLOADING then return end
+local stages_loaded = 0
+Callback.add(Callback.TYPE.onGameStart, "SSRFabricatorDroneAddStages", function( )
+	if stages_loaded == 0 then
+        stages_loaded = 1
 
-local stages = Stage.find_all()
-for _, stage in ipairs(stages) do
-    stage:add_interactable(drone_card)
-end
+        local stages = Stage.find_all()
+        for _, stage in ipairs(stages) do
+            stage:add_interactable(drone_card)
+        end
+    end
+end)
