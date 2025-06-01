@@ -128,6 +128,26 @@
 			"name": "FAIL-SAFE ASSISTANCE 2.0",
 			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
 		},
+		"muleZ": {
+			"name": "INTERFERENCE REMOVAL",
+			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		"muleX": {
+			"name": "IMMOBILIZE",
+			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		"muleC": {
+			"name": "TORQUE CALIBRATION",
+			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		"muleV": {
+			"name": "FAIL-SAFE ASSISTANCE",
+			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		"muleVBoosted": {
+			"name": "FAIL-SAFE ASSISTANCE 2.0",
+			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
 			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
