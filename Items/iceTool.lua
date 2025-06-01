@@ -1,4 +1,4 @@
-local sprite_item = Resources.sprite_load(NAMESPACE, "IceTool", path.combine(PATH, "Sprites/Items/iceTool.png"), 1, 18, 16)
+local sprite_item = Resources.sprite_load(NAMESPACE, "IceTool", path.combine(PATH, "Sprites/Items/iceTool.png"), 1, 16, 16)
 local sprite_effect = Resources.sprite_load(NAMESPACE, "EfIceTool", path.combine(PATH, "Sprites/Items/Effects/iceTool.png"), 4, 13, 8)
 local sound = Resources.sfx_load(NAMESPACE, "IceTool", path.combine(PATH, "Sounds/Items/iceTool.ogg"))
 

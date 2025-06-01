@@ -20,8 +20,8 @@ local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripW
 --Stage
 local basin_stage = Stage.new(NAMESPACE, "whistlingBasin")
 basin_stage.music_id = gm.sound_add_w(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Sounds/Music", "musicWhistlingBasin.ogg"))
-basin_stage.token_name = "Whistling Basin"
-basin_stage.token_subname = "Dwindling Oasis"
+basin_stage.token_name = Language.translate_token("stage.whistlingBasin.name")
+basin_stage.token_subname = Language.translate_token("stage.whistlingBasin.subname")
 basin_stage.teleporter_index = 0
 basin_stage:set_index(2)
 
@@ -97,8 +97,8 @@ local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripT
 
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
 outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
-outlands_stage.token_name = "Torrid Outlands"
-outlands_stage.token_subname = "Silent Sunburn" 
+outlands_stage.token_name = Language.translate_token("stage.torridOutlands.name")
+outlands_stage.token_subname = Language.translate_token("stage.torridOutlands.subname") 
 outlands_stage.teleporter_index = 0
 outlands_stage.interactable_spawn_points = 900
 outlands_stage:set_index(3)
