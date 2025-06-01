@@ -27,7 +27,7 @@
 		"nemesisCommando" : {
 			"name" : "Nemesis Commando",
 			"nameUpper" : "NEMESIS COMMANDO",
-			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Dive</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			"description" : "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Roll</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
 			"endQuote": "..and so he left, carrying new sense of humanity within.",
 			"story": "<p>MY ORIGINAL OC DO NOT STEAL</c>"
 		},
@@ -68,11 +68,11 @@
 		},
 		"executionerV2": {
 			"name": "Skullsplitter",
-			"description": "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+			"description": "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 		"executionerV2Boosted": {
 			"name": "Skullbuster",
-			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. Damage is <y>doubled</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+			"description": "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
 		},
 		"muleZ": {
 			"name": "INTERFERENCE REMOVAL",
