@@ -175,6 +175,8 @@ technician.sprite_idle = sprite_idle
 technician.sprite_title = sprite_walk
 technician.sprite_credits = sprite_credits
 
+technician.select_sound_id = sound_select
+
 technician:set_palettes(sprite_palette, sprite_palette, sprite_palette)
 
 technician:add_skin("TechnicianRose", 1, Resources.sprite_load(NAMESPACE, "TechnicianSelect_PAL2", path.combine(SPRITE_PATH, "selectS1.png"), 18, 28, 0),
@@ -1155,35 +1157,6 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 	if _hit_info and _hit_info.value and (_hit_info.value.attack_info.__ssr_technician_is_expose or 0) >= 2 and not gm.bool(_critical.value) then
 		_critical.value = true
 		_damage.value = _damage.value * 2
-	end
-end)
-
-----TEMPORARY: Will be removed when a proper solution is added to the api
---Plays the survivor's selection sound when being selected in the character select screen
-local localSelectMenu
-local playedSound = false
-gm.pre_script_hook(gm.constants.game_lobby_start, function(self, other, result, args)
-	local function WaitForInit()
-		localSelectMenu = Instance.find(Object.find("ror", "SelectMenu"))
-	end
-	Alarm.create(WaitForInit, 25)
-end)
-
-gm.pre_script_hook(gm.constants._ui_update, function(self, other, result, args)
-	if not Instance.exists(localSelectMenu) then return end
-	
-	if localSelectMenu.choice == technician.value then
-		if not playedSound then
-			gm.sound_play_at(sound_select, 1, 1, 1000, 100)
-			
-			if gm.audio_is_playing(soundCommandoSelect) then
-				gm.audio_stop_sound(soundCommandoSelect)
-			end
-			
-			playedSound = true
-		end
-	else
-		playedSound = false
 	end
 end)
 
