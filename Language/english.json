@@ -519,7 +519,7 @@
 
 	"interactable" : {
 		"TeleporterEthereal.text" : "Activate Ethereal Teleporter.",
-		"TeleporterEthereal2.text" : "This will radically increase the difficulty!",
+		"TeleporterEthereal.text2" : "This will radically increase the difficulty!",
 		"MimicInactive.text" : "..?",
 		"MimicInactive.name" : "Large Chest?"
 	},
