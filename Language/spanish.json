@@ -1,7 +1,15 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Tifón",
-		"typhoon.description" : "<r>El reto definitivo.</c>\nUna pesadilla en la cual la supervivencia es una mera ilusión.\nNadie está a la altura."
+		"typhoon.description" : "<r>El reto definitivo.</c>\nUna pesadilla en la cual la supervivencia es una mera ilusión.\nNadie está a la altura.",
+		"easyEthereal.name" : "Diluvio",
+		"normalEthereal.name" : "Tempesta",
+		"hardEthereal.name" : "Cyclón",
+		"typhoonEthereal.name" : "Huracán",
+	},
+	"alert" : {
+		"difficultyUp" : "Subida de Dificultad",
+		"storm" : "Una tormena se acerca...",
 	},
 	"survivor" : {
 		"executioner" : {
@@ -456,6 +464,8 @@
 	},
 
 	"interactable" : {
+		"TeleporterEthereal.text" : "Activar Teletransportador Etéreo.",
+		"TeleporterEthereal.text2" : "¡Esto incrementara la dificultad radicalmente!",
 		"MimicInactive.text" : "..?",
 		"MimicInactive.name" : "Cofre Grande..?"
 	},
