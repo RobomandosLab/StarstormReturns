@@ -35,6 +35,16 @@ local ethereal_map = {
 	[Difficulty.find(NAMESPACE, "typhoon").value] = diffHurricane,
 }
 
+-- copy important properties from original difficulties
+for orig_id, eth in pairs(ethereal_map) do
+	local orig = Difficulty.wrap(orig_id)
+	eth.diff_scale = orig.diff_scale
+	eth.general_scale = orig.general_scale
+	eth.point_scale = orig.point_scale
+	eth.is_monsoon_or_higher = orig.is_monsoon_or_higher
+	eth.allow_blight_spawns = orig.allow_blight_spawns
+end
+
 do
 	local difficulty_display_list = List.wrap(Global.difficulty_display_list)
 
@@ -52,6 +62,7 @@ end
 
 -- maps room ids to teleporter locations
 -- only to be filled out for vanilla stages! ssr stages should place the ethearal tp object in the rorlvl
+-- some have depth specified for cases where it needs adjustment to look good
 local ethereal_tp_locations = {}
 
 do
@@ -66,7 +77,7 @@ do
 	local templeOfTheElders_rooms = List.wrap(Stage.find("ror", "templeOfTheElders").room_list)
 
 	ethereal_tp_locations[desolateForest_rooms[2]] = {x = 71, y = 97}
-	ethereal_tp_locations[desolateForest_rooms[4]] = {x = 155, y = 24}
+	ethereal_tp_locations[desolateForest_rooms[4]] = {x = 342, y = 100}
 	ethereal_tp_locations[driedLake_rooms[1]] = {x = 222, y = 56}
 	ethereal_tp_locations[driedLake_rooms[2]] = {x = 222, y = 56}
 	ethereal_tp_locations[driedLake_rooms[3]] = {x = 223, y = 62}
@@ -79,12 +90,12 @@ do
 	ethereal_tp_locations[ancientValley_rooms[1]] = {x = 31, y = 215}
 	ethereal_tp_locations[ancientValley_rooms[2]] = {x = 32, y = 215}
 	ethereal_tp_locations[ancientValley_rooms[3]] = {x = 32, y = 215}
-	ethereal_tp_locations[sunkenTombs_rooms[1]] = {x = 161, y = 129}
+	ethereal_tp_locations[sunkenTombs_rooms[1]] = {x = 161, y = 129, depth = 350}
 	ethereal_tp_locations[sunkenTombs_rooms[2]] = {x = 160, y = 129}
 	ethereal_tp_locations[sunkenTombs_rooms[3]] = {x = 160, y = 129}
-	ethereal_tp_locations[hiveCluster_rooms[1]] = {x = 198, y = 9}
-	ethereal_tp_locations[hiveCluster_rooms[2]] = {x = 198, y = 9}
-	ethereal_tp_locations[hiveCluster_rooms[3]] = {x = 198, y = 9}
+	ethereal_tp_locations[hiveCluster_rooms[1]] = {x = 198, y = 9, depth = 155}
+	ethereal_tp_locations[hiveCluster_rooms[2]] = {x = 198, y = 9, depth = 155}
+	ethereal_tp_locations[hiveCluster_rooms[3]] = {x = 198, y = 9, depth = 155}
 	ethereal_tp_locations[magmaBarracks_rooms[1]] = {x = 12, y = 79}
 	ethereal_tp_locations[magmaBarracks_rooms[2]] = {x = 9, y = 73}
 	ethereal_tp_locations[magmaBarracks_rooms[3]] = {x = 9, y = 73}
@@ -132,7 +143,6 @@ local function make_tp_ethereal(tp)
 	tp.sprite_charging = sprite_teleporter_ethereal
 	--tp.sprite_fidget
 	tp.sprite_finished = sprite_teleporter_ethereal
-	tp.depth = 12
 
 	-- these are used for offscreen culling
 	-- need to expand them a bit to accommodate the bigger sprite
@@ -148,10 +158,12 @@ end
 
 local objEtherealTeleporter = Object.new(NAMESPACE, "TeleporterEthereal")
 objEtherealTeleporter.obj_sprite = sprite_teleporter_ethereal
+objEtherealTeleporter.obj_depth = 12
 
 objEtherealTeleporter:clear_callbacks()
 objEtherealTeleporter:onStep(function(self)
 	local tp = GM.instance_create(self.x, self.y, gm.constants.oTeleporter)
+	tp.depth = self.depth
 	make_tp_ethereal(tp)
 
 	self:destroy()
@@ -169,7 +181,8 @@ Callback.add(Callback.TYPE.onStageStart, "SSEtherealStageStart", function()
 
 	local data = ethereal_tp_locations[gm._mod_room_get_current()]
 	if data then
-		objEtherealTeleporter:create(data.x * 32 + 16, data.y * 32)
+		local tp = objEtherealTeleporter:create(data.x * 32 + 16, data.y * 32)
+		tp.depth = data.depth or tp.depth
 	end
 end)
 
@@ -193,25 +206,19 @@ gm.pre_code_execute("gml_Object_pTeleporter_Step_2", function(self, other)
 
 			self:sound_play(sound_big_teleporter, 1, 1)
 			self:screen_shake(25)
-
-			if gm._mod_net_isHost() then
-				gm.instance_create(self.x, self.y - 96, gm.constants.oImpPortal)
-			end
 		end
 	end
 end)
 
 -- difficulty up notification
-local surf_difficulty_up = -1
-
 Callback.add(Callback.TYPE.onHUDDraw, "SSEtherealHUDDraw", function()
 	if not difficulty_notif_active then return end
 
 	difficulty_notif_timer = difficulty_notif_timer + 1
 
-	if difficulty_notif_timer < 120 then return end
+	if difficulty_notif_timer < 90 then return end
 
-	if difficulty_notif_timer < 7 * 60 then
+	if difficulty_notif_timer < 6 * 60 then
 		difficulty_notif_alpha = math.min(1, difficulty_notif_alpha + 0.02)
 	else
 		difficulty_notif_alpha = difficulty_notif_alpha - 0.02
@@ -225,22 +232,28 @@ Callback.add(Callback.TYPE.onHUDDraw, "SSEtherealHUDDraw", function()
 	gm.draw_set_alpha(difficulty_notif_alpha)
 
 	local tx = Global.___view_l_x + Global.___view_l_w * 0.5
-	local ty = Global.___view_l_y + Global.___view_l_h * 0.4
+	local ty = Global.___view_l_y + Global.___view_l_h * 0.5 - 100 -- offset to appear just above stage title name
 
-	local _diff_sprite = Difficulty.wrap(Global.diff_level).sprite_loadout_id
+	local text = Language.translate_token("alert.difficultyUp")
 
-	gm.draw_sprite(_diff_sprite, 1, tx, ty - 40)
+	-- white text with dark gray outline ..
+	gm.scribble_set_starting_format("fntLarge", Color.WHITE, 1)
+	gm.scribble_set_blend(Color.DKGRAY, difficulty_notif_alpha)
+	gm.scribble_draw(tx-1, ty,   text)
+	gm.scribble_draw(tx+1, ty,   text)
+	gm.scribble_draw(tx-1, ty-1, text)
+	gm.scribble_draw(tx+1, ty-1, text)
+	gm.scribble_draw(tx,   ty-1, text)
+	gm.scribble_draw(tx,   ty+1, text)
+	gm.scribble_draw(tx-1, ty+1, text)
+	gm.scribble_draw(tx+1, ty+1, text)
+	gm.scribble_set_blend(Color.WHITE, difficulty_notif_alpha)
+	gm.scribble_draw(tx, ty, text)
 
-	if gm.surface_exists(surf_difficulty_up) == 0 then
-		local text = Language.translate_token("alert.difficultyUp")
+	-- draw difficulty sprite
+	local diff_sprite = Difficulty.wrap(Global.diff_level).sprite_loadout_id
+	gm.draw_sprite(diff_sprite, 1, tx, ty - 40)
 
-		gm.scribble_set_starting_format("fntLarge", Color.WHITE, 0)
-		surf_difficulty_up = gm.scribble_cache_to_surface_outlined(gm.scribble_cache(text), Color.WHITE, Color.DKGRAY)
-	end
-
-	tx = tx - gm.surface_get_width(surf_difficulty_up) * 0.5
-	ty = ty - gm.surface_get_height(surf_difficulty_up) * 0.5
-
-	gm.draw_surface(surf_difficulty_up, tx, ty)
+	gm.scribble_set_blend(Color.WHITE, 1)
 	gm.draw_set_alpha(1)
 end)
