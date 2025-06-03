@@ -460,7 +460,15 @@
 		"Admonitor.name" : "Admonitor de Arcilla",
 		"Gatekeeper.name" : "Centinela",
 		"Protector.name" : "Protector",
-		"Protector.text" : "Guardián del Artefacto"
+		"Protector.text" : "Guardián del Artefacto",
+		"nemmandoEnemy.name" : "Comando Némesis",
+		"nemmandoEnemy.text" : "Eco Solitario",
+		"nemmercEnemy.name" : "Mercenario Némesis",
+		"nemmercEnemy.text" : "Desertor Vengativo",
+		"nemforcerEnemy.name" : "Agente Némesis",
+		"nemforcerEnemy.text" : "Sombra Incorruptible",
+		"nemloaderEnemy.name" : "Cargador Némesis",
+		"nemloaderEnemy.text" : "Mastodonte Hidráulico"
 	},
 
 	"interactable" : {
