@@ -15,3 +15,13 @@ Callback.add(Callback.TYPE.onInteractableActivate, "SSLockOtherTeleporters", fun
 		end
 	end
 end)
+
+-- handle teleporters that've been spawned in, such as the counterfeit tp
+gm.post_code_execute("gml_Object_pTeleporter_Create_0", function(self, other)
+	if Global.__gamemode_current >= 2 then return end
+
+	-- `teleporter_active` is seemingly set to the largest `active` variable of all teleporter instances
+	if gm._mod_game_getDirector().teleporter_active > 0 then
+		self.locked = true
+	end
+end)
