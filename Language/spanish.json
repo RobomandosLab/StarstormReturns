@@ -107,7 +107,7 @@
 			"description": "LANZA UN DRON DE REPARACIÓN DURANTE 8 SEGUNDOS. EL DRON <g>CURA 5x10% DE TU SALUD TOTAL</c>. SI ESTÁS A SALUD COMPLETA, <g>OTORGA BARRERA EN SU LUGAR</c>.</c>."
 		},
 		"nemesisCommandoZ": {
-			"name": "Hoja de la Cesación",
+			"name": "Misericordia",
 			"description": "Desgarra a los enemigos cercanos con un tajo que inflinge <y>120% de daño</c>, <r>hiriendolos</c> durante 6 segundos. <r>No se puede acumular</c>.\nLos enemigos <r>heridos</c> reciben un <y>50% más de daño</c> de <b>todas las fuentes.</c>"
 		},
 		"nemesisCommandoX": {
