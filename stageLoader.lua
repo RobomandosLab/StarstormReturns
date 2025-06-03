@@ -74,6 +74,7 @@ basin_stage:add_interactable_loop({
 
 --Environment Log
 basin_stage:set_log_icon(EnvironmentWhistlingBasin)
+basin_stage:set_log_view_start(3013, 2279)
 
 --Main Menu
 basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
@@ -137,6 +138,7 @@ outlands_stage:add_interactable({
 
 --Environment Log
 outlands_stage:set_log_icon(EnvironmentTorridOutlands)
+outlands_stage:set_log_view_start(9247, 2300)
 
 --Main Menu
 outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
