@@ -61,15 +61,15 @@ basin_stage:add_interactable({
     "drone4",
     "shrine2",
     "chestHealing1",
-    "equipmentActivator",
-    "droneRecycler"
 })
 basin_stage:add_interactable_loop({
     "chestHealing2",
     "chest4",
     "shrine3S",
     "barrel2",
-    "chest5"
+    "chest5",
+    "equipmentActivator",
+    "droneRecycler"
 })
 
 --Environment Log
@@ -117,10 +117,16 @@ outlands_stage:add_monster({
     "imp",
     "bison",
     "spitter",
+    "tuber",
     "colossus",
     "clayMan",
     "toxicBeast",
     "scavenger"
+})
+
+outlands_stage:add_monster_loop({
+    "greaterWisp",
+    "archaicWisp",
 })
 
 outlands_stage:add_interactable({
@@ -133,7 +139,12 @@ outlands_stage:add_interactable({
     "drone4",
     "shrine2",
     "equipmentActivator",
-    "droneRecycler"
+    "droneRecycler",
+    "droneUpgrader"
+})
+
+outlands_stage:add_interactable_loop({
+    "shrine3S"
 })
 
 --Environment Log
