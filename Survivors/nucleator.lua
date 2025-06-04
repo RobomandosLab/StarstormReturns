@@ -2,49 +2,53 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Nucleator")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Nucleator")
 
 -- sprites
-local sprite_loadout        = Resources.sprite_load(NAMESPACE, "NukeSelect", path.combine(SPRITE_PATH, "select.png"), 16, 2, 0)
-local sprite_portrait       = Resources.sprite_load(NAMESPACE, "NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
-local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "NukePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills         = Resources.sprite_load(NAMESPACE, "NukeSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
+local sprite_loadout			= Resources.sprite_load(NAMESPACE, "NukeSelect", path.combine(SPRITE_PATH, "select.png"), 16, 2, 0)
+local sprite_portrait			= Resources.sprite_load(NAMESPACE, "NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "NukePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills				= Resources.sprite_load(NAMESPACE, "NukeSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 
-local sprite_idle           = Resources.sprite_load(NAMESPACE, "NukeIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 17, 18)
-local sprite_idle_half      = Resources.sprite_load(NAMESPACE, "NukeIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 8, 9)
-local sprite_walk           = Resources.sprite_load(NAMESPACE, "NukeWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 18, 19)
-local sprite_walk_half      = Resources.sprite_load(NAMESPACE, "NukeWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 7, 9)
-local sprite_jump           = Resources.sprite_load(NAMESPACE, "NukeJump", path.combine(SPRITE_PATH, "jump.png"), 1, 6, 10)
-local sprite_jump_half      = Resources.sprite_load(NAMESPACE, "NukeJumpHalf", path.combine(SPRITE_PATH, "jump_half.png"), 1, 6, 10)
-local sprite_climb          = Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 4, 9)
-local sprite_death          = Resources.sprite_load(NAMESPACE, "NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
-local sprite_decoy          = Resources.sprite_load(NAMESPACE, "NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
+local sprite_idle				= Resources.sprite_load(NAMESPACE, "NukeIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 17, 18)
+local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "NukeIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 8, 9)
+local sprite_walk				= Resources.sprite_load(NAMESPACE, "NukeWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 18, 19)
+local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "NukeWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 18, 19)
+local sprite_jump_start			= Resources.sprite_load(NAMESPACE, "NukeJumpStart", path.combine(SPRITE_PATH, "jump_start.png"), 3, 19, 17)
+local sprite_jump_start_half	= Resources.sprite_load(NAMESPACE, "NukeJumpStartHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 3, 19, 17)
+local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "NukeJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 3, 19, 17)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 3, 19, 17)
+local sprite_jump_fall			= Resources.sprite_load(NAMESPACE, "NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 3, 19, 17)
+local sprite_jump_fall_half		= Resources.sprite_load(NAMESPACE, "NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 3, 19, 17)
+local sprite_climb				= Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 4, 9)
+local sprite_death				= Resources.sprite_load(NAMESPACE, "NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
+local sprite_decoy				= Resources.sprite_load(NAMESPACE, "NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
 
-local sprite_shoot1         = Resources.sprite_load(NAMESPACE, "NukeShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 19, 10, 26)
-local sprite_shoot1_half    = Resources.sprite_load(NAMESPACE, "NukeShoot1Half", path.combine(SPRITE_PATH, "shoot1_half.png"), 19, 10, 26)
-local sprite_shoot2         = Resources.sprite_load(NAMESPACE, "NukeShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 23, 10, 12)
-local sprite_shoot2_half    = Resources.sprite_load(NAMESPACE, "NukeShoot2Half", path.combine(SPRITE_PATH, "shoot2_half.png"), 23, 10, 12)
-local sprite_shoot3         = Resources.sprite_load(NAMESPACE, "NukeShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 16, 15, 24)
-local sprite_shoot4         = Resources.sprite_load(NAMESPACE, "NukeShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 6, 11, 12)
-local sprite_shoot4S        = Resources.sprite_load(NAMESPACE, "NukeShoot4S", path.combine(SPRITE_PATH, "shoot4S.png"), 6, 11, 12)
+local sprite_shoot1				= Resources.sprite_load(NAMESPACE, "NukeShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 19, 10, 26)
+local sprite_shoot1_half		= Resources.sprite_load(NAMESPACE, "NukeShoot1Half", path.combine(SPRITE_PATH, "shoot1_half.png"), 19, 10, 26)
+local sprite_shoot2				= Resources.sprite_load(NAMESPACE, "NukeShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 23, 10, 12)
+local sprite_shoot2_half		= Resources.sprite_load(NAMESPACE, "NukeShoot2Half", path.combine(SPRITE_PATH, "shoot2_half.png"), 23, 10, 12)
+local sprite_shoot3				= Resources.sprite_load(NAMESPACE, "NukeShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 16, 15, 24)
+local sprite_shoot4				= Resources.sprite_load(NAMESPACE, "NukeShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 6, 11, 12)
+local sprite_shoot4S			= Resources.sprite_load(NAMESPACE, "NukeShoot4S", path.combine(SPRITE_PATH, "shoot4S.png"), 6, 11, 12)
 
-local sprite_bar            = Resources.sprite_load(NAMESPACE, "NukeBar", path.combine(SPRITE_PATH, "bar.png"), 1, 19, 9)
-local sprite_sparks         = Resources.sprite_load(NAMESPACE, "NukeSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 13, 8)
-local sprite_bullet         = Resources.sprite_load(NAMESPACE, "NukeBullet", path.combine(SPRITE_PATH, "bullet.png"), 4, 10, 5)
-local sprite_explosion      = Resources.sprite_load(NAMESPACE, "NukeBulletExplosion", path.combine(SPRITE_PATH, "bulletExplosion.png"), 6, 11, 10)
-local sprite_push           = Resources.sprite_load(NAMESPACE, "NukePush", path.combine(SPRITE_PATH, "push.png"), 4, 22, 15)
-local sprite_push_blast     = Resources.sprite_load(NAMESPACE, "NukePushBlast", path.combine(SPRITE_PATH, "push_blast.png"), 6, 10, 12)
+local sprite_bar				= Resources.sprite_load(NAMESPACE, "NukeBar", path.combine(SPRITE_PATH, "bar.png"), 1, 19, 9)
+local sprite_sparks				= Resources.sprite_load(NAMESPACE, "NukeSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 13, 8)
+local sprite_bullet				= Resources.sprite_load(NAMESPACE, "NukeBullet", path.combine(SPRITE_PATH, "bullet.png"), 4, 10, 5)
+local sprite_explosion			= Resources.sprite_load(NAMESPACE, "NukeBulletExplosion", path.combine(SPRITE_PATH, "bulletExplosion.png"), 6, 11, 10)
+local sprite_push				= Resources.sprite_load(NAMESPACE, "NukePush", path.combine(SPRITE_PATH, "push.png"), 4, 22, 15)
+local sprite_push_blast			= Resources.sprite_load(NAMESPACE, "NukePushBlast", path.combine(SPRITE_PATH, "push_blast.png"), 6, 10, 12)
 
 
 -- sounds
-local sound_alarm           = Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "alarm.ogg"))
-local sound_shoot1a         = Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
-local sound_shoot1b         = Resources.sfx_load(NAMESPACE, "NukeShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
-local sound_shoot1c         = Resources.sfx_load(NAMESPACE, "NukeShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
-local sound_shoot2          = Resources.sfx_load(NAMESPACE, "NukeShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
-local sound_shoot3a         = Resources.sfx_load(NAMESPACE, "NukeShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
-local sound_shoot3b         = Resources.sfx_load(NAMESPACE, "NukeShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
-local sound_shoot3c         = Resources.sfx_load(NAMESPACE, "NukeShoot3c", path.combine(SOUND_PATH, "skill3c.ogg"))
-local sound_shoot4a         = Resources.sfx_load(NAMESPACE, "NukeShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
-local sound_shoot4b         = Resources.sfx_load(NAMESPACE, "NukeShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
-local sound_shoot4c         = Resources.sfx_load(NAMESPACE, "NukeShoot4c", path.combine(SOUND_PATH, "skill4c.ogg"))
+local sound_alarm				= Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "alarm.ogg"))
+local sound_shoot1a				= Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
+local sound_shoot1b				= Resources.sfx_load(NAMESPACE, "NukeShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
+local sound_shoot1c				= Resources.sfx_load(NAMESPACE, "NukeShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
+local sound_shoot2				= Resources.sfx_load(NAMESPACE, "NukeShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot3a				= Resources.sfx_load(NAMESPACE, "NukeShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
+local sound_shoot3b				= Resources.sfx_load(NAMESPACE, "NukeShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
+local sound_shoot3c				= Resources.sfx_load(NAMESPACE, "NukeShoot3c", path.combine(SOUND_PATH, "skill3c.ogg"))
+local sound_shoot4a				= Resources.sfx_load(NAMESPACE, "NukeShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
+local sound_shoot4b				= Resources.sfx_load(NAMESPACE, "NukeShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+local sound_shoot4c				= Resources.sfx_load(NAMESPACE, "NukeShoot4c", path.combine(SOUND_PATH, "skill4c.ogg"))
 
 
 -------- THE NUCLEATORRRRRR!!!!
@@ -67,8 +71,9 @@ nuke:set_stats_level({
 nuke:set_animations({
 	idle = sprite_idle,
 	walk = sprite_walk,
-	jump = sprite_jump,
-	jump_peak = sprite_jump,
+	jump = sprite_jump_start,
+	jump_peak = sprite_jump_peak,
+	jump_fall = sprite_jump_fall,
 	climb = sprite_climb,
 	death = sprite_death,
 	decoy = sprite_decoy
@@ -84,18 +89,15 @@ nuke.sprite_title = sprite_walk
 
 nuke:clear_callbacks()
 nuke:onInit(function(actor)
-	local idle_half = Array.new()
-	local walk_half = Array.new()
-	local jump_half = Array.new()
-	idle_half:push(sprite_idle, sprite_idle_half, 0)
-	walk_half:push(sprite_walk, sprite_walk_half, 0, sprite_walk)
-	jump_half:push(sprite_jump, sprite_jump_half, 0)
+	local idle_half = Array.new({sprite_idle, sprite_idle_half, 0})
+	local walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk})
+	local jump_half = Array.new({sprite_jump_start, sprite_jump_start_half, 0})
 
-	actor.sprite_idle_half = idle_half
-	actor.sprite_walk_half = walk_half
-	actor.sprite_jump_half = jump_half
-	actor.sprite_jump_peak_half = jump_half
-	actor.sprite_fall_half = jump_half
+	actor.sprite_idle_half = Array.new({sprite_idle, sprite_idle_half, 0})
+	actor.sprite_walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk})
+	actor.sprite_jump_half = Array.new({sprite_jump_start, sprite_jump_start_half, 0})
+	actor.sprite_jump_peak_half = Array.new({sprite_jump_peak, sprite_jump_peak_half, 0})
+	actor.sprite_fall_half = Array.new({sprite_jump_fall, sprite_jump_fall_half, 0})
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -258,11 +260,13 @@ objNukeBullet:onDestroy(function( inst )
 	if not Instance.exists(inst.parent) then return end
 	
 	local actor_data = inst.parent:get_data()
-	local damage = inst.ratio <= charge_limit/charge_cap and inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/charge_cap)) or 10.0 * inst.ratio
+	local damage = inst.ratio <= charge_limit/charge_cap and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/charge_cap))) or 10.0 * inst.ratio
 
-	local buff_shadow_clone = Buff.find("ror", "shadowClone")
-	for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
-		inst.parent:fire_explosion(inst.x, inst.y, 50, 50, damage, sprite_explosion)
+	if inst.parent:is_authority() then
+		local buff_shadow_clone = Buff.find("ror", "shadowClone")
+		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
+			inst.parent:fire_explosion(inst.x, inst.y, 50, 50, damage, sprite_explosion)
+		end
 	end
 
 	if inst.ratio >= charge_limit/charge_cap then
@@ -345,6 +349,32 @@ end)
 
 
 -------- QUARANTINE
+local objNukePush = Object.new(NAMESPACE, "NucleatorPush")
+objNukePush:set_sprite(sprite_push)
+
+objNukePush:clear_callbacks()
+objNukePush:onCreate(function( inst )
+	inst.parent = -4
+	inst.speed = 2
+	inst.image_speed = 0.2
+	inst.lifetime = 5 * 60
+	inst.life = inst.lifetime
+	inst.ratio = 0
+end)
+
+objNukePush:onStep(function( inst )
+	if not Instance.exists(inst.parent) then
+		inst:destroy()
+		return
+	end
+
+	inst.life = inst.life - 1
+	if inst.life <= 0 then
+		inst:destroy()
+	end
+end)
+
+
 nukeSecondary.sprite = sprite_skills
 nukeSecondary.subimage = 1
 nukeSecondary.cooldown = 4 * 60
@@ -372,8 +402,6 @@ stateNukeSecondary:onEnter(function( actor, data )
 end)
 
 stateNukeSecondary:onStep(function( actor, data )
-	local data = actor:get_data()
-
 	actor.sprite_index2 = sprite_shoot2_half
 	actor:skill_util_strafe_update(data.exit_index/charge_cap, 0.2)
 	actor:skill_util_step_strafe_sprites()
@@ -401,6 +429,28 @@ stateNukeSecondaryFire:onStep(function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor:skill_util_nudge_forward( -10 + -20 * data.ratio * actor.image_xscale)
+
+		if data.ratio < charge_limit/charge_cap then
+			if actor:is_authority() then
+				local undercharge = data.ratio/(charge_limit/charge_cap)
+				local damage = actor:skill_get_damage(nukeSecondary) * undercharge
+				local dir = actor.image_xscale
+
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local info = actor:fire_explosion(actor.x + 50 * dir, actor.y, 100, 50, damage, sprite_push_blast).attack_info
+					info.knockback = math.max(5, 12 * undercharge)
+					info.knockup = math.max(1, 4 * undercharge)
+					info.knockback_direction = dir
+				end
+			end
+		else
+			local push = objNukePush:create(actor.x, actor.y)
+			push.parent = actor
+			push.direction = actor:skill_util_facing_direction()
+			push.image_xscale = actor.image_xscale
+			push.ratio = data.ratio
+		end
 	end
 end)
 
@@ -434,7 +484,6 @@ stateNukeUtility:onEnter(function( actor, data )
 end)
 
 stateNukeUtility:onStep(function( actor, data )
-	local data = actor:get_data()
 	actor:skill_util_fix_hspeed()
 
 	if actor:is_authority() and ((not actor:control("skill3", 0) and actor:get_data().charge > 0) or NukeChargeStep(actor) == 1) then
