@@ -1,7 +1,15 @@
 {
 	"difficulty" : {
 		"typhoon.name" : "Tifón",
-		"typhoon.description" : "<r>El reto definitivo.</c>\nUna pesadilla en la cual la supervivencia es una mera ilusión.\nNadie está a la altura."
+		"typhoon.description" : "<r>El reto definitivo.</c>\nUna pesadilla en la cual la supervivencia es una mera ilusión.\nNadie está a la altura.",
+		"easyEthereal.name" : "Diluvio",
+		"normalEthereal.name" : "Tempesta",
+		"hardEthereal.name" : "Cyclón",
+		"typhoonEthereal.name" : "Huracán",
+	},
+	"alert" : {
+		"difficultyUp" : "Subida de Dificultad",
+		"storm" : "Una tormena se acerca...",
 	},
 	"survivor" : {
 		"executioner" : {
@@ -27,23 +35,23 @@
 		"nemesisCommando" : {
 			"name" : "Comando Némesis",
 			"nameUpper" : "COMANDO NÉMESIS",
-			"description" : "El <y>Comando Némesis</c> es un personaje flexible con el arsenal suficiente para enfrentarse a cualquier situación. <y>Hiere</c> a los enemigos usando <y>Corte Cesador</c> como preparación para infligir un daño devastador con el resto de tus habilidades. Utiliza <y>Evasión Táctica</c> para entrar y salir del combate cuerpo a cuerpo, y convertir hasta el peor escenario en una ventaja.",
+			"description" : "El <y>Comando Némesis</c> es un personaje flexible con el arsenal suficiente para enfrentarse a cualquier situación. <y>Hiere</c> a los enemigos usando <y>Misericordia</c> como preparación para infligir un daño devastador con el resto de tus habilidades. Utiliza <y>Evasión Táctica</c> para entrar y salir del combate cuerpo a cuerpo, y convertir hasta el peor escenario en una ventaja.",
 			"endQuote": "..y se marchó, llevando consigo un nuevo sentido de humanidad.",
-			"story" : "<b>REGISTRO DE DATOS DE CAMPO NO REGISTRADO: ÚLTIMA MODIFICACIÓN EN [##090??!?]</c> \n<r>[ERROR 0x00000ce: Paquete de Datos Corrupto, viendo punto de restauración.]</c> \n\n<ul>[Entrada 1] -</c> - La patrulla recogió a un sobreviviente herido a pocos kilómetros del campamento. Se rumorea que “apareció de la nada” (como si me fuera a creer eso), ya que no hay nada en los alrededores que indique de dónde vino. Sea como sea, un sobreviviente es un sobreviviente. Mientras escribo esto, lo llevamos de vuelta. No lo pone fácil, eso sí - por el peso del equipo que lleva. Tiene unas modificaciones poco comunes en una armadura estándar de Comando. Parece ser - o haber sido - un modelo Mk. 1 de primera emisión (¿aunque creo que dejaron de producirlo hace años?). \n\n<ul>[Entrada 2] -</c> - Actualización: el sujeto porta artillería peligrosamente pesada para ser un Comando - un lanzacohetes aún caliente al tacto y unas granadas que parecen claramente alienígenas - jamás vi algo parecido. Está inconsciente, y por lo que vemos a través del casco, bastante golpeado. Su brazo izquierdo está rígido - tiene la mano cerrada con fuerza sobre la empuñadura de su vibrocuchilla. Intentamos verla mejor, pero es como si su puño estuviera fusionado con esa cosa. Además, está cubierta con una sustancia negra endurecida. No sabemos si fue por una pelea entre sobrevivientes o evidencia de algún tipo de auto defe??!0049### \n<r>[Fin de datos legibles.]</c> \n\n<ul>[Entrada 2a] -</c> - no sé cuánto tiempo tengo mientras escribo esto se despertó y el campamento está DESTRUIDO la gente no para de sangrar no sabemos ni siquiera si era humano con lo que puede hacer, nadie supo qué hacer fue directo a por Adrian \n- no sabemos qué lo provocó??? qué HICIMOS para merecer esto??? por qué esa COSA nos atacó U!??!?##$0959090302???! \n<r>[Fin de datos legibles.]</c> \n\n<p>Las tábanas se ?reunen s?obre esta no?ble be?stia mie?ntras p?asta. \n\n- Tu pla?ga en su s?uperficie s?erá err?adi?cada... \n\n- Por es?tas man?os labo?rosas.</c>"
+			"story" : "<b>REGISTRO DE DATOS DE CAMPO NO REGISTRADO: ÚLTIMA MODIFICACIÓN EN [##090??!?]</c> \n<r>[ERROR 0x00000ce: Paquete de Datos Corrupto, viendo punto de restauración.]</c> \n\n<ul>[Entrada 1]</c> La patrulla recogió a un sobreviviente herido a pocos kilómetros del campamento. Se rumorea que “apareció de la nada” (como si me fuera a creer eso), ya que no hay nada en los alrededores que indique de dónde vino. Sea como sea, un sobreviviente es un sobreviviente. Mientras escribo esto, lo llevamos de vuelta. No lo pone fácil, eso sí, por el peso del equipo que lleva. Tiene unas modificaciones poco comunes en una armadura estándar de Comando. Parece ser, o haber sido, un modelo Mk. 1 de primera emisión (¿Aunque creo recordar que dejaron de producirlo hace años?). \n\n<ul>[Entrada 2]</c> Actualización: el sujeto porta artillería peligrosamente pesada para ser un Comando: Un lanzacohetes aún caliente al tacto y unas granadas que parecen claramente alienígenas, Jamás habia visto algo parecido. Está inconsciente, y por lo que vemos a través del casco, bastante golpeado. Su brazo izquierdo está rígido, tiene la mano cerrada con fuerza sobre la empuñadura de su vibrocuchilla. Intentamos verla mejor, pero es como si su puño estuviera fusionado con esa cosa. Además, está cubierta con una sustancia negra endurecida. No sabemos si fue por una pelea entre sobrevivientes o evidencia de algún tipo de auto defe??!0049### \n<r>[Fin de datos legibles.]</c> \n\n<ul>[Entrada 2a]</c> no sé cuánto tiempo tengo mientras escribo esto se despertó y el campamento está DESTRUIDO la gente no para de sangrar no sabemos ni siquiera si era humano con lo que puede hacer, nadie supo qué hacer fue directo a por Adrian \n no sabemos qué lo provocó??? qué HICIMOS para merecer esto??? por qué esa COSA nos atacó U!??!?##$0959090302???! \n<r>[Fin de datos legibles.]</c> \n\n<p>Las tábanas se ?reunen s?obre esta no?ble be?stia mie?ntras p?asta. \n\n Tu pla?ga en su s?uperficie s?erá err?adi?cada... \n\n Por es?tas man?os labo?rosas.</c>"
 		},
 		"nemesisMercenary" : {
-			"name" : "Nemesis Mercenary",
-			"nameUpper" : "NEMESIS MERCENARY",
+			"name" : "Mercenario Némesis",
+			"nameUpper" : "MERCENARIO NÉMESIS",
 			"description" : "The <y>Nemesis Mercenary</c> was born with a special power.",
-			"endQuote": "..y se marchó, loaded up for more.",
+			"endQuote": "..y se marchó, equipado para más.",
 			"story": "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
 		},
 		"technician": {
 			"name": "Técnico",
 			"nameUpper": "TÉCNICO",
-			"description": "El <y>Técnico</c> es experto en hacer y mantener zonas que bloquean el avance de los enemigos. <y>Cierre Forzoso</c> puede <y>bloquear una zona forzadamente</c> al ser mejorado. <y>Mejorar</c> dispositivos aumenta su efectividad, ¡pero ten cuidado haciendolo en entornos peligrosos!",
+			"description": "El <y>Técnico</c> es experto en hacer y mantener zonas que bloquean el avance de los enemigos. <y>Cierre Forzado</c> puede <y>bloquear una zona forzadamente</c> al ser mejorado. <y>Mejorar</c> dispositivos aumenta su efectividad, ¡pero ten cuidado haciendolo en entornos peligrosos!",
 			"endQuote": "..y se marchó, simplemente reiniciando la nave.",
-			"story" : "<ul>Detalles del Pasajero:\n<g>[Clase Empleado]\n\n<ul>Detalles del Empleado:</c>\nEmpleado contratado para trabajar en el lugar durante toda la duración del viaje programado de la UES Contact Light, con el fin de realizar mantenimiento en maquinaria en caso de que surjan problemas técnicos a bordo de la nave. Empleado calificado con 6 años de experiencia práctica en ingeniería de software y hardware.\n\n<ul>Equipaje:</c>\nEl empleado abordó con un traje espacial de soldadura Durarend, calificado con alta resistencia al vacío, además de ropa de cuero y tela diseñada para uso planetario. Se notificó al empleado que la ropa podría rasgarse en caso de un evento de vacío. Seguridad marcó la llave inglesa de gran tamaño que portaba por parecer poco práctica y potencialmente peligrosa. Al ser cuestionado, el empleado indicó que fue ''hecha a medida... para los trabajos más duros''. Siguiendo el procedimiento, la llave fue trasladada a una caja de seguridad automatizada en la bahía de carga 1a. La inspección restante del equipaje reveló varias llaves inglesas de emisión estándar, 3 USBs codificados por color, un portátil modelo GeForm 2047, cajas de herramientas y una herramienta de soldadura. Los USBs fueron inspeccionados en una computadora desechable QPuting de la compañía equipada con ReoVirus Detector v1.6.2. No se detectaron rastros de malware y los archivos almacenados están en formato UPG, conteniendo planos de varios dispositivos. El empleado fue autorizado a continuar sin más dificultades.\n\n<b>[REGISTRO DE SEGURIDAD]</c>\n<ul>- [Suceso T1]</c> Empleado retirado por la fuerza de la cabina durante los preparativos de despegue al negarse a salir después de conversar con el piloto de la nave durante varias horas.\n<ul>- [Suceso T2]</c> Empleado observado robando refrescos de una máquina expendedora.\n<ul>- [Suceso T3]</c> Bloqueo automatizado originado en la bahía de carga 4a fue resuelto por el empleado.\n<ul>- [Suceso T4]</c> El estado de la cápsula de escape B-08 cambió de ERROR a ALERTA después de que el empleado fue solicitado por el personal de la nave para realizar un diagnóstico. Se instruyó al personal de seguridad a investigar.\n<ul>- [Suceso T1a]</c> Se reportó además que el empleado manipuló el panel de control de la cabina para que fuera ''más fácil de manejar''. El lanzamiento programado se retrasó y se instruyó al empleado a revertir cualquier modificación realizada.",
+			"story" : "<ul>Detalles del Pasajero:\n<g>[Clase Empleado]\n\n<ul>Detalles del Empleado:</c>\nEmpleado contratado para trabajar en el lugar durante toda la duración del viaje programado de la UES Contact Light, con el fin de realizar mantenimiento en maquinaria en caso de que surjan problemas técnicos a bordo de la nave. Empleado calificado con 6 años de experiencia práctica en ingeniería de software y hardware.\n\n<ul>Equipaje:</c>\nEl empleado abordó con un traje espacial de soldadura Durarend, calificado con alta resistencia al vacío, además de ropa de cuero y tela diseñada para uso planetario. Se notificó al empleado que la ropa podría rasgarse en caso de un evento de vacío. Seguridad marcó la llave inglesa de gran tamaño que portaba por parecer poco práctica y potencialmente peligrosa. Al ser cuestionado, el empleado indicó que fue ''hecha a medida... para los trabajos más duros''. Siguiendo el procedimiento, la llave fue trasladada a una caja de seguridad automatizada en la bahía de carga 1a. La inspección restante del equipaje reveló varias llaves inglesas de emisión estándar, 3 USBs codificados por color, un portátil modelo GeForm 2047, cajas de herramientas y una herramienta de soldadura. Los USBs fueron inspeccionados en una computadora desechable QPuting de la compañía equipada con ReoVirus Detector v1.6.2. No se detectaron rastros de malware y los archivos almacenados están en formato UPG, conteniendo planos de varios dispositivos. El empleado fue autorizado a continuar sin más dificultades.\n\n<b>[REGISTRO DE SEGURIDAD]</c>\n<ul>- [Suceso T1]</c> Empleado retirado por la fuerza de la cabina durante los preparativos de despegue al negarse a salir después de conversar con el piloto de la nave durante varias horas.\n<ul> [Suceso T2]</c> Empleado observado robando refrescos de una máquina expendedora.\n<ul> [Suceso T3]</c> Bloqueo automatizado originado en la bahía de carga 4a fue resuelto por el empleado.\n<ul> [Suceso T4]</c> El estado de la cápsula de escape B-08 cambió de ERROR a ALERTA después de que el empleado fue solicitado por el personal de la nave para realizar un diagnóstico. Se instruyó al personal de seguridad a investigar.\n<ul> [Suceso T1a]</c> Se reportó además que el empleado manipuló el panel de control de la cabina para que fuera ''más fácil de manejar''. El lanzamiento programado se retrasó y se instruyó al empleado a revertir cualquier modificación realizada.",
 			"id" : "Travel ID: 54E4F4C434F59474E454",
 			"departure" : "<y>Origen:</c>\nMuelle de Carga 5 de la UES,\nRedview,\nMarte",
 			"arrival" : "<y>Destino:</c>\nMuelle de Carga 0 de la UES,\nRedview,\nMarte"
@@ -99,7 +107,7 @@
 			"description": "LANZA UN DRON DE REPARACIÓN DURANTE 8 SEGUNDOS. EL DRON <g>CURA 5x10% DE TU SALUD TOTAL</c>. SI ESTÁS A SALUD COMPLETA, <g>OTORGA BARRERA EN SU LUGAR</c>.</c>."
 		},
 		"nemesisCommandoZ": {
-			"name": "Corte Cesador",
+			"name": "Misericordia",
 			"description": "Desgarra a los enemigos cercanos con un tajo que inflinge <y>120% de daño</c>, <r>hiriendolos</c> durante 6 segundos. <r>No se puede acumular</c>.\nLos enemigos <r>heridos</c> reciben un <y>50% más de daño</c> de <b>todas las fuentes.</c>"
 		},
 		"nemesisCommandoX": {
@@ -107,7 +115,7 @@
 			"description": "Dispara a un enemigo inflingiendo <y>200% de daño</c>.\n<b>Puedes acumular hasta 4.</c> Recarga <b>2</c> balas cuando <b>ruedes</c>."
 		},
 		"nemesisCommandoX2": {
-			"name": "Corte Lejano",
+			"name": "Tajo Distante",
 			"description": "Corta en línea recta hacia delante e inflige <y>90% de daño</c>, <r>hiriendo</c> a los enemigos golpeados durante 6 segundos."
 		},
 		"nemesisCommandoC": {
@@ -159,8 +167,8 @@
 			"description": "Lanza una llave inglesa hacia adelante, atravesando hasta 3 enemigos inflingiendo un <y>180% de daño.\n<y>Golpear dispositivos</c> 3 veces <b>los mejorará</c> <r>temporalmente durante 20 segundos."
 		},
 		"technicianX": {
-			"name": "Cierre Forzoso",
-			"description": "Lanza una bomba que <y>aturde a los enemigos</c> e inflinge <y>700% de daño</c> cuando es reactivada.\nAtrae enemigos pasivamente cuando es <b>mejorada."
+			"name": "Cierre Forzado",
+			"description": "Lanza una bomba que inflinge <y>500% de daño</c> cuando es reactivada.\n <y>Aturde</c> y atrae a los enemigos pasivamente cuando es <b>mejorada."
 		},
 		"technicianX2": {
 			"name": "El Botón Rojo",
@@ -452,10 +460,20 @@
 		"Admonitor.name" : "Admonitor de Arcilla",
 		"Gatekeeper.name" : "Centinela",
 		"Protector.name" : "Protector",
-		"Protector.text" : "Guardián del Artefacto"
+		"Protector.text" : "Guardián del Artefacto",
+		"nemmandoEnemy.name" : "Comando Némesis",
+		"nemmandoEnemy.text" : "Eco Solitario",
+		"nemmercEnemy.name" : "Mercenario Némesis",
+		"nemmercEnemy.text" : "Desertor Vengativo",
+		"nemforcerEnemy.name" : "Agente Némesis",
+		"nemforcerEnemy.text" : "Sombra Incorruptible",
+		"nemloaderEnemy.name" : "Cargador Némesis",
+		"nemloaderEnemy.text" : "Mastodonte Hidráulico"
 	},
 
 	"interactable" : {
+		"TeleporterEthereal.text" : "Activar Teletransportador Etéreo.",
+		"TeleporterEthereal.text2" : "¡Esto incrementara la dificultad radicalmente!",
 		"MimicInactive.text" : "..?",
 		"MimicInactive.name" : "Cofre Grande..?"
 	},
