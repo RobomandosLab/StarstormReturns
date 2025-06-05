@@ -1112,7 +1112,7 @@ objFloatingShield:onStep(function( inst )
 				inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
 				data.hit_list[actor.id] = Global._current_frame
 
-			elseif Global._current_frame - data.hit_list[actor.id] <= inst.hit_delay then
+			elseif Global._current_frame - data.hit_list[actor.id] >= inst.hit_delay then
 				if gm._mod_net_isHost() then
 					local attack = inst.parent:fire_direct(actor, 0.5, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
 				end

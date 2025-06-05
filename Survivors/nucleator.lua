@@ -11,12 +11,12 @@ local sprite_idle				= Resources.sprite_load(NAMESPACE, "NukeIdle", path.combine
 local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "NukeIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 8, 9)
 local sprite_walk				= Resources.sprite_load(NAMESPACE, "NukeWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 18, 19)
 local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "NukeWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 18, 19)
-local sprite_jump_start			= Resources.sprite_load(NAMESPACE, "NukeJumpStart", path.combine(SPRITE_PATH, "jump_start.png"), 3, 19, 17)
-local sprite_jump_start_half	= Resources.sprite_load(NAMESPACE, "NukeJumpStartHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 3, 19, 17)
-local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "NukeJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 3, 19, 17)
-local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 3, 19, 17)
-local sprite_jump_fall			= Resources.sprite_load(NAMESPACE, "NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 3, 19, 17)
-local sprite_jump_fall_half		= Resources.sprite_load(NAMESPACE, "NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 3, 19, 17)
+local sprite_jump_start			= Resources.sprite_load(NAMESPACE, "NukeJumpStart", path.combine(SPRITE_PATH, "jump_start.png"), 1, 19, 17)
+local sprite_jump_start_half	= Resources.sprite_load(NAMESPACE, "NukeJumpStartHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 19, 17)
+local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "NukeJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 19, 17)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 19, 17)
+local sprite_jump_fall			= Resources.sprite_load(NAMESPACE, "NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 19, 17)
+local sprite_jump_fall_half		= Resources.sprite_load(NAMESPACE, "NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 19, 17)
 local sprite_climb				= Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 4, 9)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
 local sprite_decoy				= Resources.sprite_load(NAMESPACE, "NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
@@ -241,7 +241,6 @@ objNukeBullet:onStep(function( inst )
 		inst:destroy()
 	end
 
-	local actor_data = inst.parent:get_data()
 	local collisions = inst:get_collisions(gm.constants.pActorCollisionBase)
 
 	for _, actor in ipairs(collisions) do 
@@ -259,7 +258,6 @@ end)
 objNukeBullet:onDestroy(function( inst )
 	if not Instance.exists(inst.parent) then return end
 	
-	local actor_data = inst.parent:get_data()
 	local damage = inst.ratio <= charge_limit/charge_cap and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/charge_cap))) or 10.0 * inst.ratio
 
 	if inst.parent:is_authority() then
@@ -355,11 +353,16 @@ objNukePush:set_sprite(sprite_push)
 objNukePush:clear_callbacks()
 objNukePush:onCreate(function( inst )
 	inst.parent = -4
-	inst.speed = 2
-	inst.image_speed = 0.2
-	inst.lifetime = 5 * 60
-	inst.life = inst.lifetime
 	inst.ratio = 0
+	inst.image_speed = 0.2
+
+	inst.speed = 3
+	inst.lifetime = 3 * 60
+	inst.life = inst.lifetime
+
+	inst.hit_delay = 15
+	data = inst:get_data()
+	data.hit_list = {}
 end)
 
 objNukePush:onStep(function( inst )
@@ -371,6 +374,38 @@ objNukePush:onStep(function( inst )
 	inst.life = inst.life - 1
 	if inst.life <= 0 then
 		inst:destroy()
+	end
+
+	local data = inst:get_data()
+	local collisions = inst:get_collisions(gm.constants.pActorCollisionBase)
+	local overcharge = (inst.ratio - (charge_limit/charge_cap)) * 2 / (charge_limit/charge_cap)
+	local damage = math.max(0.5, 2 * overcharge)
+
+	for _, actor in ipairs(collisions) do
+		if actor.team ~= inst.parent.team then
+			if data.hit_list[actor.id] == nil then
+				if gm._mod_net_isHost() then
+					local attack = inst.parent:fire_direct(actor, damage, inst.direction, inst.x, inst.y, nil, true).attack_info
+					attack.knockback_direction = inst.image_xscale
+					attack.knockback = 5
+					attack.knockup = 2
+				end
+
+				inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
+				data.hit_list[actor.id] = Global._current_frame
+
+			elseif Global._current_frame - data.hit_list[actor.id] >= inst.hit_delay then
+				if gm._mod_net_isHost() then
+					local attack = inst.parent:fire_direct(actor, damage, inst.direction, inst.x, inst.y, nil, true).attack_info
+					attack.knockback_direction = inst.image_xscale
+					attack.knockback = 5
+					attack.knockup = 2
+				end
+
+				inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
+				data.hit_list[actor.id] = Global._current_frame
+			end
+		end
 	end
 end)
 
@@ -503,10 +538,30 @@ end)
 stateNukeUtilityFire:onStep(function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
-	actor:actor_animation_set(actor.sprite_index, 0.2)
+	actor:actor_animation_set(actor.sprite_index, 0.15)
+	actor:set_immune(3)
 
 	if data.fired == 0 then
 		data.fired = 1
+
+		local down = gm.bool(actor.ropeDown) and 1 or 0
+		local up = gm.bool(actor.ropeUp) and 1 or 0
+		local left = gm.bool(actor.moveLeft) and 1 or 0
+		local right = gm.bool(actor.moveRight) and 1 or 0
+
+		local vertical = down - up
+		local horizontal = right - left
+
+		local speed_factor_h = math.max(1, 20 * data.ratio)
+		local speed_factor_v = math.max(0.5, 3 * data.ratio)
+
+		actor.pVspeed = vertical * speed_factor_v * actor.pVmax
+		actor.pHspeed = horizontal * speed_factor_h * actor.pHmax
+		actor.y = actor.y - 10
+
+		if vertical == 0 and horizontal == 0 then
+			actor.pVspeed = -speed_factor_v * actor.pVmax
+		end
 	end
 end)
 
