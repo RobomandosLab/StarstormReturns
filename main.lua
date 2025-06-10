@@ -32,6 +32,7 @@ local init = function()
 	require_ordered_in_directory("Gameplay", {
 		"typhoon", -- Typhoon has to be loaded first, because the ethereal difficulties depend on it
 		"ethereals",
+		"teleporterLocking",
 	})
 	require_ordered_in_directory("Survivors", {
 		"executioner",

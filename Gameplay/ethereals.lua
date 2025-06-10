@@ -94,7 +94,7 @@ do
 	ethereal_tp_locations[hiveCluster_rooms[1]] = {x = 198, y = 9, depth = 155}
 	ethereal_tp_locations[hiveCluster_rooms[2]] = {x = 198, y = 9, depth = 155}
 	ethereal_tp_locations[hiveCluster_rooms[3]] = {x = 198, y = 9, depth = 155}
-	ethereal_tp_locations[magmaBarracks_rooms[1]] = {x = 12, y = 79}
+	ethereal_tp_locations[magmaBarracks_rooms[1]] = {x = 12, y = 73}
 	ethereal_tp_locations[magmaBarracks_rooms[2]] = {x = 9, y = 73}
 	ethereal_tp_locations[magmaBarracks_rooms[3]] = {x = 9, y = 73}
 	ethereal_tp_locations[templeOfTheElders_rooms[1]] = {x = 152, y = 128}
@@ -127,9 +127,11 @@ local function hardmode_increase()
 	local replacement_diff = ethereal_map[Global.diff_level]
 	if replacement_diff then
 		-- syncs from host to clients. how nice of it.
-		gm.difficulty_set_active(replacement_diff.value)
+		GM.difficulty_set_active(replacement_diff)
 	end
 end
+
+local packetMakeTPEthereal = Packet.new()
 
 local function make_tp_ethereal(tp)
 	tp.is_ethereal = true -- magic variable used to identify ethereal teleporters
@@ -150,21 +152,45 @@ local function make_tp_ethereal(tp)
 
 	tp.mask_index = sprite_teleporter_ethereal -- widen the interaction zone
 
-	--GM.interactable_init_name(tp, "TeleporterEthereal")
 	tp.text = Language.translate_token("interactable.TeleporterEthereal.text")
 end
 
+packetMakeTPEthereal:onReceived(function(buffer)
+	local inst = buffer:read_instance()
+	if inst:exists() then
+		make_tp_ethereal(inst)
+	end
+end)
+
+-- this object creates and setups an ethereal teleporter
 local objEtherealTeleporter = Object.new(NAMESPACE, "TeleporterEthereal")
 objEtherealTeleporter.obj_sprite = sprite_teleporter_ethereal
-objEtherealTeleporter.obj_depth = 12
+-- vanilla teleporters have depth 89
+-- set default depth for eth teleporters slightly behind such that interaction prioritises smaller tps by default
+objEtherealTeleporter.obj_depth = 90
 
 objEtherealTeleporter:clear_callbacks()
 objEtherealTeleporter:onStep(function(self)
-	local tp = GM.instance_create(self.x, self.y, gm.constants.oTeleporter)
-	tp.depth = self.depth
-	make_tp_ethereal(tp)
-
-	self:destroy()
+	if gm._mod_net_isClient() then
+		self:destroy()
+		return
+	end
+	if not self.tp then
+		-- first step -- create a teleporter
+		local tp = GM.instance_create(self.x, self.y, gm.constants.oTeleporter)
+		tp.depth = self.depth
+		self.tp = tp
+		make_tp_ethereal(tp)
+	else
+		-- second step -- send a packet to other clients to sync it
+		-- this needs to be delayed by a frame because the tp's m_id (network id) isn't set on the first frame
+		if gm._mod_net_isOnline() then
+			local msg = packetMakeTPEthereal:message_begin()
+			msg:write_instance(self.tp)
+			msg:send_to_all()
+		end
+		self:destroy()
+	end
 end)
 
 Callback.add(Callback.TYPE.onGameStart, "SSEtherealStart", function()
