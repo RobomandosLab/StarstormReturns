@@ -525,7 +525,9 @@
 	},
 
 	"elite" : {
-		"poison.name" : "Poisoning %s"
+		"poison.name" : "Poisoning %s",
+		"ethereal.name" : "Ethereal %s",
+		"ethereal.text" : "Transcending Witness",
 	},
 	"stage" : {
 		"whistlingBasin.name" : "Whistling Basin",
