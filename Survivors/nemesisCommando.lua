@@ -648,7 +648,7 @@ stateNemCommandoSpecial:onStep(function(actor, data)
 			local auto_toss = data.fuse_timer <= GRENADE_AUTOTHROW_THRESHOLD
 
 			if (release or low_toss or auto_toss) and data.tossed == 0 then
-				if gm._mod_net_isOnline() then
+				if actor:is_authority() then
 					-- magical bullshit to sync grenade releasing
 					-- so the thing is, there's no way to tell if another player is holding down their skill input.
 					-- so to actually sync this, i use the game's own message system to send a vanilla packet -- id 43: "set_activity_var2"
