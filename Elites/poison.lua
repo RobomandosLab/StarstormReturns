@@ -12,10 +12,6 @@ elitePoison.healthbar_icon = sprite_icon
 elitePoison.palette = sprite_palette
 elitePoison.blend_col = Color.PURPLE
 
--- when called without arguments, generates palettes for every elite affix, for every registered monster palette
--- once more elite types are implemented, this should probably be moved elsewhere to be called just once after all elite types are initialized
-GM.elite_generate_palettes()
-
 local itemEliteOrbPoison = Item.new(NAMESPACE, "eliteOrbPoison", true) -- true for no logbook
 itemEliteOrbPoison.is_hidden = true
 

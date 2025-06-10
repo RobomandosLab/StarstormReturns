@@ -29,6 +29,10 @@ local init = function()
 	require_all_in_directory("Misc") -- contains utility libraries and the like, so load first
 	require_all_in_directory("Actors")
 	require_all_in_directory("Elites")
+
+	-- when called without arguments, generates palettes for every elite affix, for every registered monster palette
+	gm.elite_generate_palettes()
+
 	require_ordered_in_directory("Gameplay", {
 		"typhoon", -- Typhoon has to be loaded first, because the ethereal difficulties depend on it
 		"ethereals",
