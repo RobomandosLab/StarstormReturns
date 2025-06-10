@@ -179,15 +179,16 @@ itemEliteOrbEthereal:onPreDraw(function(actor)
 		local frac1 = 1 - (data.ethereal_cooldown / 180)
 		local frac2 = math.min(1, data.ethereal_cooldown / 5)
 
-		local rad = ETHEREAL_BOMB_RADIUS_START * frac1 * frac2 + math.random(5)
+		local rad = 50 + (actor.bbox_bottom - actor.bbox_top) * 0.5
+		rad = rad * frac1 * frac2 - math.random(5)
 
 		gm.gpu_set_blendmode_ext(10, 4)
 		gm.draw_set_colour(ETHEREAL_BOMB_COLOR1)
-		gm.draw_circle(x, y, rad, false)
+		gm.draw_circle(x, y, rad*0.8, false)
 		gm.draw_set_colour(ETHEREAL_BOMB_COLOR2)
-		gm.draw_circle(x, y, rad+5, false)
+		gm.draw_circle(x, y, rad*0.9, false)
 		gm.draw_set_colour(ETHEREAL_BOMB_COLOR3)
-		gm.draw_circle(x, y, rad+10, false)
+		gm.draw_circle(x, y, rad*1.0, false)
 		gm.gpu_set_blendmode(0)
 
 		for i=1, math.ceil(frac1 * 15) do
