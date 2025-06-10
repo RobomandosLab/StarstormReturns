@@ -1,5 +1,3 @@
-require("Gameplay/typhoon.lua") -- terrible jank to force typhoon to load first, REMOVE LATER!!!!!
-
 local SPRITE_PATH = path.combine(PATH, "Sprites/Menu")
 
 -- assets
