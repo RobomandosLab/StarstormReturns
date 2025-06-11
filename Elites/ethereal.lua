@@ -18,7 +18,7 @@ local ETHEREAL_BOMB_PULSE_INTERVAL = 30
 local ETHEREAL_BOMB_PULSES = 3
 local ETHEREAL_BOMB_PULSES_BOSS = 5
 
---local sprite_icon = Resources.sprite_load(NAMESPACE, "EliteIconEthereal", path.combine(SPRITE_PATH, "icon.png"), 1, 14, 10)
+local sprite_icon = Resources.sprite_load(NAMESPACE, "EliteIconEthereal", path.combine(SPRITE_PATH, "icon.png"), 1, 21, 9)
 local sprite_palette = Resources.sprite_load(NAMESPACE, "ElitePaletteEthereal", path.combine(SPRITE_PATH, "palette.png"))
 
 local sound_spawn = Resources.sfx_load(NAMESPACE, "EtherealSpawn", path.combine(SOUND_PATH, "spawn.ogg"))
@@ -32,7 +32,7 @@ particleEthereal:set_alpha2(4, 0)
 particleEthereal:set_blend(false)
 
 local eliteEthereal = Elite.new(NAMESPACE, "ethereal")
---eliteEthereal.healthbar_icon = sprite_icon
+eliteEthereal.healthbar_icon = sprite_icon
 eliteEthereal.palette = sprite_palette
 eliteEthereal.blend_col = Color.from_rgb(23, 255, 172)
 
