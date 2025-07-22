@@ -18,6 +18,13 @@ local function get_true_xscale(actor)
 	return actor.image_xscale
 end
 
+local function should_amulet_be_active(actor)
+	if gm.actor_state_is_climb_state(actor.actor_state_current_id) then
+		return false
+	end
+	return true
+end
+
 guardingAmulet:clear_callbacks()
 guardingAmulet:onAcquire(function(actor, stack)
 	actor:get_data().amulet_pulse = 0
@@ -29,6 +36,8 @@ guardingAmulet:onPostStep(function(actor, stack)
 	end
 end)
 guardingAmulet:onPostDraw(function(actor, stack)
+	if not should_amulet_be_active(actor) then return end
+
 	local actor_xscale = get_true_xscale(actor)
 
 	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
@@ -75,6 +84,8 @@ gm.pre_script_hook(gm.constants.damager_calculate_damage, function(self, other, 
 	if count > 0 then
 		local attacker = Instance.wrap(_parent.value)
 		local target = Instance.wrap(_hit.value)
+
+		if not should_amulet_be_active(target) then return end
 
 		local attack_x = attacker.x or _hit_x.value
 
