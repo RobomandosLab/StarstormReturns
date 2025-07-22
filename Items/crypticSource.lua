@@ -1,4 +1,4 @@
-local sprite = Resources.sprite_load(NAMESPACE, "CrypticSource", path.combine(PATH, "Sprites/Items/crypticSource.png"), 1, 16, 16)
+local sprite = Resources.sprite_load(NAMESPACE, "CrypticSource", path.combine(PATH, "Sprites/Items/crypticSource.png"), 1, 18, 18)
 
 local crypticSource = Item.new(NAMESPACE, "crypticSource")
 crypticSource:set_sprite(sprite)
