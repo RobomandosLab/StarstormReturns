@@ -25,6 +25,8 @@ diffTempest:set_sprite(sprite_tempest_small, sprite_tempest_large)
 diffCyclone:set_sprite(sprite_cyclone_small, sprite_cyclone_large)
 diffHurricane:set_sprite(sprite_hurricane_small, sprite_hurricane_large)
 
+local eliteEthereal = Elite.find(NAMESPACE, "ethereal")
+
 -- map normal difficulty ids to their ethereal counterparts
 local ethereal_map = {
 	[Difficulty.find("ror", "easy").value] = diffDeluge,
@@ -106,28 +108,30 @@ end
 
 local ETHEREAL_TELEPORTER_BONUS_TIME = 30 * 60
 
+--------------------------------
 -- the juicy stuff begins
+--------------------------------
 
-local current_hardmode_level = 0 -- starts at 0 and increments after every ethereal teleporter
-local hardmode_increase_queued = false -- when true, the next stage transition calls hardmode_increase
 
--- state for "Difficulty Up" notification
-local difficulty_notif_active = false
-local difficulty_notif_timer
-local difficulty_notif_alpha
+local is_hardmode = false
+local hardmode_queued = false -- when true, the next stage transition calls set_hardmode_active
 
-local function hardmode_increase()
-	current_hardmode_level = current_hardmode_level + 1
-	gm.sound_play_global(gm.constants.wDifficulty, 1, 1)
+local function set_hardmode_active()
+	if is_hardmode then return end -- don't do it if hardmode's already enabled..
 
-	difficulty_notif_active = true
-	difficulty_notif_alpha = 0
-	difficulty_notif_timer = 0
+	is_hardmode = true
+	gm.sound_play_global(gm.constants.wDifficulty, 1, 0.95)
+
+	toggle_elite_type(eliteEthereal, true)
 
 	local replacement_diff = ethereal_map[Global.diff_level]
 	if replacement_diff then
 		-- syncs from host to clients. how nice of it.
 		GM.difficulty_set_active(replacement_diff)
+
+		Alarm.create(function()
+			EventManager.show_alert("alert.difficultyUp", replacement_diff.sprite_loadout_id, 1)
+		end, 120)
 	end
 end
 
@@ -195,12 +199,18 @@ end)
 
 Callback.add(Callback.TYPE.onGameStart, "SSEtherealStart", function()
 	current_hardmode_level = 0
-	hardmode_increase_queued = false
+	hardmode_queued = false
+
+	toggle_elite_type(eliteEthereal, false)
 end)
 Callback.add(Callback.TYPE.onStageStart, "SSEtherealStageStart", function()
-	if hardmode_increase_queued then
-		hardmode_increase()
-		hardmode_increase_queued = false
+	if hardmode_queued then
+		set_hardmode_active()
+		hardmode_queued = false
+	end
+
+	if is_hardmode then
+		local d = gm._mod_game_getDirector()
 	end
 
 	local data = ethereal_tp_locations[gm._mod_room_get_current()]
@@ -214,7 +224,7 @@ gm.pre_code_execute("gml_Object_pTeleporter_Step_2", function(self, other)
 	if not self.is_ethereal then return end
 
 	if self.active == 1 then
-		if not self._did_warning then
+		if not self._did_warning and not is_hardmode then
 			-- prevent activation and warn the player
 			self.active = 0
 
@@ -225,59 +235,17 @@ gm.pre_code_execute("gml_Object_pTeleporter_Step_2", function(self, other)
 
 			self._did_warning = true -- another one-off magic variable lol
 		elseif self.just_activated == 0 then
-			-- runs once when the ethereal tp is activated for real.
-			hardmode_increase_queued = true
+			-- `just_activated` is a vanilla pTeleporter variable
+			-- convenient to track for running code on tp activation
+			hardmode_queued = true
 
 			self:sound_play(sound_big_teleporter, 1, 1)
 			self:screen_shake(25)
+
+			local screenflash = GM.instance_create(0, 0, gm.constants.oWhiteFlash)
+			screenflash.rate = 0.004
+			screenflash.image_alpha = 0.3
+			screenflash.image_blend = Color.from_rgb(255, 100, 200)
 		end
 	end
-end)
-
--- difficulty up notification
-Callback.add(Callback.TYPE.onHUDDraw, "SSEtherealHUDDraw", function()
-	if not difficulty_notif_active then return end
-
-	difficulty_notif_timer = difficulty_notif_timer + 1
-
-	if difficulty_notif_timer < 90 then return end
-
-	if difficulty_notif_timer < 6 * 60 then
-		difficulty_notif_alpha = math.min(1, difficulty_notif_alpha + 0.02)
-	else
-		difficulty_notif_alpha = difficulty_notif_alpha - 0.02
-
-		if difficulty_notif_alpha <= 0 then
-			difficulty_notif_active = false
-			return
-		end
-	end
-
-	gm.draw_set_alpha(difficulty_notif_alpha)
-
-	local tx = Global.___view_l_x + Global.___view_l_w * 0.5
-	local ty = Global.___view_l_y + Global.___view_l_h * 0.5 - 100 -- offset to appear just above stage title name
-
-	local text = Language.translate_token("alert.difficultyUp")
-
-	-- white text with dark gray outline ..
-	gm.scribble_set_starting_format("fntLarge", Color.WHITE, 1)
-	gm.scribble_set_blend(Color.DKGRAY, difficulty_notif_alpha)
-	gm.scribble_draw(tx-1, ty,   text)
-	gm.scribble_draw(tx+1, ty,   text)
-	gm.scribble_draw(tx-1, ty-1, text)
-	gm.scribble_draw(tx+1, ty-1, text)
-	gm.scribble_draw(tx,   ty-1, text)
-	gm.scribble_draw(tx,   ty+1, text)
-	gm.scribble_draw(tx-1, ty+1, text)
-	gm.scribble_draw(tx+1, ty+1, text)
-	gm.scribble_set_blend(Color.WHITE, difficulty_notif_alpha)
-	gm.scribble_draw(tx, ty, text)
-
-	-- draw difficulty sprite
-	local diff_sprite = Difficulty.wrap(Global.diff_level).sprite_loadout_id
-	gm.draw_sprite(diff_sprite, 1, tx, ty - 40)
-
-	gm.scribble_set_blend(Color.WHITE, 1)
-	gm.draw_set_alpha(1)
 end)

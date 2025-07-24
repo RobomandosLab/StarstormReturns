@@ -8,8 +8,23 @@
 		"typhoonEthereal.name" : "Hurricane",
 	},
 	"alert" : {
-		"difficultyUp" : "Difficulty Up",
-		"storm" : "A storm is approaching..",
+		"difficultyUp" : "The planet grows in power..",
+
+		"event" : {
+			"storm" : "A storm is approaching..",
+			"wind" : "The wind blows with great force..",
+			"dissonance" : "You're caught in a mass-migration..!",
+			"heatwave" : "A heatwave burns in the air..",
+			"collapse" : "The surroundings start to crumble..",
+			"flood" : "The tides begin to rise..",
+
+			"eliteBlazing" : "The ground is lit ablaze..",
+			"eliteFrenzied" : "The creatures enter a frenzy..",
+			"eliteLeeching" : "Leeching growths take hold..",
+			"eliteOverloading" : "The air crackles with static..",
+			"eliteVolatile" : "Your ears begin ringing..",
+			"elitePoisoning" : "A sickly smell permeates the air..",
+		}
 	},
 	"survivor" : {
 		"executioner" : {

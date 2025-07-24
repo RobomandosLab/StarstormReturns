@@ -99,6 +99,7 @@ objEtherealBomb:onStep(function(self)
 				local victim = targets[i]
 
 				if self:attack_collision_canhit(victim) then
+					-- use a "no parent" attack function such that the ethereal bomb can still do damage if its parent ceases existence or dies
 					local attack_info = GM._mod_attack_fire_direct_noparent(victim, victim.x, victim.y, 0, self.team, self.damage, false, -1).attack_info
 					attack_info.parent = self.parent
 					attack_info.percent_hp = ETHEREAL_BOMB_DAMAGE_PERCENT_HP
@@ -117,7 +118,7 @@ objEtherealBomb:onDraw(function(self)
 	local t_frac = self.timer / ETHEREAL_BOMB_PULSE_INTERVAL
 	local draw_foreshadow = self.pulses > 0
 
-	local r0 = r + (r2 - r) * (1 - t_frac ^ 1.8)
+	local r0 = r + (r2 - r) * (1 - t_frac ^ 1.8) -- next explosion telegraph outline radius
 
 	local r1 = r * (1 - t_frac ^ 9)
 	local r2 = r * (1 - t_frac ^ 4)
@@ -127,7 +128,7 @@ objEtherealBomb:onDraw(function(self)
 
 	if draw_foreshadow then
 		gm.draw_circle(self.x, self.y, r0, true)
-		gm.gpu_set_blendmode(3)
+		gm.gpu_set_blendmode(3) -- subtractive
 		gm.draw_circle(self.x, self.y, r0-2, true)
 	end
 	gm.gpu_set_blendmode_ext(10, 4) -- inversion blend mode -- destination colour inv, source colour inv
@@ -201,6 +202,6 @@ end)
 --//////// TESTING PURPOSES ////////--
 gm.post_script_hook(gm.constants.init_actor_late, function(self)
 	if self.team == 2 then
-		GM.elite_set(self, eliteEthereal)
+		--GM.elite_set(self, eliteEthereal)
 	end
 end)
