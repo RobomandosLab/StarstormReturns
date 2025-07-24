@@ -3,7 +3,7 @@ local spark_sprite = gm.constants.sSparks18s--Resources.sprite_load(NAMESPACE, "
 
 local RANGE_BASE = 90
 local RANGE_STACK = 21
-local DAMAGE_COEFFICIENT = 0.5
+local DAMAGE_COEFFICIENT = 0.45
 
 local TRAVEL_TIME = 1 / 10 -- 10 frames
 local COLOR_BRIGHT = Color.from_rgb(188, 17, 255)
@@ -19,36 +19,51 @@ malice:set_loot_tags(Item.LOOT_TAG.category_damage)
 partMalice:set_shape(Particle.SHAPE.disk)
 partMalice:set_life(15, 25)
 partMalice:set_size(0.08, 0.12, -0.005, 0)
---partMalice:set_colour(Color.PURPLE) -- doesnt work !?!?
-gm.part_type_colour3(partMalice.value, COLOR_BRIGHT, Color.PURPLE, Color.PURPLE)
+partMalice:set_colour3(COLOR_BRIGHT, Color.PURPLE, Color.PURPLE)
+
+local buffWound = Buff.find("ror", "commandoWound")
 
 malice:clear_callbacks()
-malice:onHitProc(function(actor, victim, stack, hit_info)
-	-- prevent proccing more than once per attack, cause it's REALLY powerful and laggy otherwise
+malice:onHitProc(function(attacker, victim, stack, hit_info)
+	-- prevent proccing more than once per attack, not ideal (doesn't even work for multihit projectiles) but performance is very bad otherwise
 	if hit_info.attack_info.__ssr_maliced then return end
 	hit_info.attack_info.__ssr_maliced = true
 
-	local targets = List.wrap(gm.find_characters_circle(victim.x, victim.y, RANGE_BASE + (RANGE_STACK * stack - 1), true, victim.team, true))
+	-- wounding works by firing direct attacks on each hit. this bypasses the above thing, so work around it ....
+	if hit_info.attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.commando_wound_damage) then return end
+	if victim:buff_stack_count(buffWound) > 0 then stack = stack * 2 end
 
+	-- actually handle malice functionality now.
+	-- avoids use of wrapping here as much as possible to try and claw up perf
+	local _malice_target_list = gm.ds_list_create()
+
+	-- looks for actor hitboxes rather than just actors directly, so that worms, brambles, etc. interact intuitively with malice
+	local _count = victim.value:collision_circle_list(hit_info.x, hit_info.y, RANGE_BASE + (RANGE_STACK * stack - 1), gm.constants.pActorCollisionBase, false, true, _malice_target_list, true)
+	local maliced_actors = {}
 	local maliced_count = 0
 
-	-- pick random elements of the list and delete them, until the list is either empty or enough enemies have been maliced
-	while #targets > 0 and maliced_count < stack do
-		local index = math.random(#targets) - 1
+	for i=1, _count do
+		local target_hitbox = gm.ds_list_find_value(_malice_target_list, i - 1)
+		local target_actor = gm.attack_collision_resolve(target_hitbox)
 
-		local to_malice = targets:get(index)
-		if to_malice.id ~= victim.id then
-			maliced_count = maliced_count + 1
-
+		if target_actor ~= -4 and not maliced_actors[target_actor.id]
+		and target_actor.id ~= victim.id and gm.team_canhit(attacker.team, target_actor.team) then
 			local m = objEfMalice:create(hit_info.x, hit_info.y)
-			m.target = to_malice
-			m.parent = actor
+			m.target = target_hitbox
+			m.parent = attacker
 			m.critical = hit_info.critical
 			m.damage = math.ceil(hit_info.damage * DAMAGE_COEFFICIENT)
-		end
 
-		targets:delete(index)
+			maliced_actors[target_actor.id] = true
+			maliced_count = maliced_count + 1
+
+			if maliced_count >= stack then
+				break
+			end
+		end
 	end
+
+	gm.ds_list_destroy(_malice_target_list)
 end)
 
 local __quality = 3
