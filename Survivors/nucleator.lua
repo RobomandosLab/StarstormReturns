@@ -127,7 +127,17 @@ enemyRadiation:clear_callbacks()
 -- charging stuff dont mind me
 local charge_rate = 5
 local charge_limit = 60
-local charge_cap = charge_limit * 1.5
+local overcharge_limit = charge_limit * 1.5
+
+local function NukeChargeStart( actor )
+	local data = actor:get_data()
+
+	if actor:buff_stack_count(selfRadiation) > 0 then
+		data.charge = charge_limit
+	else
+		data.charge = 0
+	end
+end
 
 local function NukeChargeStep(actor)
 	local data = actor:get_data()
@@ -145,14 +155,14 @@ local function NukeChargeStep(actor)
 		end
 	end
 
-	if data.charge >= charge_cap then return 1 else return 0 end
+	if data.charge >= overcharge_limit then return 1 else return 0 end
 end
 
 local function NukeChargeRelease(actor)
 	local data = actor:get_data()
 	if not Instance.exists(data.charge_bar) then return end
 
-	local ratio = data.charge/charge_cap
+	local ratio = data.charge/overcharge_limit
 	data.charge = 0
 	data.charge_tick = 0
 	return ratio
@@ -200,7 +210,7 @@ objChargeBar:onDraw(function( inst )
 	local bar_top		= y - 2
 	local bar_bottom	= y + 1
 
-	local ratio = data.charge/charge_cap
+	local ratio = data.charge/overcharge_limit
 
 	if data.charge < charge_limit then
 		gm.draw_set_colour(nuke.primary_color)
@@ -258,7 +268,7 @@ end)
 objNukeBullet:onDestroy(function( inst )
 	if not Instance.exists(inst.parent) then return end
 	
-	local damage = inst.ratio <= charge_limit/charge_cap and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/charge_cap))) or 10.0 * inst.ratio
+	local damage = inst.ratio <= charge_limit/overcharge_limit and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/overcharge_limit))) or 10.0 * inst.ratio
 
 	if inst.parent:is_authority() then
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
@@ -267,9 +277,9 @@ objNukeBullet:onDestroy(function( inst )
 		end
 	end
 
-	if inst.ratio >= charge_limit/charge_cap then
+	if inst.ratio >= charge_limit/overcharge_limit then
 		local t = gm.instance_create(inst.x, inst.y, gm.constants.oChainLightning)
-		local overcharge = (inst.ratio - (charge_limit/charge_cap)) * 2 / (charge_limit/charge_cap)
+		local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
 
 		t.parent = inst.parent.value
 		t.team = inst.parent.team
@@ -306,11 +316,13 @@ stateNukePrimary:onEnter(function( actor, data )
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
+
+	NukeChargeStart(actor)
 end)
 
 stateNukePrimary:onStep(function( actor, data )
 	actor.sprite_index2 = sprite_shoot1_half
-	actor:skill_util_strafe_update(data.exit_index/charge_cap, 0.2)
+	actor:skill_util_strafe_update(data.exit_index/overcharge_limit, 0.2)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
@@ -378,7 +390,7 @@ objNukePush:onStep(function( inst )
 
 	local data = inst:get_data()
 	local collisions = inst:get_collisions(gm.constants.pActorCollisionBase)
-	local overcharge = (inst.ratio - (charge_limit/charge_cap)) * 2 / (charge_limit/charge_cap)
+	local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
 	local damage = math.max(0.5, 2 * overcharge)
 
 	for _, actor in ipairs(collisions) do
@@ -434,11 +446,13 @@ stateNukeSecondary:onEnter(function( actor, data )
 
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
+
+	NukeChargeStart(actor)
 end)
 
 stateNukeSecondary:onStep(function( actor, data )
 	actor.sprite_index2 = sprite_shoot2_half
-	actor:skill_util_strafe_update(data.exit_index/charge_cap, 0.2)
+	actor:skill_util_strafe_update(data.exit_index/overcharge_limit, 0.2)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
@@ -465,9 +479,9 @@ stateNukeSecondaryFire:onStep(function( actor, data )
 		data.fired = 1
 		actor:skill_util_nudge_forward( -10 + -20 * data.ratio * actor.image_xscale)
 
-		if data.ratio < charge_limit/charge_cap then
+		if data.ratio < charge_limit/overcharge_limit then
 			if actor:is_authority() then
-				local undercharge = data.ratio/(charge_limit/charge_cap)
+				local undercharge = data.ratio/(charge_limit/overcharge_limit)
 				local damage = actor:skill_get_damage(nukeSecondary) * undercharge
 				local dir = actor.image_xscale
 
@@ -513,9 +527,11 @@ stateNukeUtility:onEnter(function( actor, data )
 
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
-	actor.image_speed = data.exit_index/charge_cap
+	actor.image_speed = data.exit_index/overcharge_limit
 
 	data.fired = 0
+
+	NukeChargeStart(actor)
 end)
 
 stateNukeUtility:onStep(function( actor, data )
@@ -541,27 +557,23 @@ stateNukeUtilityFire:onStep(function( actor, data )
 	actor:actor_animation_set(actor.sprite_index, 0.15)
 	actor:set_immune(3)
 
-	if data.fired == 0 then
-		data.fired = 1
+	local down = gm.bool(actor.ropeDown) and 1 or 0
+	local up = gm.bool(actor.ropeUp) and 1 or 0
+	local left = gm.bool(actor.moveLeft) and 1 or 0
+	local right = gm.bool(actor.moveRight) and 1 or 0
 
-		local down = gm.bool(actor.ropeDown) and 1 or 0
-		local up = gm.bool(actor.ropeUp) and 1 or 0
-		local left = gm.bool(actor.moveLeft) and 1 or 0
-		local right = gm.bool(actor.moveRight) and 1 or 0
+	local vertical = down - up
+	local horizontal = right - left
 
-		local vertical = down - up
-		local horizontal = right - left
+	local speed_factor_h = math.max(1, 5 * data.ratio)
+	local speed_factor_v = math.max(0.1, 3 * data.ratio)
 
-		local speed_factor_h = math.max(1, 20 * data.ratio)
-		local speed_factor_v = math.max(0.5, 3 * data.ratio)
+	actor.pVspeed = vertical * speed_factor_v * actor.pVmax
+	actor.pHspeed = horizontal * speed_factor_h * actor.pHmax
+	actor.y = actor.y - 10
 
-		actor.pVspeed = vertical * speed_factor_v * actor.pVmax
-		actor.pHspeed = horizontal * speed_factor_h * actor.pHmax
-		actor.y = actor.y - 10
-
-		if vertical == 0 and horizontal == 0 then
-			actor.pVspeed = -speed_factor_v * actor.pVmax
-		end
+	if vertical == 0 and horizontal == 0 then
+		actor.pVspeed = -speed_factor_v * actor.pVmax
 	end
 end)
 
@@ -607,9 +619,8 @@ stateNukeSpecial:onStep(function( actor, data )
 	actor:set_immune(3)
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
+end)
 
-	if data.fired == 0 then
-		data.fired = 1
-		actor:buff_apply(selfRadiation, 6 * 60, 1)
-	end
+stateNukeSpecial:onExit(function( actor, data )
+	actor:buff_apply(selfRadiation, 1.2 * 60, 1)
 end)
