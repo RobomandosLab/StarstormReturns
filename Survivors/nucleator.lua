@@ -3,7 +3,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Nucleator")
 
 -- sprites
 local sprite_loadout			= Resources.sprite_load(NAMESPACE, "NukeSelect", path.combine(SPRITE_PATH, "select.png"), 16, 2, 0)
-local sprite_portrait			= Resources.sprite_load(NAMESPACE, "NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait			= Resources.sprite_load(NAMESPACE, "NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "NukePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "NukeSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 
@@ -17,7 +17,7 @@ local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "NukeJumpPeak", path
 local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 19, 17)
 local sprite_jump_fall			= Resources.sprite_load(NAMESPACE, "NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 19, 17)
 local sprite_jump_fall_half		= Resources.sprite_load(NAMESPACE, "NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 19, 17)
-local sprite_climb				= Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 4, 9)
+local sprite_climb				= Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 16, 25)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
 local sprite_decoy				= Resources.sprite_load(NAMESPACE, "NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
 
