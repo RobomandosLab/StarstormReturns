@@ -19,7 +19,7 @@ local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripW
 
 --Stage
 local basin_stage = Stage.new(NAMESPACE, "whistlingBasin")
-basin_stage.music_id = gm.sound_add_w(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Sounds/Music", "musicWhistlingBasin.ogg"))
+basin_stage.music_id = Resources.sfx_load(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Sounds/Music", "musicWhistlingBasin.ogg"))
 basin_stage.token_name = Language.translate_token("stage.whistlingBasin.name")
 basin_stage.token_subname = Language.translate_token("stage.whistlingBasin.subname")
 basin_stage.teleporter_index = 0
@@ -80,6 +80,8 @@ basin_stage:set_log_view_start(3013, 2279)
 basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
 
 --- TORRID OUTLANDS ---
+
+--Stage Resources
 Resources.sprite_load(NAMESPACE, "Tile16Outlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Tile16Outlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "BackTilesOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "BackTilesOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "MoonOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "MoonOutlands.png"), 1, 0, 0)
@@ -97,7 +99,7 @@ local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentT
 local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "GroundStripTorridOutlands.png"))
 
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
-outlands_stage.music_id = gm.sound_add_w(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
+outlands_stage.music_id = Resources.sfx_load(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
 outlands_stage.token_name = Language.translate_token("stage.torridOutlands.name")
 outlands_stage.token_subname = Language.translate_token("stage.torridOutlands.subname") 
 outlands_stage.teleporter_index = 0
@@ -153,3 +155,65 @@ outlands_stage:set_log_view_start(9247, 2300)
 
 --Main Menu
 outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
+
+--- VERDANT WOODLAND ---
+
+--Stage Resources
+Resources.sprite_load(NAMESPACE, "Tile16Woodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "Tile16Woodland.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "BackTilesWoodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "BackTilesWoodland.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantBG_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantBG_PLACEHOLDER.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees1_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees1_PLACEHOLDER.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees1", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees1.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees2", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees2.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees3_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees3_PLACEHOLDER.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees4_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees4_PLACEHOLDER.png"), 1, 0, 0)
+
+--Stage
+local woodland_stage = Stage.new(NAMESPACE, "verdantWoodland")
+woodland_stage.music_id = Resources.sfx_load(NAMESPACE, "musicVerdantWoodland", path.combine(PATH.."/Sounds/Music", "musicVerdantWoodland.ogg"))
+woodland_stage.token_name = Language.translate_token("stage.verdantWoodland.name")
+woodland_stage.token_subname = Language.translate_token("stage.verdantWoodland.subname") 
+woodland_stage.teleporter_index = 0
+woodland_stage.interactable_spawn_points = 920
+woodland_stage:set_index(4)
+
+woodland_stage:clear_rooms()
+woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland1.rorlvl"))
+
+--Spawn list
+woodland_stage:add_monster({
+    "mushrum",
+    "greaterWisp",
+    "wanderingVagrant",
+    "jellyfish",
+    "stoneGolem",
+    "gup",
+    "archerBug",
+    "spitter",
+    "bramble",
+    "scavenger"
+})
+woodland_stage:add_monster_loop({
+    "impOverlord",
+    "lemrider"
+})
+
+woodland_stage:add_interactable({
+    "barrel2",
+    "barrelEquipment",
+    "chest1",
+    "chest2",
+    "chest3",
+    "drone7",
+    "equipmentActivator",
+    "shrine2",
+    "chestHealing1",
+    "droneUpgrader"
+})
+woodland_stage:add_interactable_loop({
+    "chestHealing2",
+    "shrine3S",
+    "chest5",
+    "equipmentActivator",
+    "droneRecycler"
+})
