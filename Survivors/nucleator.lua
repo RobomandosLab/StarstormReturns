@@ -55,6 +55,18 @@ local sound_shoot4c				= Resources.sfx_load(NAMESPACE, "NukeShoot4c", path.combi
 local nuke = Survivor.new(NAMESPACE, "nucleator")
 local nuke_id = nuke.value
 
+
+local APPLY_RADIATION_TAG = 1
+local RADIATION_TICK_SPEED = 3 * 60
+local SELF_RADIATION_DURATION = 1.2 * 60
+local ENEMY_RADIATION_DURATION = 30 * 60
+
+local UTIL_HSPEED_MIN = 1
+local UTIL_HSPEED_FACTOR = 10
+local UTIL_VSPEED_MIN = 0.25
+local UTIL_VSPEED_FACTOR = 5
+
+
 nuke:set_stats_base({
 	maxhp = 115,
 	damage = 12,
@@ -115,13 +127,48 @@ nukeSpecial:set_skill_upgrade(nukeSpecialScepter)
 local selfRadiation = Buff.new(NAMESPACE, "NukeSelfRad")
 selfRadiation.icon_sprite = gm.constants.sBuffs
 selfRadiation.icon_subimage = 9
+selfRadiation.max_stack = 1
 
 selfRadiation:clear_callbacks()
 
 local enemyRadiation = Buff.new(NAMESPACE, "NukeEnemyRad")
-enemyRadiation.show_icon = false
+enemyRadiation.is_debuff = true
+enemyRadiation.icon_sprite = gm.constants.sBuffs
+enemyRadiation.icon_subimage = 9
+enemyRadiation.max_stack = 1
 
 enemyRadiation:clear_callbacks()
+
+enemyRadiation:onPostStep(function( actor, stacks )
+	local data = actor:get_data("ssr_radiation")
+	local tick = data.radiation_tick
+	local attacker = data.attacker
+
+	if tick then
+		if Global._current_frame - tick >= RADIATION_TICK_SPEED then
+			data.radiation_tick = Global._current_frame
+
+			if attacker then 
+				attacker:fire_explosion(actor.x, actor.y, 750, 750, 1.0)
+			end
+		end
+	else
+		data.radiation_tick = Global._current_frame
+	end
+end)
+
+Callback.add(Callback.TYPE.onAttackHit, "SSRNukeOnHit", function( hit_info )
+	local radiation_tag = hit_info.attack_info.__ssr_nuke_radiation
+
+	if radiation_tag == APPLY_RADIATION_TAG then
+		local victim = hit_info.target
+
+		local data = victim:get_data("ssr_radiation")
+		data.attacker = hit_info.inflictor
+
+		victim:buff_apply(enemyRadiation, ENEMY_RADIATION_DURATION, 1)
+	end
+end)
 
 
 -- charging stuff dont mind me
@@ -267,26 +314,29 @@ end)
 
 objNukeBullet:onDestroy(function( inst )
 	if not Instance.exists(inst.parent) then return end
-	
+
 	local damage = inst.ratio <= charge_limit/overcharge_limit and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/overcharge_limit))) or 10.0 * inst.ratio
 
 	if inst.parent:is_authority() then
 		local buff_shadow_clone = Buff.find("ror", "shadowClone")
 		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
-			inst.parent:fire_explosion(inst.x, inst.y, 50, 50, damage, sprite_explosion)
+			local attack = inst.parent:fire_explosion(inst.x, inst.y, 50, 50, damage, sprite_explosion).attack_info
+			attack.climb = i * 8
+
+			if inst.ratio >= charge_limit/overcharge_limit then
+				attack.__ssr_nuke_radiation = APPLY_RADIATION_TAG
+
+				local t = gm.instance_create(inst.x, inst.y, gm.constants.oChainLightning)
+				local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
+
+				t.parent = inst.parent.value
+				t.team = inst.parent.team
+				t.damage = inst.parent.damage * damage
+				t.blend = nuke.primary_color
+				t.bounce = 3
+				t.range = math.max(100, math.ceil(300 * overcharge))
+			end
 		end
-	end
-
-	if inst.ratio >= charge_limit/overcharge_limit then
-		local t = gm.instance_create(inst.x, inst.y, gm.constants.oChainLightning)
-		local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
-
-		t.parent = inst.parent.value
-		t.team = inst.parent.team
-		t.damage = inst.parent.damage * damage
-		t.blend = nuke.primary_color
-		t.bounce = 3
-		t.range = math.max(100, math.ceil(300 * overcharge))
 	end
 end)
 
@@ -549,31 +599,43 @@ stateNukeUtilityFire:onEnter(function( actor, data )
 
 	data.ratio = NukeChargeRelease(actor)
 	data.fired = 0
+
+	data.down = gm.bool(actor.ropeDown) and 1 or 0
+	data.up = gm.bool(actor.ropeUp) and 1 or 0
+	data.left = gm.bool(actor.moveLeft) and 1 or 0
+	data.right = gm.bool(actor.moveRight) and 1 or 0
+
+	data.vertical = data.down - data.up
+	data.horizontal = data.right - data.left
+
+	data.speed_factor_h = math.max(UTIL_HSPEED_MIN, UTIL_HSPEED_FACTOR * data.ratio)
+	data.speed_factor_v = math.max(UTIL_VSPEED_MIN, UTIL_VSPEED_FACTOR * data.ratio)
 end)
 
 stateNukeUtilityFire:onStep(function( actor, data )
-	actor:skill_util_fix_hspeed()
-	actor:skill_util_exit_state_on_anim_end()
-	actor:actor_animation_set(actor.sprite_index, 0.15)
 	actor:set_immune(3)
+	actor.moveLeft = false
+	actor.moveRight = false
 
-	local down = gm.bool(actor.ropeDown) and 1 or 0
-	local up = gm.bool(actor.ropeUp) and 1 or 0
-	local left = gm.bool(actor.moveLeft) and 1 or 0
-	local right = gm.bool(actor.moveRight) and 1 or 0
+	if data.fired == 0 then
+		data.fired = 1
+		  
+		actor.y = actor.y - 10
+		actor.pVspeed = data.vertical * data.speed_factor_v * actor.pVmax
 
-	local vertical = down - up
-	local horizontal = right - left
+		if data.vertical == 0 and data.horizontal == 0 then
+			actor.pVspeed = -data.speed_factor_v * actor.pVmax
+		end
+	end
 
-	local speed_factor_h = math.max(1, 5 * data.ratio)
-	local speed_factor_v = math.max(0.1, 3 * data.ratio)
+	actor.pHspeed = data.horizontal * data.speed_factor_h * actor.pHmax
 
-	actor.pVspeed = vertical * speed_factor_v * actor.pVmax
-	actor.pHspeed = horizontal * speed_factor_h * actor.pHmax
-	actor.y = actor.y - 10
+	if actor.image_index >= 15.8 then
+		actor.sprite_index = sprite_jump_peak
+	end
 
-	if vertical == 0 and horizontal == 0 then
-		actor.pVspeed = -speed_factor_v * actor.pVmax
+	if actor:is_grounded() then
+		actor:skill_util_reset_activity_state()
 	end
 end)
 
@@ -622,5 +684,5 @@ stateNukeSpecial:onStep(function( actor, data )
 end)
 
 stateNukeSpecial:onExit(function( actor, data )
-	actor:buff_apply(selfRadiation, 1.2 * 60, 1)
+	actor:buff_apply(selfRadiation, SELF_RADIATION_DURATION, 1)
 end)
