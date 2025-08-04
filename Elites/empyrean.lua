@@ -362,7 +362,7 @@ gm.pre_code_execute("gml_Object_oWormBody_Alarm_1", function(self, other)
 			star.targetY = self.parent.target.y
 			star.lifetime = 30
 			star.damage = self.parent.damage * 0.1
-			if math.random() >= 0.5 then
+			if Helper.chance(0.5) then
 				star.direction = self.image_angle - 90 + math.random(-45, 45)
 			else
 				star.direction = self.image_angle + 90 + math.random(-45, 45)
@@ -400,14 +400,36 @@ local whitelist = {
 	["jellyfish"] = true,
 	["magmaWorm"] = true,
 	["swift"] = true, -- lmao cope
+	["colossus"] = true,
+	["ancientWisp"] = true,
 }
 
-local all_monster_cards = Monster_Card.find_all()
-for i, card in ipairs(all_monster_cards) do
-	if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then
-		local elite_list = List.wrap(card.elite_list)
-		if not elite_list:contains(empy) then
-			elite_list:add(empy)
+Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
+	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02
+end)
+
+Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
+	if GM._mod_game_getDirector().stages_passed >= 0 then return end -- only spawns if its stage 9+
+	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
+		local all_monster_cards = Monster_Card.find_all()
+		local chance = GM._mod_game_getDirector().__ssr_empyrean_chance -- a value from 0 to 1
+		local diff = math.max(1, (GM._mod_game_getDirector().enemy_buff - 16) / 4)
+		for i, card in ipairs(all_monster_cards) do
+			if card.object_id == actor.object_index then -- if the actor has a monster card
+				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or in the whitelist
+					print("difficulty:", GM._mod_game_getDirector().enemy_buff, "cost:", card.spawn_cost, "mult:", diff)
+					print("base chance:", chance, "total chance:", (chance / math.max(1, card.spawn_cost / 40)))
+					if Helper.chance((chance / math.max(1, card.spawn_cost / 40))) then
+						print("spawned")
+						GM.elite_set(actor, empy.value) -- make it empyrean
+						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
+					else
+						print("failed")
+						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
+					end
+					break
+				end
+			end
 		end
 	end
-end
+end)
