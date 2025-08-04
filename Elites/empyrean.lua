@@ -418,8 +418,8 @@ Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
 			if card.object_id == actor.object_index then -- if the actor has a monster card
 				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or in the whitelist
 					print("difficulty:", GM._mod_game_getDirector().enemy_buff, "cost:", card.spawn_cost, "mult:", diff)
-					print("base chance:", chance, "total chance:", (chance / math.max(1, card.spawn_cost / 40)))
-					if Helper.chance((chance / math.max(1, card.spawn_cost / 40))) then
+					print("base chance:", chance, "total chance:", (chance / math.max(1, math.min(160, card.spawn_cost) / 40)))
+					if Helper.chance((chance / math.max(1, math.min(160, card.spawn_cost) / 40))) then
 						print("spawned")
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
