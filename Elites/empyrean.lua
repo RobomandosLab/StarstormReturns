@@ -209,7 +209,11 @@ empyorb:onPostDraw(function(actor, stack)
 		end
 		
 		-- draw the beam
-		gm.draw_set_alpha(actor:get_data()._imalpha)
+		if actor:get_data()._imalpha then
+			gm.draw_set_alpha(actor:get_data()._imalpha)
+		else
+			gm.draw_set_alpha(1)
+		end
 		gm.draw_set_color(Color.WHITE)
 		gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
 		
