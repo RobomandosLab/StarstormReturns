@@ -47,6 +47,7 @@ rainbowspark:set_life(20, 100)
 local teleport = Particle.new(NAMESPACE, "EmpyreanTeleport")
 teleport:set_shape(Particle.SHAPE.star)
 teleport:set_alpha3(0.75, 0.75, 0)
+teleport:set_color2(Color.WHITE, Color.WHITE)
 teleport:set_orientation(0, 0, 0, 0, true)
 teleport:set_speed(0, 3, -0.03, 0.05)
 teleport:set_direction(0, 360, 0, 10)
@@ -121,8 +122,6 @@ end
 empy:clear_callbacks()
 empy:onApply(function(actor)
 	actor:item_give(empyorb) -- applies most empyrean effects
-	
-	
 	actor:item_give(teleorb) -- makes it teleport to the player from any location
 	
 	-- stat changes are multiplicative with normal elite stat changes
@@ -177,65 +176,67 @@ empyorb:onAcquire(function(actor, stack)
 end)
 
 empyorb:onPostDraw(function(actor, stack)
-	if actor:get_data().empy_beam > 0 and actor:get_data().empy_beam_over == 0 then
-		local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
-		local part_width = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
-		local part_height = gm.round(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
-		local silhouette_y = actor.y - 16 - (16 * math.sin(gm.degtorad(270 + actor:get_data().empy_beam * 2)))
+	if actor:get_data().empy_beam and actor:get_data().empy_beam_over then
+		if actor:get_data().empy_beam > 0 and actor:get_data().empy_beam_over == 0 then
+			local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+			local part_width = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
+			local part_height = gm.round(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
+			local silhouette_y = actor.y - 16 - (16 * math.sin(gm.degtorad(270 + actor:get_data().empy_beam * 2)))
 
-		if actor:get_data().empy_beam <= 10 then
-			width = width * (1000 - (10 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam shrink when its lifetime ends
-		elseif actor:get_data().empy_beam > 168 then
-			width = width * ((180 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam widen when it appears
-		elseif actor:get_data().empy_beam > 165 then
-			width = width * (1.3 - ((169 - actor:get_data().empy_beam) / 10)) -- make the beam shrink back to its normal size after it widens
-		else
-			if math.random() >= 0.5 then
-				-- create the black particles around the enemy
-				evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.SYSTEM.middle)
-				
-				-- create the beam splashing particles
-				local side = 1
+			if actor:get_data().empy_beam <= 10 then
+				width = width * (1000 - (10 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam shrink when its lifetime ends
+			elseif actor:get_data().empy_beam > 168 then
+				width = width * ((180 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam widen when it appears
+			elseif actor:get_data().empy_beam > 165 then
+				width = width * (1.3 - ((169 - actor:get_data().empy_beam) / 10)) -- make the beam shrink back to its normal size after it widens
+			else
 				if math.random() >= 0.5 then
-					side = -1
+					-- create the black particles around the enemy
+					evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.SYSTEM.middle)
+					
+					-- create the beam splashing particles
+					local side = 1
+					if math.random() >= 0.5 then
+						side = -1
+					end
+					local ori = 180 + math.random(-45, 45) - 45 * side
+					splash:set_orientation(ori, ori, 0, 0, false)
+					splash:create_color(actor.x + (width + math.random(3)) * side, actor.bbox_bottom, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 				end
-				local ori = 180 + math.random(-45, 45) - 45 * side
-				splash:set_orientation(ori, ori, 0, 0, false)
-				splash:create_color(actor.x + (width + math.random(3)) * side, actor.bbox_bottom, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 			end
-		end
-		
-		if actor:get_data().empy_beam > 15 and actor:get_data().empy_beam <= 170 then
-			-- create the beam particles that touch the ground
-			beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-			beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 			
-			-- create the beam particles around the beam
-			for i = 1, 22 do
-				local rnd = math.random(80, 1728)
-				if gm.inside_view(actor.x, actor.y - rnd) == 1 then
-					beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-					beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+			if actor:get_data().empy_beam > 15 and actor:get_data().empy_beam <= 170 then
+				-- create the beam particles that touch the ground
+				beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+				beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+				
+				-- create the beam particles around the beam
+				for i = 1, 22 do
+					local rnd = math.random(80, 1728)
+					if gm.inside_view(actor.x, actor.y - rnd) == 1 then
+						beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+						beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+					end
 				end
 			end
-		end
-		
-		-- draw the beam
-		if actor:get_data()._imalpha then
-			gm.draw_set_alpha(actor:get_data()._imalpha)
-		else
+			
+			-- draw the beam
+			if actor:get_data()._imalpha then
+				gm.draw_set_alpha(actor:get_data()._imalpha)
+			else
+				gm.draw_set_alpha(1)
+			end
+			gm.draw_set_color(Color.WHITE)
+			gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
+			
+			-- make it black and move
+			gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - actor:get_data().empy_beam) ^ 3) / 1000))
 			gm.draw_set_alpha(1)
-		end
-		gm.draw_set_color(Color.WHITE)
-		gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
-		
-		-- make it black and move
-		gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - actor:get_data().empy_beam) ^ 3) / 1000))
-		gm.draw_set_alpha(1)
-	else
-		-- make it rainbow
-		if actor.object_index ~= gm.constants.oWorm then
-			gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, actor.y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.from_hsv(Global._current_frame % 360, 100, 100), actor.image_alpha)
+		else
+			-- make it rainbow
+			if actor.object_index ~= gm.constants.oWorm then
+				gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, actor.y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.from_hsv(Global._current_frame % 360, 100, 100), actor.image_alpha)
+			end
 		end
 	end
 end)
@@ -327,7 +328,7 @@ empyorb:onPostStep(function(actor, stack)
 		ssr_give_empyrean_aspects(actor)
 		
 		-- make the boss bar appear
-		if actor.team ~= 1 then
+		if actor.team ~= 1 and GM._mod_net_isHost() then
 			local arr = Array.new({actor})
 			local party = GM.actor_create_enemy_party_from_ids(arr)
 			local director = GM._mod_game_getDirector()
@@ -339,7 +340,7 @@ empyorb:onPostStep(function(actor, stack)
 		actor:skill_util_reset_activity_state()
 	end
 	
-	if actor:get_data().no_beam_loser then
+	if actor:get_data().no_beam_loser and gm._mod_net_isHost() then
 		if actor:get_data().no_beam_loser > 0 then -- wait 5 frames before adding empyreans that didnt play the animation to the boss party (prevents issues with max hp being fucked up on the boss bar)
 			actor:get_data().no_beam_loser = actor:get_data().no_beam_loser - 1
 		else
@@ -375,7 +376,6 @@ end)
 teleorb:clear_callbacks()
 teleorb:onAcquire(function(actor, stack)
 	actor:get_data().empyrean_teleport = 480 + math.random(240)
-	actor:get_data().empyrean_teleport_max = -1
 end)
 
 teleorb:onPostStep(function(actor, stack)
@@ -388,45 +388,49 @@ teleorb:onPostStep(function(actor, stack)
 			
 			-- go through all players and find one that is grounded and not climbing
 			for _, target in ipairs(targets) do
-				if not gm.bool(target.free) and not gm.actor_state_is_climb_state(target.actor_state_current_id) and gm.point_distance(actor.x, actor.y, target.x, target.y) > 200 then
+				if not gm.bool(target.free) and not gm.actor_state_is_climb_state(target.actor_state_current_id) and gm.point_distance(actor.x, actor.y, target.x, target.y) > 200 and not target.dead then
 					target_fin = target
 					break
 				end
 			end
 			
 			-- disable skills for a second to prevent unfair deaths
-			for i = 0, 3 do
-				local skill = actor:get_active_skill(i)
-				skill.use_next_frame = math.max(skill.use_next_frame, Global._current_frame + 60)
+			if gm._mod_net_isHost() then
+				for i = 0, 3 do
+					local skill = actor:get_active_skill(i)
+					skill.use_next_frame = math.max(skill.use_next_frame, Global._current_frame + 60)
+				end
 			end
 			
 			-- teleport!
 			if target_fin then
-				gm.teleport_nearby(actor.id, target_fin.x - (80 + math.random(20)) * gm.sign(target_fin.pHspeed), target_fin.y) -- teleport to this fool
-				actor.ghost_x = actor.x
-				actor.ghost_y = actor.y
-				actor.pVspeed = 0
-				actor.pHspeed = 0
-				actor.ai_tick_rate = 1
+				if gm._mod_net_isHost() then
+					gm.teleport_nearby(actor.id, target_fin.x - (80 + math.random(20)) * gm.sign(target_fin.pHspeed), target_fin.y) -- teleport to this fool
+					actor:net_send_instance_message(25)
+					
+					actor.ghost_x = actor.x
+					actor.ghost_y = actor.y
+					actor.pVspeed = 0
+					actor.pHspeed = 0
+					actor.ai_tick_rate = 1
+				end
 				
 				actor:get_data().empyrean_teleport = 480 + math.random(240)
-				actor:get_data().empyrean_teleport_max = actor:get_data().empyrean_teleport
 				
 				-- create some effects so you know youre about to die
 				local circle = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle)
 				circle.parent = actor
-				circle.radius = 50
-				circle.image_blend = Color.from_hsv(Global._current_frame % 360, 100, 100)
+				circle.radius = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x) + (actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 4) * 1.5 )
 				
 				local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
 				flash.parent = actor
-				flash.rate = 0.05
-				flash.image_alpha = 0.8
-				flash.image_blend = Color.from_hsv(Global._current_frame % 360, 100, 100)
+				flash.rate = 0.02
+				flash.image_alpha = 1
 				
 				for i = 1, 36 do
 					teleport:set_direction(10 * i, 10 * i, 0, 10)
-					teleport:create_color(actor.x, actor.y, Color.from_hsv(gm.round(math.random(360)), 100, 100), 1, Particle.SYSTEM.middle)
+					teleport:set_color2(Color.WHITE, gm.round(math.random(360)))
+					teleport:create(actor.x, actor.y, 1, Particle.SYSTEM.middle)
 				end
 				
 				actor:sound_play(gm.constants.wMS, 1, 0.8 + math.random() * 0.2)
@@ -600,24 +604,21 @@ Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
-	if GM._mod_game_getDirector().stages_passed < 8 then return end -- only spawns if its stage 9+
+	if GM._mod_game_getDirector().stages_passed < 0 then return end -- only spawns if its stage 9+
+	if not GM._mod_net_isHost() then return end
+	
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
 		local all_monster_cards = Monster_Card.find_all()
 		local chance = GM._mod_game_getDirector().__ssr_empyrean_chance -- a value from 0 to 1
 		local diff = math.max(1, (GM._mod_game_getDirector().enemy_buff - 16) / 4)
 		for i, card in ipairs(all_monster_cards) do
 			if card.object_id == actor.object_index then -- if the actor has a monster card
-				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or in the whitelist
+				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or is in the whitelist
 					local cost = math.min(4, math.max(1, card.spawn_cost / 40 * diff))
-					print("cost scaled:", cost, "cost base:", card.spawn_cost)
-					print("difficulty:", GM._mod_game_getDirector().enemy_buff, "mult:", diff)
-					print("base chance:", chance, "total chance:", (chance / cost))
 					if Helper.chance(chance / cost) then
-						print("spawned", card.identifier)
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else
-						print("failed to spawn", card.identifier)
 						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
 					end
 					break
