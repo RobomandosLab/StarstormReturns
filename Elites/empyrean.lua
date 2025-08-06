@@ -44,10 +44,13 @@ rainbowspark:set_direction(0, 180, 0, 10)
 rainbowspark:set_scale(0.1, 0.1)
 rainbowspark:set_life(20, 100)
 
-local startrail = Particle.new(NAMESPACE, "EmpyreanWormStarTrail")
-startrail:set_sprite(star_sprite, true, true, false)
-startrail:set_alpha2(0.75, 0)
-startrail:set_life(5, 5)
+local telegraph = Particle.new(NAMESPACE, "EmpyreanStarTelegraph")
+telegraph:set_shape(Particle.SHAPE.disk)
+telegraph:set_alpha2(0.75, 0)
+telegraph:set_blend(true)
+telegraph:set_speed(6, 6, 0, 0)
+telegraph:set_scale(0.1, 0.1)
+telegraph:set_life(120, 120)
 
 local empyorb = Item.new(NAMESPACE, "eliteOrbEmpyrean", true)
 empyorb.is_hidden = true
@@ -141,7 +144,7 @@ empyorb:onAcquire(function(actor, stack)
 	actor:screen_shake(4)
 	
 	-- play the spawn sound
-	actor:sound_play(gotanythingsharp, 1, 1)
+	actor:sound_play(gotanythingsharp, 2, 1)
 	
 	-- start the beam
 	if gm.inside_view(actor.x, actor.y) == 1 then
@@ -150,23 +153,21 @@ empyorb:onAcquire(function(actor, stack)
 	else
 		actor:get_data().empy_beam = 0
 		actor:get_data().empy_beam_over = 1
+		actor:get_data().no_beam_loser = 5
 		
 		-- give them all elite aspects
 		ssr_give_empyrean_aspects(actor)
 	end
-
-	-- make the boss bar appear
-	if actor.team ~= 1 then
-		local arr = Array.new({actor})
-		local party = GM.actor_create_enemy_party_from_ids(arr)
-		local director = GM._mod_game_getDirector()
-		director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
+	
+	-- remove the passive teleport orb since empyreans have a custom one
+	if actor:item_stack_count(Item.find("ror-elitePassiveTeleport")) > 0 then 
+		actor:item_remove(Item.find("ror-elitePassiveTeleport"), actor:item_stack_count(Item.find("ror-elitePassiveTeleport")))
 	end
 end)
 
 empyorb:onPostDraw(function(actor, stack)
 	if actor:get_data().empy_beam > 0 and actor:get_data().empy_beam_over == 0 then
-		local width = gm.sprite_get_width(actor.mask_index) * 1.5
+		local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
 		local part_width = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
 		local part_height = gm.round(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
 		local silhouette_y = actor.y - 16 - (16 * math.sin(gm.degtorad(270 + actor:get_data().empy_beam * 2)))
@@ -180,7 +181,7 @@ empyorb:onPostDraw(function(actor, stack)
 		else
 			if math.random() >= 0.5 then
 				-- create the black particles around the enemy
-				evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height - math.random(part_height), Color.BLACK, 1)
+				evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.SYSTEM.middle)
 				
 				-- create the beam splashing particles
 				local side = 1
@@ -189,21 +190,21 @@ empyorb:onPostDraw(function(actor, stack)
 				end
 				local ori = 180 + math.random(-45, 45) - 45 * side
 				splash:set_orientation(ori, ori, 0, 0, false)
-				splash:create_color(actor.x + (width + math.random(3)) * side, actor.bbox_bottom, Color.from_hsv(Global._current_frame % 360, 100, 100), 1)
+				splash:create_color(actor.x + (width + math.random(3)) * side, actor.bbox_bottom, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 			end
 		end
 		
 		if actor:get_data().empy_beam > 15 and actor:get_data().empy_beam <= 170 then
 			-- create the beam particles that touch the ground
-			beam:create_color(actor.x - width - math.random(3), actor.y - 76, Color.from_hsv(Global._current_frame % 360, 100, 100), 1)
-			beam:create_color(actor.x + width + math.random(3), actor.y - 76, Color.from_hsv(Global._current_frame % 360, 100, 100), 1)
+			beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+			beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 			
 			-- create the beam particles around the beam
 			for i = 0, 22 do
 				local rnd = math.random(80, 1728)
 				if gm.inside_view(actor.x, actor.y - rnd) == 1 then
-					beam:create_color(actor.x - width - math.random(3), actor.y - math.random(80, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1)
-					beam:create_color(actor.x + width + math.random(3), actor.y - math.random(80, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1)
+					beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
+					beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 				end
 			end
 		end
@@ -276,6 +277,13 @@ empyorb:onPostStep(function(actor, stack)
 		actor.__activity_handler_state = 50
 		actor.state = 0
 		
+		-- smoother transition
+		if actor:get_data()._imalpha then
+			actor.image_alpha = actor:get_data()._imalpha * (10 - actor:get_data().empy_beam) / 10
+		else
+			actor.image_alpha = (10 - actor:get_data().empy_beam) / 10
+		end
+		
 		-- (duke nukem voice) shake it baby
 		actor:screen_shake(0.5)
 		
@@ -307,16 +315,38 @@ empyorb:onPostStep(function(actor, stack)
 		-- give them all elite aspects
 		ssr_give_empyrean_aspects(actor)
 		
+		-- make the boss bar appear
+		if actor.team ~= 1 then
+			local arr = Array.new({actor})
+			local party = GM.actor_create_enemy_party_from_ids(arr)
+			local director = GM._mod_game_getDirector()
+			director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
+		end
+		
 		-- make them move again !! yippie!!
 		actor.state = 1
 		actor:skill_util_reset_activity_state()
 	end
 	
-	if gm.inside_view(actor.x, actor.y) == 1 and actor:get_data().empy_beam_over == 1 and actor:get_data().empy_beam <= 0 and Global._current_frame % 2 == 0 then
-		rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((Global._current_frame + actor.y * (0.75)) % 360, 100, 100), 1, Particle.SYSTEM.middle)
+	if actor:get_data().no_beam_loser then
+		if actor:get_data().no_beam_loser > 0 then -- wait 5 frames before adding empyreans that didnt play the animation to the boss party (prevents issues with max hp being fucked up on the boss bar)
+			actor:get_data().no_beam_loser = actor:get_data().no_beam_loser - 1
+		else
+			actor:get_data().no_beam_loser = nil
+			if actor.team ~= 1 then -- make the boss bar appear
+				local arr = Array.new({actor})
+				local party = GM.actor_create_enemy_party_from_ids(arr)
+				local director = GM._mod_game_getDirector()
+				director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
+			end
+		end
 	end
 	
-	if actor.object_index == gm.constants.oWorm then
+	if gm.inside_view(actor.x, actor.y) == 1 and actor:get_data().empy_beam_over == 1 and actor:get_data().empy_beam <= 0 and Global._current_frame % 2 == 0 then
+		rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((Global._current_frame + actor.y * (0.75)) % 360, 100, 100), 1, Particle.SYSTEM.below)
+	end
+	
+	if actor.object_index == gm.constants.oWorm or actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
 		actor.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
 	end
 end)
@@ -352,64 +382,146 @@ gm.pre_code_execute("gml_Object_oWorm_Alarm_4", function(self, other)
 	end
 end)
 
--- make the worm bodies shoot the orbs
+-- special empyrean worm projectile
+local oStarStorm = Object.new(NAMESPACE, "EmpyreanWormStar")
+oStarStorm.obj_sprite = star_sprite
+oStarStorm:clear_callbacks()
+
+oStarStorm:onCreate(function(self)
+	self.life = 600
+	self.damage = 1
+	self.targetX = 0
+	self.targetY = 0
+	self.team = 2
+	self.image_speed = 0.4
+	self.image_alpha = 0.75
+	self.direction = 0
+	self.speed = 0
+	
+	self:sound_play(gm.constants.wMedallion, 1, 0.8 + math.random() * 0.2)
+	self:sound_play(gm.constants.wJellyHit, 1, 0.8 + math.random() * 0.2)
+end)
+
+oStarStorm:onDraw(function(self)
+	gm.draw_set_alpha(0.4)
+	gm.draw_circle_colour(self.x, self.y, 20, self.image_blend, self.image_blend, false)
+	gm.draw_set_alpha(1)
+end)
+
+oStarStorm:onStep(function(self)
+	if self.life > 0 then
+		self.life = self.life - 1
+	else
+		self:destroy()
+	end
+	
+	if not self.spawn_speed then
+		self.spawn_speed = self.speed
+	end
+	
+	if self.life >= 570 then
+		self.speed = self.speed - self.spawn_speed / 30
+	elseif self.life == 481 then
+		local flash = GM.instance_create(self.x, self.y, gm.constants.oEfFlash)
+		flash.parent = self
+		flash.rate = 0.03
+		flash.image_alpha = 0.6
+		
+		self:sound_play(gm.constants.wItemDrop_White, 0.8, 0.8 + math.random() * 0.2)
+		self:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 1.2 + math.random() * 0.4)
+		self:sound_play(gm.constants.wBossOrbShoot, 0.5, 1.2 + math.random() * 0.4)
+		
+		self.direction = gm.point_direction(self.x, self.y, self.targetX, self.targetY)
+	elseif self.life >= 480 then
+		if self.life % 8 == 0 then
+			telegraph:set_direction(gm.point_direction(self.x, self.y, self.targetX, self.targetY), gm.point_direction(self.x, self.y, self.targetX, self.targetY), 0, 0)
+			telegraph:create_color(self.x, self.y, self.image_blend, 1)
+		end
+	elseif self.life >= 470 then
+		self.speed = self.speed - 0.4
+	else
+		self.speed = math.min(30, self.speed + 0.6)
+		
+		if self.life % 2 == 0 then
+			local trail = GM.instance_create(self.x, self.y, gm.constants.oEfTrail)
+			trail.sprite_index = self.sprite_index
+			trail.image_index = self.image_index
+			trail.image_blend = self.image_blend
+			trail.image_alpha = self.image_alpha
+			trail.image_xscale = self.image_xscale
+			trail.image_yscale = self.image_yscale
+			trail.direction = self.direction
+			trail.speed = self.speed * 0.75
+			trail.depth = self.depth + 1
+		end
+		
+		for _, actor in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do
+			if self:attack_collision_canhit(actor) and Instance.exists(self.parent) then
+				if gm._mod_net_isHost() then
+					local attack = self.parent:fire_direct(actor, self.damage / self.parent.damage)
+				end
+
+				self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
+				self:destroy()
+			end
+		end
+	end
+	
+	if gm.inside_view(self.x, self.y) == 1 and self.life % 3 == 0 then
+		rainbowspark:create_color(self.x, self.y, self.image_blend, 1, Particle.SYSTEM.middle)
+	end
+end)
+
+-- make the worm shoot the star storm
 gm.pre_code_execute("gml_Object_oWormBody_Alarm_1", function(self, other)
 	if self.parent.elite_type == empy.value then
 		self:alarm_set(1, 330)
 	
 		if self.parent.target then
-			local star = gm.instance_create(self.x, self.y, gm.constants.oWurmMissile)
+			local star = oStarStorm:create(self.x, self.y)
 			star.parent = self.parent
-			star.target = self.parent.target
 			star.team = self.parent.team
 			star.targetX = self.parent.target.x
 			star.targetY = self.parent.target.y
-			star.lifetime = 30
-			star.damage = self.parent.damage * 0.1
+			star.damage = self.parent.damage * 0.05
 			if Helper.chance(0.5) then
 				star.direction = self.image_angle - 90 + math.random(-45, 45)
 			else
 				star.direction = self.image_angle + 90 + math.random(-45, 45)
 			end
-			star.speed = star.speed * math.random(1, 2)
-			star.image_alpha = 0.75
+			star.speed = math.random(4, 8)
 			star.image_blend = self.image_blend
-			
-			self:sound_play(gm.constants.wMedallion, 1, 0.8 + math.random() * 0.2)
 		end
 	end
 end)
 
--- make the orbs look like colorful stars
-gm.pre_code_execute("gml_Object_oWurmMissile_Draw_0", function(self, other)
-	if self.parent.elite_type == empy.value then
-		gm.draw_sprite_ext(star_sprite, (Global._current_frame % 24) / 3, self.x, self.y, self.image_xscale, self.image_yscale, self.image_angle, self.image_blend, self.image_alpha)
-		gm.draw_set_alpha(0.4)
-		gm.draw_circle_colour(self.x, self.y, 20, self.image_blend, self.image_blend, false)
-		gm.draw_set_alpha(1)
-		if gm.inside_view(self.x, self.y) == 1 and Global._current_frame % 2 == 0 and self.speed > 12 then
-			startrail:create_color(self.x, self.y, self.image_blend, 1, Particle.SYSTEM.middle)
-		end
-		return false -- makes the normal draw code not run, we dont want overlap
+-- make the warning change color
+gm.pre_code_execute("gml_Object_oWormWarning_Step_0", function(self, other)
+	if self.image_blend == Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then -- check what color it was on the previous frame
+		self.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
 	end
 end)
 
 local blacklist = {
 	["lemrider"] = true, -- the spawn anim breaks since its 2 of them at once
-	["bramble"] = true, -- same issue as above and also requires fixes like the magma worm
- 	["spitter"] = true, -- technically works but FUCK no
+	["bramble"] = true, -- requires major fixes that im not sure are even possible
+ 	["spitter"] = true, -- technically fully works but FUCK no
 }
 
 local whitelist = {
 	["jellyfish"] = true,
 	["magmaWorm"] = true,
 	["swift"] = true, -- lmao cope
+	["archerBug"] = true,
 	["colossus"] = true,
 	["ancientWisp"] = true,
+	["ifrit"] = true,
+	["wanderingVagrant"] = true,
+	["youngVagrant"] = true,
 }
 
 Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
-	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02
+	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
@@ -421,14 +533,14 @@ Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
 		for i, card in ipairs(all_monster_cards) do
 			if card.object_id == actor.object_index then -- if the actor has a monster card
 				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or in the whitelist
-					print("difficulty:", GM._mod_game_getDirector().enemy_buff, "cost:", card.spawn_cost, "mult:", diff)
-					print("base chance:", chance, "total chance:", (chance / math.max(1, math.min(160, card.spawn_cost) / 40)))
+					--print("difficulty:", GM._mod_game_getDirector().enemy_buff, "cost:", card.spawn_cost, "mult:", diff)
+					--print("base chance:", chance, "total chance:", (chance / math.max(1, math.min(160, card.spawn_cost) / 40)))
 					if Helper.chance((chance / math.max(1, math.min(160, card.spawn_cost) / 40))) then
-						print("spawned")
+						--print("spawned", card.identifier)
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else
-						print("failed")
+						--print("failed to spawn", card.identifier)
 						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
 					end
 					break
