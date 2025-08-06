@@ -600,7 +600,7 @@ Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
-	if GM._mod_game_getDirector().stages_passed < 0 then return end -- only spawns if its stage 9+
+	if GM._mod_game_getDirector().stages_passed < 8 then return end -- only spawns if its stage 9+
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
 		local all_monster_cards = Monster_Card.find_all()
 		local chance = GM._mod_game_getDirector().__ssr_empyrean_chance -- a value from 0 to 1
