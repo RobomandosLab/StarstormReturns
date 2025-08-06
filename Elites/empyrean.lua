@@ -44,9 +44,18 @@ rainbowspark:set_direction(0, 180, 0, 10)
 rainbowspark:set_scale(0.1, 0.1)
 rainbowspark:set_life(20, 100)
 
+local teleport = Particle.new(NAMESPACE, "EmpyreanTeleport")
+teleport:set_shape(Particle.SHAPE.star)
+teleport:set_alpha3(0.75, 0.75, 0)
+teleport:set_orientation(0, 0, 0, 0, true)
+teleport:set_speed(0, 3, -0.03, 0.05)
+teleport:set_direction(0, 360, 0, 10)
+teleport:set_scale(0.1, 0.1)
+teleport:set_life(20, 100)
+
 local telegraph = Particle.new(NAMESPACE, "EmpyreanStarTelegraph")
 telegraph:set_shape(Particle.SHAPE.disk)
-telegraph:set_alpha2(0.75, 0)
+telegraph:set_alpha2(0.6, 0)
 telegraph:set_blend(true)
 telegraph:set_speed(6, 6, 0, 0)
 telegraph:set_scale(0.1, 0.1)
@@ -112,6 +121,8 @@ end
 empy:clear_callbacks()
 empy:onApply(function(actor)
 	actor:item_give(empyorb) -- applies most empyrean effects
+	
+	
 	actor:item_give(teleorb) -- makes it teleport to the player from any location
 	
 	-- stat changes are multiplicative with normal elite stat changes
@@ -200,7 +211,7 @@ empyorb:onPostDraw(function(actor, stack)
 			beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
 			
 			-- create the beam particles around the beam
-			for i = 0, 22 do
+			for i = 1, 22 do
 				local rnd = math.random(80, 1728)
 				if gm.inside_view(actor.x, actor.y - rnd) == 1 then
 					beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
@@ -361,6 +372,70 @@ empyorb:onPostStatRecalc(function(actor)
 	end
 end)
 
+teleorb:clear_callbacks()
+teleorb:onAcquire(function(actor, stack)
+	actor:get_data().empyrean_teleport = 480 + math.random(240)
+	actor:get_data().empyrean_teleport_max = -1
+end)
+
+teleorb:onPostStep(function(actor, stack)
+	if GM.actor_is_classic(actor) then
+		if actor:get_data().empyrean_teleport > 0 then
+			actor:get_data().empyrean_teleport = actor:get_data().empyrean_teleport - 1
+		elseif not gm.actor_state_is_climb_state(actor.actor_state_current_id) then
+			local targets = Instance.find_all(gm.constants.oP)
+			local target_fin = nil
+			
+			-- go through all players and find one that is grounded and not climbing
+			for _, target in ipairs(targets) do
+				if not gm.bool(target.free) and not gm.actor_state_is_climb_state(target.actor_state_current_id) and gm.point_distance(actor.x, actor.y, target.x, target.y) > 200 then
+					target_fin = target
+					break
+				end
+			end
+			
+			-- disable skills for a second to prevent unfair deaths
+			for i = 0, 3 do
+				local skill = actor:get_active_skill(i)
+				skill.use_next_frame = math.max(skill.use_next_frame, Global._current_frame + 60)
+			end
+			
+			-- teleport!
+			if target_fin then
+				gm.teleport_nearby(actor.id, target_fin.x - (80 + math.random(20)) * gm.sign(target_fin.pHspeed), target_fin.y) -- teleport to this fool
+				actor.ghost_x = actor.x
+				actor.ghost_y = actor.y
+				actor.pVspeed = 0
+				actor.pHspeed = 0
+				actor.ai_tick_rate = 1
+				
+				actor:get_data().empyrean_teleport = 480 + math.random(240)
+				actor:get_data().empyrean_teleport_max = actor:get_data().empyrean_teleport
+				
+				-- create some effects so you know youre about to die
+				local circle = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle)
+				circle.parent = actor
+				circle.radius = 50
+				circle.image_blend = Color.from_hsv(Global._current_frame % 360, 100, 100)
+				
+				local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
+				flash.parent = actor
+				flash.rate = 0.05
+				flash.image_alpha = 0.8
+				flash.image_blend = Color.from_hsv(Global._current_frame % 360, 100, 100)
+				
+				for i = 1, 36 do
+					teleport:set_direction(10 * i, 10 * i, 0, 10)
+					teleport:create_color(actor.x, actor.y, Color.from_hsv(gm.round(math.random(360)), 100, 100), 1, Particle.SYSTEM.middle)
+				end
+				
+				actor:sound_play(gm.constants.wMS, 1, 0.8 + math.random() * 0.2)
+				actor:sound_play(gm.constants.wBoss1DeathWarp, 1, 0.8 + math.random() * 0.2)
+			end
+		end
+	end
+end)
+
 -- empyrean worms !!!
 -- make the worm bodies rainbow too and also make them create sparks
 gm.pre_code_execute("gml_Object_oWormBody_Step_2", function(self, other)
@@ -419,30 +494,30 @@ oStarStorm:onStep(function(self)
 		self.spawn_speed = self.speed
 	end
 	
-	if self.life >= 570 then
+	if self.life >= 570 then -- do this for the first 30 frames after spawning
 		self.speed = self.speed - self.spawn_speed / 30
-	elseif self.life == 481 then
-		local flash = GM.instance_create(self.x, self.y, gm.constants.oEfFlash)
+	elseif self.life == 481 then -- make it idle for a second and a half, then >>
+		local flash = GM.instance_create(self.x, self.y, gm.constants.oEfFlash) -- >> make it flash
 		flash.parent = self
 		flash.rate = 0.03
 		flash.image_alpha = 0.6
 		
-		self:sound_play(gm.constants.wItemDrop_White, 0.8, 0.8 + math.random() * 0.2)
+		self:sound_play(gm.constants.wItemDrop_White, 0.8, 0.8 + math.random() * 0.2) -- >> play these sounds
 		self:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 1.2 + math.random() * 0.4)
 		self:sound_play(gm.constants.wBossOrbShoot, 0.5, 1.2 + math.random() * 0.4)
 		
-		self.direction = gm.point_direction(self.x, self.y, self.targetX, self.targetY)
-	elseif self.life >= 480 then
+		self.direction = gm.point_direction(self.x, self.y, self.targetX, self.targetY) -- >> make it aim at the player
+	elseif self.life >= 480 then -- while idling, create telegraph particles
 		if self.life % 8 == 0 then
 			telegraph:set_direction(gm.point_direction(self.x, self.y, self.targetX, self.targetY), gm.point_direction(self.x, self.y, self.targetX, self.targetY), 0, 0)
 			telegraph:create_color(self.x, self.y, self.image_blend, 1)
 		end
-	elseif self.life >= 470 then
+	elseif self.life >= 470 then -- once were done idling, descrease its speed to create a wind up effect for 10 frames
 		self.speed = self.speed - 0.4
 	else
-		self.speed = math.min(30, self.speed + 0.6)
+		self.speed = math.min(30, self.speed + 0.6) -- then start increasing its speed for the rest of the duration
 		
-		if self.life % 2 == 0 then
+		if self.life % 2 == 0 then -- create trails cuz theyre cool
 			local trail = GM.instance_create(self.x, self.y, gm.constants.oEfTrail)
 			trail.sprite_index = self.sprite_index
 			trail.image_index = self.image_index
@@ -455,7 +530,7 @@ oStarStorm:onStep(function(self)
 			trail.depth = self.depth + 1
 		end
 		
-		for _, actor in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do
+		for _, actor in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do -- make it deal damage if it hits the opposite team
 			if self:attack_collision_canhit(actor) and Instance.exists(self.parent) then
 				if gm._mod_net_isHost() then
 					local attack = self.parent:fire_direct(actor, self.damage / self.parent.damage)
@@ -483,7 +558,7 @@ gm.pre_code_execute("gml_Object_oWormBody_Alarm_1", function(self, other)
 			star.team = self.parent.team
 			star.targetX = self.parent.target.x
 			star.targetY = self.parent.target.y
-			star.damage = self.parent.damage * 0.05
+			star.damage = self.parent.damage * 0.07
 			if Helper.chance(0.5) then
 				star.direction = self.image_angle - 90 + math.random(-45, 45)
 			else
@@ -503,7 +578,7 @@ gm.pre_code_execute("gml_Object_oWormWarning_Step_0", function(self, other)
 end)
 
 local blacklist = {
-	["lemrider"] = true, -- the spawn anim breaks since its 2 of them at once
+	["lemrider"] = true, -- the spawn anim breaks since its 2 of them at once, also doesnt actually do most elite effects
 	["bramble"] = true, -- requires major fixes that im not sure are even possible
  	["spitter"] = true, -- technically fully works but FUCK no
 }
@@ -521,11 +596,11 @@ local whitelist = {
 }
 
 Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
-	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005
+	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02 -- higher chance so you see your first empyrean sooner
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
-	if GM._mod_game_getDirector().stages_passed < 8 then return end -- only spawns if its stage 9+
+	if GM._mod_game_getDirector().stages_passed < 0 then return end -- only spawns if its stage 9+
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
 		local all_monster_cards = Monster_Card.find_all()
 		local chance = GM._mod_game_getDirector().__ssr_empyrean_chance -- a value from 0 to 1
@@ -533,14 +608,16 @@ Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
 		for i, card in ipairs(all_monster_cards) do
 			if card.object_id == actor.object_index then -- if the actor has a monster card
 				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or in the whitelist
-					--print("difficulty:", GM._mod_game_getDirector().enemy_buff, "cost:", card.spawn_cost, "mult:", diff)
-					--print("base chance:", chance, "total chance:", (chance / math.max(1, math.min(160, card.spawn_cost) / 40)))
-					if Helper.chance((chance / math.max(1, math.min(160, card.spawn_cost) / 40))) then
-						--print("spawned", card.identifier)
+					local cost = math.min(4, math.max(1, card.spawn_cost / 40 * diff))
+					print("cost scaled:", cost, "cost base:", card.spawn_cost)
+					print("difficulty:", GM._mod_game_getDirector().enemy_buff, "mult:", diff)
+					print("base chance:", chance, "total chance:", (chance / cost))
+					if Helper.chance(chance / cost) then
+						print("spawned", card.identifier)
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else
-						--print("failed to spawn", card.identifier)
+						print("failed to spawn", card.identifier)
 						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
 					end
 					break
