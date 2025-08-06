@@ -604,7 +604,7 @@ Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
-	if GM._mod_game_getDirector().stages_passed < 0 then return end -- only spawns if its stage 9+
+	if GM._mod_game_getDirector().stages_passed < 8 then return end -- only spawns if its stage 9+
 	if not GM._mod_net_isHost() then return end
 	
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
