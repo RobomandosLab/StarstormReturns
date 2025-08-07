@@ -48,6 +48,16 @@
 			"departure" : "<y>Departure:</c>\nUES Shipping Dock 5,\nRedview,\nMars",
 			"arrival" : "<y>Destination:</c>\nUES Shipping Dock 0,\nRedview,\nMars"
 		},
+		"baroness": {
+			"name": "Baroness",
+			"nameUpper": "BARONESS",
+			"description": "Trained for the front lines, and loaded tooth and nail for crowd control. Able to wipe crowds with grenades, and relocate enemies wherever she pleases, the <y>Baroness</c> has the tools for the job. <y>Don't let anything get personal</c>.",
+			"endQuote": "..and so she left, a defiant noble, expurgated.",
+			"story": "girlboss",
+			"id" : "",
+			"departure" : "",
+			"arrival" : ""
+		},
 		"swapNemesis": {
 			"name": "Nemesis Survivors",
 			"nameUpper": "NEMESIS SURVIVORS",
@@ -235,6 +245,26 @@
 		"technicianVBoosted": {
 			"name": "Backup Firewall 2.0",
 			"description": "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires missiles for <y>4x100% damage</c> when <b>upgraded."
+		},
+		"baronessZ": {
+			"name": "Pulling the Trigger",
+			"description": "Hurl MG rounds for <y>95% damage</c>. \n<lt>Vehicle:</c> fire a laser <y>increasing in damage the longer it hits</c>."
+		},
+		"baronessX": {
+			"name": "Steady Target",
+			"description": "Pick up an enemy, dealing <y>100% damage</c> and disabling them. Lasts 4 seconds."
+		},
+		"baronessC": {
+			"name": "Active Relocation",
+			"description": "Summon a hovering vehicle that <b>increases movement speed</c>, <r>but strips the ability to jump or climb</c>. \n<b>Can attack while moving</c>."
+		},
+		"baronessV": {
+			"name": "Saturated O-Charge",
+			"description": "Throw a grenade which seeks enemies and <y>explodes</c> for <y>3x320% damage</c>."
+		},
+		"baronessVBoosted": {
+			"name": "Bursting O-Charge",
+			"description": "Throw a grenade which seeks enemies and <y>explodes</c> for <y>3x320% damage</c>."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",

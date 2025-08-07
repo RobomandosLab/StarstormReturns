@@ -133,6 +133,14 @@ function move_contact_air(inst, angle, amount)
 	return x, y
 end
 
+function approach(current, target, change)
+	if target > current then
+		return current + change
+	else
+		return current - change
+	end
+end
+
 --Kinda useless but whatever... Feels better anyways
 function get_tiles(x)
 	return (x or 1) * 32
