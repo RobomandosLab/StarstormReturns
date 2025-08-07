@@ -57,14 +57,14 @@ local nuke_id = nuke.value
 
 
 local APPLY_RADIATION_TAG = 1
-local RADIATION_TICK_SPEED = 3 * 60
+local RADIATION_TICK_SPEED = 2 * 60
 local SELF_RADIATION_DURATION = 1.2 * 60
 local ENEMY_RADIATION_DURATION = 30 * 60
 
-local UTIL_HSPEED_MIN = 1
-local UTIL_HSPEED_FACTOR = 10
-local UTIL_VSPEED_MIN = 0.25
-local UTIL_VSPEED_FACTOR = 5
+local UTIL_HSPEED_MIN = 1.5
+local UTIL_HSPEED_FACTOR = 6
+local UTIL_VSPEED_MIN = 1
+local UTIL_VSPEED_FACTOR = 4
 
 
 nuke:set_stats_base({
@@ -127,7 +127,9 @@ nukeSpecial:set_skill_upgrade(nukeSpecialScepter)
 local selfRadiation = Buff.new(NAMESPACE, "NukeSelfRad")
 selfRadiation.icon_sprite = gm.constants.sBuffs
 selfRadiation.icon_subimage = 9
-selfRadiation.max_stack = 1
+selfRadiation.max_stack = 3
+selfRadiation.draw_stack_number = true
+selfRadiation.is_timed = false
 
 selfRadiation:clear_callbacks()
 
@@ -149,6 +151,7 @@ enemyRadiation:onPostStep(function( actor, stacks )
 			data.radiation_tick = Global._current_frame
 
 			if attacker then 
+				local damage = (actor.maxhp * 0.025)/attacker.damage
 				attacker:fire_explosion(actor.x, actor.y, 750, 750, 1.0)
 			end
 		end
@@ -210,9 +213,16 @@ local function NukeChargeRelease(actor)
 	if not Instance.exists(data.charge_bar) then return end
 
 	local ratio = data.charge/overcharge_limit
+	local undercharge = ratio/(charge_limit/overcharge_limit)
+	local overcharge = math.max(0, (ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit))
+
 	data.charge = 0
 	data.charge_tick = 0
-	return ratio
+	if actor:buff_stack_count(selfRadiation) > 0 then
+		actor:buff_remove(selfRadiation, 1)
+	end
+
+	return ratio, undercharge, overcharge
 end
 
 local objChargeBar = Object.new(NAMESPACE, "NukeChargeBar")
@@ -283,6 +293,7 @@ objNukeBullet:onCreate(function( inst )
 	inst.lifetime = 3 * 60
 	inst.life = inst.lifetime
 	inst.ratio = 0
+	inst.overcharge = 0
 end)
 
 objNukeBullet:onStep(function( inst )
@@ -327,14 +338,13 @@ objNukeBullet:onDestroy(function( inst )
 				attack.__ssr_nuke_radiation = APPLY_RADIATION_TAG
 
 				local t = gm.instance_create(inst.x, inst.y, gm.constants.oChainLightning)
-				local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
 
 				t.parent = inst.parent.value
 				t.team = inst.parent.team
-				t.damage = inst.parent.damage * damage
+				t.damage = inst.parent.damage * damage / 2
 				t.blend = nuke.primary_color
-				t.bounce = 3
-				t.range = math.max(100, math.ceil(300 * overcharge))
+				t.bounce = 2
+				t.range = math.max(30, math.ceil(150 * inst.overcharge))
 			end
 		end
 	end
@@ -386,7 +396,9 @@ stateNukePrimaryFire:onEnter(function( actor, data )
 	actor.image_index = 15
 	actor.sprite_index = sprite_shoot1
 
-	data.ratio = NukeChargeRelease(actor)
+	local ratio, undercharge, overcharge = NukeChargeRelease(actor)
+	data.ratio = ratio
+	data.overcharge = overcharge
 	data.fired = 0
 end)
 
@@ -404,6 +416,7 @@ stateNukePrimaryFire:onStep(function( actor, data )
 		bullet.direction = actor:skill_util_facing_direction()
 		bullet.image_xscale = actor.image_xscale
 		bullet.ratio = data.ratio
+		bullet.overcharge = data.overcharge
 	end
 end)
 
@@ -416,11 +429,12 @@ objNukePush:clear_callbacks()
 objNukePush:onCreate(function( inst )
 	inst.parent = -4
 	inst.ratio = 0
+	inst.overcharge = 0
 	inst.image_speed = 0.2
 
 	inst.speed = 3
-	inst.lifetime = 3 * 60
-	inst.life = inst.lifetime
+	inst.lifetime = 0
+	inst.life = 0
 
 	inst.hit_delay = 15
 	data = inst:get_data()
@@ -435,30 +449,23 @@ objNukePush:onStep(function( inst )
 
 	inst.life = inst.life - 1
 	if inst.life <= 0 then
+		local attack = inst.parent:fire_explosion(inst.x, inst.y, 100, 100, 1.0, sprite_explosion).attack_info
+		attack.__ssr_nuke_radiation = APPLY_RADIATION_TAG
+		attack.knockback_direction = inst.image_xscale
+		attack.knockback = 7
+		attack.knockup = 1
+
 		inst:destroy()
 	end
 
 	local data = inst:get_data()
 	local collisions = inst:get_collisions(gm.constants.pActorCollisionBase)
-	local overcharge = (inst.ratio - (charge_limit/overcharge_limit)) * 2 / (charge_limit/overcharge_limit)
-	local damage = math.max(0.5, 2 * overcharge)
 
 	for _, actor in ipairs(collisions) do
 		if actor.team ~= inst.parent.team then
-			if data.hit_list[actor.id] == nil then
+			if data.hit_list[actor.id] == nil or Global._current_frame - data.hit_list[actor.id] >= inst.hit_delay then
 				if gm._mod_net_isHost() then
-					local attack = inst.parent:fire_direct(actor, damage, inst.direction, inst.x, inst.y, nil, true).attack_info
-					attack.knockback_direction = inst.image_xscale
-					attack.knockback = 5
-					attack.knockup = 2
-				end
-
-				inst:sound_play(gm.constants.wMercenaryShoot1_3, 0.5, 0.9)
-				data.hit_list[actor.id] = Global._current_frame
-
-			elseif Global._current_frame - data.hit_list[actor.id] >= inst.hit_delay then
-				if gm._mod_net_isHost() then
-					local attack = inst.parent:fire_direct(actor, damage, inst.direction, inst.x, inst.y, nil, true).attack_info
+					local attack = inst.parent:fire_direct(actor, 0.5, inst.direction, inst.x, inst.y, nil, true).attack_info
 					attack.knockback_direction = inst.image_xscale
 					attack.knockback = 5
 					attack.knockup = 2
@@ -516,7 +523,9 @@ stateNukeSecondaryFire:onEnter(function( actor, data )
 	actor.image_index = 16
 	actor.sprite_index = sprite_shoot2
 
-	data.ratio = NukeChargeRelease(actor)
+	local ratio, undercharge, overcharge = NukeChargeRelease(actor)
+	data.ratio = ratio
+	data.overcharge = overcharge
 	data.fired = 0
 end)
 
@@ -548,7 +557,12 @@ stateNukeSecondaryFire:onStep(function( actor, data )
 			push.parent = actor
 			push.direction = actor:skill_util_facing_direction()
 			push.image_xscale = actor.image_xscale
+
 			push.ratio = data.ratio
+			push.overcharge = data.overcharge
+
+			push.lifetime = math.max(1 * 60, 3 * push.overcharge * 60)
+			push.life = push.lifetime
 		end
 	end
 end)
@@ -608,8 +622,19 @@ stateNukeUtilityFire:onEnter(function( actor, data )
 	data.vertical = data.down - data.up
 	data.horizontal = data.right - data.left
 
-	data.speed_factor_h = math.max(UTIL_HSPEED_MIN, UTIL_HSPEED_FACTOR * data.ratio)
-	data.speed_factor_v = math.max(UTIL_VSPEED_MIN, UTIL_VSPEED_FACTOR * data.ratio)
+	data.speed_factor_h = math.max(UTIL_HSPEED_MIN, UTIL_HSPEED_FACTOR  * math.log(data.ratio + 1))
+	data.speed_factor_v = math.max(UTIL_VSPEED_MIN, UTIL_VSPEED_FACTOR * math.log(data.ratio + 1))
+
+	if data.ratio < charge_limit/overcharge_limit then
+		local attack = actor:fire_explosion(actor.x, actor.y, 150, 150, 1.0, sprite_explosion).attack_info
+		attack.knockback = 4
+		attack.knockup = 1
+	else
+		local attack = actor:fire_explosion(actor.x, actor.y, 200, 200, 2.0, sprite_explosion).attack_info
+		attack.__ssr_nuke_radiation = APPLY_RADIATION_TAG
+		attack.knockback = -6
+		attack.knockup = 1
+	end
 end)
 
 stateNukeUtilityFire:onStep(function( actor, data )
@@ -623,8 +648,12 @@ stateNukeUtilityFire:onStep(function( actor, data )
 		actor.y = actor.y - 10
 		actor.pVspeed = data.vertical * data.speed_factor_v * actor.pVmax
 
-		if data.vertical == 0 and data.horizontal == 0 then
-			actor.pVspeed = -data.speed_factor_v * actor.pVmax
+		if data.vertical == 0 then
+			if data.horizontal == 0 then
+				actor.pVspeed = -data.speed_factor_v * actor.pVmax
+			else
+				actor.pVspeed = -UTIL_VSPEED_MIN * actor.pVmax
+			end
 		end
 	end
 
@@ -634,7 +663,13 @@ stateNukeUtilityFire:onStep(function( actor, data )
 		actor.sprite_index = sprite_jump_peak
 	end
 
-	if actor:is_grounded() then
+	if is_colliding_stage(actor, actor.x + 1, actor.y + 1) or is_colliding_stage(actor, actor.x - 1) then
+		local attack = actor:fire_explosion(actor.x, actor.y, 150, 150, 90.0, sprite_explosion).attack_info
+		attack:set_stun(1, actor.image_xscale, standard)
+		attack.knockback = 2
+		attack.knockup = 1
+
+		actor.pVspeed = -0.75 * actor.pVmax
 		actor:skill_util_reset_activity_state()
 	end
 end)
@@ -643,14 +678,14 @@ end)
 -------- RADIONUCLIDE SURGE
 nukeSpecial.sprite = sprite_skills
 nukeSpecial.subimage = 3
-nukeSpecial.cooldown = 13 * 60
+nukeSpecial.cooldown = 20 * 60
 nukeSpecial.damage = 3.0
 nukeSpecial.require_key_press = true
 nukeSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 nukeSpecialScepter.sprite = sprite_skills
 nukeSpecialScepter.subimage = 4
-nukeSpecialScepter.cooldown = 13 * 60
+nukeSpecialScepter.cooldown = 20 * 60
 nukeSpecialScepter.damage = 3.0
 nukeSpecialScepter.require_key_press = true
 nukeSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
@@ -684,5 +719,5 @@ stateNukeSpecial:onStep(function( actor, data )
 end)
 
 stateNukeSpecial:onExit(function( actor, data )
-	actor:buff_apply(selfRadiation, SELF_RADIATION_DURATION, 1)
+	actor:buff_apply(selfRadiation, SELF_RADIATION_DURATION, actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 and 5 or 3)
 end)
