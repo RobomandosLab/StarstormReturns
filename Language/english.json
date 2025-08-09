@@ -250,6 +250,10 @@
 			"name": "Pulling the Trigger",
 			"description": "Hurl MG rounds for <y>95% damage</c>. \n<lt>Vehicle:</c> fire a laser <y>increasing in damage the longer it hits</c>."
 		},
+		"baronessFocusingBeam": {
+			"name": "Focusing Beam",
+			"description": "Fire a constant laser, <y>dealing more damage the longer it hits</c>."
+		},
 		"baronessX": {
 			"name": "Steady Target",
 			"description": "Pick up an enemy, dealing <y>100% damage</c> and disabling them. Lasts 4 seconds."
@@ -257,6 +261,10 @@
 		"baronessC": {
 			"name": "Active Relocation",
 			"description": "Summon a hovering vehicle that <b>increases movement speed</c>, <r>but strips the ability to jump or climb</c>. \n<b>Can attack while moving</c>."
+		},
+		"baronessFaceToFace": {
+			"name": "Face to Face",
+			"description": "Exit the vehicle."
 		},
 		"baronessV": {
 			"name": "Saturated O-Charge",

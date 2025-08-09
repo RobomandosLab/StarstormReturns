@@ -134,10 +134,10 @@ function move_contact_air(inst, angle, amount)
 end
 
 function approach(current, target, change)
-	if target > current then
-		return current + change
+	if current < target then
+		return math.min(current + change, target)
 	else
-		return current - change
+		return math.max(current - change, target)
 	end
 end
 

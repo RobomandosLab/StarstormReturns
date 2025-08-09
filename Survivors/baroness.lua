@@ -36,6 +36,7 @@ local sprite_shoot3b		= Resources.sprite_load(NAMESPACE, "BaronessShoot3b", path
 local sprite_shoot4a		= Resources.sprite_load(NAMESPACE, "BaronessShoot4a", path.combine(SPRITE_PATH, "shoot4a.png"), 7, 14, 18)
 local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "BaronessShoot4b", path.combine(SPRITE_PATH, "shoot4b.png"), 7, 32, 30)
 
+local sprite_vehicle_mask 	= Resources.sprite_load(NAMESPACE, "BaronessVehicleMask", path.combine(SPRITE_PATH, "vehicle_mask.png"), 1, 12, 10)
 local sprite_nade			= Resources.sprite_load(NAMESPACE, "BaronessGrenade", path.combine(SPRITE_PATH, "nade.png"))
 local sprite_sparks			= Resources.sprite_load(NAMESPACE, "BaronessSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 26, 16)
 local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "BaronessSparksLaser", path.combine(SPRITE_PATH, "sparks2.png"), 3, 24, 16)
@@ -99,13 +100,29 @@ baroness:onInit(function(actor)
 	actor.sprite_jump_half		= Array.new({sprite_jump,		sprite_jump_half, 0})
 	actor.sprite_jump_peak_half	= Array.new({sprite_jump_peak,	sprite_jump_peak_half, 0})
 	actor.sprite_fall_half		= Array.new({sprite_fall,		sprite_fall_half, 0})
+	
+	actor.sprite_idle2 = sprite_idle2
+	actor.sprite_walk2 = sprite_walk2
+	actor.sprite_jump2 = sprite_jump2
+	actor.sprite_jump_peak2 = sprite_jump_peak2
+	actor.sprite_fall2 = sprite_fall2
+	actor.sprite_shoot1b = sprite_shoot
+	actor.sprite_shoot2b = sprite_shoot2b
+	actor.sprite_shoot3a = sprite_shoot3a
+	actor.sprite_shoot3b = sprite_shoot3b
+	actor.sprite_shoot4b = sprite_shoot4b
+	
+	actor.vehicle = false
+	actor:get_data().baroness_bike_strafing = 0
 
 	actor:survivor_util_init_half_sprites()
 end)
 
 local trigger = baroness:get_primary()
+local beam = Skill.new(NAMESPACE, "baronessFocusingBeam")
 local steady = baroness:get_secondary()
 local relocation = baroness:get_utility()
+local relocation2 = Skill.new(NAMESPACE, "baronessFaceToFace")
 local nade = baroness:get_special()
 
 local shock = Particle.new(NAMESPACE, "BaronessShock")
@@ -116,6 +133,86 @@ shock:set_size(0.09, 0.16, -0.015, 0)
 shock:set_speed(0, 0.6, -0.002, 0)
 shock:set_direction(0, 360, 0, 50)
 shock:set_life(3, 8)
+
+local bike_speed = Buff.new(NAMESPACE, "baronessBikeSpeed")
+bike_speed.show_icon = false
+bike_speed.is_timed = false
+bike_speed:clear_callbacks()
+
+bike_speed:onPostStep(function(actor, stack)
+	actor.mask_index = sprite_vehicle_mask
+	actor.can_rope = false
+	actor.walk_speed_coeff = 0.4
+end)
+
+bike_speed:onPostStatRecalc(function(actor, stack)
+	if actor.pHmax + 3.4 < actor.pHmax * 1.75 then
+		actor.pHmax = actor.pHmax * 1.75
+	else
+		actor.pHmax = actor.pHmax + 3.4
+	end
+end)
+
+bike_speed:onRemove(function(actor, stack)
+	actor.mask_index = gm.constants.sPMask
+	actor.can_rope = true
+	actor.walk_speed_coeff = 1
+end)
+
+baroness:onStep(function(actor)
+	if actor.vehicle == true then
+		if actor:buff_stack_count(bike_speed) == 0 then
+			actor:buff_apply(bike_speed, 60)
+		end
+		
+		if Global._current_frame % 30 == 0 then
+			actor:sound_play(sound_skill3c, math.min(math.abs(actor.pHspeed / 2) * 0.13, 0.6), 1 + math.random() * 0.2)
+		end
+		
+		if gm.bool(actor.moveUp) then
+			local feathered = actor:item_stack_count(Item.find("ror-hopooFeather")) > 0 and actor.jump_count < actor:item_stack_count(Item.find("ror-hopooFeather"))
+			
+			if not feathered then
+				actor.moveUp = 0
+				actor.moveUpHold = 0
+				actor.moveUp_buffered = 0
+			elseif actor.free == false then
+				actor.jump_count = actor.jump_count + 1
+				
+				actor:sound_play(gm.constants.wFeather, 1, 1 + math.random() * 0.2)
+				
+				local effect = GM.instance_create(actor.x, actor.y, gm.constants.oEfExplosion)
+				effect.sprite_index = gm.constants.sEfFeather
+				effect.image_yscale = 1
+				effect.image_xscale = 1
+			end
+		end
+		
+		if actor:get_skill(Skill.SLOT.utility).value == relocation2.value then
+			actor:freeze_default_skill(Skill.SLOT.utility)
+		end
+		
+		actor.sprite_idle = actor.sprite_idle2
+		actor.sprite_walk = actor.sprite_walk2
+		actor.sprite_jump = actor.sprite_jump2
+		actor.sprite_jump_peak = actor.sprite_jump_peak2
+		actor.sprite_fall = actor.sprite_fall2
+		
+		if (gm.bool(actor.moveLeft) or gm.bool(actor.moveRight)) and not actor.free and actor.image_index ~= actor.sprite_shoot3a then
+			shock:create(actor.x - 20 * actor.image_xscale, actor.y + math.random(1, 4), 2, Particle.SYSTEM.middle)
+		end
+	else
+		if actor:buff_stack_count(bike_speed) > 0 then
+			actor:buff_remove(bike_speed) 
+		end
+		
+		actor.sprite_idle = sprite_idle
+		actor.sprite_walk = sprite_walk
+		actor.sprite_jump = sprite_jump
+		actor.sprite_jump_peak = sprite_jump_peak
+		actor.sprite_fall = sprite_fall
+	end
+end)
 
 local shocked = Buff.new(NAMESPACE, "baronessShocked")
 shocked.is_debuff = true
@@ -142,7 +239,7 @@ shocked:onPostStep(function(actor, stack)
 end)
 
 shocked:onPostDraw(function(actor, stack)
-	local size = ((actor.bbox_bottom - actor.bbox_top) + (actor.bbox_right - actor.bbox_left)) / 2 + 12
+	local size = ((actor.bbox_bottom - actor.bbox_top) + (actor.bbox_right - actor.bbox_left)) / 2
 	
 	for i = 1, 6 do
 		local aa = (math.random(0, 360000) / 1000)
@@ -313,6 +410,7 @@ trigger.cooldown = 5
 trigger.damage = 0.95
 trigger.require_key_press = false
 trigger.hold_facing_direction = true
+trigger.is_primary = true
 trigger.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
 local sttrigger = State.new(NAMESPACE, "baronessPullingTheTrigger")
@@ -324,33 +422,50 @@ end)
 
 sttrigger:clear_callbacks()
 sttrigger:onEnter(function(actor, data)
-	actor.image_index2 = 0
 	data.fired = 0
-
-	actor:skill_util_strafe_init()
-	actor:skill_util_strafe_turn_init()
+	
+	if actor.vehicle == false then
+		actor.image_index2 = 0
+		actor:skill_util_strafe_init()
+		actor:skill_util_strafe_turn_init()
+	else
+		actor.image_index = 0
+		actor:skill_util_strafe_and_slide_init()
+	end
 end)
 
 sttrigger:onStep(function(actor, data)
 	actor.sprite_index2 = sprite_shoot1
-
-	-- first arg: speed for attack animation, in sprite frames per game frame
-	-- second arg: multiplier for movement speed while strafing
-	actor:skill_util_strafe_update(0.21 * actor.attack_speed, 0.5)
-	actor:skill_util_step_strafe_sprites()
-	actor:skill_util_strafe_turn_update()
-
-	-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
-	if actor.sprite_index == actor.sprite_walk_half[2] then
-		local walk_offset = 0
-		local leg_frame = math.floor(actor.image_index)
-		if leg_frame == 0 or leg_frame == 4 then
-			walk_offset = 1
-		end
-		actor.ydisp = walk_offset -- ydisp controls upper body offset
+	
+	if actor.vehicle then
+		actor:skill_util_strafe_and_slide(0.85)
+		actor:actor_animation_set(sprite_shoot1, 0.21)
+	else
+		-- first arg: speed for attack animation, in sprite frames per game frame
+		-- second arg: multiplier for movement speed while strafing
+		actor:skill_util_strafe_update(0.21 * actor.attack_speed, 0.5)
+		actor:skill_util_step_strafe_sprites()
+		actor:skill_util_strafe_turn_update()
 	end
-
-	if actor.image_index2 >= 1 and data.fired == 0 then
+	
+	if not actor.vehicle then
+		-- adjust vertical offset so the upper body bobs up and down depending on the leg animation
+		if actor.sprite_index == actor.sprite_walk_half[2] then
+			local walk_offset = 0
+			local leg_frame = math.floor(actor.image_index)
+			if leg_frame == 0 or leg_frame == 4 then
+				walk_offset = 1
+			end
+			actor.ydisp = walk_offset -- ydisp controls upper body offset
+		end
+	end
+	
+	local fire = (actor.image_index >= 1 and data.fired == 0)
+	if not actor.vehicle then
+		fire = (actor.image_index2 >= 1 and data.fired == 0)
+	end
+	
+	if fire then
 		data.fired = 1
 
 		actor:sound_play(sound_skill1a, 0.93, 1 + math.random() * 0.07)
@@ -361,7 +476,7 @@ sttrigger:onStep(function(actor, data)
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
-					local attack = actor:fire_bullet(actor.x, actor.y, 960, dir + math.random(-1, 1), damage, nil, sprite_sparks, Attack_Info.TRACER.commando1)
+					local attack = actor:fire_bullet(actor.x, actor.y, 960, dir + math.random(-1, 1) * actor.image_xscale, damage, nil, sprite_sparks, Attack_Info.TRACER.commando1)
 					attack.climb = i * 8
 				end
 			end
@@ -372,7 +487,39 @@ sttrigger:onStep(function(actor, data)
 end)
 
 sttrigger:onExit(function(actor, data)
-	actor:skill_util_strafe_exit()
+	if actor.vehicle == false then
+		actor:skill_util_strafe_exit()
+	end
+end)
+
+-- focusing beam
+beam:set_skill_icon(sprite_skills, 5)
+beam.cooldown = 6
+beam.require_key_press = false
+beam.hold_facing_direction = true
+beam.is_primary = true
+beam.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+
+local stbeam = State.new(NAMESPACE, "baronessFocusingBeam")
+
+beam:clear_callbacks()
+beam:onActivate(function(actor)
+	actor:enter_state(stbeam)
+end)
+
+stbeam:clear_callbacks()
+stbeam:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+	
+	actor:skill_util_strafe_and_slide_init()
+end)
+
+stbeam:onStep(function(actor, data)
+	actor:skill_util_strafe_and_slide(0.85)
+	actor:actor_animation_set(sprite_walk2, 0.25)
+		
+	actor:skill_util_exit_state_on_anim_end()
 end)
 
 -- steady target
@@ -393,11 +540,20 @@ ststeady:onEnter(function(actor, data)
 	actor.image_index = 0
 
 	data.fired = 0
+	
+	if actor.vehicle then
+		actor:skill_util_strafe_and_slide_init()
+	end
 end)
 
 ststeady:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot2a, 0.25)
+	if actor.vehicle then
+		actor:skill_util_strafe_and_slide(1)
+		actor:actor_animation_set(sprite_shoot2b, 0.25)
+	else
+		actor:skill_util_fix_hspeed()
+		actor:actor_animation_set(sprite_shoot2a, 0.25)
+	end
 	
 	if actor.image_index >= 3 and data.fired == 0 then
 		data.fired = 1
@@ -405,7 +561,7 @@ ststeady:onStep(function(actor, data)
 		actor:sound_play(sound_skill2a, 1, 1 + math.random() * 0.2)
 		
 		local victims = List.new()
-		actor:collision_rectangle_list(actor.x, actor.y - 8, actor.x + 400 * actor.image_xscale, actor.y + 8, gm.constants.pActor, false, true, victims, false)
+		actor:collision_rectangle_list(actor.x, actor.y - 16, actor.x + 400 * actor.image_xscale, actor.y + 16, gm.constants.pActor, false, true, victims, false)
 		target = nil
 		
 		for _, victim in ipairs(victims) do
@@ -450,6 +606,90 @@ ststeady:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
+-- active relocation
+relocation:set_skill_icon(sprite_skills, 2)
+relocation.cooldown = 5 * 60
+relocation.override_strafe_direction = true
+relocation.ignore_aim_direction = true
+relocation.is_utility = true
+
+local stbike = State.new(NAMESPACE, "baronessActiveRelocation")
+
+relocation:clear_callbacks()
+relocation:onActivate(function(actor)
+	actor:enter_state(stbike)
+end)
+
+stbike:clear_callbacks()
+stbike:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+	
+	if actor:get_skill(Skill.SLOT.utility).value ~= relocation2.value then
+		actor:add_skill_override(Skill.SLOT.utility, relocation2)
+	end
+	
+	if actor:get_skill(Skill.SLOT.primary).value ~= beam.value then
+		actor:add_skill_override(Skill.SLOT.primary, beam)
+	end
+end)
+
+stbike:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot3a, 0.2, false)
+	
+	if data.fired == 0 then
+		data.fired = 1
+		actor.vehicle = true
+		actor:sound_play(sound_skill3a, 1, 1 + math.random() * 0.2)
+	end
+	
+	actor.pHspeed = actor.pHmax * actor.image_xscale
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+-- face to face
+relocation2:set_skill_icon(sprite_skills, 4)
+relocation2.cooldown = 60
+relocation2.override_strafe_direction = true
+relocation2.ignore_aim_direction = true
+relocation2.is_utility = true
+
+local stbike2 = State.new(NAMESPACE, "baronessActiveRelocation2")
+
+relocation2:clear_callbacks()
+relocation2:onActivate(function(actor)
+	actor:enter_state(stbike2)
+end)
+
+stbike2:clear_callbacks()
+stbike2:onEnter(function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+	
+	if actor:get_skill(Skill.SLOT.utility).value == relocation2.value then
+		actor:remove_skill_override(Skill.SLOT.utility, relocation2)
+	end
+	
+	if actor:get_skill(Skill.SLOT.primary).value == beam.value then
+		actor:remove_skill_override(Skill.SLOT.primary, beam)
+	end
+end)
+
+stbike2:onStep(function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot3b, 0.25, false)
+	
+	if data.fired == 0 then
+		data.fired = 1
+		actor.vehicle = false
+		actor:sound_play(sound_skill3b, 1, 1 + math.random() * 0.2)
+	end
+	
+	actor.pHspeed = actor.pHmax * actor.image_xscale
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
 -- saturated o charge
 nade:set_skill_icon(sprite_skills, 3)
 nade.cooldown = 8 * 60
@@ -468,11 +708,20 @@ stnade:onEnter(function(actor, data)
 	actor.image_index = 0
 
 	data.fired = 0
+	
+	if actor.vehicle then
+		actor:skill_util_strafe_and_slide_init()
+	end
 end)
 
 stnade:onStep(function(actor, data)
-	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot4a, 0.25)
+	if actor.vehicle then
+		actor:skill_util_strafe_and_slide(1)
+		actor:actor_animation_set(sprite_shoot4b, 0.25)
+	else
+		actor:skill_util_fix_hspeed()
+		actor:actor_animation_set(sprite_shoot4a, 0.25)
+	end
 	
 	if actor.image_index >= 5 and data.fired == 0 then
 		data.fired = 1
