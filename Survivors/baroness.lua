@@ -14,6 +14,7 @@ local sprite_walk			= Resources.sprite_load(NAMESPACE, "BaronessWalk", path.comb
 local sprite_walk2			= Resources.sprite_load(NAMESPACE, "BaronessWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 38, 16)
 local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "BaronessWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 10, 12)
 local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "BaronessWalkBack", path.combine(SPRITE_PATH, "walk_back.png"), 8, 10, 12)
+local sprite_walk_back2		= Resources.sprite_load(NAMESPACE, "BaronessWalkBack2", path.combine(SPRITE_PATH, "walk_back2.png"), 8, 38, 16)
 local sprite_jump			= Resources.sprite_load(NAMESPACE, "BaronessJump", path.combine(SPRITE_PATH, "jump.png"), 1, 10, 12)
 local sprite_jump2			= Resources.sprite_load(NAMESPACE, "BaronessJump2", path.combine(SPRITE_PATH, "jump2.png"), 1, 18, 16)
 local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "BaronessJumpHalf", path.combine(SPRITE_PATH, "jump_half.png"), 1, 10, 12)
@@ -28,7 +29,8 @@ local sprite_death			= Resources.sprite_load(NAMESPACE, "BaronessDeath", path.co
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "BaronessDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 18, 20)
 local sprite_palette		= Resources.sprite_load(NAMESPACE, "BaronessPalette", path.combine(SPRITE_PATH, "palette.png"))
 
-local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "BaronessShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 3, 10, 13)
+local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "BaronessShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 3, 10, 13)
+local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "BaronessShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 4, 38, 16)
 local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "BaronessShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 7, 10, 28)
 local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "BaronessShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 7, 30, 30)
 local sprite_shoot3a		= Resources.sprite_load(NAMESPACE, "BaronessShoot3a", path.combine(SPRITE_PATH, "shoot3a.png"), 6, 16, 20)
@@ -106,7 +108,7 @@ baroness:onInit(function(actor)
 	actor.sprite_jump2 = sprite_jump2
 	actor.sprite_jump_peak2 = sprite_jump_peak2
 	actor.sprite_fall2 = sprite_fall2
-	actor.sprite_shoot1b = sprite_shoot
+	actor.sprite_shoot1b = sprite_shoot1b
 	actor.sprite_shoot2b = sprite_shoot2b
 	actor.sprite_shoot3a = sprite_shoot3a
 	actor.sprite_shoot3b = sprite_shoot3b
@@ -114,6 +116,9 @@ baroness:onInit(function(actor)
 	
 	actor.vehicle = false
 	actor:get_data().baroness_bike_strafing = 0
+	actor:get_data().baroness_beam_used = 0
+	actor:get_data().baroness_beam_damage = 0
+	actor:get_data().baroness_beam_x = 0
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -124,6 +129,7 @@ local steady = baroness:get_secondary()
 local relocation = baroness:get_utility()
 local relocation2 = Skill.new(NAMESPACE, "baronessFaceToFace")
 local nade = baroness:get_special()
+local nade2 = Skill.new(NAMESPACE, "baronessVBoosted")
 
 local shock = Particle.new(NAMESPACE, "BaronessShock")
 shock:set_shape(Particle.SHAPE.disk)
@@ -159,6 +165,19 @@ bike_speed:onRemove(function(actor, stack)
 	actor.walk_speed_coeff = 1
 end)
 
+Callback.add(Callback.TYPE.onDraw, "BaronessBeamVisual", function()
+	for _, actor in ipairs(Instance.find_all(Object.find("ror-P"))) do
+		if actor:get_data().baroness_beam_used > 0 and actor:get_data().baroness_beam_x > 0 then
+			local col = gm.merge_colour(Color.RED, Color.WHITE, actor:get_data().baroness_beam_used / 2)
+			gm.draw_set_colour(col)
+			gm.draw_set_alpha(actor:get_data().baroness_beam_used)
+			gm.draw_line_width(actor.x + 19 * actor.image_xscale, actor.y - 2, actor:get_data().baroness_beam_x, actor.y - 2, 2)
+			gm.draw_set_colour(Color.WHITE)
+			gm.draw_set_alpha(1)
+		end
+	end
+end)
+
 baroness:onStep(function(actor)
 	if actor.vehicle == true then
 		if actor:buff_stack_count(bike_speed) == 0 then
@@ -186,6 +205,10 @@ baroness:onStep(function(actor)
 				effect.image_yscale = 1
 				effect.image_xscale = 1
 			end
+			
+			if actor:item_stack_count(Item.find("ror-photonJetpack")) and actor.jetpack_fuel > 0 then
+				actor.pVspeed = actor.pVspeed - 2
+			end
 		end
 		
 		if actor:get_skill(Skill.SLOT.utility).value == relocation2.value then
@@ -197,6 +220,8 @@ baroness:onStep(function(actor)
 		actor.sprite_jump = actor.sprite_jump2
 		actor.sprite_jump_peak = actor.sprite_jump_peak2
 		actor.sprite_fall = actor.sprite_fall2
+		actor.sprite_walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk_back2})
+		baroness:set_cape_offset(0, -14, 0, -5)
 		
 		if (gm.bool(actor.moveLeft) or gm.bool(actor.moveRight)) and not actor.free and actor.image_index ~= actor.sprite_shoot3a then
 			shock:create(actor.x - 20 * actor.image_xscale, actor.y + math.random(1, 4), 2, Particle.SYSTEM.middle)
@@ -211,6 +236,14 @@ baroness:onStep(function(actor)
 		actor.sprite_jump = sprite_jump
 		actor.sprite_jump_peak = sprite_jump_peak
 		actor.sprite_fall = sprite_fall
+		actor.sprite_walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk_back})
+		baroness:set_cape_offset(0, -8, 0, -5)
+	end
+	
+	if actor:get_data().baroness_beam_used > 0 then
+		actor:get_data().baroness_beam_used = math.max(actor:get_data().baroness_beam_used - 0.1, 0)
+	else
+		actor:get_data().baroness_beam_damage = math.max(0, actor:get_data().baroness_beam_damage - 0.008)
 	end
 end)
 
@@ -367,15 +400,12 @@ grenade:onStep(function(self)
 			if self.life <= ii and last_life > ii then
 				if self.parent and Instance.exists(self.parent) then
 					if self.parent:is_authority() then
-						for i = 0, self.shadow_buff do
-							local attack = nil
-							if self.scepter > 0 then
-								attack = self.parent:fire_explosion(self.x, self.y, 30, 30, self.parent:skill_get_damage(nade), sprite_sparks5, gm.constants.sSparks6)
-							else
-								attack = self.parent:fire_explosion(self.x, self.y, 30, 30, self.parent:skill_get_damage(nade), sprite_sparks4, gm.constants.sSparks5)
-							end
-							attack.knockback = 6
-							attack.climb = i * 8
+						if self.scepter > 0 then
+							attack = self.parent:fire_explosion(self.x, self.y, 30, 30, self.parent:skill_get_damage(nade), sprite_sparks5, gm.constants.sSparks6)
+							attack.attack_info.knockback = 6
+						else
+							attack = self.parent:fire_explosion(self.x, self.y, 30, 30, self.parent:skill_get_damage(nade), sprite_sparks4, gm.constants.sSparks5)
+							attack.attack_info.knockback = 6
 						end
 					end
 					self:screen_shake(5)
@@ -435,11 +465,11 @@ sttrigger:onEnter(function(actor, data)
 end)
 
 sttrigger:onStep(function(actor, data)
-	actor.sprite_index2 = sprite_shoot1
+	actor.sprite_index2 = sprite_shoot1a
 	
 	if actor.vehicle then
-		actor:skill_util_strafe_and_slide(0.85)
-		actor:actor_animation_set(sprite_shoot1, 0.21)
+		actor:skill_util_strafe_and_slide(0.7)
+		actor:actor_animation_set(sprite_shoot1a, 0.21)
 	else
 		-- first arg: speed for attack animation, in sprite frames per game frame
 		-- second arg: multiplier for movement speed while strafing
@@ -476,8 +506,8 @@ sttrigger:onStep(function(actor, data)
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
-					local attack = actor:fire_bullet(actor.x, actor.y, 960, dir + math.random(-1, 1) * actor.image_xscale, damage, nil, sprite_sparks, Attack_Info.TRACER.commando1)
-					attack.climb = i * 8
+					local attack = actor:fire_bullet(actor.x, actor.y, 960, dir, damage, nil, sprite_sparks, Attack_Info.TRACER.commando1)
+					attack.attack_info.climb = i * 8
 				end
 			end
 		end
@@ -511,14 +541,113 @@ stbeam:clear_callbacks()
 stbeam:onEnter(function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+	data.fire_frame = 0
+	
+	if data.proc == nil then
+		data.proc = 1
+	end
 	
 	actor:skill_util_strafe_and_slide_init()
 end)
 
 stbeam:onStep(function(actor, data)
-	actor:skill_util_strafe_and_slide(0.85)
-	actor:actor_animation_set(sprite_walk2, 0.25)
+	actor:actor_animation_set(sprite_shoot1b, 0.3, false)
+
+	local victims = List.new()
+	
+	actor:collision_line_list(actor.x, actor.y, actor.x + 400 * actor.image_xscale, actor.y, gm.constants.pActorCollisionBase, false, true, victims, true)
+	target = nil
+	target_block = nil
 		
+	for _, victim in ipairs(victims) do
+		if victim.team ~= actor.team then
+			target = victim
+		end
+	end
+	victims:destroy()
+	
+	local blocks = List.new()
+	actor:collision_line_list(actor.x, actor.y, actor.x + 400 * actor.image_xscale, actor.y, gm.constants.pBlock, false, true, blocks, true)
+		
+	for _, block in ipairs(blocks) do
+		target_block = block
+		break
+	end
+	blocks:destroy()
+		
+	if target then
+		actor:skill_util_strafe_and_slide(0.7)
+		
+		if actor.image_index >= data.fire_frame and data.fired == 0 then
+		
+			data.fire_frame = math.min(2, data.fire_frame + 1)
+			
+			if data.fire_frame >= 2 then
+				data.fired = 1
+			end
+		
+			actor:sound_play(sound_skill1b, 1, 1 + math.random() * 0.07)
+				
+			if actor:is_authority() then
+				local damage = math.min(0.05 + (0.4 * actor:get_data().baroness_beam_damage) / actor.damage, 2)
+				local dir = actor:skill_util_facing_direction()
+				
+				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
+					for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
+						local attack = actor:fire_bullet(actor.x, actor.y, 400, dir, damage, 2 / 3, nil)
+						attack.attack_info.climb = i * 8
+						attack.attack_info.proc = gm.bool(data.proc)
+					end
+				end
+			end
+			
+			if data.proc == 1 then
+				data.proc = 0
+			else
+				data.proc = 1
+			end
+			
+			actor:get_data().baroness_beam_x = target.x
+				
+			local victims = List.new()
+			actor:collision_line_list(actor.x, actor.y, actor.x + 400 * actor.image_xscale, actor.y, gm.constants.pActorCollisionBase, false, true, victims, true)
+					
+			for _, victim in ipairs(victims) do
+				if victim.team ~= actor.team and math.abs(actor.x - victim.x) <= math.abs(actor.x - target.x) then
+					local effect = GM.instance_create(victim.x, actor.y, gm.constants.oEfExplosion)
+					effect.sprite_index = sprite_sparks2
+					effect.image_yscale = 1
+					effect.image_xscale = actor.image_xscale
+				end
+			end
+			victims:destroy()
+			
+			local increase = 0.4
+			
+			if actor:get_data().baroness_shock_victim and Instance.exists(actor:get_data().baroness_shock_victim) then
+				if actor:get_data().baroness_shock_victim:get_data().baroness_shock_parent then
+					increase = 0.9
+				end
+			end
+			
+			actor:get_data().baroness_beam_damage = actor:get_data().baroness_beam_damage + ((increase + 0.1 * actor.attack_speed) / 6)
+				
+			if target_block ~= nil then
+				actor:collision_line_advanced(actor.x, actor.y, actor.x + 400 * actor.image_xscale, actor.y, gm.constants.pBlock, true, true)
+				actor:get_data().baroness_beam_x = gm.variable_global_get("collision_x")
+				
+				local effect = GM.instance_create(actor:get_data().baroness_beam_x, actor.y, gm.constants.oEfExplosion)
+				effect.sprite_index = sprite_sparks2
+				effect.image_yscale = 1
+				effect.image_xscale = actor.image_xscale
+			end
+			
+			actor:get_data().baroness_beam_used = 2
+		end
+	else
+		actor:skill_util_strafe_and_slide(1)
+	end
+	
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -591,7 +720,7 @@ ststeady:onStep(function(actor, data)
 
 				for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
 					local attack = actor:fire_direct(target, damage)
-					attack.climb = i * 8
+					attack.attack_info.climb = i * 8
 				end
 			end
 			
@@ -632,6 +761,8 @@ stbike:onEnter(function(actor, data)
 	if actor:get_skill(Skill.SLOT.primary).value ~= beam.value then
 		actor:add_skill_override(Skill.SLOT.primary, beam)
 	end
+	
+	actor.vehicle = true
 end)
 
 stbike:onStep(function(actor, data)
@@ -640,7 +771,6 @@ stbike:onStep(function(actor, data)
 	
 	if data.fired == 0 then
 		data.fired = 1
-		actor.vehicle = true
 		actor:sound_play(sound_skill3a, 1, 1 + math.random() * 0.2)
 	end
 	
@@ -656,6 +786,7 @@ relocation2.ignore_aim_direction = true
 relocation2.is_utility = true
 
 local stbike2 = State.new(NAMESPACE, "baronessActiveRelocation2")
+stbike2.activity_flags = State.ACTIVITY_FLAG.allow_rope_cancel
 
 relocation2:clear_callbacks()
 relocation2:onActivate(function(actor)
@@ -674,6 +805,8 @@ stbike2:onEnter(function(actor, data)
 	if actor:get_skill(Skill.SLOT.primary).value == beam.value then
 		actor:remove_skill_override(Skill.SLOT.primary, beam)
 	end
+	
+	actor.vehicle = false
 end)
 
 stbike2:onStep(function(actor, data)
@@ -682,7 +815,6 @@ stbike2:onStep(function(actor, data)
 	
 	if data.fired == 0 then
 		data.fired = 1
-		actor.vehicle = false
 		actor:sound_play(sound_skill3b, 1, 1 + math.random() * 0.2)
 	end
 	
@@ -700,6 +832,18 @@ local stnade = State.new(NAMESPACE, "baronessSaturatedOCharge")
 
 nade:clear_callbacks()
 nade:onActivate(function(actor)
+	actor:enter_state(stnade)
+end)
+
+-- bursting o charge
+nade2:set_skill_icon(sprite_skills, 6)
+nade2.cooldown = 8 * 60
+nade2.damage = 3.2
+nade2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+nade:set_skill_upgrade(nade2)
+
+nade2:clear_callbacks()
+nade2:onActivate(function(actor)
 	actor:enter_state(stnade)
 end)
 
@@ -726,16 +870,18 @@ stnade:onStep(function(actor, data)
 	if actor.image_index >= 5 and data.fired == 0 then
 		data.fired = 1
 		
-		local inst = grenade:create(actor.x, actor.y)
-		inst.xaccel = actor.image_xscale * 4
-		inst.yaccel = -3
-		inst.attack_speed_mult = math.min(actor.attack_speed, 3)
-		inst.shadow_buff = actor:buff_stack_count(Buff.find("ror", "shadowClone"))
-		inst.scepter = math.min(1, actor:item_stack_count(Item.find("ror", "ancientScepter")))
-		inst.team = actor.team
-		inst.parent = actor
-		if inst.scepter > 0 then
-			inst.image_blend = Color.YELLOW
+		for i=0, actor:buff_stack_count(Buff.find("ror", "shadowClone")) do
+			local inst = grenade:create(actor.x, actor.y)
+			inst.xaccel = actor.image_xscale * (4 + (math.min(1, actor:buff_stack_count(Buff.find("ror", "shadowClone"))) * math.random(-1, 1) / 2))
+			inst.yaccel = -3 + (math.min(1, actor:buff_stack_count(Buff.find("ror", "shadowClone"))) * math.random(-1, 1) / 2)
+			inst.attack_speed_mult = math.min(actor.attack_speed, 3)
+			inst.shadow_buff = actor:buff_stack_count(Buff.find("ror", "shadowClone"))
+			inst.scepter = math.min(1, actor:item_stack_count(Item.find("ror", "ancientScepter")))
+			inst.team = actor.team
+			inst.parent = actor
+			if inst.scepter > 0 then
+				inst.image_blend = Color.YELLOW
+			end
 		end
 	end
 	

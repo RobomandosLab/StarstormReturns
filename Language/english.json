@@ -272,7 +272,7 @@
 		},
 		"baronessVBoosted": {
 			"name": "Bursting O-Charge",
-			"description": "Throw a grenade which seeks enemies and <y>explodes</c> for <y>3x320% damage</c>."
+			"description": "Throw a grenade which seeks enemies and <y>explodes</c> for <y>5x320% damage</c>."
 		},
 		"peace": {
 			"name": "<#a4eae4>Peace!",
