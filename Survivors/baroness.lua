@@ -611,7 +611,7 @@ stbeam:onStep(function(actor, data)
 			actor:sound_play(sound_skill1b, 1, 1 + math.random() * 0.07)
 				
 			if actor:is_authority() then
-				local damage = math.min(0.05 + (0.02 * actor:get_data().baroness_beam_damage), 2)
+				local damage = math.min(0.05 + (0.04 * actor:get_data().baroness_beam_damage), 2)
 				local dir = actor:skill_util_facing_direction()
 				
 				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
