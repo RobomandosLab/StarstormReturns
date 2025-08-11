@@ -1,62 +1,65 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Baroness")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Baroness")
 
-local sprite_loadout		= Resources.sprite_load(NAMESPACE, "BaronessSelect", path.combine(SPRITE_PATH, "select.png"), 27, 28, 0)
-local sprite_portrait		= Resources.sprite_load(NAMESPACE, "BaronessPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
-local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "BaronessPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills			= Resources.sprite_load(NAMESPACE, "BaronessSkills", path.combine(SPRITE_PATH, "skills.png"), 7)
-local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorBaroness", path.combine(SPRITE_PATH, "credits.png"), 1, 10, 14)
+local sprite_loadout			= Resources.sprite_load(NAMESPACE, "BaronessSelect", path.combine(SPRITE_PATH, "select.png"), 27, 28, 0)
+local sprite_portrait			= Resources.sprite_load(NAMESPACE, "BaronessPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
+local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "BaronessPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills				= Resources.sprite_load(NAMESPACE, "BaronessSkills", path.combine(SPRITE_PATH, "skills.png"), 7)
+local sprite_credits			= Resources.sprite_load(NAMESPACE, "CreditsSurvivorBaroness", path.combine(SPRITE_PATH, "credits.png"), 1, 10, 14)
 
-local sprite_idle			= Resources.sprite_load(NAMESPACE, "BaronessIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 10, 12)
-local sprite_idle2			= Resources.sprite_load(NAMESPACE, "BaronessIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 18, 16)
-local sprite_idle_half		= Resources.sprite_load(NAMESPACE, "BaronessIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 12)
-local sprite_walk			= Resources.sprite_load(NAMESPACE, "BaronessWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 10, 12)
-local sprite_walk2			= Resources.sprite_load(NAMESPACE, "BaronessWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 38, 16)
-local sprite_walk_half		= Resources.sprite_load(NAMESPACE, "BaronessWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 10, 12)
-local sprite_walk_back		= Resources.sprite_load(NAMESPACE, "BaronessWalkBack", path.combine(SPRITE_PATH, "walk_back.png"), 8, 10, 12)
-local sprite_walk_back2		= Resources.sprite_load(NAMESPACE, "BaronessWalkBack2", path.combine(SPRITE_PATH, "walk_back2.png"), 8, 38, 16)
-local sprite_jump			= Resources.sprite_load(NAMESPACE, "BaronessJump", path.combine(SPRITE_PATH, "jump.png"), 1, 10, 12)
-local sprite_jump2			= Resources.sprite_load(NAMESPACE, "BaronessJump2", path.combine(SPRITE_PATH, "jump2.png"), 1, 18, 16)
-local sprite_jump_half		= Resources.sprite_load(NAMESPACE, "BaronessJumpHalf", path.combine(SPRITE_PATH, "jump_half.png"), 1, 10, 12)
-local sprite_jump_peak		= Resources.sprite_load(NAMESPACE, "BaronessJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 10, 12)
-local sprite_jump_peak2		= Resources.sprite_load(NAMESPACE, "BaronessJumpPeak2", path.combine(SPRITE_PATH, "jump_peak2.png"), 1, 18, 16)
-local sprite_jump_peak_half	= Resources.sprite_load(NAMESPACE, "BaronessJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 10, 12)
-local sprite_fall			= Resources.sprite_load(NAMESPACE, "BaronessFall", path.combine(SPRITE_PATH, "fall.png"), 1, 10, 12)
-local sprite_fall2			= Resources.sprite_load(NAMESPACE, "BaronessFall2", path.combine(SPRITE_PATH, "fall2.png"), 1, 18, 16)
-local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "BaronessFallHalf", path.combine(SPRITE_PATH, "fall_half.png"), 1, 10, 12)
-local sprite_climb			= Resources.sprite_load(NAMESPACE, "BaronessClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18)
-local sprite_death			= Resources.sprite_load(NAMESPACE, "BaronessDeath", path.combine(SPRITE_PATH, "death.png"), 8, 60, 16)
-local sprite_decoy			= Resources.sprite_load(NAMESPACE, "BaronessDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 18, 20)
-local sprite_palette		= Resources.sprite_load(NAMESPACE, "BaronessPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_idle				= Resources.sprite_load(NAMESPACE, "BaronessIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 10, 12)
+local sprite_idle2				= Resources.sprite_load(NAMESPACE, "BaronessIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 18, 16)
+local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "BaronessIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 12)
+local sprite_walk				= Resources.sprite_load(NAMESPACE, "BaronessWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 10, 12)
+local sprite_walk2				= Resources.sprite_load(NAMESPACE, "BaronessWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 38, 16)
+local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "BaronessWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 10, 12)
+local sprite_walk_back			= Resources.sprite_load(NAMESPACE, "BaronessWalkBack", path.combine(SPRITE_PATH, "walk_back.png"), 8, 10, 12)
+local sprite_walk_back2			= Resources.sprite_load(NAMESPACE, "BaronessWalkBack2", path.combine(SPRITE_PATH, "walk_back2.png"), 8, 38, 16)
+local sprite_jump				= Resources.sprite_load(NAMESPACE, "BaronessJump", path.combine(SPRITE_PATH, "jump.png"), 1, 10, 12)
+local sprite_jump2				= Resources.sprite_load(NAMESPACE, "BaronessJump2", path.combine(SPRITE_PATH, "jump2.png"), 1, 18, 16)
+local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "BaronessJumpHalf", path.combine(SPRITE_PATH, "jump_half.png"), 1, 10, 12)
+local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "BaronessJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 10, 12)
+local sprite_jump_peak2			= Resources.sprite_load(NAMESPACE, "BaronessJumpPeak2", path.combine(SPRITE_PATH, "jump_peak2.png"), 1, 18, 16)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "BaronessJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 10, 12)
+local sprite_fall				= Resources.sprite_load(NAMESPACE, "BaronessFall", path.combine(SPRITE_PATH, "fall.png"), 1, 10, 12)
+local sprite_fall2				= Resources.sprite_load(NAMESPACE, "BaronessFall2", path.combine(SPRITE_PATH, "fall2.png"), 1, 18, 16)
+local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "BaronessFallHalf", path.combine(SPRITE_PATH, "fall_half.png"), 1, 10, 12)
+local sprite_climb				= Resources.sprite_load(NAMESPACE, "BaronessClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 8, 18)
+local sprite_death				= Resources.sprite_load(NAMESPACE, "BaronessDeath", path.combine(SPRITE_PATH, "death.png"), 8, 60, 16)
+local sprite_decoy				= Resources.sprite_load(NAMESPACE, "BaronessDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 18, 20)
+local sprite_palette			= Resources.sprite_load(NAMESPACE, "BaronessPalette", path.combine(SPRITE_PATH, "palette.png"))
 
-local sprite_shoot1a		= Resources.sprite_load(NAMESPACE, "BaronessShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 3, 10, 13)
-local sprite_shoot1b		= Resources.sprite_load(NAMESPACE, "BaronessShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 4, 38, 16)
-local sprite_shoot2a		= Resources.sprite_load(NAMESPACE, "BaronessShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 7, 10, 28)
-local sprite_shoot2b		= Resources.sprite_load(NAMESPACE, "BaronessShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 7, 30, 30)
-local sprite_shoot3a		= Resources.sprite_load(NAMESPACE, "BaronessShoot3a", path.combine(SPRITE_PATH, "shoot3a.png"), 6, 16, 20)
-local sprite_shoot3b		= Resources.sprite_load(NAMESPACE, "BaronessShoot3b", path.combine(SPRITE_PATH, "shoot3b.png"), 8, 38, 36)
-local sprite_shoot4a		= Resources.sprite_load(NAMESPACE, "BaronessShoot4a", path.combine(SPRITE_PATH, "shoot4a.png"), 7, 14, 18)
-local sprite_shoot4b		= Resources.sprite_load(NAMESPACE, "BaronessShoot4b", path.combine(SPRITE_PATH, "shoot4b.png"), 7, 32, 30)
+local sprite_shoot1a			= Resources.sprite_load(NAMESPACE, "BaronessShoot1a", path.combine(SPRITE_PATH, "shoot1a.png"), 3, 10, 13)
+local sprite_shoot1b			= Resources.sprite_load(NAMESPACE, "BaronessShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 4, 38, 16)
+local sprite_shoot2a			= Resources.sprite_load(NAMESPACE, "BaronessShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 7, 10, 28)
+local sprite_shoot2b			= Resources.sprite_load(NAMESPACE, "BaronessShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 7, 30, 30)
+local sprite_shoot3a			= Resources.sprite_load(NAMESPACE, "BaronessShoot3a", path.combine(SPRITE_PATH, "shoot3a.png"), 6, 16, 20)
+local sprite_shoot3a_stationary	= Resources.sprite_load(NAMESPACE, "BaronessShoot3aStationary", path.combine(SPRITE_PATH, "shoot3a_stationary.png"), 6, 16, 20)
+local sprite_dismount_jump		= Resources.sprite_load(NAMESPACE, "BaronessDismountJump", path.combine(SPRITE_PATH, "dismount_jump.png"), 8, 38, 36)
+local sprite_shoot3b			= Resources.sprite_load(NAMESPACE, "BaronessShoot3b", path.combine(SPRITE_PATH, "shoot3b.png"), 8, 38, 36)
+local sprite_shoot3b_stationary	= Resources.sprite_load(NAMESPACE, "BaronessShoot3b", path.combine(SPRITE_PATH, "shoot3b_stationary.png"), 8, 38, 36)
+local sprite_shoot4a			= Resources.sprite_load(NAMESPACE, "BaronessShoot4a", path.combine(SPRITE_PATH, "shoot4a.png"), 7, 14, 18)
+local sprite_shoot4b			= Resources.sprite_load(NAMESPACE, "BaronessShoot4b", path.combine(SPRITE_PATH, "shoot4b.png"), 7, 32, 30)
 
-local sprite_vehicle_mask 	= Resources.sprite_load(NAMESPACE, "BaronessVehicleMask", path.combine(SPRITE_PATH, "vehicle_mask.png"), 1, 12, 10)
-local sprite_nade			= Resources.sprite_load(NAMESPACE, "BaronessGrenade", path.combine(SPRITE_PATH, "nade.png"))
-local sprite_sparks			= Resources.sprite_load(NAMESPACE, "BaronessSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 26, 16)
-local sprite_sparks2		= Resources.sprite_load(NAMESPACE, "BaronessSparksLaser", path.combine(SPRITE_PATH, "sparks2.png"), 3, 24, 16)
-local sprite_sparks3		= Resources.sprite_load(NAMESPACE, "BaronessSparksBombA", path.combine(SPRITE_PATH, "sparks3.png"), 3, 30, 16)
-local sprite_sparks4		= Resources.sprite_load(NAMESPACE, "BaronessSparksBombB", path.combine(SPRITE_PATH, "sparks4.png"), 5, 112, 60)
-local sprite_sparks5		= Resources.sprite_load(NAMESPACE, "BaronessSparksBombC", path.combine(SPRITE_PATH, "sparks5.png"), 5, 112, 60)
+local sprite_vehicle_mask 		= Resources.sprite_load(NAMESPACE, "BaronessVehicleMask", path.combine(SPRITE_PATH, "vehicle_mask.png"), 1, 12, 10)
+local sprite_nade				= Resources.sprite_load(NAMESPACE, "BaronessGrenade", path.combine(SPRITE_PATH, "nade.png"))
+local sprite_sparks				= Resources.sprite_load(NAMESPACE, "BaronessSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 26, 16)
+local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "BaronessSparksLaser", path.combine(SPRITE_PATH, "sparks2.png"), 3, 24, 16)
+local sprite_sparks3			= Resources.sprite_load(NAMESPACE, "BaronessSparksBombA", path.combine(SPRITE_PATH, "sparks3.png"), 3, 30, 16)
+local sprite_sparks4			= Resources.sprite_load(NAMESPACE, "BaronessSparksBombB", path.combine(SPRITE_PATH, "sparks4.png"), 5, 112, 60)
+local sprite_sparks5			= Resources.sprite_load(NAMESPACE, "BaronessSparksBombC", path.combine(SPRITE_PATH, "sparks5.png"), 5, 112, 60)
 
-local sound_nade			= Resources.sfx_load(NAMESPACE, "BaronessGrenade", path.combine(SOUND_PATH, "grenade.ogg"))
-local sound_skill1a			= Resources.sfx_load(NAMESPACE, "BaronessSkill1A", path.combine(SOUND_PATH, "skill1a.ogg"))
-local sound_skill1b			= Resources.sfx_load(NAMESPACE, "BaronessSkill1B", path.combine(SOUND_PATH, "skill1b.ogg"))
-local sound_skill2a			= Resources.sfx_load(NAMESPACE, "BaronessSkill2A", path.combine(SOUND_PATH, "skill2a.ogg"))
-local sound_skill2b			= Resources.sfx_load(NAMESPACE, "BaronessSkill2B", path.combine(SOUND_PATH, "skill2b.ogg"))
-local sound_skill3a			= Resources.sfx_load(NAMESPACE, "BaronessSkill3A", path.combine(SOUND_PATH, "skill3a.ogg"))
-local sound_skill3b			= Resources.sfx_load(NAMESPACE, "BaronessSkill3B", path.combine(SOUND_PATH, "skill3b.ogg"))
-local sound_skill3c			= Resources.sfx_load(NAMESPACE, "BaronessSkill3C", path.combine(SOUND_PATH, "skill3c.ogg"))
-local sound_skill4a			= Resources.sfx_load(NAMESPACE, "BaronessSkill4A", path.combine(SOUND_PATH, "skill4a.ogg"))
-local sound_skill4b			= Resources.sfx_load(NAMESPACE, "BaronessSkill4B", path.combine(SOUND_PATH, "skill4b.ogg"))
-local sound_skill4c			= Resources.sfx_load(NAMESPACE, "BaronessSkill4C", path.combine(SOUND_PATH, "skill4c.ogg"))
+local sound_nade				= Resources.sfx_load(NAMESPACE, "BaronessGrenade", path.combine(SOUND_PATH, "grenade.ogg"))
+local sound_skill1a				= Resources.sfx_load(NAMESPACE, "BaronessSkill1A", path.combine(SOUND_PATH, "skill1a.ogg"))
+local sound_skill1b				= Resources.sfx_load(NAMESPACE, "BaronessSkill1B", path.combine(SOUND_PATH, "skill1b.ogg"))
+local sound_skill2a				= Resources.sfx_load(NAMESPACE, "BaronessSkill2A", path.combine(SOUND_PATH, "skill2a.ogg"))
+local sound_skill2b				= Resources.sfx_load(NAMESPACE, "BaronessSkill2B", path.combine(SOUND_PATH, "skill2b.ogg"))
+local sound_skill3a				= Resources.sfx_load(NAMESPACE, "BaronessSkill3A", path.combine(SOUND_PATH, "skill3a.ogg"))
+local sound_skill3b				= Resources.sfx_load(NAMESPACE, "BaronessSkill3B", path.combine(SOUND_PATH, "skill3b.ogg"))
+local sound_skill3c				= Resources.sfx_load(NAMESPACE, "BaronessSkill3C", path.combine(SOUND_PATH, "skill3c.ogg"))
+local sound_skill4a				= Resources.sfx_load(NAMESPACE, "BaronessSkill4A", path.combine(SOUND_PATH, "skill4a.ogg"))
+local sound_skill4b				= Resources.sfx_load(NAMESPACE, "BaronessSkill4B", path.combine(SOUND_PATH, "skill4b.ogg"))
+local sound_skill4c				= Resources.sfx_load(NAMESPACE, "BaronessSkill4C", path.combine(SOUND_PATH, "skill4c.ogg"))
 
 local baroness = Survivor.new(NAMESPACE, "baroness")
 
@@ -111,13 +114,17 @@ baroness:onInit(function(actor)
 	actor.sprite_shoot1b = sprite_shoot1b
 	actor.sprite_shoot2b = sprite_shoot2b
 	actor.sprite_shoot3a = sprite_shoot3a
+	actor.sprite_shoot3a_stationary = sprite_shoot3a_stationary
+	actor.sprite_dismount_jump = sprite_dismount_jump
 	actor.sprite_shoot3b = sprite_shoot3b
+	actor.sprite_shoot3b_stationary = sprite_shoot3b_stationary
 	actor.sprite_shoot4b = sprite_shoot4b
 	
 	actor.vehicle = false
 	actor:get_data().baroness_bike_strafing = 0
 	actor:get_data().baroness_beam_used = 0
 	actor:get_data().baroness_beam_damage = 0
+	actor:get_data().baroness_beam_damage_reset = 120
 	actor:get_data().baroness_beam_x = 0
 
 	actor:survivor_util_init_half_sprites()
@@ -157,6 +164,8 @@ bike_speed:onPostStatRecalc(function(actor, stack)
 	else
 		actor.pHmax = actor.pHmax + 3.4
 	end
+	
+	actor.pVmax = actor.pVmax + 3
 end)
 
 bike_speed:onRemove(function(actor, stack)
@@ -189,25 +198,27 @@ baroness:onStep(function(actor)
 		end
 		
 		if gm.bool(actor.moveUp) then
-			local feathered = actor:item_stack_count(Item.find("ror-hopooFeather")) > 0 and actor.jump_count < actor:item_stack_count(Item.find("ror-hopooFeather"))
-			
-			if not feathered then
-				actor.moveUp = 0
-				actor.moveUpHold = 0
-				actor.moveUp_buffered = 0
-			elseif actor.free == false then
-				actor.jump_count = actor.jump_count + 1
+			if not actor.free then
+				actor.vehicle = false
 				
-				actor:sound_play(gm.constants.wFeather, 1, 1 + math.random() * 0.2)
+				if actor:get_skill(Skill.SLOT.utility).value == relocation2.value then
+					actor:remove_skill_override(Skill.SLOT.utility, relocation2)
+				end
+		
+				if actor:get_skill(Skill.SLOT.primary).value == beam.value then
+					actor:remove_skill_override(Skill.SLOT.primary, beam)
+				end
+				
+				actor:sound_play(sound_skill3b, 1, 1 + math.random() * 0.2)
 				
 				local effect = GM.instance_create(actor.x, actor.y, gm.constants.oEfExplosion)
-				effect.sprite_index = gm.constants.sEfFeather
+				effect.sprite_index = actor.sprite_dismount_jump
 				effect.image_yscale = 1
-				effect.image_xscale = 1
-			end
-			
-			if actor:item_stack_count(Item.find("ror-photonJetpack")) and actor.jetpack_fuel > 0 then
-				actor.pVspeed = actor.pVspeed - 2
+				effect.image_xscale = actor.image_xscale
+			else
+				actor.moveUpHold = 0
+				actor.moveUp_buffered = 0
+				actor.moveUp = 0
 			end
 		end
 		
@@ -242,8 +253,13 @@ baroness:onStep(function(actor)
 	
 	if actor:get_data().baroness_beam_used > 0 then
 		actor:get_data().baroness_beam_used = math.max(actor:get_data().baroness_beam_used - 0.1, 0)
+		actor:get_data().baroness_beam_damage_reset = 120
 	else
-		actor:get_data().baroness_beam_damage = math.max(0, actor:get_data().baroness_beam_damage - 0.008)
+		actor:get_data().baroness_beam_damage_reset = actor:get_data().baroness_beam_damage_reset - 1
+	end
+	
+	if actor:get_data().baroness_beam_damage_reset <= 0 then
+		actor:get_data().baroness_beam_damage = 0
 	end
 end)
 
@@ -469,7 +485,7 @@ sttrigger:onStep(function(actor, data)
 	
 	if actor.vehicle then
 		actor:skill_util_strafe_and_slide(0.7)
-		actor:actor_animation_set(sprite_shoot1a, 0.21)
+		actor:actor_animation_set(actor.sprite_shoot1a, 0.21)
 	else
 		-- first arg: speed for attack animation, in sprite frames per game frame
 		-- second arg: multiplier for movement speed while strafing
@@ -519,6 +535,12 @@ end)
 sttrigger:onExit(function(actor, data)
 	if actor.vehicle == false then
 		actor:skill_util_strafe_exit()
+	end
+end)
+
+sttrigger:onGetInterruptPriority(function(actor, data)
+	if actor.image_index >= 2 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
 	end
 end)
 
@@ -589,7 +611,7 @@ stbeam:onStep(function(actor, data)
 			actor:sound_play(sound_skill1b, 1, 1 + math.random() * 0.07)
 				
 			if actor:is_authority() then
-				local damage = math.min(0.05 + (0.4 * actor:get_data().baroness_beam_damage) / actor.damage, 2)
+				local damage = math.min(0.05 + (0.02 * actor:get_data().baroness_beam_damage), 2)
 				local dir = actor:skill_util_facing_direction()
 				
 				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
@@ -655,6 +677,7 @@ end)
 steady:set_skill_icon(sprite_skills, 1)
 steady.cooldown = 6 * 60
 steady.damage = 1
+steady.require_key_press = true
 steady.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local ststeady = State.new(NAMESPACE, "baronessSteadyTarget")
@@ -678,7 +701,7 @@ end)
 ststeady:onStep(function(actor, data)
 	if actor.vehicle then
 		actor:skill_util_strafe_and_slide(1)
-		actor:actor_animation_set(sprite_shoot2b, 0.25)
+		actor:actor_animation_set(actor.sprite_shoot2b, 0.25)
 	else
 		actor:skill_util_fix_hspeed()
 		actor:actor_animation_set(sprite_shoot2a, 0.25)
@@ -735,6 +758,12 @@ ststeady:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
+ststeady:onGetInterruptPriority(function(actor, data)
+	if actor.image_index >= 4 then
+		return State.ACTOR_STATE_INTERRUPT_PRIORITY.skill_interrupt_period
+	end
+end)
+
 -- active relocation
 relocation:set_skill_icon(sprite_skills, 2)
 relocation.cooldown = 5 * 60
@@ -767,14 +796,19 @@ end)
 
 stbike:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot3a, 0.2, false)
+	
+	if (not gm.bool(actor.moveLeft) and not gm.bool(actor.moveRight)) or (gm.bool(actor.moveLeft) and gm.bool(actor.moveRight)) then
+		actor:actor_animation_set(actor.sprite_shoot3a_stationary, 0.2, false)
+	else
+		actor:actor_animation_set(actor.sprite_shoot3a, 0.2, false)
+		actor.pHspeed = actor.pHmax * actor.image_xscale
+	end
 	
 	if data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(sound_skill3a, 1, 1 + math.random() * 0.2)
 	end
 	
-	actor.pHspeed = actor.pHmax * actor.image_xscale
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -811,14 +845,18 @@ end)
 
 stbike2:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot3b, 0.25, false)
+	
+	if (not gm.bool(actor.moveLeft) and not gm.bool(actor.moveRight)) or (gm.bool(actor.moveLeft) and gm.bool(actor.moveRight)) then
+		actor:actor_animation_set(actor.sprite_shoot3b_stationary, 0.25, false)
+	else
+		actor:actor_animation_set(actor.sprite_shoot3b, 0.25, false)
+		actor.pHspeed = actor.pHmax * actor.image_xscale
+	end
 	
 	if data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(sound_skill3b, 1, 1 + math.random() * 0.2)
 	end
-	
-	actor.pHspeed = actor.pHmax * actor.image_xscale
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -826,7 +864,6 @@ end)
 nade:set_skill_icon(sprite_skills, 3)
 nade.cooldown = 8 * 60
 nade.damage = 3.2
-nade.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 local stnade = State.new(NAMESPACE, "baronessSaturatedOCharge")
 
@@ -839,7 +876,6 @@ end)
 nade2:set_skill_icon(sprite_skills, 6)
 nade2.cooldown = 8 * 60
 nade2.damage = 3.2
-nade2.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 nade:set_skill_upgrade(nade2)
 
 nade2:clear_callbacks()
@@ -861,7 +897,7 @@ end)
 stnade:onStep(function(actor, data)
 	if actor.vehicle then
 		actor:skill_util_strafe_and_slide(1)
-		actor:actor_animation_set(sprite_shoot4b, 0.25)
+		actor:actor_animation_set(actor.sprite_shoot4b, 0.25)
 	else
 		actor:skill_util_fix_hspeed()
 		actor:actor_animation_set(sprite_shoot4a, 0.25)
