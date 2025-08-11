@@ -6,6 +6,7 @@ local sprite_portrait			= Resources.sprite_load(NAMESPACE, "BaronessPortrait", p
 local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "BaronessPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "BaronessSkills", path.combine(SPRITE_PATH, "skills.png"), 7)
 local sprite_credits			= Resources.sprite_load(NAMESPACE, "CreditsSurvivorBaroness", path.combine(SPRITE_PATH, "credits.png"), 1, 10, 14)
+local sprite_log 				= Resources.sprite_load(NAMESPACE, "BaronessLog", path.combine(SPRITE_PATH, "log.png"))
 
 local sprite_idle				= Resources.sprite_load(NAMESPACE, "BaronessIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 10, 12)
 local sprite_idle2				= Resources.sprite_load(NAMESPACE, "BaronessIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 18, 16)
@@ -923,3 +924,5 @@ stnade:onStep(function(actor, data)
 	
 	actor:skill_util_exit_state_on_anim_end()
 end)
+
+local log = Survivor_Log.new(baroness, sprite_log)

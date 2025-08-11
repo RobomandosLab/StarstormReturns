@@ -51,9 +51,9 @@
 		"baroness": {
 			"name": "Baroness",
 			"nameUpper": "BARONESS",
-			"description": "Trained for the front lines, and loaded tooth and nail for crowd control. Able to wipe crowds with grenades, and relocate enemies wherever she pleases, the <y>Baroness</c> has the tools for the job. <y>Don't let anything get personal</c>.",
+			"description": "The <y>Baroness</c> flips between strategical on-foot single-target elimination and fast-paced gradual crowd control using her hoverbike. <y>Unfettered Barrage</c> quickly dispatches of single targets on foot, while <y>Focusing Beam</c> takes care of crowds while riding. Hitting enemies shocked by <y>Steady Target</c> with your laser increases its damage faster. Don't let anything get personal.",
 			"endQuote": "..and so she left, a defiant noble, expurgated.",
-			"story": "girlboss",
+			"story": "DID YOU TAKE A BIKE FROM THESE RAILINGS ON THE NIGHT OF THE 25TH? \n\n                             <r>YOU ARE GOING TO DIE! </c> \n\nI AM GOING TO KILL YOU. I WILL SPEND THE REST OF MY LIFE TRACKING YOU DOWN. I WILL FIND YOU. YOU WILL NEVER SLEEP AGAIN. GOD WILL NOT SAVE YOU. I AM COMING FOR YOU.",
 			"id" : "",
 			"departure" : "",
 			"arrival" : ""
@@ -247,20 +247,20 @@
 			"description": "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires missiles for <y>4x100% damage</c> when <b>upgraded."
 		},
 		"baronessZ": {
-			"name": "Pulling the Trigger",
-			"description": "Hurl MG rounds for <y>95% damage</c>. \n<lt>Vehicle:</c> fire a laser <y>increasing in damage the longer it hits</c>."
+			"name": "Unfettered Barrage",
+			"description": "Fire MG rounds for <y>95% damage</c>."
 		},
 		"baronessFocusingBeam": {
 			"name": "Focusing Beam",
-			"description": "Fire a constant laser, <y>dealing more damage the longer it hits</c>."
+			"description": "Fire a constant laser, <y>dealing more damage the longer it hits</c>. /nDamage increases faster if hitting a <y>shocked</c> enemy"
 		},
 		"baronessX": {
 			"name": "Steady Target",
-			"description": "Pick up an enemy, dealing <y>100% damage</c> and disabling them. Lasts 4 seconds."
+			"description": "Pick up an enemy, dealing <y>100% damage</c> and <y>shocking</c> them. Lasts 4 seconds."
 		},
 		"baronessC": {
 			"name": "Active Relocation",
-			"description": "Summon a hovering vehicle that <b>increases movement speed</c>, <r>but strips the ability to jump or climb</c>. \n<b>Can attack while moving</c>."
+			"description": "Summon a hovering vehicle that <b>increases movement speed</c>, <r>but strips the ability to jump or climb</c>. \n<b>Transforms Primary into a laser increasing damage the longer it hits</c>."
 		},
 		"baronessFaceToFace": {
 			"name": "Face to Face",
