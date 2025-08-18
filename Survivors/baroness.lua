@@ -177,13 +177,15 @@ end)
 
 Callback.add(Callback.TYPE.onDraw, "BaronessBeamVisual", function()
 	for _, actor in ipairs(Instance.find_all(Object.find("ror-P"))) do
-		if actor:get_data().baroness_beam_used > 0 and actor:get_data().baroness_beam_x > 0 then
-			local col = gm.merge_colour(Color.RED, Color.WHITE, actor:get_data().baroness_beam_used / 2)
-			gm.draw_set_colour(col)
-			gm.draw_set_alpha(actor:get_data().baroness_beam_used)
-			gm.draw_line_width(actor.x + 19 * actor.image_xscale, actor.y - 2, actor:get_data().baroness_beam_x, actor.y - 2, 2)
-			gm.draw_set_colour(Color.WHITE)
-			gm.draw_set_alpha(1)
+		if actor:get_data().baroness_beam_used and actor:get_data().baroness_beam_x then
+			if actor:get_data().baroness_beam_used > 0 and actor:get_data().baroness_beam_x > 0 then
+				local col = gm.merge_colour(Color.RED, Color.WHITE, actor:get_data().baroness_beam_used / 2)
+				gm.draw_set_colour(col)
+				gm.draw_set_alpha(actor:get_data().baroness_beam_used)
+				gm.draw_line_width(actor.x + 19 * actor.image_xscale, actor.y - 2, actor:get_data().baroness_beam_x, actor.y - 2, 2)
+				gm.draw_set_colour(Color.WHITE)
+				gm.draw_set_alpha(1)
+			end
 		end
 	end
 end)
