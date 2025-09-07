@@ -478,7 +478,7 @@ Callback.add(Callback.TYPE.onStageStart, "SSMimicSpawn", function()
 	for i=1, 3 do
 		if math.random() <= 0.05 then
 			-- function used by the game's director when spawninginteractables.
-			gm.mapobject_spawn(mimicInactive_id, 1) -- second arg is required tile space
+			gm._mod_game_getDirector():mapobject_spawn(mimicInactive_id, 1) -- second arg is required tile space
 		else
 			break
 		end
