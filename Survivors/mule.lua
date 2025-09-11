@@ -44,6 +44,7 @@ local sprite_sparks1			= Resources.sprite_load(NAMESPACE, "MuleSparks1", path.co
 local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "MuleSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 27, 24)
 local sprite_sparks3			= Resources.sprite_load(NAMESPACE, "MuleSparks3", path.combine(SPRITE_PATH, "sparks3.png"), 4, 22, 16)
 
+local sound_select				= Resources.sfx_load(NAMESPACE, "MuleSelect", path.combine(SOUND_PATH, "select.ogg"))
 local sound_shoot1a				= Resources.sfx_load(NAMESPACE, "MuleShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
 local sound_shoot1b				= Resources.sfx_load(NAMESPACE, "MuleShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
 local sound_shoot1c				= Resources.sfx_load(NAMESPACE, "MuleShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
@@ -106,6 +107,7 @@ mule.sprite_portrait_small = sprite_portrait_small
 mule.sprite_idle = sprite_idle
 mule.sprite_title = sprite_walk
 mule.sprite_credits = sprite_credits
+mule.select_sound_id = sound_select
 
 mule:clear_callbacks()
 mule:onInit(function(actor)
@@ -128,8 +130,8 @@ snare:onPostStep(function(actor, stack)
 	actor.pHspeed = 0
 	if not GM.actor_is_boss(actor) then
 		actor.activity = 50
-		actor:alarm_set(7, 60)
-		actor:alarm_set(2, 100)
+		actor:alarm_set(7, 10)
+		actor:alarm_set(2, 10)
 		if actor.sprite_climb and GM.actor_state_is_climb_state(actor.actor_state_current_id) then
 			actor.sprite_index = actor.sprite_climb
 			actor.image_index = 0
