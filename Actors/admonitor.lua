@@ -6,6 +6,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Admonitor")
 
 local sprite_mask		= Resources.sprite_load(NAMESPACE, "AdmonitorMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 11, 26)
 local sprite_palette	= Resources.sprite_load(NAMESPACE, "AdmonitorPalette",	path.combine(SPRITE_PATH, "palette.png"))
+local sprite_portrait	= Resources.sprite_load(NAMESPACE, "AdmonitorPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
 local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 15, 58, 39)
 local sprite_idle		= Resources.sprite_load(NAMESPACE, "AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27)
 local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
@@ -178,3 +179,12 @@ for _, s in ipairs(postLoopStages) do
 	local stage = Stage.find(s)
 	stage:add_monster_loop(monsterCardPuncher)
 end
+
+local mlog = Monster_Log.new(NAMESPACE, "admonitor")
+mlog.sprite_id = sprite_idle
+mlog.portrait_id = sprite_portrait
+mlog.sprite_offset_x = 44
+mlog.sprite_offset_y = 48
+mlog.stat_hp = 350
+mlog.stat_damage = 17
+mlog.stat_speed = 1.6

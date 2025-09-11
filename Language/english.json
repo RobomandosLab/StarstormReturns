@@ -420,6 +420,11 @@
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
 	},
+	
+	"monster" : {
+		"admonitor.name" : "Clay Admonitor",
+		"admonitor.story" : "In the distance, a familiar clay 'person' trudged across the temple grounds. However, despite their similar appearances, this creature was not the same type I had seen before. For what it lacked in cunning, unlike its smaller brethren, this potted protector bore two skulking fists, clenched in a vice grip. The stride it assumed almost made it look... confident. I know I would be a fool to assume it couldn't produce intelligent emotions such as conviction. Nevertheless, out of concern for my general wellbeing, I chose not to test the mettle of this swaggering oil slick and hid inside an upturned ruin. \n\nIf I'm to make it off of this planet alive, I'd prefer my femur to be intact."
+	},
 
 	"interactable" : {
 		"MimicInactive.text" : "..?",
