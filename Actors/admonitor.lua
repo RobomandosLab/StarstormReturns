@@ -12,8 +12,8 @@ local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.com
 local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 26, 33)
 local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 26, 33)
 local sprite_fall		= Resources.sprite_load(NAMESPACE, "AdmonitorFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 26, 33)
-local sprite_death		= Resources.sprite_load(NAMESPACE, "AdmonitorDeath",	path.combine(SPRITE_PATH, "death.png"), 13, 24, 40)
-local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "AdmonitorShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 22, 50, 40)
+local sprite_death		= Resources.sprite_load(NAMESPACE, "AdmonitorDeath",	path.combine(SPRITE_PATH, "death.png"), 14, 33, 53)
+local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "AdmonitorShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 30, 53, 86)
 
 gm.elite_generate_palettes(sprite_palette)
 
@@ -96,14 +96,14 @@ end)
 
 statePuncherPrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot1, 0.18) -- 0.18 is anim speed
+	actor:actor_animation_set(sprite_shoot1, 0.23) -- 0.18 is anim speed
 
-	if data.fired == 0 and actor.image_index >= 1 then
+	if data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(sound_shoot1a, 1, 0.9 + math.random() * 0.2)
 	end
 	
-	if data.fired == 1 and actor.image_index >= 13 then
+	if data.fired == 1 and actor.image_index >= 16 then
 		data.fired = 2
 		actor:sound_play(sound_shoot1b, 1, 0.9 + math.random() * 0.2)
 		if gm._mod_net_isHost() then
