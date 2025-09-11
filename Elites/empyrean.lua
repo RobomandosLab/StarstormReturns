@@ -330,9 +330,9 @@ empyorb:onPostStep(function(actor, stack)
 		-- make the boss bar appear
 		if actor.team ~= 1 and GM._mod_net_isHost() then
 			local arr = Array.new({actor})
-			local party = GM.actor_create_enemy_party_from_ids(arr)
-			local director = GM._mod_game_getDirector()
-			director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
+			local party = actor:actor_create_enemy_party_from_ids(arr)
+			local director = gm._mod_game_getDirector()
+			gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 		end
 		
 		-- make them move again !! yippie!!
@@ -347,9 +347,9 @@ empyorb:onPostStep(function(actor, stack)
 			actor:get_data().no_beam_loser = nil
 			if actor.team ~= 1 then -- make the boss bar appear
 				local arr = Array.new({actor})
-				local party = GM.actor_create_enemy_party_from_ids(arr)
-				local director = GM._mod_game_getDirector()
-				director:register_boss_party_gml_Object_oDirectorControl_Create_0(party)
+				local party = actor:actor_create_enemy_party_from_ids(arr)
+				local director = gm._mod_game_getDirector()
+				gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 			end
 		end
 	end
