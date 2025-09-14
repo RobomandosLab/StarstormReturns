@@ -4,12 +4,14 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Elites/Empyrean")
 local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
-local sprite_icon = Resources.sprite_load(NAMESPACE, "EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 24, 15)
+local sprite_icon = Resources.sprite_load(NAMESPACE, "EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
 local splash_sprite = Resources.sprite_load(NAMESPACE, "ParticleEmpyreanSpawnSplash", path.combine(SPRITE_PATH, "splash.png"), 6)
 local beam_sprite = Resources.sprite_load(NAMESPACE, "ParticleEmpyreanSpawnBeam", path.combine(SPRITE_PATH, "beam.png"), 11)
 local star_sprite = Resources.sprite_load(NAMESPACE, "EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
 
 local gotanythingsharp = Resources.sfx_load(NAMESPACE, "EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
+local sound_spawn = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
+local sound_spawn_alt = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShortAlt", path.combine(SOUND_PATH, "spawn_alt.ogg"))
 
 local empy = Elite.new(NAMESPACE, "empyrean")
 empy.healthbar_icon = sprite_icon
@@ -154,16 +156,22 @@ empyorb:onAcquire(function(actor, stack)
 	actor:screen_shake(4)
 	
 	-- play the spawn sound
-	actor:sound_play(gotanythingsharp, 2, 1)
 	
 	-- start the beam
 	if gm.inside_view(actor.x, actor.y) == 1 then
 		actor:get_data().empy_beam = 180
 		actor:get_data().empy_beam_over = 0
+		actor:sound_play(gotanythingsharp, 2, 1)
 	else
 		actor:get_data().empy_beam = 0
 		actor:get_data().empy_beam_over = 1
 		actor:get_data().no_beam_loser = 5
+		
+		if Helper.chance(0.5) then
+			actor:sound_play(sound_spawn, 2, 1)
+		else
+			actor:sound_play(sound_spawn_alt, 2, 1)
+		end
 		
 		-- give them all elite aspects
 		ssr_give_empyrean_aspects(actor)
@@ -237,6 +245,8 @@ empyorb:onPostDraw(function(actor, stack)
 			if actor.object_index ~= gm.constants.oWorm then
 				gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, actor.y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.from_hsv(Global._current_frame % 360, 100, 100), actor.image_alpha)
 			end
+			
+			actor.hud_health_color = Color.WHITE
 		end
 	end
 end)
