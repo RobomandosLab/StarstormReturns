@@ -1,21 +1,21 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Technician")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Technician")
 
-local buff_mirror = Buff.find("ror", "shadowClone")
+local buff_mirror = Buff.find("ror", "shadowClone") --Shattered Mirror buff
 local item_scepter = Item.find("ror", "ancientScepter")
-local object_sparks = Object.find("ror", "EfSparks")
+local object_sparks = Object.find("ror", "EfSparks") --Standard hit sparks object
 local object_flash = Object.find("ror", "EfFlash")
 local object_missile = Object.find("ror", "EfMissile")
 local particle_spark = Particle.find("ror", "Spark")
 
--- assets.
+-- Define all the assets
 local sprite_loadout			= Resources.sprite_load(NAMESPACE, "TechnicianSelect", path.combine(SPRITE_PATH, "select.png"), 18, 28, 0)
-local sprite_portrait			= Resources.sprite_load(NAMESPACE, "TechnicianPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
-local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_portrait			= Resources.sprite_load(NAMESPACE, "TechnicianPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3) --CSS screen/General UI survivor icons
+local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png")) --Ditto
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "TechnicianSkills", path.combine(SPRITE_PATH, "skills.png"), 7)
-local sprite_credits 			= Resources.sprite_load(NAMESPACE, "TechnicianCredits", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 12)
-local sprite_palette 			= Resources.sprite_load(NAMESPACE, "TechnicianPalette", path.combine(SPRITE_PATH, "palette.png"))
-local sprite_log				= Resources.sprite_load(NAMESPACE, "TechnicianLog", path.combine(SPRITE_PATH, "log.png"))
+local sprite_credits 			= Resources.sprite_load(NAMESPACE, "TechnicianCredits", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 12) --The sprite used at the end of the credits; 2x scale RoR1 idle sprite if it exists
+local sprite_palette 			= Resources.sprite_load(NAMESPACE, "TechnicianPalette", path.combine(SPRITE_PATH, "palette.png")) --The color palette used to map skins
+local sprite_log				= Resources.sprite_load(NAMESPACE, "TechnicianLog", path.combine(SPRITE_PATH, "log.png")) --The logbook portrait
 
 local sprite_idle				= Resources.sprite_load(NAMESPACE, "TechnicianIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 9, 13)
 local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "TechnicianIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 9, 13)
@@ -76,6 +76,7 @@ local buff_exposed_2_sprite 	= Resources.sprite_load(NAMESPACE, "BuffExposed2", 
 
 local sprite_wrench				= Resources.sprite_load(NAMESPACE, "TechnicianWrench", path.combine(SPRITE_PATH, "wrench.png"), 1, 9, 9)
 
+--Object hitbox sprites
 local mine_mask 				= Resources.sprite_load(NAMESPACE, "TechnicianMineMask", path.combine(SPRITE_PATH, "minemask.png"), 1, 7, 18)
 local turret_mask 				= Resources.sprite_load(NAMESPACE, "TechnicianTurretMask", path.combine(SPRITE_PATH, "turretmask.png"), 1, 11, 8)
 local wrench_mask 				= Resources.sprite_load(NAMESPACE, "TechnicianWrenchMask", path.combine(SPRITE_PATH, "wrenchmask.png"), 1, 11, 8)
@@ -107,17 +108,16 @@ local color_tech_red			= Color.from_hex(0xFF4843)
 local color_tech_blue			= Color.from_hex(0x96FFFF)
 local color_tech_orange			= Color.from_hex(0xFFC479)
 
-local explosion1				= gm.constants.sEfBombExplode -- WWWWWWWWWWWWWWWWWWWWWWWOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 local explosion2				= gm.constants.sMinerExplosion
 local explosion3				= gm.constants.sDroneDeath
 local soundImpact				= gm.constants.wTurtleExplosion
-local soundCommandoSelect		= gm.constants.wUI_Survivors_Commando
 
+--Constants for various things
 local WRENCH_BLAST_OFFSET_X = get_tiles(0.8)
 local WRENCH_BLAST_OFFSET_Y = -get_tiles(0.1)
 local WRENCH_BLAST_W = get_tiles(2.2)
 local WRENCH_BLAST_H = get_tiles(1.2)
-local WRENCH_DOWNGRADE_TIME = 60 * 30
+local WRENCH_DOWNGRADE_TIME = 60 * 20
 local WRENCH_THROW_DOWNGRADE_TIME = 60 * 20
 
 local MACHINE_VENDING_GRAV = 0.2
@@ -140,6 +140,7 @@ local MACHINE_AMPLIFIER_RADIUS = 140
 local technician = Survivor.new(NAMESPACE, "technician")
 local technician_id = technician.value
 
+--Set base and level stats
 technician:set_stats_base({
 	maxhp = 102,
 	damage = 11,
@@ -177,8 +178,11 @@ technician.sprite_credits = sprite_credits
 
 technician.select_sound_id = sound_select
 
+--Set palettes to be used for skins
 technician:set_palettes(sprite_palette, sprite_palette, sprite_palette)
 
+--Add a few skins
+---1st arg is internal name, 2nd is the column in the palette sprite where the skin is located, 3rd-5th are recolored sprites in the CSS
 technician:add_skin("TechnicianRose", 1, Resources.sprite_load(NAMESPACE, "TechnicianSelect_PAL2", path.combine(SPRITE_PATH, "selectS1.png"), 18, 28, 0),
 Resources.sprite_load(NAMESPACE, "TechnicianPortrait_PAL2", path.combine(SPRITE_PATH, "portraitS1.png"), 3),
 Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall_PAL2", path.combine(SPRITE_PATH, "portraitSmallS1.png")))
@@ -203,8 +207,11 @@ Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall_PAL3", path.combine(SP
 Resources.sprite_load(NAMESPACE, "TechnicianPortrait_PROV", path.combine(SPRITE_PATH, "portraitPROV.png"), 3),
 Resources.sprite_load(NAMESPACE, "TechnicianPortraitSmall_PROV", path.combine(SPRITE_PATH, "portraitSmallPROV.png")))]]
 
+--Create the survivor log
+---All text is defined in the language file
 local technicianLog = Survivor_Log.new(technician, sprite_log)
 
+--Retrieve the skills automatically created with custom survivors, and manually create skills for alts and Red Button
 local technicianPrimary = technician:get_primary()
 local technicianSecondary = technician:get_secondary()
 local technicianUtility = technician:get_utility()
@@ -234,17 +241,18 @@ technician:onInit(function(actor)
 	actor.sprite_jump_peak_half = jump_peak_half
 	actor.sprite_fall_half = fall_half
 	
+	actor:survivor_util_init_half_sprites()
+	
 	--Skill overrides aren't removed when transitioning between stages so this does that
 	--Otherwise the skill stocks of it get all messed up and secondary does nothing because there's no mine to detonate
 	actor:add_callback("onStageStart", "SSOnStageStartTech", function(actor)
 		actor:remove_skill_override(Skill.SLOT.secondary, technicianSecondary_Det, 1)
 	end)
-
-	actor:survivor_util_init_half_sprites()
 end)
 
+-- Adjusts your vertical offset to keep in line with the legs animation while strafing
+--- Offsets and frames may vary per survivor
 local handle_strafing_yoffset = function(actor)
-	-- Adjust vertical offset so the upper body bobs up and down depending on the leg animation
 	if actor.sprite_index == actor.sprite_walk_half[2] then
 		local walk_offset = 0
 		local leg_frame = math.floor(actor.image_index)
@@ -257,18 +265,22 @@ local handle_strafing_yoffset = function(actor)
 	end
 end
 
+---Create some buffs
 local buff_vending = Buff.new(NAMESPACE, "hydrated")
 local buff_vending_2 = Buff.new(NAMESPACE, "really_hydrated")
 local buff_exposed = Buff.new(NAMESPACE, "exposed")
 local buff_exposed_2 = Buff.new(NAMESPACE, "exposed2")
 
--- machines
+-- All the machines.........!
+
+--Create an EfFlash (Fading solid color overlay of the object)
 local machineFlash = function(inst, color)
 	local flash = object_flash:create(inst.x, inst.y)
 	flash.parent = inst.id
 	flash.image_blend = color or Color.WHITE
 end
 
+--MULTIPLAYER: Create a new packet, when it is retrieved by a client the cooresponding machine flashes and plays a sound
 local machine_temp_visual_packet = Packet.new()
 machine_temp_visual_packet:onReceived(function(message, player)
 	local inst = message:read_instance()
@@ -277,22 +289,25 @@ machine_temp_visual_packet:onReceived(function(message, player)
 	gm.sound_play_at(gm.bool(isFinal) and sound_downgrade or sound_downgradeBeep, 1, 1, inst.x, inst.y)
 end)
 
+--Update machine temporary upgrade logic
 local machine_update_temp = function(inst)
 	if inst.upgrade_progress_temp > 0 then
 		if inst.upgrade_progress_temp_timer < 300 and inst.upgrade_progress_temp_timer % 120 == 0 then
-			machineFlash(inst, color_tech_red)
-			if gm._mod_net_isHost() then
+			if gm._mod_net_isHost() then --Only ran by the host in a Multiplayer game, must be done to have properly synced visuals (through packets)
+				machineFlash(inst, color_tech_red) --Create a red flash on the instance
 				if inst.upgrade_progress_temp_timer <= 0 then
-					inst.upgrade_progress = inst.upgrade_progress - inst.upgrade_progress_temp
+					inst.upgrade_progress = inst.upgrade_progress - inst.upgrade_progress_temp --Reduce the upgrade_progress of the instance; The machine itself handles the reprecussions
 					inst.upgrade_progress_temp = 0
-					gm.sound_play_at(sound_downgrade, 1, 1, inst.x, inst.y)
+					gm.sound_play_at(sound_downgrade, 1, 1, inst.x, inst.y) --Play a non-moving sound at the instance's location
 				else
-					gm.sound_play_at(sound_downgradeBeep, 1, 1, inst.x, inst.y)
+					gm.sound_play_at(sound_downgradeBeep, 1, 1, inst.x, inst.y) --Ditto
 				end
+				
+				--MULTIPLAYER: Create and send the temp packet visual which runs code similar to above on all clients
 				if not Net.is_single() then
 					local buffer = machine_temp_visual_packet:message_begin()
-					buffer:write_instance(inst)
-					buffer:write_byte(inst.upgrade_progress_temp_timer <= 0 and 1 or 0)
+					buffer:write_instance(inst) --Add the machine as an argument to the packet
+					buffer:write_byte(inst.upgrade_progress_temp_timer <= 0 and 1 or 0) --Tells the client whether or not to play the full downgrade sound (1) or beep sound (0)
 					buffer:send_to_all()
 				end
 			end
@@ -301,22 +316,30 @@ local machine_update_temp = function(inst)
 	end
 end
 
+--Increments the upgrade_progress variable on a machine
 local upgrade_machine = function(inst, amount, tempTimer)
-	if inst.upgrade_progress < inst.upgrade_progress_max then
-		if gm._mod_net_isHost() then
-			inst.upgrade_progress = math.min(inst.upgrade_progress + amount, inst.upgrade_progress_max)
-			if tempTimer then
-				inst.upgrade_progress_temp = math.min(inst.upgrade_progress_temp + amount, inst.upgrade_progress_max)
-				inst.upgrade_progress_temp_timer = tempTimer
+	local shouldTempReset = (inst.upgrade_progress_temp_timer <= 240 and inst.upgrade_progress_temp_timer > 0)
+	if inst.upgrade_progress < inst.upgrade_progress_max or shouldTempReset then
+		if gm._mod_net_isHost() then --Host handles all upgrade logic
+			if tempTimer or shouldTempReset then
+				if inst.upgrade_progress < inst.upgrade_progress_max then
+					inst.upgrade_progress_temp = math.min(inst.upgrade_progress_temp + amount, inst.upgrade_progress_max) --Stores the amount of progress to be reverted when the machine is downgraded
+				end
+				inst.upgrade_progress_temp_timer = math.max(inst.upgrade_progress_temp_timer, tempTimer or 0) --Reset the machine's temporary upgrade timer
 			end
+			inst.upgrade_progress = math.min(inst.upgrade_progress + amount, inst.upgrade_progress_max) --Increments the machine's upgrade_progress variable; The machine itself handles the reprecussions
 		end
-		particle_spark:create(inst.x, inst.y, math.random(2, 4), Particle.SYSTEM.middle)
-		gm.sound_play_at(sound_wrenchHit, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
+		particle_spark:create(inst.x, inst.y, math.random(2, 4), Particle.SYSTEM.middle) --Creates 2-4 spark particles at the machine's location
+		gm.sound_play_at(sound_wrenchHit, 1, 0.9 + math.random() * 0.2, inst.x, inst.y) --Plays a non-moving sound at the machine's location
 	end
 end
 
 -- Turret
 
+--MULTIPLAYER: Define a few new packets for the Turret machine
+---Each one is for purely visual and auditory purposes
+
+--Plays the fire animation and sound when recieved by clients
 local turret_shoot_packet = Packet.new()
 turret_shoot_packet:onReceived(function(message, player)
 	local inst = message:read_instance()
@@ -325,6 +348,7 @@ turret_shoot_packet:onReceived(function(message, player)
 	gm.sound_play_at(inst.upgradeState >= 1 and sound_turretShoot2 or sound_turretShoot1, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
 end)
 
+--Plays the fire animation and sound when recieved by the host, then sends the above packet to all clients except the one who sent this packet
 local turret_shoot_packet_host = Packet.new()
 turret_shoot_packet_host:onReceived(function(message, player)
 	local inst = message:read_instance()
@@ -338,6 +362,7 @@ turret_shoot_packet_host:onReceived(function(message, player)
 	buffer:send_exclude(owner)
 end)
 
+--Changes the display state of the missile silo on Scepter turret when recieved by clients
 local turret_missile_state_packet = Packet.new()
 turret_missile_state_packet:onReceived(function(message, player)
 	local inst = message:read_instance()
@@ -345,6 +370,7 @@ turret_missile_state_packet:onReceived(function(message, player)
 	inst.switchMissileState = missileState
 end)
 
+--
 local shoot_missiledis_offset_map = {
 	{-8, 2},
 	{-4, 1},
@@ -356,15 +382,23 @@ local obj_turret = Object.new(NAMESPACE, "turret", Object.PARENT.actor)
 obj_turret:set_sprite(sprite_turretaI)
 obj_turret:clear_callbacks()
 obj_turret:onCreate(function(inst)
+	inst:init_actor_default()
+	
 	inst.mask_index = turret_mask
 	inst.idle = sprite_turretaI
 	inst.shoot = sprite_turretashoot
 	inst.sparks = sprite_sparks1
+	inst.intangible = true
 	inst.init = nil
+	
+	inst.team = gm.constants.TEAM_PLAYER
+	
 	inst.upgrade_progress = 0
 	inst.upgrade_progress_max = 3
 	inst.upgrade_progress_temp = 0
 	inst.upgrade_progress_temp_timer = 0
+	inst.upgradeState = 0
+	
 	inst.cooldown = 0
 	inst.basecooldown = 50
 	inst.secondarycooldown = 0
@@ -372,15 +406,21 @@ obj_turret:onCreate(function(inst)
 	inst.basesecondarycooldown = 90
 	inst.extrasecondarycooldown = 12
 	inst.basesecondarystocks = 4
+	
 	inst.damage = 1
 	inst.co_damage = technicianSpecial.damage
-	inst.upgradeState = 0
+	
 	inst.ff = 0
 	inst.image_speed = 0.2
-	inst.intangible = true
+	
+	inst:init_actor_late(true)
+	
+	inst.dirty = 1
 	inst:instance_sync()
 end)
 obj_turret:onStep(function(inst)
+	inst:step_actor()
+	
 	if inst.parent and Instance.exists(inst.parent) then
 		if not inst.oy then inst.oy = inst.y end
 		inst.ff = inst.ff + 1
@@ -388,7 +428,7 @@ obj_turret:onStep(function(inst)
 		
 		inst.scepter = inst.parent:item_stack_count(item_scepter)
 		if not inst.init then
-			local xx, _ = move_point_contact_solid(inst.x, inst.y, 90 - 90 * inst.image_xscale, 800)
+			local xx, _ = move_point_contact_solid(inst.x, inst.y, 90 - 90 * inst.image_xscale, 1000)
 			inst.range = math.abs(xx - inst.x)
 			inst.init = 1
 			
@@ -416,6 +456,7 @@ obj_turret:onStep(function(inst)
 			inst.upgradeState = 0
 			inst.cooldown = math.min(inst.cooldown, inst.basecooldown)
 			inst.playanim = nil
+			inst.skin_layer.visible = true
 			if inst.missileDis then inst.missileDis:destroy() end
 			doResync = true
 		end
@@ -428,6 +469,7 @@ obj_turret:onStep(function(inst)
 			inst.upgradeState = 1
 			inst.cooldown = math.min(inst.cooldown, inst.basecooldown)
 			inst.playanim = nil
+			inst.skin_layer.visible = true
 			if (inst.prevUpgradeState or inst.upgradeState) < inst.upgradeState then
 				machineFlash(inst)
 				gm.sound_play_at(sound_turretUpgrade, 1, 1, inst.x, inst.y)
@@ -444,6 +486,7 @@ obj_turret:onStep(function(inst)
 			inst.missileDis.parent = inst
 			inst.missileDis.sprite_index = sprite_turretc_mis1
 			inst.missileDis.image_xscale = inst.image_xscale
+			inst.skin_layer.visible = false
 			inst.secondarystocks = inst.basesecondarystocks
 			inst.missileState = 1
 			inst.upgradeState = 2
@@ -510,7 +553,7 @@ obj_turret:onStep(function(inst)
 		if inst.parent:is_authority() or (inst.upgradeState == 2 and gm._mod_net_isHost()) then
 			local wantattack = false
 			local victims = List.new()
-			inst:collision_line_list(inst.x, inst.y, inst.x + inst.range * inst.image_xscale, inst.y, gm.constants.pActorCollisionBase, false, true, victims, false)
+			inst:collision_line_list(inst.x, inst.y + (inst.upgradeState >= 1 and 8 or 10), inst.x + inst.range * inst.image_xscale, inst.y, gm.constants.pActorCollisionBase, false, true, victims, false)
 			for _, victim in ipairs(victims) do
 				if inst:attack_collision_canhit(victim) then
 					wantattack = victim
@@ -524,12 +567,10 @@ obj_turret:onStep(function(inst)
 				if inst.cooldown <= 0 and inst.parent:is_authority() then
 					inst.playanim = 1
 					inst.image_index = 0
-					--print(inst.attack_speed)
 					inst.cooldown = inst.basecooldown / inst.attack_speed
 					inst.damage = inst.parent.damage
 					for i = 0, inst.parent:buff_stack_count(buff_mirror) do
 						local attack_info = inst:fire_bullet(inst.x, inst.y + (inst.upgradeState >= 1 and 8 or 10), 1000, 90 - 90 * inst.image_xscale, inst.co_damage, nil, inst.sparks, Attack_Info.TRACER.commando1).attack_info
-						setNoProc(attack_info)
 						attack_info.climb = i * 8 * 1.35
 					end
 					gm.sound_play_at(inst.upgradeState >= 1 and sound_turretShoot2 or sound_turretShoot1, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
@@ -1125,7 +1166,7 @@ local healable_survivors = {
 local healable_objects = { Object.find("ror", "EngiTurret"), Object.find("ror", "EngiTurretB") }
 
 Callback.add(Callback.TYPE.onAttackHit, "SSOnHitTechnician", function(hit_info)
-	local expose = 0
+	--[[local expose = 0
 	if hit_info.target:buff_stack_count(buff_exposed) >= 1 then expose = 1 end
 	if hit_info.target:buff_stack_count(buff_exposed_2) >= 1 then expose = 2 end
 	if not hit_info.attack_info.__ssr_technician_is_expose and hit_info.inflictor and Instance.exists(hit_info.inflictor) and expose >= 1 and gm._mod_net_isHost() then
@@ -1133,7 +1174,7 @@ Callback.add(Callback.TYPE.onAttackHit, "SSOnHitTechnician", function(hit_info)
 		attack_info.__ssr_technician_is_expose = expose
 		attack_info.damage_color = expose == 2 and color_tech_orange or color_tech_red
 		attack_info.climb = 8 * 1.35
-	end
+	end]]
 	
 	if hit_info.attack_info.__wrench_hit then
 		if hit_info.attack_info.__wrench_hit == 1 then
@@ -1191,7 +1232,7 @@ end)
 stateTechnicianPrimary:onStep(function(actor, data)
 	actor.sprite_index2 = (data.currentAnim == 1 and sprite_shoot1_2 or sprite_shoot1_1)
 
-	actor:skill_util_strafe_update(0.2 * actor.attack_speed, gm.constants.STRAFE_SPEED_NORMAL)
+	actor:skill_util_strafe_update(0.18 * actor.attack_speed, gm.constants.STRAFE_SPEED_NORMAL)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
@@ -1210,7 +1251,10 @@ stateTechnicianPrimary:onStep(function(actor, data)
 				if actor:is_authority() then
 					local attack_info = actor:fire_explosion(actor.x + WRENCH_BLAST_OFFSET_X * actor.image_xscale, actor.y + WRENCH_BLAST_OFFSET_Y, WRENCH_BLAST_W, WRENCH_BLAST_H, actor:skill_get_damage(technicianPrimary)).attack_info
 					attack_info.climb = i * 8 * 1.35
+					
 					attack_info.knockback_direction = actor.image_xscale
+					attack_info.knockback = 3
+					
 					attack_info.__wrench_hit = 1
 				end
 				local machinesHit = List.new()
@@ -1348,7 +1392,7 @@ obj_wrench:onStep(function(inst)
 		local healablesHit = List.new()
 		inst.parent:collision_rectangle_list(inst.x - 9, inst.y - 9, inst.x + 9, inst.y + 9, gm.constants.oP, false, true, healablesHit, false)
 		for _, object in ipairs(healable_objects) do
-			actor:collision_rectangle_list(inst.x - 9, inst.y - 9, inst.x + 9, inst.y + 9, object, false, true, healablesHit, false)
+			inst.parent:collision_rectangle_list(inst.x - 9, inst.y - 9, inst.x + 9, inst.y + 9, object, false, true, healablesHit, false)
 		end
 		for _, instance in ipairs(healablesHit) do
 			if (instance.object_index ~= gm.constants.oP or healable_survivors[instance.class]) and not data.hit[instance.id] then
@@ -1369,7 +1413,7 @@ technicianPrimaryAlt.subimage = 6
 technician:add_primary(technicianPrimaryAlt)
 
 technicianPrimaryAlt.cooldown = 5
-technicianPrimaryAlt.damage = 1.8
+technicianPrimaryAlt.damage = 1.6
 technicianPrimaryAlt.require_key_press = false
 technicianPrimaryAlt.is_primary = true
 technicianPrimaryAlt.does_change_activity_state = true
@@ -1674,8 +1718,8 @@ stateTechnicianSpecial:onStep(function(actor, data)
 		turret_inst.parent = actor
 		turret_inst.team = actor.team
 		turret_inst.image_xscale = actor.image_xscale
-		--GM.inventory_items_copy(actor, turret_inst, Item.LOOT_TAG.item_blacklist_engi_turrets)
-		--GM.actor_queue_dirty(turret_inst)
+		GM.actor_queue_dirty(turret_inst)
+		GM.inventory_items_copy(actor, turret_inst, Item.LOOT_TAG.item_blacklist_engi_turrets)
 		if data.scepter > 0 then
 			turret_inst.upgrade_progress = 3
 		end
