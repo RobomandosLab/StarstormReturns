@@ -12,6 +12,12 @@ local star_sprite = Resources.sprite_load(NAMESPACE, "EmpyreanWormStar", path.co
 local gotanythingsharp = Resources.sfx_load(NAMESPACE, "EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
 local sound_spawn = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_spawn_alt = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShortAlt", path.combine(SOUND_PATH, "spawn_alt.ogg"))
+local sound_spawn_worm = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnWorm", path.combine(SOUND_PATH, "spawn_worm.ogg"))
+local sound_star_spawn = Resources.sfx_load(NAMESPACE, "EmpyreanStarSpawn", path.combine(SOUND_PATH, "star_spawn.ogg"))
+local sound_star_shoot = Resources.sfx_load(NAMESPACE, "EmpyreanStarShoot", path.combine(SOUND_PATH, "star_shoot.ogg"))
+local sound_teleport1 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport1", path.combine(SOUND_PATH, "teleport1.ogg"))
+local sound_teleport2 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport2", path.combine(SOUND_PATH, "teleport2.ogg"))
+local sound_teleport3 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport3", path.combine(SOUND_PATH, "teleport3.ogg"))
 
 local empy = Elite.new(NAMESPACE, "empyrean")
 empy.healthbar_icon = sprite_icon
@@ -62,7 +68,7 @@ telegraph:set_alpha2(0.6, 0)
 telegraph:set_blend(true)
 telegraph:set_speed(6, 6, 0, 0)
 telegraph:set_scale(0.1, 0.1)
-telegraph:set_life(120, 120)
+telegraph:set_life(100, 100)
 
 local empyorb = Item.new(NAMESPACE, "eliteOrbEmpyrean", true)
 empyorb.is_hidden = true
@@ -443,8 +449,15 @@ teleorb:onPostStep(function(actor, stack)
 					teleport:create(actor.x, actor.y, 1, Particle.SYSTEM.middle)
 				end
 				
-				actor:sound_play(gm.constants.wMS, 1, 0.8 + math.random() * 0.2)
-				actor:sound_play(gm.constants.wBoss1DeathWarp, 1, 0.8 + math.random() * 0.2)
+				-- play one of these 3 sounds randomly
+				local tpsound = math.random()
+				if tpsound >= 0.67 then
+					actor:sound_play(sound_teleport1, 1, 0.8 + math.random() * 0.2) 
+				elseif tpsound >= 0.33 then
+					actor:sound_play(sound_teleport2, 1, 0.8 + math.random() * 0.2)
+				else
+					actor:sound_play(sound_teleport3, 1, 0.8 + math.random() * 0.2)
+				end
 			end
 		end
 	end
@@ -456,7 +469,7 @@ gm.pre_code_execute("gml_Object_oWormBody_Step_2", function(self, other)
 	if self.parent.elite_type == empy.value then
 		self.image_blend = Color.from_hsv((Global._current_frame + (self.m_id - self.parent.m_id) * 18) % 360, 65, 100)
 		
-		if gm.inside_view(self.x, self.y) == 1 and Global._current_frame % 2 == 0 then
+		if gm.inside_view(self.x, self.y) == 1 and Global._current_frame % 3 == 0 then
 			rainbowspark:create_color(self.x, self.y, Color.from_hsv((Global._current_frame + self.y * (0.75)) % 360, 100, 100), 1, Particle.SYSTEM.middle)
 		end
 	end
@@ -468,6 +481,13 @@ gm.pre_code_execute("gml_Object_oWorm_Alarm_4", function(self, other)
 		for _, segment in ipairs(self.body) do
 			segment:alarm_set(1, 150 + (segment.m_id - self.m_id) * 2)
 		end
+	end
+end)
+
+-- play the spawn sound
+gm.pre_code_execute("gml_Object_oWorm_Alarm_3", function(self, other)
+	if self.elite_type == empy.value then
+		gm.sound_play_global(sound_spawn_worm, 1, 1)
 	end
 end)
 
@@ -487,8 +507,7 @@ oStarStorm:onCreate(function(self)
 	self.direction = 0
 	self.speed = 0
 	
-	self:sound_play(gm.constants.wMedallion, 1, 0.8 + math.random() * 0.2)
-	self:sound_play(gm.constants.wJellyHit, 1, 0.8 + math.random() * 0.2)
+	self:sound_play(sound_star_spawn, 0.5, 0.8 + math.random() * 0.2)
 end)
 
 oStarStorm:onDraw(function(self)
@@ -516,13 +535,11 @@ oStarStorm:onStep(function(self)
 		flash.rate = 0.03
 		flash.image_alpha = 0.6
 		
-		self:sound_play(gm.constants.wItemDrop_White, 0.8, 0.8 + math.random() * 0.2) -- >> play these sounds
-		self:sound_play(gm.constants.wLizardR_Spear_2, 0.8, 1.2 + math.random() * 0.4)
-		self:sound_play(gm.constants.wBossOrbShoot, 0.5, 1.2 + math.random() * 0.4)
+		self:sound_play(sound_star_shoot, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
 		
 		self.direction = gm.point_direction(self.x, self.y, self.targetX, self.targetY) -- >> make it aim at the player
 	elseif self.life >= 480 then -- while idling, create telegraph particles
-		if self.life % 8 == 0 then
+		if self.life % 10 == 0 then
 			telegraph:set_direction(gm.point_direction(self.x, self.y, self.targetX, self.targetY), gm.point_direction(self.x, self.y, self.targetX, self.targetY), 0, 0)
 			telegraph:create_color(self.x, self.y, self.image_blend, 1)
 		end
@@ -531,7 +548,7 @@ oStarStorm:onStep(function(self)
 	else
 		self.speed = math.min(30, self.speed + 0.6) -- then start increasing its speed for the rest of the duration
 		
-		if self.life % 2 == 0 then -- create trails cuz theyre cool
+		if self.life % 3 == 0 then -- create trails cuz theyre cool
 			local trail = GM.instance_create(self.x, self.y, gm.constants.oEfTrail)
 			trail.sprite_index = self.sprite_index
 			trail.image_index = self.image_index
@@ -556,7 +573,7 @@ oStarStorm:onStep(function(self)
 		end
 	end
 	
-	if gm.inside_view(self.x, self.y) == 1 and self.life % 3 == 0 then
+	if gm.inside_view(self.x, self.y) == 1 and self.life % 5 == 0 then
 		rainbowspark:create_color(self.x, self.y, self.image_blend, 1, Particle.SYSTEM.middle)
 	end
 end)
