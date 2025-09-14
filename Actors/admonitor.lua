@@ -47,6 +47,16 @@ push:onPostStep(function(actor, stack)
 	end
 end)
 
+-- create the monster log
+local mlog = Monster_Log.new(NAMESPACE, "admonitor")
+mlog.sprite_id = sprite_idle
+mlog.portrait_id = sprite_portrait
+mlog.sprite_offset_x = 44
+mlog.sprite_offset_y = 48
+mlog.stat_hp = 350
+mlog.stat_damage = 17
+mlog.stat_speed = 1.6
+
 local puncher = Object.new(NAMESPACE, "Admonitor", Object.PARENT.enemyClassic)
 local puncher_id = puncher.value
 
@@ -78,7 +88,8 @@ puncher:onCreate(function(actor)
 	actor:enemy_stats_init(17, 350, 50, 30) -- damage, hp, knockback cap, experience amount
 	actor.pHmax_base = 1.6 -- speed, default speed is 2.4
 
-	actor.z_range = 200 -- range of the primary
+	actor.z_range = 150 -- range of the primary
+	actor.monster_log_drop_id = mlog.value
 	actor:set_default_skill(Skill.SLOT.primary, puncherPrimary)
 
 	actor:init_actor_late()
@@ -108,7 +119,7 @@ statePuncherPrimary:onStep(function(actor, data)
 		data.fired = 2
 		actor:sound_play(sound_shoot1b, 1, 0.9 + math.random() * 0.2)
 		if gm._mod_net_isHost() then
-			local attack = actor:fire_explosion(actor.x + 72 * actor.image_xscale, actor.y - 9, 144, 54, 4.2, nil, gm.constants.wSparks4).attack_info
+			local attack = actor:fire_explosion(actor.x + 75 * actor.image_xscale, actor.y - 5, 130, 32, 4.2, nil, gm.constants.wSparks4).attack_info
 			attack.__ssr_puncher_push = 4 * actor.image_xscale
 		end
 	end
@@ -161,12 +172,12 @@ monsterCardPuncher.can_be_blighted = true
 local stages = {
 	"ror-templeOfTheElders",
 	"ror-riskOfRain",
+	"ror-boarBeach", -- ive got no idea why nk put them there in ss1 but we decided it would be funny to keep it, also moved to pre loop
 }
 
 local postLoopStages = {
 	"ror-sunkenTombs",
 	"ror-ancientValley",
-	"ror-boarBeach",
 	"ror-magmaBarracks",
 }
 
@@ -179,12 +190,3 @@ for _, s in ipairs(postLoopStages) do
 	local stage = Stage.find(s)
 	stage:add_monster_loop(monsterCardPuncher)
 end
-
-local mlog = Monster_Log.new(NAMESPACE, "admonitor")
-mlog.sprite_id = sprite_idle
-mlog.portrait_id = sprite_portrait
-mlog.sprite_offset_x = 44
-mlog.sprite_offset_y = 48
-mlog.stat_hp = 350
-mlog.stat_damage = 17
-mlog.stat_speed = 1.6
