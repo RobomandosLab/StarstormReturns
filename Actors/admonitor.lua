@@ -115,9 +115,13 @@ statePuncherPrimary:onStep(function(actor, data)
 		actor:sound_play(sound_shoot1a, 1, 0.9 + math.random() * 0.2)
 	end
 	
-	if data.fired == 1 and actor.image_index >= 16 then
+	if data.fired == 1 and actor.image_index >= 14 then
 		data.fired = 2
 		actor:sound_play(sound_shoot1b, 1, 0.9 + math.random() * 0.2)
+	end
+	
+	if data.fired == 2 and actor.image_index >= 16 then
+		data.fired = 3
 		if gm._mod_net_isHost() then
 			local attack = actor:fire_explosion(actor.x + 75 * actor.image_xscale, actor.y - 5, 130, 32, 4.2, nil, gm.constants.wSparks4).attack_info
 			attack.__ssr_puncher_push = 4 * actor.image_xscale
