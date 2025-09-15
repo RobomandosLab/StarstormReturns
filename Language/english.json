@@ -108,46 +108,6 @@
 			"name": "FAIL-SAFE ASSISTANCE 2.0",
 			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
 		},
-		"muleZ": {
-			"name": "INTERFERENCE REMOVAL",
-			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
-		},
-		"muleX": {
-			"name": "IMMOBILIZE",
-			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
-		},
-		"muleC": {
-			"name": "TORQUE CALIBRATION",
-			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
-		},
-		"muleV": {
-			"name": "FAIL-SAFE ASSISTANCE",
-			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
-		},
-		"muleVBoosted": {
-			"name": "FAIL-SAFE ASSISTANCE 2.0",
-			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
-		},
-		"muleZ": {
-			"name": "INTERFERENCE REMOVAL",
-			"description": "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
-		},
-		"muleX": {
-			"name": "IMMOBILIZE",
-			"description": "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
-		},
-		"muleC": {
-			"name": "TORQUE CALIBRATION",
-			"description": "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
-		},
-		"muleV": {
-			"name": "FAIL-SAFE ASSISTANCE",
-			"description": "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
-		},
-		"muleVBoosted": {
-			"name": "FAIL-SAFE ASSISTANCE 2.0",
-			"description": "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
-		},
 		"nemesisCommandoZ": {
 			"name": "Blade of Cessation",
 			"description": "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
@@ -389,7 +349,7 @@
 		"malice" : {
 			"name": "Malice",
 			"pickup" : "Damage spreads to nearby enemies.",
-			"description": "Attacks <p>spread to nearby enemies</c> for <y>50% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
+			"description": "Attacks <p>spread to nearby enemies</c> for <y>45% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
 			"destination" : "P24,\nRomeo,\nPol-A Station",
 			"date" : "02/11/2056",
 			"story" : "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
@@ -508,6 +468,11 @@
 		"Protector.name" : "Protector",
 		"Protector.text" : "Keeper of the Artifact"
 	},
+	
+	"monster" : {
+		"admonitor.name" : "Clay Admonitor",
+		"admonitor.story" : "In the distance, a familiar clay 'person' trudged across the temple grounds. However, despite their similar appearances, this creature was not the same type I had seen before. For what it lacked in cunning, unlike its smaller brethren, this potted protector bore two skulking fists, clenched in a vice grip. The stride it assumed almost made it look... confident. I know I would be a fool to assume it couldn't produce intelligent emotions such as conviction. Nevertheless, out of concern for my general wellbeing, I chose not to test the mettle of this swaggering oil slick and hid inside an upturned ruin. \n\nIf I'm to make it off of this planet alive, I'd prefer my femur to be intact."
+	},
 
 	"interactable" : {
 		"MimicInactive.text" : "..?",
@@ -515,7 +480,10 @@
 	},
 
 	"elite" : {
-		"poison.name" : "Poisoning %s"
+		"poison.name" : "Poisoning %s",
+		"empyrean.name" : "<cycle 0 64 128 192>Empyrean %s</cycle>",
+		"empyrean.text" : "Harbinger of Judgement",
+		"empyrean.worm" : "Prismatic Leviathan"
 	},
 	"stage" : {
 		"whistlingBasin.name" : "Whistling Basin",
