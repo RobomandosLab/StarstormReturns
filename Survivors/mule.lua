@@ -4,23 +4,24 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/MULE")
 local sprite_loadout			= Resources.sprite_load(NAMESPACE, "MuleSelect", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0)
 local sprite_portrait 			= Resources.sprite_load(NAMESPACE, "MulePortrait", path.combine(SPRITE_PATH, "portrait.png"), 4)
 local sprite_portrait_small 	= Resources.sprite_load(NAMESPACE, "MulePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_palette 			= Resources.sprite_load(NAMESPACE, "MulePalette", path.combine(SPRITE_PATH, "palette.png"))
 local sprite_skills				= Resources.sprite_load(NAMESPACE, "MuleSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 local sprite_credits 			= Resources.sprite_load(NAMESPACE, "MuleCredits", path.combine(SPRITE_PATH, "credits.png"), 1, 12, 22)
 local sprite_log				= Resources.sprite_load(NAMESPACE, "MuleLog", path.combine(SPRITE_PATH, "log.png"), 1)
 local sprite_wave_mask			= Resources.sprite_load(NAMESPACE, "MuleShockwaveMask", path.combine(SPRITE_PATH, "wave_mask.png"), 1, 8, 8)
 
 local sprite_idle 				= Resources.sprite_load(NAMESPACE, "MuleIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 20, 26)
-local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 10, 26)
+local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "MuleIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 7, 26)
 local sprite_walk				= Resources.sprite_load(NAMESPACE, "MuleWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 22, 28)
 local sprite_walk_back			= Resources.sprite_load(NAMESPACE, "MuleWalkBack", path.combine(SPRITE_PATH, "walk_back.png"), 8, 22, 27)
-local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 14, 28)
+local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "MuleWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 10, 28)
 local sprite_climb				= Resources.sprite_load(NAMESPACE, "MuleClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 25, 51)
 local sprite_jump				= Resources.sprite_load(NAMESPACE, "MuleJump", path.combine(SPRITE_PATH, "jump_start.png"), 1, 22, 32)
-local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 12, 32)
+local sprite_jump_half			= Resources.sprite_load(NAMESPACE, "MuleJumpHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 9, 28)
 local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "MuleJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 22, 32)
-local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 12, 32)
+local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "MuleJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 9, 28)
 local sprite_fall				= Resources.sprite_load(NAMESPACE, "MuleFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 22, 32)
-local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 12, 32)
+local sprite_fall_half			= Resources.sprite_load(NAMESPACE, "MuleFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 9, 28)
 local sprite_death				= Resources.sprite_load(NAMESPACE, "MuleDeath", path.combine(SPRITE_PATH, "death.png"), 10, 45, 55)
 local sprite_decoy				= Resources.sprite_load(NAMESPACE, "MuleDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 17, 17)
 
@@ -28,7 +29,7 @@ local sprite_shoot1a			= Resources.sprite_load(NAMESPACE, "MuleShoot1_1", path.c
 local sprite_shoot1b			= Resources.sprite_load(NAMESPACE, "MuleShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 21, 34)
 local sprite_shoot1c			= Resources.sprite_load(NAMESPACE, "MuleShoot1_3", path.combine(SPRITE_PATH, "shoot1_3.png"), 9, 39, 36)
 local sprite_shoot2				= Resources.sprite_load(NAMESPACE, "MuleShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 7, 30, 33)
-local sprite_shoot1charge		= Resources.sprite_load(NAMESPACE, "MuleShoot1Charge", path.combine(SPRITE_PATH, "shoot1_charge.png"), 6, 21, 28)
+local sprite_shoot1charge		= Resources.sprite_load(NAMESPACE, "MuleShoot1Charge", path.combine(SPRITE_PATH, "shoot1_charge.png"), 6, 17, 38)
 local sprite_shoot3				= Resources.sprite_load(NAMESPACE, "MuleShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 15, 48, 33)
 local sprite_shoot4				= Resources.sprite_load(NAMESPACE, "MuleShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 15, 23, 27)
 local sprite_shoot4boosted		= Resources.sprite_load(NAMESPACE, "MuleShoot4Boosted", path.combine(SPRITE_PATH, "shoot4boosted.png"), 15, 23, 27)
@@ -44,6 +45,7 @@ local sprite_sparks1			= Resources.sprite_load(NAMESPACE, "MuleSparks1", path.co
 local sprite_sparks2			= Resources.sprite_load(NAMESPACE, "MuleSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 27, 24)
 local sprite_sparks3			= Resources.sprite_load(NAMESPACE, "MuleSparks3", path.combine(SPRITE_PATH, "sparks3.png"), 4, 22, 16)
 
+local sound_select				= Resources.sfx_load(NAMESPACE, "MuleSelect", path.combine(SOUND_PATH, "select.ogg"))
 local sound_shoot1a				= Resources.sfx_load(NAMESPACE, "MuleShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
 local sound_shoot1b				= Resources.sfx_load(NAMESPACE, "MuleShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
 local sound_shoot1c				= Resources.sfx_load(NAMESPACE, "MuleShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
@@ -106,6 +108,25 @@ mule.sprite_portrait_small = sprite_portrait_small
 mule.sprite_idle = sprite_idle
 mule.sprite_title = sprite_walk
 mule.sprite_credits = sprite_credits
+mule.select_sound_id = sound_select
+mule:set_palettes(sprite_palette, sprite_palette, sprite_palette)
+
+-- skins
+--mule:add_skin("Yellow Rose", 1, Resources.sprite_load(NAMESPACE, "MuleSelect2", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
+--Resources.sprite_load(NAMESPACE, "MulePortrait2", path.combine(SPRITE_PATH, "portrait.png"), 4),
+--Resources.sprite_load(NAMESPACE, "MulePortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall.png")))
+
+--mule:add_skin("Steel Soul", 2, Resources.sprite_load(NAMESPACE, "MuleSelect3", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
+--Resources.sprite_load(NAMESPACE, "MulePortrait3", path.combine(SPRITE_PATH, "portrait.png"), 4),
+--Resources.sprite_load(NAMESPACE, "MulePortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall.png")))
+
+--mule:add_skin("Automated Hunter", 3, Resources.sprite_load(NAMESPACE, "MuleSelect4", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
+--Resources.sprite_load(NAMESPACE, "MulePortrait4", path.combine(SPRITE_PATH, "portrait.png"), 4),
+--Resources.sprite_load(NAMESPACE, "MulePortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall.png")))
+
+--mule:add_skin("Military Grade", 4, Resources.sprite_load(NAMESPACE, "MuleSelect5", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
+--Resources.sprite_load(NAMESPACE, "MulePortrait5", path.combine(SPRITE_PATH, "portrait.png"), 4),
+--Resources.sprite_load(NAMESPACE, "MulePortraitSmall5", path.combine(SPRITE_PATH, "portraitSmall.png")))
 
 mule:clear_callbacks()
 mule:onInit(function(actor)
@@ -124,22 +145,12 @@ snare.show_icon = true
 snare.is_debuff = true
 snare:clear_callbacks()
 
-snare:onApply(function(actor, stack)
-	actor.pHspeed = 0
-	actor.pHmax = 0
-	if not GM.actor_is_boss(actor) then
-		actor.activity = 50
-		actor.__activity_handler_state = 50
-		actor.state = 0
-	end
-end)
-
 snare:onPostStep(function(actor, stack)
 	actor.pHspeed = 0
-	actor.pHmax = 0
 	if not GM.actor_is_boss(actor) then
 		actor.activity = 50
-		actor.__activity_handler_state = 50
+		actor:alarm_set(7, 10)
+		actor:alarm_set(2, 10)
 		if actor.sprite_climb and GM.actor_state_is_climb_state(actor.actor_state_current_id) then
 			actor.sprite_index = actor.sprite_climb
 			actor.image_index = 0
@@ -346,7 +357,7 @@ statePrimaryCharge:onStep(function(actor, data)
 			data.strength = actor:skill_get_damage(primary) + 0.6 * math.min(4, math.floor(actor.image_index2))
 		end
 		
-		if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) and actor.sprite_index2 == sprite_shoot1charge then
+		if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) - 1 and actor.sprite_index2 == sprite_shoot1charge then
 			data.fired = 1
 		end
 
