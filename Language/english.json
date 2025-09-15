@@ -475,7 +475,10 @@
 	},
 
 	"elite" : {
-		"poison.name" : "Poisoning %s"
+		"poison.name" : "Poisoning %s",
+		"empyrean.name" : "<cycle 0 64 128 192>Empyrean %s</cycle>",
+		"empyrean.text" : "Harbinger of Judgement",
+		"empyrean.worm" : "Prismatic Leviathan"
 	},
 	"stage" : {
 		"whistlingBasin.name" : "Whistling Basin",

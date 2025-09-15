@@ -461,7 +461,9 @@
 	},
 
 	"elite" : {
-		"poison.name" : "%s яда"
+		"poison.name" : "%s яда",
+		"empyrean.name" : "<cycle 0 64 128 192>%s Эмпиреи</cycle>",
+		"empyrean.text" : "Предвестник Суда",
 	},
 	"stage" : {
 		"whistlingBasin.name" : "Свистящий Бассейн",
