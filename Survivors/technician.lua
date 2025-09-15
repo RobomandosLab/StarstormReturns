@@ -428,7 +428,7 @@ obj_turret:onStep(function(inst)
 		
 		inst.scepter = inst.parent:item_stack_count(item_scepter)
 		if not inst.init then
-			local xx, _ = move_point_contact_solid(inst.x, inst.y, 90 - 90 * inst.image_xscale, 1000)
+			local xx, _ = move_point_contact_solid(inst.x, inst.y, 90 - 90 * inst.image_xscale, 1000, inst)
 			inst.range = math.abs(xx - inst.x)
 			inst.init = 1
 			
@@ -893,7 +893,8 @@ obj_mine_pull:onCreate(function(inst)
 end)
 obj_mine_pull:onStep(function(inst)
 	inst.ff = inst.ff + 1
-	local targets = List.wrap(gm.find_characters_circle(inst.x, inst.y, MACHINE_MINE_PULL_RADIUS, true, inst.team == 1 and 2 or 1, true))
+	local targets = List.new()
+	inst:collision_circle_list(inst.x, inst.y, MACHINE_MINE_PULL_RADIUS, gm.constants.pActorCollisionBase, false, true, targets, false)
 	for _, target in ipairs(targets) do
 		--Check if we should pull the target
 		--Pulling is weird with ropes so climbing enemies are excluded
@@ -923,6 +924,7 @@ obj_mine_pull:onStep(function(inst)
 			end
 		end
 	end
+	targets:destroy()
 	inst.life = inst.life - 1
 	if inst.life <= 0 then
 		inst:destroy()
@@ -1286,7 +1288,7 @@ stateTechnicianPrimary:onStep(function(actor, data)
 			end
 		else
 			local machinesHit = List.new()
-			local endX, _ = move_point_contact_solid(actor.x, actor.y, 90 - 90 * actor.image_xscale, 700)
+			local endX, _ = move_point_contact_solid(actor.x, actor.y, 90 - 90 * actor.image_xscale, 700, actor)
 			actor:collision_line_list(actor.x, actor.y, endX, actor.y, gm.constants.oCustomObject, false, true, machinesHit, false)
 			actor:collision_line_list(actor.x, actor.y, endX, actor.y, gm.constants.oCustomObject_pNPC, false, true, machinesHit, false)
 			for _, machineObj in ipairs(machines) do
@@ -1463,7 +1465,7 @@ stateTechnicianPrimaryAlt:onStep(function(actor, data)
 			wrench:actor_skin_skinnable_set_skin(actor)
 		else
 			local machinesHit = List.new()
-			local endX, _ = move_point_contact_solid(actor.x, actor.y, 90 - 90 * actor.image_xscale, 700)
+			local endX, _ = move_point_contact_solid(actor.x, actor.y, 90 - 90 * actor.image_xscale, 700, actor)
 			actor:collision_line_list(actor.x, actor.y, endX, actor.y, gm.constants.oCustomObject, false, true, machinesHit, false)
 			actor:collision_line_list(actor.x, actor.y, endX, actor.y, gm.constants.oCustomObject_pNPC, false, true, machinesHit, false)
 			for _, machineObj in ipairs(machines) do
