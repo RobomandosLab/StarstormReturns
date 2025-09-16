@@ -108,7 +108,7 @@ end)
 
 statePuncherPrimary:onStep(function(actor, data)
 	actor:skill_util_fix_hspeed()
-	actor:actor_animation_set(sprite_shoot1, 0.23) -- 0.18 is anim speed
+	actor:actor_animation_set(sprite_shoot1, 0.23) -- 0.23 is anim speed value, its 0.23 to make the animation match the sound
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -159,7 +159,7 @@ Callback.add(Callback.TYPE.onAttackHit, "SSRPuncherPush", function(hit_info)
 	if hit_info.attack_info.__ssr_puncher_push then
 		if hit_info.target and GM.actor_is_classic(hit_info.target) then
 			if gm._mod_net_isOnline() then
-				sync_puncher_push(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the effect for clients in multiplayer
+				sync_puncher_push(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the knockback effect for clients in multiplayer
 			end
 			hit_info.target:get_data().puncher_push = hit_info.attack_info.__ssr_puncher_push
 			GM.apply_buff(hit_info.target, push, 3 * 60, 1)
