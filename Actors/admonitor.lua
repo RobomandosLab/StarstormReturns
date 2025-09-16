@@ -133,13 +133,13 @@ end)
 
 local puncherPushSync = Packet.new()
 puncherPushSync:onReceived(function(msg)
-	local actor = msg:read_instance()
-	local strength = msg:read_short()
+	local actor = msg:read_instance() -- send to clients who got hit
+	local strength = msg:read_short() -- send to clients the strength of knockback
 
 	if not actor:exists() then return end
 	
 	actor:get_data().puncher_push = strength
-	GM.apply_buff(actor, push, 3 * 60, 1)
+	GM.apply_buff(actor, push, 3 * 60, 1) -- apply the knockback to the person who got hit
 end)
 
 local function sync_puncher_push(actor, strength)
