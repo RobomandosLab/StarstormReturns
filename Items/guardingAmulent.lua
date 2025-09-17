@@ -1,4 +1,4 @@
-local item_sprite = Resources.sprite_load(NAMESPACE, "GuardingAmulet", path.combine(PATH, "Sprites/Items/guardingAmulet.png"), 1, 17, 17)
+local item_sprite = Resources.sprite_load(NAMESPACE, "GuardingAmulet", path.combine(PATH, "Sprites/Items/guardingAmulet.png"), 1, 19, 16)
 local effect_sprite = Resources.sprite_load(NAMESPACE, "EfGuardingAmulet", path.combine(PATH, "Sprites/Items/Effects/guardingAmulet.png"), 1, 4, 9)
 local sound = Resources.sfx_load(NAMESPACE, "GuardingAmulet", path.combine(PATH, "Sounds/Items/guardingAmulet.ogg"))
 
