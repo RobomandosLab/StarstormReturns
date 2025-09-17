@@ -1,8 +1,8 @@
 --All my functions! And sometimes some constants
 
 --Check if a point is colliding with the stage
-function is_point_colliding_stage(x, y)
-	local collision = gm.collision_point(x, y, gm.constants.pBlock, false, true)
+function is_point_colliding_stage(x, y, actor)
+	local collision = actor:collision_point(x, y, gm.constants.pBlock, false, true)
 	if not collision or (type(collision) == "number" and collision < 0) then
 		return false
 	end
@@ -16,7 +16,7 @@ end
 
 --Move a point in a specified direction until it collides with the stage, or has reached the max amount
 ---90 is down, 270 up, 180 left, and 0/360 right
-function move_point_contact_solid(x, y, angle, amount)
+function move_point_contact_solid(x, y, angle, amount, actor)
 	amount = amount or 1000
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
@@ -30,11 +30,11 @@ function move_point_contact_solid(x, y, angle, amount)
 			y = y - yy * (totalMoved - amount)
 			break
 		end
-		if is_point_colliding_stage(x, y) then
+		if is_point_colliding_stage(x, y, actor) then
 			for i = 0, 31 do
 				x = x - xx
 				y = y - yy
-				if not is_point_colliding_stage(x, y) then
+				if not is_point_colliding_stage(x, y, actor) then
 					break
 				end
 			end
@@ -45,7 +45,7 @@ function move_point_contact_solid(x, y, angle, amount)
 end
 
 --Same as move_point_contact_solid, but stops after *exiting* terrain instead
-function move_point_contact_air(x, y, angle, amount)
+function move_point_contact_air(x, y, angle, amount, actor)
 	amount = amount or 1000
 	local totalMoved = 0
 	local xx = math.cos(math.rad(angle))
@@ -59,11 +59,11 @@ function move_point_contact_air(x, y, angle, amount)
 			y = y - yy * (totalMoved - amount)
 			break
 		end
-		if not is_point_colliding_stage(x, y) then
+		if not is_point_colliding_stage(x, y, actor) then
 			for i = 0, 31 do
 				x = x - xx
 				y = y - yy
-				if is_point_colliding_stage(x, y) then
+				if is_point_colliding_stage(x, y, actor) then
 					x = x + xx
 					y = y + yy
 					break
