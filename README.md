@@ -44,4 +44,4 @@ Should be! Please report any issues you find on our [Github]((https://github.com
 - Kris for helping get SSR development started!
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
-- SwedishFish75 for Spanish Translation
+- SwedishFish75, Dragonrster for translations!
