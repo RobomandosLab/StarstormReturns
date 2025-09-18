@@ -164,11 +164,11 @@ empyorb:onAcquire(function(actor, stack)
 	-- play the spawn sound
 	
 	-- start the beam
-	if gm.inside_view(actor.x, actor.y) == 1 then
+	if gm.inside_view(actor.x, actor.y) == 1 and actor.team ~= 1 then
 		actor:get_data().empy_beam = 180
 		actor:get_data().empy_beam_over = 0
 		actor:sound_play(gotanythingsharp, 2, 1)
-	else
+	elseif gm.inside_view(actor.x, actor.y) ~= 1 or actor.team == 1 then
 		actor:get_data().empy_beam = 0
 		actor:get_data().empy_beam_over = 1
 		actor:get_data().no_beam_loser = 5
@@ -259,6 +259,8 @@ end)
 
 -- dont draw the healthbar while the beam is there
 gm.pre_script_hook(gm.constants.draw_hp_bar, function(self, other, result, args)
+	if not Wrap.wrap(self):get_data().empy_beam then return end
+	
 	if Wrap.wrap(self):get_data().empy_beam then
 		if Wrap.wrap(self):get_data().empy_beam > 0 then
 			return false
@@ -270,6 +272,8 @@ local guarded = false
 
 -- disable fall damage for the elite to prevent cheese
 gm.pre_script_hook(gm.constants.actor_phy_on_landed, function(self, other, result, args)
+	if not Instance.wrap(self).fall_immune then return end
+	
     local real_self = Instance.wrap(self)
     if not gm.bool(self.invincible) and real_self.fall_immune == true then
         self.invincible = 1
@@ -466,6 +470,8 @@ end)
 -- empyrean worms !!!
 -- make the worm bodies rainbow too and also make them create sparks
 gm.pre_code_execute("gml_Object_oWormBody_Step_2", function(self, other)
+	if self.parent.elite_type ~= empy.value then return end
+	
 	if self.parent.elite_type == empy.value then
 		self.image_blend = Color.from_hsv((Global._current_frame + (self.m_id - self.parent.m_id) * 18) % 360, 65, 100)
 		
@@ -477,6 +483,8 @@ end)
 
 -- make the worm bodies set their first alarm (needed to shoot the orbs)
 gm.pre_code_execute("gml_Object_oWorm_Alarm_4", function(self, other)
+	if self.elite_type ~= empy.value then return end
+	
 	if self.elite_type == empy.value then
 		for _, segment in ipairs(self.body) do
 			segment:alarm_set(1, 150 + (segment.m_id - self.m_id) * 2)
@@ -486,6 +494,8 @@ end)
 
 -- play the spawn sound
 gm.pre_code_execute("gml_Object_oWorm_Alarm_3", function(self, other)
+	if self.elite_type ~= empy.value then return end
+	
 	if self.elite_type == empy.value then
 		gm.sound_play_global(sound_spawn_worm, 1, 1)
 	end
@@ -580,6 +590,8 @@ end)
 
 -- make the worm shoot the star storm
 gm.pre_code_execute("gml_Object_oWormBody_Alarm_1", function(self, other)
+	if self.parent.elite_type ~= empy.value then return end
+	
 	if self.parent.elite_type == empy.value then
 		self:alarm_set(1, 330)
 	
@@ -603,6 +615,8 @@ end)
 
 -- make the warning change color
 gm.pre_code_execute("gml_Object_oWormWarning_Step_0", function(self, other)
+	if self.image_blend ~= Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then return end
+	
 	if self.image_blend == Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then -- check what color it was on the previous frame
 		self.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
 	end
@@ -631,7 +645,7 @@ Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
 end)
 
 Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
-	if GM._mod_game_getDirector().stages_passed < 8 then return end -- only spawns if its stage 9+
+	if GM._mod_game_getDirector().stages_passed <= 8 then return end -- only spawns if its stage 9+
 	if not GM._mod_net_isHost() then return end
 	
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
