@@ -3,21 +3,20 @@
 Starstorm Returns is a work-in-progress mod for RoRR that remasters the original RoR1 Starstorm mod . It adds new survivors, enemies, stages, difficulties, and items.
 
 ## Feedback, Bug Reports, and Known Issues
-- Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or by telling a developer in the Starstorm 1, or Risk of Rain Returns Discord servers.
+- Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or in the [Starstorm Returns Discord server](https://discord.gg/fGShMVEayr).
 
 ## FAQ
 ### Is the mod finished?
 No
 
 ### Is it Multiplayer compatible?
-Should be! Please report any issues you find.
+Should be! Please report any issues you find on our [Github]((https://github.com/RobomandosLab/StarstormReturns) or [Discord](https://discord.gg/fGShMVEayr).
 
 ## Credits
 - Neik: Creator of Starstorm 1
 - Hobart: Morale support
 - Bread: Github Detective
 - Buns: Project management
-- Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
 - Battery: Programmer
 - [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
@@ -25,7 +24,7 @@ Should be! Please report any issues you find.
 - AnAwesomeDudette: Writer & Programmer
 - Opal: Pixel Artist & Programmer
 - Altzeus: Music & Programmer
-- Redacted: Writer & Lead Pixel Artist
+- Redacted: Writer & Pixel Artist
 - DigBug: Writer & Pixel Artist
 - [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist
 - isDahMaster: Pixel Artist
@@ -42,6 +41,7 @@ Should be! Please report any issues you find.
 - Swuff for helping kickstart the codebase
 - Starstorm 2 team for their design guidance and support
 - Starstorm fans everywhere
+- Kris for helping get SSR development started!
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
-- SwedishFish75 for Spanish Translation
+- SwedishFish75, Dragonrster for translations!

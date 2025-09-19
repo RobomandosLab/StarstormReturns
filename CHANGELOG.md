@@ -1,5 +1,13 @@
 # SSR Changelog *spoilers below!!*
 
+## 0.1.2
+- Various fixes for Mule and Technician
+- New enemy: Clay Admonitor
+- VFX/SFX for Dungus
+- New elite: Empyrean
+- Translations for: Simplified Chinese. Spanish, and Russian
+
+
 ## 0.1.1
 - Add a returning survivor: MULE!
 - README/Credit updates
