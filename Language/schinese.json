@@ -445,17 +445,17 @@
 			"name" : "群体",
 			"description": "敌人大规模成群结队。",
 			"approaching": "成群的敌人正在逼近。",
-			"arriving": "做好迎战准备……",
+			"arriving": "做好迎战准备……"
 		},
 		"displacement" : {
 			"pickupName" : "错位神器",
 			"name" : "错位",
-			"description": "关卡顺序被打乱。",
+			"description": "关卡顺序被打乱。"
 		},
 		"gathering" : {
 			"pickupName" : "集聚神器",
 			"name" : "集聚",
-			"description": "金币掉落翻倍但必须手动拾取。",
+			"description": "金币掉落翻倍但必须手动拾取。"
 		}
 	},
 	
@@ -468,6 +468,11 @@
 		"Protector.name" : "守护者",
 		"Protector.text" : "神器看守者"
 	},
+	
+	"monster" : {
+		"admonitor.name" : "陶土训诫者",
+		"admonitor.story" : "远处，一个熟悉的陶土'人'在神殿地面上艰难跋涉。然而，尽管外观相似，这个生物与我之前见过的类型不同。与它较小的同类不同，这个盆栽守护者缺乏狡诈，却拥有两个潜伏的拳头，紧握成钳状。它迈出的步伐几乎让它看起来...自信。我知道如果假设它无法产生诸如信念这样的智能情感，我就是个傻瓜。尽管如此，出于对我整体健康的担忧，我选择不测试这个趾高气扬的油滑家伙的勇气，而是躲在一座翻倒的废墟里。\n\n如果我要活着离开这个星球，我希望我的股骨保持完整。"
+	},
 
 	"interactable" : {
 		"MimicInactive.text" : "..？",
@@ -475,7 +480,10 @@
 	},
 
 	"elite" : {
-		"poison.name" : "剧毒 %s"
+		"poison.name" : "剧毒 %s",
+		"empyrean.name" : "<cycle 0 64 128 192>天界 %s</cycle>",
+		"empyrean.text" : "审判先驱",
+		"empyrean.worm" : "棱镜利维坦"
 	},
 	"stage" : {
 		"whistlingBasin.name" : "啸风盆地",
