@@ -10,7 +10,7 @@ Starstorm Returns is a work-in-progress mod for RoRR that remasters the original
 No
 
 ### Is it Multiplayer compatible?
-Should be! Please report any issues you find on our [Github]((https://github.com/RobomandosLab/StarstormReturns) or [Discord](https://discord.gg/fGShMVEayr).
+Should be! Please report any issues you find on our [Github](https://github.com/RobomandosLab/StarstormReturns) or [Discord](https://discord.gg/fGShMVEayr).
 
 ## Credits
 - Neik: Creator of Starstorm 1
