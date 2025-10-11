@@ -99,7 +99,7 @@ local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentT
 local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "GroundStripTorridOutlands.png"))
 
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
-outlands_stage.music_id = Resources.sfx_load(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlands.ogg"))
+outlands_stage.music_id = Resources.sfx_load(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlandsOLD.ogg"))
 outlands_stage.token_name = Language.translate_token("stage.torridOutlands.name")
 outlands_stage.token_subname = Language.translate_token("stage.torridOutlands.subname") 
 outlands_stage.teleporter_index = 0
@@ -161,12 +161,11 @@ outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
 --Stage Resources
 Resources.sprite_load(NAMESPACE, "Tile16Woodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "Tile16Woodland.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "BackTilesWoodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "BackTilesWoodland.png"), 1, 0, 0)
-Resources.sprite_load(NAMESPACE, "VerdantBG_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantBG_PLACEHOLDER.png"), 1, 0, 0)
-Resources.sprite_load(NAMESPACE, "VerdantTrees1_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees1_PLACEHOLDER.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "VerdantTrees1", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees1.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "VerdantTrees2", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees2.png"), 1, 0, 0)
-Resources.sprite_load(NAMESPACE, "VerdantTrees3_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees3_PLACEHOLDER.png"), 1, 0, 0)
-Resources.sprite_load(NAMESPACE, "VerdantTrees4_PLACEHOLDER", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees4_PLACEHOLDER.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees3", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees3.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantTrees4", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantTrees4.png"), 1, 0, 0)
+Resources.sprite_load(NAMESPACE, "VerdantGodRays", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "VerdantGodRays.png"), 1, 0, 0)
 
 --Stage
 local woodland_stage = Stage.new(NAMESPACE, "verdantWoodland")
