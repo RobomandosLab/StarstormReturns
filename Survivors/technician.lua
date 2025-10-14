@@ -272,8 +272,7 @@ local buff_exposed = Buff.new(NAMESPACE, "exposed")
 local buff_exposed_2 = Buff.new(NAMESPACE, "exposed2")
 
 local fake_mocha = Item.new(NAMESPACE, "fakeMocha", true)
-fake_mocha:set_sprite(gm.constants.sMocha)
-fake_mocha:set_tier(Item.TIER.common)
+fake_mocha.is_hidden = true
 fake_mocha:clear_callbacks()
 fake_mocha:onStatRecalc(function(actor, stack)
 	actor.attack_speed = actor.attack_speed + 0.15 * stack
