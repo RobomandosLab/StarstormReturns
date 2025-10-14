@@ -8,13 +8,13 @@ local providence_spawn_address = gm.get_object_function_address("gml_Object_oCom
 if providence_spawn_address:is_valid() then
     local stupid_fucker = providence_spawn_address:add(5371) -- I FUCKING HATE THIS FUNCTION CALL IM SO GLAD IM KILLING IT
     for i = 0, 4 do
-        stupid_fucker:add(i):patch_byte(0x90):apply()
+        stupid_fucker:add(i):patch_byte(0x90):apply() -- this stops the function from destroying all enemy objects
     end
 
 	memory.dynamic_hook_mid("gml_Object_oCommand_Step_2__chirr_compat", {}, {}, 0, stupid_fucker, function( args )
 		local actors = Instance.find_all(gm.constants.pActor)
 
-		for i, actor in ipairs(actors) do
+		for i, actor in ipairs(actors) do -- this instead destroys everything on the enemy team
 			if actor.team ~= 1 then
 				actor:destroy()
 			end
@@ -363,15 +363,25 @@ stateChirrSecondary:onStep(function( actor, data ) -- using the skill
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(chirrSecondary)
 			local dir = actor.image_xscale -- explosions dont use directions, this is just used to make the x offset
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 
-			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then -- if not using heaven cracker
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
-					attack = actor:fire_explosion(actor.x + dir * 40, actor.y, 100, 50, damage, nil, nil, true)
-					attack.attack_info:allow_stun()
-					attack.attack_info:set_stun(3, dir, standard)
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
+				attack = actor:fire_explosion(actor.x + dir * 40, actor.y, 100, 50, damage, nil, nil, true)
+				attack.attack_info:allow_stun()
+				attack.attack_info:set_stun(3, dir, standard)
+			end
+
+			local friends = List.new() -- list to hold our friends
+			actor:collision_rectangle_list(actor.x + dir * 40 + 50, actor.y - 25, actor.x + dir * 40 - 50, actor.y + 25, gm.constants.pActor, false, false, friends, false) -- this grabs all the actors in a radius
+		
+			for _, friend in ipairs(friends) do
+				if friend.team == actor.team and friend.value ~= player_actor.value then -- checking to see who is actually our friend
+					friend.pVspeed = -3
+					GM.actor_knockback_inflict(friend, 1, dir, 60, 9)
 				end
 			end
+
+			friends:destroy()	
 		end
 	end
 
