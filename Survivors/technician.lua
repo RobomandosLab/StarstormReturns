@@ -271,6 +271,15 @@ local buff_vending_2 = Buff.new(NAMESPACE, "really_hydrated")
 local buff_exposed = Buff.new(NAMESPACE, "exposed")
 local buff_exposed_2 = Buff.new(NAMESPACE, "exposed2")
 
+local fake_mocha = Item.new(NAMESPACE, "fakeMocha", true)
+fake_mocha:set_sprite(gm.constants.sMocha)
+fake_mocha:set_tier(Item.TIER.common)
+fake_mocha:clear_callbacks()
+fake_mocha:onStatRecalc(function(actor, stack)
+	actor.attack_speed = actor.attack_speed + 0.15 * stack
+	actor.pHmax = actor.pHmax + 0.06 * stack
+end)
+
 -- All the machines.........!
 
 --Create an EfFlash (Fading solid color overlay of the object)
@@ -1722,6 +1731,10 @@ stateTechnicianSpecial:onStep(function(actor, data)
 		turret_inst.image_xscale = actor.image_xscale
 		GM.actor_queue_dirty(turret_inst)
 		GM.inventory_items_copy(actor, turret_inst, Item.LOOT_TAG.item_blacklist_engi_turrets)
+		
+		turret_inst:item_give(fake_mocha, turret_inst:item_stack_count(Item.find("ror-mocha"))) -- this is stupid but has to be done because for whatever reason mochas crash the game when certain actors get it (like drones)
+		turret_inst:item_remove(Item.find("ror-mocha"), turret_inst:item_stack_count(Item.find("ror-mocha")), Item.STACK_KIND.any)
+		
 		if data.scepter > 0 then
 			turret_inst.upgrade_progress = 3
 		end
