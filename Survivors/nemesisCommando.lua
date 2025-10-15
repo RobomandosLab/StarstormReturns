@@ -5,6 +5,7 @@ local sprite_select			= Resources.sprite_load(NAMESPACE, "NemCommandoSelect", pa
 local sprite_portrait		= Resources.sprite_load(NAMESPACE, "NemCommandoPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall", path.combine(SPRITE_PATH, "portraitTiny.png"))
 local sprite_credits		= Resources.sprite_load(NAMESPACE, "CreditsSurvivorNemCommando", path.combine(SPRITE_PATH, "credits.png"), 1, 7, 11)
+local sprite_palette 		= Resources.sprite_load(NAMESPACE, "NemCommandoPalette", path.combine(SPRITE_PATH, "palette.png"))
 
 local sprite_idle			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
 local sprite_idle2			= Resources.sprite_load(NAMESPACE, "NemCommandoIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 15, 12)
@@ -130,6 +131,24 @@ nemCommando.sprite_loadout = sprite_select
 nemCommando.sprite_idle = sprite_idle
 nemCommando.sprite_title = sprite_walk
 nemCommando.sprite_credits = sprite_credits
+nemCommando:set_palettes(sprite_palette, sprite_palette, sprite_palette)
+
+--skins
+nemCommando:add_skin("Mk. II", 1, Resources.sprite_load(NAMESPACE, "NemCommandoSelect2", path.combine(SPRITE_PATH, "select2.png"), 34, 28, 0),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 3),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall2", path.combine(SPRITE_PATH, "portraitTiny2.png")))
+
+nemCommando:add_skin("Ice Blade", 2, Resources.sprite_load(NAMESPACE, "NemCommandoSelect3", path.combine(SPRITE_PATH, "select3.png"), 34, 28, 0),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 3),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall3", path.combine(SPRITE_PATH, "portraitTiny3.png")))
+
+nemCommando:add_skin("Nature's Gift", 3, Resources.sprite_load(NAMESPACE, "NemCommandoSelect4", path.combine(SPRITE_PATH, "select4.png"), 34, 28, 0),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 3),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall4", path.combine(SPRITE_PATH, "portraitTiny4.png")))
+
+nemCommando:add_skin("Callback", 4, Resources.sprite_load(NAMESPACE, "NemCommandoSelect5", path.combine(SPRITE_PATH, "select5.png"), 34, 28, 0),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortrait5", path.combine(SPRITE_PATH, "portrait5.png"), 3),
+Resources.sprite_load(NAMESPACE, "NemCommandoPortraitSmall5", path.combine(SPRITE_PATH, "portraitTiny5.png")))
 
 -- utility function for updating his basic sprites depending on if his last skill was the gun
 local function nemmando_update_sprites(actor, has_gun)
@@ -426,6 +445,7 @@ stateNemCommandoSecondary2:onStep(function(actor, data)
 			slash.direction = actor:skill_util_facing_direction()
 			slash.image_xscale = actor.image_xscale
 			slash.depth = slash.depth + i
+			slash:actor_skin_skinnable_set_skin(actor)
 
 			if i > 0 then
 				slash.image_blend = Color.DKGRAY
@@ -454,6 +474,8 @@ objSlash:onCreate(function(inst)
 	local data = inst:get_data()
 	data.hit_list = {}
 	data.lifetime = 80
+	
+	inst:actor_skin_skinnable_init()
 end)
 objSlash:onStep(function(inst)
 	if not Instance.exists(inst.parent) then
@@ -477,6 +499,7 @@ objSlash:onStep(function(inst)
 		trail.image_xscale = inst.image_xscale
 		trail.image_yscale = inst.image_yscale
 		trail.depth = inst.depth + 1
+		trail:actor_skin_skinnable_set_skin(inst.parent)
 	end
 
 	local scale = math.min(1, data.lifetime / 40)
@@ -501,6 +524,9 @@ objSlash:onStep(function(inst)
 			data.hit_list[actor.id] = true
 		end
 	end
+end)
+objSlash:onDraw(function(inst)
+	inst:actor_skin_skinnable_draw_self()
 end)
 
 nemCommandoUtility:set_skill_icon(sprite_skills, 3)

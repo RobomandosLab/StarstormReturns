@@ -22,7 +22,7 @@ local sprite_fall_half		= Resources.sprite_load(NAMESPACE, "ExecutionerFallHalf"
 local sprite_climb			= Resources.sprite_load(NAMESPACE, "ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 12, 18)
 local sprite_death			= Resources.sprite_load(NAMESPACE, "ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 11, 38, 17)
 local sprite_decoy			= Resources.sprite_load(NAMESPACE, "ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
---local sprite_palette		= Resources.sprite_load(NAMESPACE, "ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette		= Resources.sprite_load(NAMESPACE, "ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
 
 local sprite_shoot1			= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half	= Resources.sprite_load(NAMESPACE, "ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
@@ -57,6 +57,7 @@ local sprite_ion_particleS	= Resources.sprite_load(NAMESPACE, "ExecutionerIonPar
 local sprite_log			= Resources.sprite_load(NAMESPACE, "ExecutionerLog", path.combine(SPRITE_PATH, "log.png"))
 
 -- sounds.
+local sound_select			= Resources.sfx_load(NAMESPACE, "UISurvivorsExecutioner", path.combine(SOUND_PATH, "select.ogg"))
 local sound_shoot1			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
 local sound_shoot2			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
 local sound_shoot3			= Resources.sfx_load(NAMESPACE, "ExecutionerShoot3", path.combine(SOUND_PATH, "skill3.ogg"))
@@ -122,6 +123,7 @@ executioner:set_animations({
 
 executioner:set_cape_offset(0, -8, 0, -5)
 executioner:set_primary_color(Color.from_rgb(175, 113, 126))
+executioner.select_sound_id = sound_select
 
 executioner.sprite_loadout = sprite_loadout
 executioner.sprite_portrait = sprite_portrait
@@ -129,6 +131,20 @@ executioner.sprite_portrait_small = sprite_portrait_small
 executioner.sprite_idle = sprite_idle -- used by skin systen for idle sprite
 executioner.sprite_title = sprite_walk -- also used by skin system for walk sprite
 executioner.sprite_credits = sprite_credits
+executioner:set_palettes(sprite_palette, sprite_palette, sprite_palette)
+
+--skins
+executioner:add_skin("Grass Green", 1, Resources.sprite_load(NAMESPACE, "ExecutionerSelect2", path.combine(SPRITE_PATH, "select2.png"), 23, 28, 0),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 3),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall2.png")))
+
+executioner:add_skin("Blood Red", 2, Resources.sprite_load(NAMESPACE, "ExecutionerSelect3", path.combine(SPRITE_PATH, "select3.png"), 23, 28, 0),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 3),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall3.png")))
+
+executioner:add_skin("Royal Purple", 3, Resources.sprite_load(NAMESPACE, "ExecutionerSelect4", path.combine(SPRITE_PATH, "select4.png"), 23, 28, 0),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 3),
+Resources.sprite_load(NAMESPACE, "ExecutionerPortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall4.png")))
 
 executioner:clear_callbacks()
 executioner:onInit(function(actor)
@@ -787,6 +803,7 @@ stateExecutionerSpecial2:onStep(function(actor, data)
 			projectile.direction = 90 - actor.image_xscale * 90
 			projectile.image_xscale = actor.image_xscale
 			projectile.damage_coeff = damage
+			projectile:actor_skin_skinnable_set_skin(actor)
 
 			projectile.tX = actor.x + 270 * actor.image_xscale
 			projectile.tY = actor.y
@@ -831,6 +848,8 @@ objExecutionerAxe:onCreate(function(self)
 	self.time = 0.0
 
 	self:get_data().already_hit = {}
+	
+	self:actor_skin_skinnable_init()
 end)
 objExecutionerAxe:onStep(function(self)
 	if not Instance.exists(self.parent) then
@@ -956,6 +975,10 @@ objExecutionerAxe:onStep(function(self)
 		self.x = self.x + math.random(-4, 4)
 		self.y = self.y + math.random(-4, 4)
 	end
+end)
+
+objExecutionerAxe:onDraw(function(self)
+	self:actor_skin_skinnable_draw_self()
 end)
 
 local executionerLog = Survivor_Log.new(executioner, sprite_log)

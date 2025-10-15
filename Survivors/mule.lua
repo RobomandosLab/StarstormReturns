@@ -111,22 +111,22 @@ mule.sprite_credits = sprite_credits
 mule.select_sound_id = sound_select
 mule:set_palettes(sprite_palette, sprite_palette, sprite_palette)
 
--- skins
---mule:add_skin("Yellow Rose", 1, Resources.sprite_load(NAMESPACE, "MuleSelect2", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
---Resources.sprite_load(NAMESPACE, "MulePortrait2", path.combine(SPRITE_PATH, "portrait.png"), 4),
---Resources.sprite_load(NAMESPACE, "MulePortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall.png")))
+--skins
+mule:add_skin("Yellow Rose", 1, Resources.sprite_load(NAMESPACE, "MuleSelect2", path.combine(SPRITE_PATH, "select2.png"), 15, 56, 0),
+Resources.sprite_load(NAMESPACE, "MulePortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 4),
+Resources.sprite_load(NAMESPACE, "MulePortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall2.png")))
 
---mule:add_skin("Steel Soul", 2, Resources.sprite_load(NAMESPACE, "MuleSelect3", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
---Resources.sprite_load(NAMESPACE, "MulePortrait3", path.combine(SPRITE_PATH, "portrait.png"), 4),
---Resources.sprite_load(NAMESPACE, "MulePortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall.png")))
+mule:add_skin("Steel Soul", 2, Resources.sprite_load(NAMESPACE, "MuleSelect3", path.combine(SPRITE_PATH, "select3.png"), 15, 56, 0),
+Resources.sprite_load(NAMESPACE, "MulePortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 4),
+Resources.sprite_load(NAMESPACE, "MulePortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall3.png")))
 
---mule:add_skin("Automated Hunter", 3, Resources.sprite_load(NAMESPACE, "MuleSelect4", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
---Resources.sprite_load(NAMESPACE, "MulePortrait4", path.combine(SPRITE_PATH, "portrait.png"), 4),
---Resources.sprite_load(NAMESPACE, "MulePortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall.png")))
+mule:add_skin("Automated Hunter", 3, Resources.sprite_load(NAMESPACE, "MuleSelect4", path.combine(SPRITE_PATH, "select4.png"), 15, 56, 0),
+Resources.sprite_load(NAMESPACE, "MulePortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 4),
+Resources.sprite_load(NAMESPACE, "MulePortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall4.png")))
 
---mule:add_skin("Military Grade", 4, Resources.sprite_load(NAMESPACE, "MuleSelect5", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0),
---Resources.sprite_load(NAMESPACE, "MulePortrait5", path.combine(SPRITE_PATH, "portrait.png"), 4),
---Resources.sprite_load(NAMESPACE, "MulePortraitSmall5", path.combine(SPRITE_PATH, "portraitSmall.png")))
+mule:add_skin("Military Grade", 4, Resources.sprite_load(NAMESPACE, "MuleSelect5", path.combine(SPRITE_PATH, "select5.png"), 15, 56, 0),
+Resources.sprite_load(NAMESPACE, "MulePortrait5", path.combine(SPRITE_PATH, "portrait5.png"), 4),
+Resources.sprite_load(NAMESPACE, "MulePortraitSmall5", path.combine(SPRITE_PATH, "portraitSmall5.png")))
 
 mule:clear_callbacks()
 mule:onInit(function(actor)
