@@ -15,9 +15,10 @@ gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, 
 	if not displacement.active then return end
 	
 	validEnvs:clear()
-	for i = 1, 5 do -- go through 5 tiers of stages, we exclude tier 6 because we dont want to randomly go to risk of rain
+	for i = 1, 4 do -- go through 4 tiers of stages, we exclude tier 6 because we dont want to randomly go to risk of rain, and we exclude tier 5 stages because artifact of tempus can easily be cheesed if temple of the elders is chosen as one of the first stages (it also breaks the onstep code of the artifact's object for some reason? no clue why)
 		local envs = List.wrap(gm._mod_stage_get_pool_list(i)) -- get all environments in a tier
 		for _, env in ipairs(envs) do
+			print(Stage.wrap(env).identifier)
 			validEnvs:add(env) -- add each environment to validEnvs
 		end
 	end
@@ -28,7 +29,7 @@ gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, 
 	if args[1].value == 1 then -- if the upcoming stage is tier 1 >>
 		potentialEnvs:clear() -- >> clear the list of potential environments
 		-- >> restore the list to include all environments again
-		for i = 1, 5 do
+		for i = 1, 4 do
 			local envs = List.wrap(gm._mod_stage_get_pool_list(i))
 			for _, env in ipairs(envs) do
 				potentialEnvs:add(env)
