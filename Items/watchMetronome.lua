@@ -1,4 +1,4 @@
-local sprite = Resources.sprite_load(NAMESPACE, "WatchMetronome", path.combine(PATH, "Sprites/Items/watchMetronome.png"), 1, 15, 12)
+local sprite = Resources.sprite_load(NAMESPACE, "WatchMetronome", path.combine(PATH, "Sprites/Items/watchMetronome.png"), 1, 17, 15)
 local bar_sprite = Resources.sprite_load(NAMESPACE, "MetronomeBar2", path.combine(PATH, "Sprites/Items/Effects/metronomeBar.png"), 1, 26, 5)
 --local bar_sprite_big = Resources.sprite_load(NAMESPACE, "MetronomeBarBig", path.combine(PATH, "Sprites/Items/Effects/metronomeBarBig.png"), 1, 2, 8)
 
