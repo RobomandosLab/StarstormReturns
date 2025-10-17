@@ -35,6 +35,6 @@ midas:onUse(function(actor, embryo)
 		if embryo then
 			reward = reward * 2
 		end
-		hud:add_gold_gml_Object_oHUD_Create_0(reward)
+		hud.gold = hud.gold + reward
 	end
 end)
