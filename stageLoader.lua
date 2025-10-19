@@ -13,10 +13,6 @@ Resources.sprite_load(NAMESPACE, "MountainsBasinNew2", path.combine(PATH.."/Spri
 Resources.sprite_load(NAMESPACE, "LandCloud4WhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloud4WhistlingBasin.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "LandCloud5WhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloud5WhistlingBasin.png"), 1, 0, 0)
 
---Menu Resources
-local EnvironmentWhistlingBasin = Resources.sprite_load(NAMESPACE, "EnvironmentWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "EnvironmentWhistlingBasin.png"))
-local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "GroundStripWhistlingBasin.png"))
-
 --Stage
 local basin_stage = Stage.new(NAMESPACE, "whistlingBasin")
 basin_stage.music_id = Resources.sfx_load(NAMESPACE, "musicWhistlingBasin", path.combine(PATH.."/Sounds/Music", "musicWhistlingBasin.ogg"))
@@ -24,6 +20,11 @@ basin_stage.token_name = Language.translate_token("stage.whistlingBasin.name")
 basin_stage.token_subname = Language.translate_token("stage.whistlingBasin.subname")
 basin_stage.teleporter_index = 0
 basin_stage:set_index(2)
+
+--Menu Resources
+local EnvironmentWhistlingBasin = Resources.sprite_load(NAMESPACE, "EnvironmentWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "EnvironmentWhistlingBasin.png"))
+local GroundStripWhistlingBasin = Resources.sprite_load(NAMESPACE, "GroundStripWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "GroundStripWhistlingBasin.png"))
+basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
 
 --Rooms
 basin_stage:clear_rooms()
@@ -76,8 +77,6 @@ basin_stage:add_interactable_loop({
 basin_stage:set_log_icon(EnvironmentWhistlingBasin)
 basin_stage:set_log_view_start(3013, 2279)
 
---Main Menu
-basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
 
 --- TORRID OUTLANDS ---
 
@@ -94,10 +93,7 @@ Resources.sprite_load(NAMESPACE, "CanyonsBack1TorridOutlands", path.combine(PATH
 Resources.sprite_load(NAMESPACE, "CanyonsBack3TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack3TorridOutlands.png"), 1, 0, 0)
 Resources.sprite_load(NAMESPACE, "EelBone", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "skeelton.png"), 1, 0, 0)
 
---Menu Resources
-local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "EnvironmentTorridOutlands.png"))
-local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "GroundStripTorridOutlands.png"))
-
+--Stage
 local outlands_stage = Stage.new(NAMESPACE, "torridOutlands")
 outlands_stage.music_id = Resources.sfx_load(NAMESPACE, "musicTorridOutlands", path.combine(PATH.."/Sounds/Music", "musicTorridOutlandsOLD.ogg"))
 outlands_stage.token_name = Language.translate_token("stage.torridOutlands.name")
@@ -105,6 +101,11 @@ outlands_stage.token_subname = Language.translate_token("stage.torridOutlands.su
 outlands_stage.teleporter_index = 0
 outlands_stage.interactable_spawn_points = 900
 outlands_stage:set_index(3)
+
+--Menu Resources
+local EnvironmentTorridOutlands = Resources.sprite_load(NAMESPACE, "EnvironmentTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "EnvironmentTorridOutlands.png"))
+local GroundStripTorridOutlands = Resources.sprite_load(NAMESPACE, "GroundStripTorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "GroundStripTorridOutlands.png"))
+outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
 
 outlands_stage:clear_rooms()
 outlands_stage:add_room(path.combine(PATH.."/Stages/TorridOutlands", "torridOutlands1.rorlvl"))
@@ -153,8 +154,6 @@ outlands_stage:add_interactable_loop({
 outlands_stage:set_log_icon(EnvironmentTorridOutlands)
 outlands_stage:set_log_view_start(9247, 2300)
 
---Main Menu
-outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
 
 --- VERDANT WOODLAND ---
 
@@ -184,6 +183,8 @@ woodland_stage:add_monster({
     "mushrum",
     "greaterWisp",
     "wanderingVagrant",
+    "lynxTotem",
+    "impOverlord",
     "jellyfish",
     "stoneGolem",
     "gup",
