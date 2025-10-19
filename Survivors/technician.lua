@@ -902,7 +902,7 @@ end)
 obj_mine_pull:onStep(function(inst)
 	inst.ff = inst.ff + 1
 	local targets = List.new()
-	inst:collision_circle_list(inst.x, inst.y, MACHINE_MINE_PULL_RADIUS, gm.constants.pActorCollisionBase, false, true, targets, false)
+	inst:collision_circle_list(inst.x, inst.y, MACHINE_MINE_PULL_RADIUS, gm.constants.pActor, false, true, targets, false)
 	for _, target in ipairs(targets) do
 		--Check if we should pull the target
 		--Pulling is weird with ropes so climbing enemies are excluded

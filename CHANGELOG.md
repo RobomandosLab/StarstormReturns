@@ -1,5 +1,16 @@
 # SSR Changelog *spoilers below!!*
 
+## 0.1.3
+- Added 3-4 skins to every survivor except Technician (cuz he had them already)
+- Resprited Balloon, Coffee Bag, Cryptic Source, Juddering Egg, Roulette, Watch Metronome and Wonder Herbs
+- Added a log for MULE
+- Added a russian translation for Clay Admonitor's log
+- Clay Admonitor's attack is now slightly taller so you can't jump over it
+- Artifact of Displacement no longer includes stage 5s in the randomization process (broke Artifact of Tempus unlock)
+- Fixed M.I.D.A.S not giving money
+- Fixed Technician crashing the game when attempting to build a turret while holding a Mocha
+- Fixed Technician upgraded Forced Shutdown mine erroring when a Magma Worm or a Bramble are in its range
+
 ## 0.1.2
 - Various fixes for Mule and Technician
 - New enemy: Clay Admonitor

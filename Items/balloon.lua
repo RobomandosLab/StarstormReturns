@@ -1,4 +1,4 @@
-local sprite_item = Resources.sprite_load(NAMESPACE, "Balloon", path.combine(PATH, "Sprites/Items/balloon.png"), 1, 17, 17)
+local sprite_item = Resources.sprite_load(NAMESPACE, "Balloon", path.combine(PATH, "Sprites/Items/balloon.png"), 1, 17, 19)
 local sprite_effect = Resources.sprite_load(NAMESPACE, "EfBalloon", path.combine(PATH, "Sprites/Items/Effects/balloon.png"), 6, 4, 6)
 local sound_pop = Resources.sfx_load(NAMESPACE, "BalloonPop", path.combine(PATH, "Sounds/Items/balloonPop.ogg"))
 
