@@ -1,4 +1,4 @@
-local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Chirr")
+﻿local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Chirr")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Chirr")
 
 
@@ -148,12 +148,11 @@ local chirrPrimary =   chirr:get_primary()
 local chirrSecondary = chirr:get_secondary()
 local chirrUtility =   chirr:get_utility()
 local chirrSpecial =   chirr:get_special()
-
 local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
 chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
 
+-- replacement special once she is at max tames
 local chirrTether = Skill.new(NAMESPACE, "chirrTether")
-
 
 -- her movement control stuff and other on step stuff
 local tameHealthbarBuff = Buff.new(NAMESPACE, "chirrShowAllyHPBuff") -- draws the health bars for your friends!
@@ -328,65 +327,103 @@ stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
 end)
 
 
--------- headbutt
--- just skill info
+
+-------- burrow
 chirrSecondary.sprite = sprite_skills
 chirrSecondary.subimage = 1
-chirrSecondary.cooldown = 4*60
-chirrSecondary.damage = 3.0
-chirrSecondary.require_key_press = true
+chirrSecondary.damage = 3.5
+chirrSecondary.cooldown = 3 * 60
+chirrSecondary.require_key_press = false
 chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateChirrSecondary = State.new(NAMESPACE, "chirrSecondary") -- setting up states again
+local stateChirrBurrow = State.new(NAMESPACE, "chirrBurrow") -- the actual dive into the ground part
+local stateChirrDigging = State.new(NAMESPACE, "chirrDigging") -- start digging in the earth twin 🤖
 
 chirrSecondary:clear_callbacks()
-chirrSecondary:onActivate(function( actor )
-	actor:enter_state(stateChirrSecondary)
+chirrSecondary:onActivate(function(actor)
+	actor:enter_state(stateChirrBurrow)
 end)
 
-stateChirrSecondary:clear_callbacks()
-stateChirrSecondary:onEnter(function( actor, data ) -- skill setup again
+-- leaping into the ground behavior
+stateChirrBurrow:clear_callbacks()
+stateChirrBurrow:onEnter(function( actor, data )
+	-- anim stuff will go here when its added
 	actor.image_index = 0
-	data.fired = 0
+	actor.pVspeed = -12
+	tempVSpeed = -12
 end)
 
-stateChirrSecondary:onStep(function( actor, data ) -- using the skill
-	actor.sprite_index = sprite_shoot2
-	actor.image_speed = 0.25
+stateChirrBurrow:onStep(function( actor, data )
+	actor.pVspeed = actor.pVspeed + 0.5
+	if actor.pVspeed > actor.pVmax * 3 then
+		actor.pVspeed = actor.pVmax * 3
+	end
 
-	actor:skill_util_fix_hspeed()
+	actor:freeze_active_skill(Skill.SLOT.secondary) 
+	actor:set_immune(3) -- prevents instant death from fall damage
 
-	if data.fired == 0 then
-		data.fired = 1
-		actor:sound_play(sound_shoot2, .8, 0.9 + math.random() * 0.2)
+	if actor:is_grounded() and actor.pVspeed >= 0 then 
+		actor:enter_state(stateChirrDigging)
+	end
+end)
 
-		if actor:is_authority() then
-			local damage = actor:skill_get_damage(chirrSecondary)
-			local dir = actor.image_xscale -- explosions dont use directions, this is just used to make the x offset
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+-- digging around behavior
+stateChirrDigging:clear_callbacks()
+stateChirrDigging:onEnter(function( actor, data )
+	data.yLevel = actor.y
+	data.time = 0
+end)
 
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
-				attack = actor:fire_explosion(actor.x + dir * 40, actor.y, 100, 50, damage, nil, nil, true)
-				attack.attack_info:allow_stun()
-				attack.attack_info:set_stun(3, dir, standard)
-			end
+stateChirrDigging:onStep(function( actor, data )
+	actor.y = data.yLevel
+	actor.pVspeed = 0
+	data.time = data.time + 1
+	actor:set_immune(3)
+	actor:freeze_active_skill(Skill.SLOT.secondary)
 
-			local friends = List.new() -- list to hold our friends
-			actor:collision_rectangle_list(actor.x + dir * 40 + 50, actor.y - 25, actor.x + dir * 40 - 50, actor.y + 25, gm.constants.pActor, false, false, friends, false) -- this grabs all the actors in a radius
-		
-			for _, friend in ipairs(friends) do
-				if friend.team == actor.team and friend.value ~= player_actor.value then -- checking to see who is actually our friend
-					friend.pVspeed = -3
-					GM.actor_knockback_inflict(friend, 1, dir, 60, 9)
-				end
-			end
+	-- conditions keeping you in the state
+	local holding = gm.bool(actor.x_skill)
+	if not holding or data.time > 5 * 60 then
+		actor:skill_util_reset_activity_state()
+	end
 
-			friends:destroy()	
+	-- movement controls
+	-- this is split up because i need to do separate checks for if you can move left or right, otherwise youd just get stuck
+	local collisionL = actor:collision_point(actor.x - 32, actor.y + 32, gm.constants.pBlock, false, true)
+	local collisionR = actor:collision_point(actor.x + 32, actor.y + 32, gm.constants.pBlock, false, true)
+
+	if gm.bool(actor.moveLeft) then -- left checks
+		if not collisionL or (type(collisionL) == "number" and collisionL < 0) then
+			actor.pHspeed = 6
+		elseif not (actor.pHspeed < -1 * actor.pHmax * 1.75) then
+			actor.pHspeed = actor.pHspeed - 0.2
 		end
 	end
 
-	actor:skill_util_exit_state_on_anim_end()
+	if gm.bool(actor.moveRight) then -- right checks
+		if not collisionR or (type(collisionR) == "number" and collisionR < 0) then
+			actor.pHspeed = -6
+		elseif not (actor.pHspeed > actor.pHmax * 1.75) then
+			actor.pHspeed = actor.pHspeed + 0.2
+		end
+	end
 end)
+
+stateChirrDigging:onExit(function( actor, data )
+	actor.pVspeed = -9
+
+	local damage = actor:skill_get_damage(chirrSecondary)
+	local dir = actor.image_xscale
+
+	if actor:is_authority() then
+		local buff_shadow_clone = Buff.find("ror", "shadowClone")
+		for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local attack_info = actor:fire_explosion(actor.x, actor.y, 150, 150, damage).attack_info
+			attack_info:set_stun(3, dir, standard)
+		end
+	end
+end)
+
 
 
 -------- heal pulse
@@ -479,7 +516,6 @@ Callback.add(Callback.TYPE.onDraw, "SSChirrDrawPulseZone", function() -- just a 
 		end
 	end
 end)
-
 
 
 
