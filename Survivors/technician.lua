@@ -599,7 +599,7 @@ obj_turret:onStep(function(inst)
 					if inst.missileState == 2 then
 						if inst.secondarycooldown <= 0 then
 							local missile = object_missile:create(inst.x - 16 * inst.image_xscale, inst.y - 20)
-							missile.parent = inst.id
+							missile.parent = inst.parent
 							missile.team = inst.team
 							missile.damage = inst.parent.damage
 							missile.sync = true
