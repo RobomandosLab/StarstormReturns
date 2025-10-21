@@ -75,10 +75,7 @@ local tamed = {}
 local taming_target
 local has_full_party = 0
 local apply_tame_tag = 1
-
-
-local tethered
-local time_since_tether_override
+local tame_charge_time = .75*60
 
 chirr:set_stats_base({ -- setting base stats
 	maxhp = 104,
@@ -151,9 +148,6 @@ local chirrSpecial =   chirr:get_special()
 local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
 chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
 
--- replacement special once she is at max tames
-local chirrTether = Skill.new(NAMESPACE, "chirrTether")
-
 -- her movement control stuff and other on step stuff
 local tameHealthbarBuff = Buff.new(NAMESPACE, "chirrShowAllyHPBuff") -- draws the health bars for your friends!
 tameHealthbarBuff.show_icon = false
@@ -204,21 +198,20 @@ chirr:onStep(function( actor )
 		player_actor = actor
 	end
 
-	if player_actor then  -- UNREASONABLE RIDICULOUS TETHER FIX
+	if player_actor then -- party size tracker
 		if #tamed < 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 1 then -- if your party has newly been made empty
 			has_full_party = 0
-			time_since_tether_override = Global._current_frame
-			GM._mod_ActorSkillSlot_removeOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether , Skill.OVERRIDE_PRIORITY.cancel) -- sets the override skill to tether
-
 		elseif #tamed >= 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 0 then -- if your party has newly been made full
 			has_full_party = 1
-			GM._mod_ActorSkillSlot_addOverride(player_actor:actor_get_skill_slot(Skill.SLOT.special), chirrTether, Skill.OVERRIDE_PRIORITY.cancel) -- removes the tether override skill
-			time_since_tether_override = Global._current_frame
 		end
 	end
 
-	for i,v in ipairs(tamed) do
-		v.despawn_time = 9999
+	for i, friend in ipairs(tamed) do
+		if Instance.exists(friend) then -- sanity check to ensure your friends actually exist
+			friend.despawn_time = 99999999
+		else 
+			table.remove(tamed, i)
+		end
 	end
 end)
 
@@ -313,7 +306,6 @@ stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
 					local attack_info
 					attack_info = actor:fire_bullet(actor.x, actor.y + math.random(-8.00,8.00), 400, dir, damage, nil, sprite_sparks, thorn_tracer, true).attack_info
 					attack_info.climb = i * 8
-					attack_info.__ssr_chirr_set_tame_target = apply_tame_tag
 				end
 			end
 		end
@@ -355,8 +347,8 @@ end)
 
 stateChirrBurrow:onStep(function( actor, data )
 	actor.pVspeed = actor.pVspeed + 0.5
-	if actor.pVspeed > actor.pVmax * 3 then
-		actor.pVspeed = actor.pVmax * 3
+	if actor.pVspeed > actor.pVmax * 6 then
+		actor.pVspeed = actor.pVmax * 6
 	end
 
 	actor:freeze_active_skill(Skill.SLOT.secondary) 
@@ -389,12 +381,12 @@ stateChirrDigging:onStep(function( actor, data )
 
 	-- movement controls
 	-- this is split up because i need to do separate checks for if you can move left or right, otherwise youd just get stuck
-	local collisionL = actor:collision_point(actor.x - 32, actor.y + 32, gm.constants.pBlock, false, true)
-	local collisionR = actor:collision_point(actor.x + 32, actor.y + 32, gm.constants.pBlock, false, true)
+	local collisionL = actor:collision_point(actor.x - 16, actor.y + 32, gm.constants.pBlock, false, true)
+	local collisionR = actor:collision_point(actor.x + 16, actor.y + 32, gm.constants.pBlock, false, true)
 
 	if gm.bool(actor.moveLeft) then -- left checks
 		if not collisionL or (type(collisionL) == "number" and collisionL < 0) then
-			actor.pHspeed = 6
+			actor.pHspeed = 3
 		elseif not (actor.pHspeed < -1 * actor.pHmax * 1.75) then
 			actor.pHspeed = actor.pHspeed - 0.2
 		end
@@ -402,7 +394,7 @@ stateChirrDigging:onStep(function( actor, data )
 
 	if gm.bool(actor.moveRight) then -- right checks
 		if not collisionR or (type(collisionR) == "number" and collisionR < 0) then
-			actor.pHspeed = -6
+			actor.pHspeed = -3
 		elseif not (actor.pHspeed > actor.pHmax * 1.75) then
 			actor.pHspeed = actor.pHspeed + 0.2
 		end
@@ -523,25 +515,16 @@ end)
 -- getting a tame
 chirrSpecial.sprite = sprite_skills
 chirrSpecial.subimage = 3
-chirrSpecial.cooldown = 4 * 60
-chirrSpecial.require_key_press = true
+chirrSpecial.cooldown = 1.5 * 60
 chirrSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 -- getting a SUUUUUPPPERRR tame
 chirrSpecialScepter.sprite = sprite_skills
 chirrSpecialScepter.subimage = 5
-chirrSpecialScepter.cooldown = 4 * 60
+chirrSpecialScepter.cooldown = 1.5 * 60
 chirrSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
--- girl and her tether
-chirrTether.sprite = sprite_skills
-chirrTether.subimage = 4
-chirrTether.cooldown = 4 * 60
-chirrTether.require_key_press = false
-chirrTether.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
-
 local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
-local stateChirrTether = State.new(NAMESPACE, "chirrTether")
 
 local allyMaxHPFactor = 0.25
 local siphonFactor = 0.75
@@ -555,6 +538,7 @@ chirrSpecialScepter:onActivate(function( actor, data )
 	actor:enter_state(stateChirrSpecial)
 end)
 
+-- taming relating callbacks and object setup
 local obj_tame_heart = Object.new(NAMESPACE, "chirrTameHeart") -- making the little heart object
 obj_tame_heart.obj_sprite = sprite_shoot4
 obj_tame_heart.obj_depth = 1
@@ -589,7 +573,6 @@ end)
 
 Callback.add(Callback.TYPE.onGameStart, "SSChirrResetTameTable", function(  ) -- resets the friend list each game
 	tamed = {}
-	tethered = nil
 	taming_target = nil
 end)
 
@@ -597,12 +580,6 @@ Callback.add(Callback.TYPE.onDeath, "SSChirrTameUpdate", function( victim, fell_
 	for index, friend in ipairs(tamed) do
 		if friend.value == victim.value then
 			table.remove(tamed, index)
-		end
-	end
-
-	if tethered then
-		if tethered.value == victim.value then
-			tethered = nil
 		end
 	end
 
@@ -630,36 +607,6 @@ Callback.add(Callback.TYPE.onStageStart, "SSChirrFriendGroupup", function(  ) --
 	end
 end)
 
-Callback.add(Callback.TYPE.onDamagedProc, "SSChirrTetherSiphon", function( actor, hit_info ) -- soul siphon ACTIVATE!!
-	if player_actor then
-		if actor.value == player_actor.value and tethered then
-			local damage_to_siphon = hit_info.damage * siphonFactor
-			player_actor:heal(damage_to_siphon)
-			GM.damage_inflict(tethered, damage_to_siphon)
-		end
-	end
-end)
-
-Callback.add(Callback.TYPE.onDraw, "SSChirrDrawTether", function(  ) -- draws the tether graphics when shes tethering to an ally
-	if player_actor then
-		if tethered then
-			gm.draw_set_alpha(0.5)
-
-			gm.draw_set_colour(Color.TEXT_GREEN)
-			gm.draw_line_width(player_actor.x, player_actor.y, tethered.x, tethered.y, 5 + math.random() * 2)
-			gm.draw_circle(tethered.x, tethered.y, 4 + math.random() * 8, false)
-			gm.draw_circle(player_actor.x, player_actor.y, 2 + math.random() * 4, false)
-
-			gm.draw_set_colour(Color.WHITE)
-			gm.draw_line_width(player_actor.x, player_actor.y, tethered.x, tethered.y, 2)
-			gm.draw_circle(tethered.x, tethered.y, 8, true)
-			gm.draw_circle(player_actor.x, player_actor.y, 4, true)
-
-			gm.draw_set_alpha(1)
-		end
-	end
-end)
-
 Callback.add(Callback.TYPE.onAttackHit, "SSChirrSetTameTarget", function( hit_info ) -- sets chirrs tame target from her primary shot
 	local tame_tag = hit_info.attack_info.__ssr_chirr_set_tame_target
 
@@ -678,104 +625,63 @@ Callback.add(Callback.TYPE.onAttackHit, "SSChirrSetTameTarget", function( hit_in
 end)
 
 
-
+-- taming skill code
 stateChirrSpecial:clear_callbacks()
 stateChirrSpecial:onEnter(function( actor, data )
-	actor:sound_play(sound_shoot4, 1, 1)
-
-	obj_tame_heart:create(actor.x + 14 * actor.image_xscale, actor.y - 10) -- make the little heart
-
-	if taming_target then
-		if taming_target.team ~= actor.team and not taming_target.enemy_party and taming_target.hp <= taming_target.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
-			if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then -- sets the limit based off our scepter count
-
-				table.insert(tamed, taming_target) -- adds them to our list of total friends
-				taming_target.persistent = true -- this stops our friends from going away each stage
-				taming_target.is_character_enemy_targettable = true -- lets enemies actually target the poor fella
-				actor:actor_team_set(taming_target, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
-
-				taming_target:buff_remove(tameOptionDisplay) -- removes the little tame indicator
-				taming_target:buff_apply(tameHealthbarBuff, 1)
-				GM.elite_set(taming_target, elite) -- sets the elite type of your friend
-				actor:inventory_items_copy(actor, taming_target, 0) -- gives our friend our items
-				taming_target.y_range = taming_target.y_range + 100 -- lets our friend attack from a bit higher
-			end
-		end
-	end
-
-	actor:skill_util_reset_activity_state()
-end)
-
-chirrTether:clear_callbacks()
-chirrTether:onActivate(function( actor, state )
-	actor:enter_state(stateChirrTether)
-end)
-
-stateChirrTether:clear_callbacks()
-stateChirrTether:onEnter(function( actor, data )
 	data.step = 0
-	data.exit = 0
 end)
 
-local tether_tp_charge_time = .75*60
+stateChirrSpecial:onStep(function( actor, data )
+	data.step = data.step + 1
 
-stateChirrTether:onStep(function( actor, data ) -- track how long the tether skill is held to see what the skill should do after being let go
-	if Global._current_frame - time_since_tether_override > 10 then
-		actor:skill_util_fix_hspeed()
-	
-		data.step = data.step + 1
-
-		local holding = gm.bool(actor.v_skill)
-		if not holding or data.step >= tether_tp_charge_time then
-			actor:skill_util_reset_activity_state()
-		end		local holding = gm.bool(actor.v_skill)
-		if not holding or data.step >= tether_tp_charge_time then
-			actor:skill_util_reset_activity_state()
-		end
-	else
-		data.exit = 1
+	local holding = gm.bool(actor.v_skill)
+	if not holding or data.step >= tame_charge_time then
 		actor:skill_util_reset_activity_state()
 	end
 end)
 
-stateChirrTether:onExit(function( actor, data )
-	if data.exit == 0 then
-		if data.step >= tether_tp_charge_time then -- teleport friends nearby if held long enough
+stateChirrSpecial:onExit(function( actor, data )
+	if data.step >= tame_charge_time then
+		actor:sound_play(sound_shoot4, 1, 1)
+		obj_tame_heart:create(actor.x + 14 * actor.image_xscale, actor.y - 10) -- make the little heart
+
+		if has_full_party == 1 then
 			for _, friend in ipairs(tamed) do
 				friend:actor_teleport(actor.x, actor.y)
 			end
-		else -- tether the closest fella otherwise
-			if not tethered then
-				local nearby_friends = {}
-				local nearby_allies = List.new()
-				actor:collision_circle_list(actor.x, actor.y, 240, gm.constants.pActor, true, false, nearby_allies, false)
+		else
+			if taming_target then
+				if taming_target.team ~= actor.team and not taming_target.enemy_party and taming_target.hp <= taming_target.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
+					if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then -- sets the limit based off our scepter count
 
-				for _,ally in ipairs(nearby_allies) do
-					for _,friend in ipairs(tamed) do 
-						if ally.value == friend.value then
-							table.insert(nearby_friends, ally)
-						end
+						table.insert(tamed, taming_target) -- adds them to our list of total friends
+						taming_target.persistent = true -- this stops our friends from going away each stage
+						taming_target.is_character_enemy_targettable = true -- lets enemies actually target the poor fella
+						actor:actor_team_set(taming_target, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
+
+						taming_target:buff_remove(tameOptionDisplay) -- removes the little tame indicator
+						taming_target:buff_apply(tameHealthbarBuff, 1)
+						GM.elite_set(taming_target, elite) -- sets the elite type of your friend
+						actor:inventory_items_copy(actor, taming_target, 0) -- gives our friend our items
+						taming_target.y_range = taming_target.y_range + 100 -- lets our friend attack from a bit higher
 					end
 				end
+			end
+		end
 
-				local shortest_distance
-				local closest_friend
-				if #nearby_friends > 0 then
-					for _,friend in ipairs(nearby_friends) do
-						local current_distance = math.sqrt((friend.x - actor.x)^2+(friend.y - actor.y)^2)
+	else
+		actor:sound_play(sound_shoot1, .5, 0.9 + math.random() * 0.8)
+		
+		if actor:is_authority() then 
+			local damage = actor:skill_get_damage(chirrPrimary)
+			local dir = actor:skill_util_facing_direction()
 
-						if not shortest_distance or shortest_distance > current_distance then
-							shortest_distance = current_distance
-							closest_friend = friend
-							print(shortest_distance)
-						end
-					end
-				end
-
-				tethered = closest_friend
-				nearby_allies:destroy()
-			else
-				tethered = nil
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
+				local attack_info
+				attack_info = actor:fire_bullet(actor.x, actor.y, 400, dir, damage, nil, sprite_sparks, thorn_tracer, true).attack_info
+				attack_info.climb = i * 8
+				attack_info.__ssr_chirr_set_tame_target = apply_tame_tag
 			end
 		end
 	end
