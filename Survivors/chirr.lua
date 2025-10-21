@@ -76,6 +76,7 @@ local taming_target
 local has_full_party = 0
 local apply_tame_tag = 1
 local tame_charge_time = .75*60
+local tame_teleport_distance = 1200
 
 chirr:set_stats_base({ -- setting base stats
 	maxhp = 104,
@@ -209,6 +210,10 @@ chirr:onStep(function( actor )
 	for i, friend in ipairs(tamed) do
 		if Instance.exists(friend) then -- sanity check to ensure your friends actually exist
 			friend.despawn_time = 99999999
+
+			if gm.point_distance(actor.x, actor.y, friend.x, friend.y) >= tame_teleport_distance then
+				gm.teleport_nearby(friend.value, actor.x, actor.y)
+			end
 		else 
 			table.remove(tamed, i)
 		end
@@ -323,8 +328,8 @@ end)
 -------- burrow
 chirrSecondary.sprite = sprite_skills
 chirrSecondary.subimage = 1
-chirrSecondary.damage = 3.5
-chirrSecondary.cooldown = 3 * 60
+chirrSecondary.damage = 5
+chirrSecondary.cooldown = 5 * 60
 chirrSecondary.require_key_press = false
 chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
