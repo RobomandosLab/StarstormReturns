@@ -17,30 +17,7 @@ gm.post_code_execute("gml_Object_oEfGold_Create_0", function(self, other)
 	Alarm.create(function()
 		self.value = self.value * 2
 	end, 1)
-
-	-- im unsure if this is faster than finding all instances in a step callback, but both avoid using the gold_onstep, so it shouldnt cause lag while inactive?
-	Alarm.create(function()
-		local set_visible -- needs to be done, because otherwise set_visible would be out of scope in set_invisible
-		local function set_invisible()
-			if gm.instance_exists(self) then
-				self.image_alpha = 0
-				Alarm.create(set_visible, 3)
-			end
-		end
-		set_visible = function()
-			if gm.instance_exists(self) then
-				self.image_alpha = 1
-				Alarm.create(set_invisible, 7)
-			end
-		end
-		Alarm.create(set_invisible, 1)
-		-- destroy 
-		Alarm.create(function()
-			if gm.instance_exists(self) then
-				gm.instance_destroy(self)
-			end
-		end, 100)
-	end, 900)
+	self.lifetime = 1000
 end)
 
 -- It's preferred to always let basegame functions run, this mostly just undoes what alarm[1] is doing
@@ -49,5 +26,17 @@ gm.post_code_execute("gml_Object_oEfGold_Alarm_1", function(self, other)
 	if not gathering.active then return end
 	self.hspeed = 0
 	self.vspeed = 0
-	self.speed = 1 -- the pickup radius is loosely related to speed, if speed is 0 then you wouldnt be able to pick up the coin
+	self.speed = 5 -- the pickup radius is loosely related to speed, if speed is 0 then you wouldnt be able to pick up the coin
+
+	self.lifetime = self.lifetime - 5
+	if self.lifetime < 100 then
+		if self.lifetime % 15 < 10 then
+			self.visible = true
+		else
+			self.visible = false
+		end
+	end
+	if self.lifetime <= 0 then
+		gm.instance_destroy(self)
+	end
 end)
