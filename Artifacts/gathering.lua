@@ -23,13 +23,13 @@ gm.post_code_execute("gml_Object_oEfGold_Create_0", function(self, other)
 		local set_visible -- needs to be done, because otherwise set_visible would be out of scope in set_invisible
 		local function set_invisible()
 			if gm.instance_exists(self) then
-				self.visible = false
+				self.image_alpha = 0
 				Alarm.create(set_visible, 3)
 			end
 		end
 		set_visible = function()
 			if gm.instance_exists(self) then
-				self.visible = true
+				self.image_alpha = 1
 				Alarm.create(set_invisible, 7)
 			end
 		end
