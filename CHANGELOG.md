@@ -1,4 +1,6 @@
 # SSR Changelog *spoilers below!!*
+## 0.1.4
+- Optimized Artifact of Gathering to no longer tank performance as much. Which it did even while disabled. Huge thanks to Onyx (0n_x) for this one!
 
 ## 0.1.3
 - Added 3-4 skins to every survivor except Technician (cuz he had them already)
