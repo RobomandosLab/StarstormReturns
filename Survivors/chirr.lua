@@ -74,6 +74,7 @@ local player_actor
 local tamed = {}
 local taming_target
 local has_full_party = 0
+local apply_mist_buildup = 1
 local apply_tame_tag = 1
 local tame_charge_time = .75*60
 local tame_teleport_distance = 1200
@@ -159,11 +160,14 @@ tameHealthbarBuff:onPreDraw(function( actor )
 	actor:draw_hp_bar_ally()
 end)
 
-local tameOptionDisplay = Buff.new(NAMESPACE, "chirrIndicateTameTarget") -- this is her weird little tame indicator
-tameOptionDisplay.show_icon = true
-tameOptionDisplay.icon_sprite = sprite_portrait_small
-tameOptionDisplay.is_timed = false
-tameOptionDisplay.is_debuff = true
+local tameMark = Buff.new(NAMESPACE, "chirrTameMark") -- this is her weird little tame indicator
+tameMark.show_icon = true
+tameMark.icon_sprite = sprite_portrait_small
+tameMark.is_debuff = true
+
+tameMark:onStatRecalc(function( actor )
+	actor.armor = actor.armor - 30
+end)
 
 local flying = false -- hover stuff
 local wings
@@ -226,30 +230,33 @@ end)
 chirrPrimary.sprite = sprite_skills
 chirrPrimary.subimage = 0
 chirrPrimary.cooldown = 5
-chirrPrimary.damage = 0.9
+chirrPrimary.damage = 0.5
 chirrPrimary.require_key_press = false
 chirrPrimary.is_primary = true
 chirrPrimary.does_change_activity_state = true
 chirrPrimary.hold_facing_direction = true
 chirrPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
 
+-- tracer for her projectiles
 local tracer_particle = Particle.find("ror", "WispGTracer") 
 local tracer_color = Color.from_rgb(129,167,98)
 local tracer_color2= Color.from_rgb(204,232,111)
 local thorn_tracer, thorn_tracer_info = CustomTracer.new(function(x1, y1, x2, y2) -- i just kinda copied this tracer code and tweaked it for some fun visuals
-	y1 = y1 - 8
-	y2 = y2 - 8
+	local offset = -7 + math.random() * 3
+	y1 = y1 + offset
+	y2 = y2 + offset
+
+	local tr = gm.instance_create(x1, y1, gm.constants.oEfLineTracer)
+	tr.xend = x2
+	tr.yend = y2
+	tr.sprite_index = gm.constants.sPilotShoo1BTracer
+	tr.image_speed = 2
+	tr.rate = 0.125
+	tr.bm = 1 -- additive
+	tr.image_blend = tracer_color2
 
 	local dist = gm.point_distance(x1, y1, x2, y2)
 	local dir = gm.point_direction(x1, y1, x2, y2)
-
-	local t = GM.instance_create(x1, y1, gm.constants.oEfProjectileTracer)
-	t.direction = dir
-	t.speed = 60
-	t.length = 80
-	t.blend_1 = tracer_color2
-	t.blend_2 = tracer_color2
-	t:alarm_set(0, math.max(1, dist / t.speed))
 
 	tracer_particle:set_direction(dir, dir, 0, 0)
 	local px = x1
@@ -272,6 +279,27 @@ local thorn_tracer, thorn_tracer_info = CustomTracer.new(function(x1, y1, x2, y2
 end)
 thorn_tracer_info.sparks_offset_y = -8
 
+-- debuff that her primary inflicts
+local healingMistBuildup = Buff.new(NAMESPACE, "healingMistDebuff") -- this is her weird little tame indicator
+healingMistBuildup.show_icon = true
+healingMistBuildup.icon_sprite = sprite_portrait_small
+healingMistBuildup.is_debuff = true
+healingMistBuildup.icon_stack_subimage = false
+healingMistBuildup.draw_stack_number = true
+healingMistBuildup.stack_number_col = Array.new(1, tracer_color2)
+healingMistBuildup.max_stack = 9
+
+healingMistBuildup:onApply(function( actor, stack )
+	if stack == 9 then
+		actor:buff_remove(healingMistBuildup)
+
+		if player_actor then
+			player_actor:fire_explosion(actor.x, actor.y, 100, 100, 3)
+		end
+	end
+end)
+
+-- actual primary skill
 local stateChirrPrimary = State.new(NAMESPACE, "chirrPrimary") -- making a primary state
 
 chirrPrimary:clear_callbacks()
@@ -311,6 +339,7 @@ stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
 					local attack_info
 					attack_info = actor:fire_bullet(actor.x, actor.y + math.random(-8.00,8.00), 400, dir, damage, nil, sprite_sparks, thorn_tracer, true).attack_info
 					attack_info.climb = i * 8
+					attack_info.__ssr_chirr_mist_buildup_tag = apply_mist_buildup
 				end
 			end
 		end
@@ -529,22 +558,9 @@ chirrSpecialScepter.subimage = 5
 chirrSpecialScepter.cooldown = 1.5 * 60
 chirrSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
 
-local allyMaxHPFactor = 0.25
-local siphonFactor = 0.75
-
-chirrSpecial:clear_callbacks()
-chirrSpecial:onActivate(function( actor, data )
-	actor:enter_state(stateChirrSpecial)
-end)
-chirrSpecialScepter:clear_callbacks()
-chirrSpecialScepter:onActivate(function( actor, data )
-	actor:enter_state(stateChirrSpecial)
-end)
-
--- taming relating callbacks and object setup
-local obj_tame_heart = Object.new(NAMESPACE, "chirrTameHeart") -- making the little heart object
+-- making the little heart object
+local obj_tame_heart = Object.new(NAMESPACE, "chirrTameHeart")
 obj_tame_heart.obj_sprite = sprite_shoot4
 obj_tame_heart.obj_depth = 1
 
@@ -557,25 +573,34 @@ end
 
 obj_tame_heart:onStep(tameHeartStep)
 
-local elite = Elite.new(NAMESPACE, "tamed") -- setup for the elite type
+
+ -- elite type for tamed enemies
+local elite = Elite.new(NAMESPACE, "tamed")
 local elite_id = gm.elite_type_find("tamed")
 elite:set_healthbar_icon(sprite_tamed_icon)
 elite.palette = sprite_palette
 gm._mod_elite_generate_palette_all()
 
-local tamedStatChangeItem = Item.new(NAMESPACE, "tamedEliteItem", true) -- item for your fellas 
-tamedStatChangeItem.is_hidden = true
+-- stat changes and behaviors for tames
+local tamedEliteItem = Item.new(NAMESPACE, "tamedEliteItem", true) -- item for your fellas 
+tamedEliteItem.is_hidden = true
 
-tamedStatChangeItem:onStatRecalc(function( actor, stack )
-	actor.maxhp = actor.maxhp * allyMaxHPFactor
-	actor.hp = actor.hp * allyMaxHPFactor
+tamedEliteItem:onStatRecalc(function( actor, stack )
+	actor.maxhp = actor.maxhp * 0.25
+	actor.hp = actor.hp * 0.25
+end)
+
+tamedEliteItem:onPostStep(function( actor, data )
+	actor.hp = actor.hp - actor.maxhp * 0.001
 end)
 
 elite:clear_callbacks()
 elite:onApply(function( actor )
-	actor:item_give(tamedStatChangeItem)
+	actor:item_give(tamedEliteItem)
 end)
 
+
+-- callbacks that keep this character from fucking shitting itself
 Callback.add(Callback.TYPE.onGameStart, "SSChirrResetTameTable", function(  ) -- resets the friend list each game
 	tamed = {}
 	taming_target = nil
@@ -590,7 +615,7 @@ Callback.add(Callback.TYPE.onDeath, "SSChirrTameUpdate", function( victim, fell_
 
 	if taming_target then
 		if victim.value == taming_target.value then
-			taming_target:remove_buff(tameOptionDisplay)
+			taming_target:remove_buff(tameMark)
 			taming_target = nil
 		end
 	end
@@ -605,32 +630,49 @@ Callback.add(Callback.TYPE.onPickupCollected, "SSChirrFriendItemSync", function(
 end)
 
 Callback.add(Callback.TYPE.onStageStart, "SSChirrFriendGroupup", function(  ) -- brings your friends to you on each stage
-	if player_actor then
-		for _, friend in ipairs(tamed) do
-			gm.teleport_nearby(friend.value, player_actor.x, player_actor.y)
-		end
-	end
+	table.clear(tamed)
 end)
 
-Callback.add(Callback.TYPE.onAttackHit, "SSChirrSetTameTarget", function( hit_info ) -- sets chirrs tame target from her primary shot
+Callback.add(Callback.TYPE.onAttackHit, "SSChirrApplyDebuffs", function( hit_info ) -- applies chirrs debuffs where necessary
+	-- taming mark
 	local tame_tag = hit_info.attack_info.__ssr_chirr_set_tame_target
 
 	if tame_tag then
-		if taming_target then
-			if taming_target ~= hit_info.target and #tamed < 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) then
-				taming_target:buff_remove(tameOptionDisplay)
-				taming_target = hit_info.target
-				hit_info.target:buff_apply(tameOptionDisplay, 1)
+		if taming_target and Instance.exists(taming_target) then
+			if taming_target:buff_stack_count(tameMark) > 0 then
+				taming_target:buff_remove(tameMark)
 			end
-		else
-			taming_target = hit_info.target
-			hit_info.target:buff_apply(tameOptionDisplay, 1)
 		end
+
+		taming_target = hit_info.target
+		hit_info.target:buff_apply(tameMark, 10 * 60)
+
+		for _, tame in ipairs(tamed) do
+			tame.target = taming_target
+		end
+	end
+
+	-- healing mist buildup
+	local mist_tag = hit_info.attack_info.__ssr_chirr_mist_buildup_tag
+
+	if mist_tag then
+		hit_info.target:buff_apply(healingMistBuildup, 6 * 60)
 	end
 end)
 
 
 -- taming skill code
+local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
+
+chirrSpecial:clear_callbacks()
+chirrSpecial:onActivate(function( actor, data )
+	actor:enter_state(stateChirrSpecial)
+end)
+chirrSpecialScepter:clear_callbacks()
+chirrSpecialScepter:onActivate(function( actor, data )
+	actor:enter_state(stateChirrSpecial)
+end)
+
 stateChirrSpecial:clear_callbacks()
 stateChirrSpecial:onEnter(function( actor, data )
 	data.step = 0
@@ -660,11 +702,10 @@ stateChirrSpecial:onExit(function( actor, data )
 					if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then -- sets the limit based off our scepter count
 
 						table.insert(tamed, taming_target) -- adds them to our list of total friends
-						taming_target.persistent = true -- this stops our friends from going away each stage
 						taming_target.is_character_enemy_targettable = true -- lets enemies actually target the poor fella
 						actor:actor_team_set(taming_target, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
 
-						taming_target:buff_remove(tameOptionDisplay) -- removes the little tame indicator
+						taming_target:buff_remove(tameMark) -- removes the little tame indicator
 						taming_target:buff_apply(tameHealthbarBuff, 1)
 						GM.elite_set(taming_target, elite) -- sets the elite type of your friend
 						actor:inventory_items_copy(actor, taming_target, 0) -- gives our friend our items
