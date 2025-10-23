@@ -1,6 +1,6 @@
 {
 	"name": "StarstormReturns",
-	"version_number": "0.1.4",
+	"version_number": "0.1.5",
 	"website_url": "https://discord.gg/fGShMVEayr",
 	"description": "A remaster of Starstorm 1, adding new survivors, items, artifacts, stages, enemies and much more to Risk of Rain Returns.",
 	"dependencies": [
