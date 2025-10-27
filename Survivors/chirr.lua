@@ -641,7 +641,7 @@ stateChirrUtilityAlt:onStep(function( actor, data )
 			local buff_shadow_clone = Buff.find("ror", "shadowClone")
 			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
 				for _, friend in ipairs(tamed) do
-					local damage = (friend.maxhp * 0.2)/10 -- a quarter of your tames max hp, adjusted to work as a % value
+					local damage = friend.maxhp/40 -- your tames max hp, adjusted to work as a % value
 					local attack_info = actor:fire_explosion(friend.x, friend.y, 600, 600, damage).attack_info
 					attack_info:set_stun(1, dir, standard)
 					GM.damage_inflict(friend, friend.maxhp)
