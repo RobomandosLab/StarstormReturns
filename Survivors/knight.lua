@@ -1390,8 +1390,8 @@ objConsecratedBanner:set_sprite(gm.constants.sEfWarbanner)
 
 local objEfConsecrate = Object.new(NAMESPACE, "knightEfConsecrate")
 objEfConsecrate:set_sprite(gm.constants.sEfArtiStarIdle)
-local partConsecrate = Particle.new(NAMESPACE, "knightConsecrate")
 
+local partConsecrate = Particle.new(NAMESPACE, "knightConsecrate")
 partConsecrate:set_shape(Particle.SHAPE.star)
 partConsecrate:set_life(15, 25)
 partConsecrate:set_size(0.08, 0.12, -0.005, 0)

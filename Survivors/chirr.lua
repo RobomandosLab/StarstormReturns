@@ -77,7 +77,7 @@ local has_full_party = 0
 local apply_mist_buildup = 1
 local apply_tame_tag = 1
 local tame_charge_time = .75*60
-local tame_teleport_distance = 1200
+local tame_teleport_distance = 1100
 
 chirr:set_stats_base({ -- setting base stats
 	maxhp = 104,
@@ -149,6 +149,10 @@ local chirrUtility =   chirr:get_utility()
 local chirrSpecial =   chirr:get_special()
 local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
 chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
+
+-- alt skills
+local chirrUtilityAlt = Skill.new(NAMESPACE, "channelingPulse")
+chirr:add_utility(chirrUtilityAlt)
 
 -- her movement control stuff and other on step stuff
 local tameHealthbarBuff = Buff.new(NAMESPACE, "chirrShowAllyHPBuff") -- draws the health bars for your friends!
@@ -230,7 +234,7 @@ end)
 chirrPrimary.sprite = sprite_skills
 chirrPrimary.subimage = 0
 chirrPrimary.cooldown = 5
-chirrPrimary.damage = 0.5
+chirrPrimary.damage = 0.4
 chirrPrimary.require_key_press = false
 chirrPrimary.is_primary = true
 chirrPrimary.does_change_activity_state = true
@@ -279,6 +283,50 @@ local thorn_tracer, thorn_tracer_info = CustomTracer.new(function(x1, y1, x2, y2
 end)
 thorn_tracer_info.sparks_offset_y = -8
 
+-- healing mist spawned by the primary
+local objHealingMist = Object.new(NAMESPACE, "chirrHealingMist")
+objHealingMist.obj_depth = 1
+
+local partHealingMist = Particle.new(NAMESPACE, "partHealingMist")
+partHealingMist:set_shape(Particle.SHAPE.cloud)
+partHealingMist:set_life(60)
+partHealingMist:set_size(1, 1.2, -0.0167, -0.02)
+
+local partHealingSparks = Particle.new(NAMESPACE, "partHealingSparks")
+partHealingSparks:set_shape(Particle.SHAPE.star)
+partHealingSparks:set_life(10, 30)
+partHealingSparks:set_size(0.09, 0.125, -0.05, -0.1)
+
+objHealingMist:onCreate(function( inst )
+	inst.parent = -4
+	inst.start = Global._current_frame
+	inst.tick = Global._current_frame
+end)
+
+objHealingMist:onStep(function( inst )
+	if Global._current_frame - inst.start >= 5 * 60 then
+		inst:destroy()
+	end
+
+	partHealingMist:create_color(inst.x + math.random(-90,90), inst.y + math.random(-90,90), Color.TEXT_GREEN, 1, Particle.SYSTEM.below)
+
+	if Global._current_frame - inst.tick >= 30 then
+		partHealingSparks:create_color(inst.x + math.random(-90,90), inst.y + math.random(-90,90), Color.TEXT_GREEN, 1, Particle.SYSTEM.above)
+
+		local friends = List.new() 
+		player_actor:collision_circle_list(inst.x, inst.y, 180, gm.constants.pActor, false, false, friends, false) 
+
+		for _, friend in ipairs(friends) do
+			if friend.team == 1 then -- checking to see who is actually our friend
+				friend:heal(friend.maxhp * .025)
+			end
+		end
+				
+		friends:destroy()
+		inst.tick = Global._current_frame
+	end
+end)
+
 -- debuff that her primary inflicts
 local healingMistBuildup = Buff.new(NAMESPACE, "healingMistDebuff") -- this is her weird little tame indicator
 healingMistBuildup.show_icon = true
@@ -290,12 +338,16 @@ healingMistBuildup.stack_number_col = Array.new(1, tracer_color2)
 healingMistBuildup.max_stack = 9
 
 healingMistBuildup:onApply(function( actor, stack )
-	if stack == 9 then
+	if stack == 5 then
 		actor:buff_remove(healingMistBuildup)
 
 		if player_actor then
-			player_actor:fire_explosion(actor.x, actor.y, 100, 100, 3)
+			player_actor:fire_explosion(actor.x, actor.y, 100, 100, 1)
 		end
+
+		local mist = objHealingMist:create(actor.x, actor.y)
+		mist.parent = actor
+
 	end
 end)
 
@@ -463,8 +515,8 @@ chirrUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.
 
 local stateChirrUtility = State.new(NAMESPACE, "chirrUtility") -- guess what this is, you get three tries
 
-local channeling_heal_pulse = 0
-local channeling_step = 0
+local charging_heal = 0
+local charging_heal_step = 0
 
 chirrUtility:clear_callbacks()
 chirrUtility:onActivate(function(actor)
@@ -489,12 +541,12 @@ stateChirrUtility:onStep(function( actor, data )
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = .25
 
-	channeling_heal_pulse = 1
-	channeling_step = channeling_step + 1
+	charging_heal = 1
+	charging_heal_step = charging_heal_step + 1
 
 	actor:skill_util_fix_hspeed()
 
-	if actor.image_index == 12 then -- when the animation reaches the final frame
+	if actor.image_index >= 11.5 then -- when the animation reaches the final frame
 		actor:sound_play(sound_shoot3b, 1.2, 0.9 + math.random() * 0.2)
 
 		local healArea = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle) -- cool circle object ty kris
@@ -525,22 +577,90 @@ stateChirrUtility:onStep(function( actor, data )
 end)
 
 stateChirrUtility:onExit(function( ... )
-	channeling_heal_pulse = 0
-	channeling_step = 0
+	charging_heal = 0
+	charging_heal_step = 0
 end)
 
 
 Callback.add(Callback.TYPE.onDraw, "SSChirrDrawPulseZone", function() -- just a fun visual to help you aim the heal pulse
-	if channeling_heal_pulse == 1 then
+	if charging_heal == 1 then
 		if player_actor then
-			gm.draw_set_alpha(channeling_step * .0025)
+			gm.draw_set_alpha(charging_heal_step * .0025)
 
 			gm.draw_set_colour(Color.TEXT_GREEN)
-			gm.draw_circle(player_actor.x, player_actor.y, 200 + (math.log(channeling_step) * 35), false)
+			gm.draw_circle(player_actor.x, player_actor.y, 200 + (math.log(charging_heal_step) * 35), false)
 	
 			gm.draw_set_alpha(1)
 		end
 	end
+end)
+
+
+-------- channeling pulse
+chirrUtilityAlt.sprite = sprite_skills
+chirrUtilityAlt.subimage = 2
+chirrUtilityAlt.cooldown = 15 * 60
+chirrUtilityAlt.is_utility = true
+chirrUtilityAlt.require_key_press = true
+chirrUtilityAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+
+local stateChirrUtilityAlt = State.new(NAMESPACE, "chirrUtilityAlt") -- guess what this is, you get three tries
+
+local charging_blast = 0
+local charging_blast_step = 0
+
+chirrUtilityAlt:clear_callbacks()
+chirrUtilityAlt:onActivate(function(actor)
+	actor:enter_state(stateChirrUtilityAlt)
+end)
+
+stateChirrUtilityAlt:clear_callbacks()
+stateChirrUtilityAlt:onEnter(function(actor, data)
+	actor.image_index = 0
+	actor:sound_play(sound_shoot3a, .6, 1.4)
+end)
+
+stateChirrUtilityAlt:onStep(function( actor, data )
+	actor.sprite_index = sprite_shoot3
+	actor.image_speed = .2
+
+	charging_blast = 1
+	charging_blast_step = charging_blast_step + 1
+
+	actor:skill_util_fix_hspeed()
+
+	if actor.image_index >= 11.5 then -- when the animation reaches the final frame
+		actor:sound_play(sound_shoot3b, 1.2, 0.9 + math.random() * 0.2)
+
+		local trigger_pulse = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle)
+		trigger_pulse.radius = 0
+		trigger_pulse.rate = 120
+		trigger_pulse.image_blend = Color.from_rgb(179,217,148)
+
+		if actor:is_authority() then
+			local buff_shadow_clone = Buff.find("ror", "shadowClone")
+			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
+				for _, friend in ipairs(tamed) do
+					local damage = (friend.maxhp * 0.2)/10 -- a quarter of your tames max hp, adjusted to work as a % value
+					local attack_info = actor:fire_explosion(friend.x, friend.y, 600, 600, damage).attack_info
+					attack_info:set_stun(1, dir, standard)
+					GM.damage_inflict(friend, friend.maxhp)
+
+					local detonate_pulse = GM.instance_create(friend.x, friend.y, gm.constants.oEfCircle)
+					detonate_pulse.radius = 0
+					detonate_pulse.rate = 120
+					detonate_pulse.image_blend = Color.from_rgb(179,217,148)
+				end
+			end
+		end
+	end
+
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+stateChirrUtilityAlt:onExit(function( ... )
+	charging_blast = 0
+	charging_blast_step = 0
 end)
 
 
@@ -585,13 +705,8 @@ gm._mod_elite_generate_palette_all()
 local tamedEliteItem = Item.new(NAMESPACE, "tamedEliteItem", true) -- item for your fellas 
 tamedEliteItem.is_hidden = true
 
-tamedEliteItem:onStatRecalc(function( actor, stack )
-	actor.maxhp = actor.maxhp * 0.25
-	actor.hp = actor.hp * 0.25
-end)
-
 tamedEliteItem:onPostStep(function( actor, data )
-	actor.hp = actor.hp - actor.maxhp * 0.001
+	actor.hp = actor.hp - actor.maxhp * 0.00075
 end)
 
 elite:clear_callbacks()
@@ -630,7 +745,7 @@ Callback.add(Callback.TYPE.onPickupCollected, "SSChirrFriendItemSync", function(
 end)
 
 Callback.add(Callback.TYPE.onStageStart, "SSChirrFriendGroupup", function(  ) -- brings your friends to you on each stage
-	table.clear(tamed)
+	tamed = {}
 end)
 
 Callback.add(Callback.TYPE.onAttackHit, "SSChirrApplyDebuffs", function( hit_info ) -- applies chirrs debuffs where necessary
@@ -706,6 +821,7 @@ stateChirrSpecial:onExit(function( actor, data )
 						actor:actor_team_set(taming_target, 1) -- setting the enemies team to our team (1 is player team, 2 is enemy)
 
 						taming_target:buff_remove(tameMark) -- removes the little tame indicator
+						taming_target:buff_remove(healingMistBuildup) -- theres no reason for this to be there now
 						taming_target:buff_apply(tameHealthbarBuff, 1)
 						GM.elite_set(taming_target, elite) -- sets the elite type of your friend
 						actor:inventory_items_copy(actor, taming_target, 0) -- gives our friend our items
