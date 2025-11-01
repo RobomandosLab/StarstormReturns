@@ -1,20 +1,20 @@
 -- starstorm returns
 -- ssr team
-mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto(true)
+mods["ReturnsAPI-ReturnsAPI"].auto{mp = true, namespace = "ssr"}
 
 PATH = _ENV["!plugins_mod_folder_path"]
-NAMESPACE = "ssr"
 
 local init = function()
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
-		"Actors",
-		"Elites",
-		"Gameplay",
+		"Language",
+		--"Actors",
+		--"Elites",
+		--"Gameplay",
 		"Survivors",
-		"Items",
-		"Equipments",
-		"Artifacts"
+		--"Items",
+		--"Equipments",
+		--"Artifacts"
 	}
 
 	for _, folder in ipairs(folders) do
@@ -27,13 +27,14 @@ local init = function()
 			end
 		end
 	end
-	require("stageLoader") --temporaryoh 
+	--require("stageLoader")
 
 	-- once we have loaded everything, enable hot/live reloading.
 	-- this variable may be used by content code to make sure it behaves correctly when hotloading
 	HOTLOADING = true
 end
-Initialize(init)
+
+Initialize.add(init)
 
 if HOTLOADING then
 	init()
