@@ -14,8 +14,11 @@ local init = function()
 		"Survivors",
 		--"Items",
 		--"Equipments",
-		--"Artifacts"
+		--"Artifacts",
+		"Stages"
 	}
+	
+	Stage.remove_all_rooms() -- reload stages
 
 	for _, folder in ipairs(folders) do
 		-- NOTE: this includes filepaths within subdirectories of the above folders
@@ -27,7 +30,6 @@ local init = function()
 			end
 		end
 	end
-	--require("stageLoader")
 
 	-- once we have loaded everything, enable hot/live reloading.
 	-- this variable may be used by content code to make sure it behaves correctly when hotloading
