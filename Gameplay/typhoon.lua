@@ -1,18 +1,21 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Menu")
 local SOUND_PATH = path.combine(PATH, "Sounds/Menu")
 
-local sprite_small = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon", path.combine(SPRITE_PATH, "DifficultyTyphoon.png"), 5, 11, 9)
-local sprite_large = Resources.sprite_load(NAMESPACE, "DifficultyTyphoon2X", path.combine(SPRITE_PATH, "DifficultyTyphoon_2x.png"), 4, 22, 20)
+local sprite_small = Sprite.new("DifficultyTyphoon", path.combine(SPRITE_PATH, "DifficultyTyphoon.png"), 5, 11, 9)
+local sprite_large = Sprite.new("DifficultyTyphoon2X", path.combine(SPRITE_PATH, "DifficultyTyphoon_2x.png"), 4, 22, 20)
 
-local sound_select = Resources.sfx_load(NAMESPACE, "UI_Diff_Typhoon", path.combine(SOUND_PATH, "UI_Diff_Typhoon.ogg"))
+local sound_select = Sound.new("UI_Diff_Typhoon", path.combine(SOUND_PATH, "UI_Diff_Typhoon.ogg"))
 
-local typhoon = Difficulty.new(NAMESPACE, "typhoon")
-typhoon:set_sprite(sprite_small, sprite_large)
-typhoon:set_primary_color(Color.from_rgb(195, 28, 124))
-typhoon:set_sound(sound_select)
-typhoon:set_scaling(0.2, 4.0, 1.7)
-typhoon:set_monsoon_or_higher(true)
-typhoon:set_allow_blight_spawns(true)
+local typhoon = Difficulty.new("typhoon")
+typhoon.sprite_id = sprite_small
+typhoon.sprite_loadout_id = sprite_large
+typhoon.primary_color = Color.from_rgb(195, 28, 124)
+typhoon.sound_id = sound_select
+typhoon.diff_scale = 0.2
+typhoon.general_scale = 4.0
+typhoon.point_scale = 1.7
+typhoon.is_monsoon_or_higher = true
+typhoon.allow_blight_spawns = true
 
 --[[
 Callback.add(Callback.TYPE.onGameStart, "SSTyphoonStart", function()

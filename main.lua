@@ -10,7 +10,7 @@ local init = function()
 		"Language",
 		--"Actors",
 		--"Elites",
-		--"Gameplay",
+		"Gameplay",
 		"Survivors",
 		--"Items",
 		--"Equipments",
