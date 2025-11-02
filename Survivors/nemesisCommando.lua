@@ -110,6 +110,8 @@ nemmando:set_stats_level({
 
 local nemmando_log = SurvivorLog.new_from_survivor(nemmando)
 nemmando_log.portrait_id = sprite_log
+nemmando_log.sprite_id = sprite_walk
+nemmando_log.sprite_icon_id = sprite_portrait
 
 nemmando.primary_color = Color.from_rgb(250, 40, 40)
 
@@ -267,7 +269,7 @@ Callback.add(statePrimary.on_step, function(actor, data)
 		actor.z_count = actor.z_count + 1 -- this is part of heaven cracker and has to be run shared for reasons
 
 		-- has to be host-side instead of authority-side because of the wounding thing uughhhhhhhhhhhh
-		if gm._mod_net_isHost() then
+		if Net.host then
 			local damage = actor:skill_get_damage(primary)
 			local direction = actor:skill_util_facing_direction()
 
@@ -530,7 +532,7 @@ Callback.add(objSlash.on_step, function(inst)
 
 	for _, actor in ipairs(actors) do
 		if inst:attack_collision_canhit(actor) and not data.hit_list[actor.id] then
-			if gm._mod_net_isHost() then
+			if Net.host then
 				local attack = inst.parent:fire_direct(actor, 0.9, inst.direction, inst.x, inst.y, gm.constants.sBite3).attack_info
 				attack.__ssr_nemmando_wound = ATTACK_TAG_APPLY_WOUND
 			end
@@ -689,13 +691,13 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 			local auto_toss = data.fuse_timer <= GRENADE_AUTOTHROW_THRESHOLD
 
 			if (release or low_toss or auto_toss) and data.tossed == 0 then
-				if gm._mod_net_isOnline() then
+				if Net.online then
 					-- magical bullshit to sync grenade releasing
 					-- so the thing is, there's no way to tell if another player is holding down their skill input.
 					-- so to actually sync this, i use the game's own message system to send a vanilla packet -- id 43: "set_activity_var2"
 					-- this packet sets the activity_var2 variable on the actor when received. so this way we can inform the host/other clients that a nemmando released his grenade.
 					-- it also sets the actor's xscale i guess
-					if gm._mod_net_isHost() then
+					if Net.host then
 						-- args: [not sure], packet id, object index, net id, value to write to activity_var2, actor xscale
 						gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, gm.sign(actor.image_xscale))
 					else
@@ -877,7 +879,7 @@ Callback.add(objGrenade.on_destroy, function(inst)
 
 	if data.stun_parent == 1 then
 		-- this occurs host-side
-		if gm._mod_net_isHost() then
+		if Net.host then
 			parent:apply_knockback(-parent.image_xscale, 60)
 		end
 	end

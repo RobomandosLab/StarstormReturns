@@ -12,7 +12,7 @@ local init = function()
 		--"Elites",
 		"Gameplay",
 		"Survivors",
-		--"Items",
+		"Items",
 		--"Equipments",
 		--"Artifacts",
 		"Stages"
