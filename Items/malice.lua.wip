@@ -1,5 +1,5 @@
 local item_sprite = Resources.sprite_load(NAMESPACE, "malice", path.combine(PATH, "Sprites/Items/malice.png"), 1, 16, 18)
-local spark_sprite = gm.constants.sSparks18s--Resources.sprite_load(NAMESPACE, "SparkMalice", path.combine(PATH, "Sprites/Items/Effects/malice.png"), 4, 8, 4)
+local spark_sprite = gm.constants.sSparks18s
 
 local RANGE_BASE = 90
 local RANGE_STACK = 21
@@ -83,6 +83,7 @@ objEfMalice:onCreate(function(self)
 
 	self:instance_sync()
 end)
+
 objEfMalice:onStep(function(self)
 	if not Instance.exists(self.target) then self:destroy() return end
 	if not Instance.exists(self.parent) then self:destroy() return end
@@ -107,7 +108,7 @@ objEfMalice:onStep(function(self)
 	if self.fract + TRAVEL_TIME > 1 then
 		if gm._mod_net_isHost() then
 			local dir = gm.point_direction(self.xprevious, self.yprevious, self.x, self.y)
-			local atk = self.parent:fire_direct(target, 1, dir, self.x, self.y, spark_sprite, false).attack_info
+			local atk = self.parent:fire_direct(target, 1, dir, self.x, self.y, gm.constants.sSparks18s, false).attack_info
 			atk.damage = self.damage
 			atk.critical = self.critical
 			atk.damage_color = COLOR_BRIGHT
@@ -121,6 +122,7 @@ objEfMalice:onSerialize(function(self, buffer)
 	buffer:write_instance(self.parent)
 	buffer:write_instance(self.target)
 end)
+
 objEfMalice:onDeserialize(function(self, buffer)
 	self.parent = buffer:read_instance()
 	self.target = buffer:read_instance()

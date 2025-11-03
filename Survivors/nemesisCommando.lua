@@ -929,7 +929,6 @@ end)
 Callback.add(stateSpecial2.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
-	data.airborne = actor.free
 
 	if Util.bool(data.airborne) then
 		actor.sprite_index = sprite_shoot4b_a
@@ -944,7 +943,7 @@ Callback.add(stateSpecial2.on_step, function(actor, data)
 
 	actor:actor_animation_set(actor.sprite_index, 0.2)
 
-	local airborne = Util.bool(data.airborne)
+	local airborne = not actor:is_grounded()
 	local should_fire = actor.image_index >= 3 or (actor.image_index >= 2 and airborne)
 
 	if should_fire and data.fired == 0 then

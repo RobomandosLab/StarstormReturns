@@ -62,6 +62,7 @@ Callback.add(Callback.ON_STEP, function()
 		end
 
 		if gm.bool(actor.moveUp_buffered) and can_do_it then
+			print("hi")
 			actor.pVspeed = -actor.pVmax - 1.5
 			actor.free_jump_timer = 0
 			actor.jumping = true

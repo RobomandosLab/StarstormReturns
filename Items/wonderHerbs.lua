@@ -1,24 +1,23 @@
-local sprite = Resources.sprite_load(NAMESPACE, "WonderHerbs", path.combine(PATH, "Sprites/Items/wonderHerbs.png"), 1, 16, 16)
+local sprite = Sprite.new("WonderHerbs", path.combine(PATH, "Sprites/Items/wonderHerbs.png"), 1, 16, 16)
 
-local wonderHerbs = Item.new(NAMESPACE, "wonderHerbs")
+local wonderHerbs = Item.new("wonderHerbs")
 wonderHerbs:set_sprite(sprite)
-wonderHerbs:set_tier(Item.TIER.common)
-wonderHerbs:set_loot_tags(Item.LOOT_TAG.category_healing)
+wonderHerbs:set_tier(ItemTier.COMMON)
+wonderHerbs.loot_tags = Item.LootTag.CATEGORY_HEALING
 
-local wonderHerbsID = wonderHerbs.value
+ItemLog.new_from_item(wonderHerbs)
 
 local HEAL_COLOR = Color.from_rgb(143, 255, 38)
 
--- doesn't use onHeal due to its implementation not sufficiently covering every source of healing
-
 local preserve_number
+
 gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
 	--local actor = Instance.wrap(args[1].value)
 	--local stack = actor:item_stack_count(wonderHerbs)
 
 	-- it's a smidge faster to just use these directly
 	local actor = args[1].value or -4
-	local stack = gm.item_count(actor, wonderHerbsID) or 0
+	local stack = gm.item_count(actor, wonderHerbs.value) or 0
 
 	if stack > 0 then
 		local in_amount = args[2].value
@@ -39,6 +38,7 @@ gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, ar
 		args[2].value = new_amount
 	end
 end)
+
 -- the argument is set back to its unmodified value to avoid weird inconsistencies where some cases end up modifying the vanilla healing number and others don't
 -- it's weird and annoying and stupid and i hate it, but it is what it is
 gm.post_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
