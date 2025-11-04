@@ -16,9 +16,8 @@ buffNeedles.is_debuff = true
 Callback.add(Callback.ON_HIT_PROC, function(actor, victim, hit_info)
 	local stack = actor:item_count(needles)
     if stack <= 0 then return end
-		
-	local force_proc = hit_info.attack_info:get_flag(AttackFlag.FORCE_PROC)
-	if (math.random() <= 0.01 + stack * 0.02 or force_proc) and victim:buff_count(buffNeedles) == 0 then
+	
+	if (math.random() <= 0.01 + stack * 0.02 or hit_info.attack_info:get_flag(AttackFlag.FORCE_PROC)) and victim:buff_count(buffNeedles) == 0 then
 		victim:buff_apply(buffNeedles, 190)
 	end
 end)
