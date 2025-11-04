@@ -151,8 +151,14 @@ local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
 chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
 
 -- alt skills
+local chirrPrimaryAlt = Skill.new(NAMESPACE, "drainingRoots")
+chirr:add_primary(chirrPrimaryAlt)
+
 local chirrUtilityAlt = Skill.new(NAMESPACE, "channelingPulse")
 chirr:add_utility(chirrUtilityAlt)
+
+local chirrSpecialAlt = Skill.new(NAMESPACE, "siphonsnare")
+chirr:add_special(chirrSpecialAlt)
 
 -- her movement control stuff and other on step stuff
 local tameHealthbarBuff = Buff.new(NAMESPACE, "chirrShowAllyHPBuff") -- draws the health bars for your friends!
@@ -174,9 +180,17 @@ tameMark:onStatRecalc(function( actor )
 end)
 
 local flying = false -- hover stuff
+local diving = false -- for chirrs moves where she dives downwards
+local rooted = false -- for when i want to prevent her from jumping
 local wings
 chirr:onStep(function( actor )
-	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.35 then -- her hover
+	if gm.bool(actor.moveUp) and rooted then
+		actor.moveUpHold = 0
+		actor.moveUp_buffered = 0
+		actor.moveUp = 0
+	end
+
+	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.35 and not diving then -- her hover
 		flying = true
 		actor.pVspeed = 0.35
 
@@ -197,7 +211,7 @@ chirr:onStep(function( actor )
 	else
 		flying = false
 
-		if wings then
+		if wings then -- remove her wings once shes done hovering
 			wings:destroy()
 			wings = nil
 		end
@@ -406,6 +420,94 @@ end)
 
 
 
+-------- draining roots
+chirrPrimaryAlt.sprite = sprite_skills
+chirrPrimaryAlt.subimage = 0
+chirrPrimaryAlt.cooldown = 5
+chirrPrimaryAlt.damage = 1.2
+chirrPrimaryAlt.require_key_press = false
+chirrPrimaryAlt.is_primary = true
+chirrPrimaryAlt.does_change_activity_state = true
+chirrPrimaryAlt.hold_facing_direction = true
+chirrPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+
+local stateChirrRoots = State.new(NAMESPACE, "chirrRoots")
+
+chirrPrimaryAlt:clear_callbacks()
+chirrPrimaryAlt:onActivate(function( actor ) 
+	actor:enter_state(stateChirrRoots)
+end)
+
+stateChirrRoots:clear_callbacks()
+stateChirrRoots:onEnter(function( actor, data )
+	actor.image_index2 = 0
+	data.substate = 0
+	data.fired = 0
+	data.rootX = 0
+
+	actor:skill_util_strafe_init()
+
+	rooted = true
+	diving = true
+end)
+
+stateChirrRoots:onStep(function( actor, data )
+	actor:skill_util_strafe_update(.2 * actor.attack_speed, 0.5)
+	actor:skill_util_step_strafe_sprites()
+
+	if data.substate == 0 then
+		actor:set_immune(3)
+
+		actor.pVspeed = actor.pVspeed + 0.5
+		if actor.pVspeed > actor.pVmax * 6 then
+			actor.pVspeed = actor.pVmax * 6
+		end
+
+		if not gm.bool(actor.free) then
+			data.substate = 1
+			data.rootX = actor.x
+			diving = false
+		end
+	elseif data.substate == 1 then
+		actor.sprite_index2 = sprite_shoot1_half
+
+		if actor.image_index2 >= 5 and data.fired == 0 then
+			data.fired = 1 
+			
+			if actor:is_authority() then
+				local damage = actor:skill_get_damage(chirrPrimaryAlt)
+				local dir = actor.image_xscale
+
+				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local attack_info = actor:fire_explosion(data.rootX, actor.y + 15, 75, 50, damage, sprite_sparks).attack_info
+					attack_info:set_stun(0.5, dir, standard)
+					attack_info.knockback = 4
+					attack_info.knockback_direction = dir
+				end
+
+				data.rootX = data.rootX + (50 * dir)
+			end
+		end
+
+		if actor.image_index2 >= gm.sprite_get_number(actor.sprite_index2) then
+			actor.image_index2 = 0
+			data.fired = 0
+		end
+	end
+
+	local holding = gm.bool(actor.z_skill)
+	if not holding then
+		actor:skill_util_reset_activity_state()
+	end
+end)
+
+stateChirrRoots:onExit(function( actor, data )
+	rooted = false
+end)
+
+
+
 -------- burrow
 chirrSecondary.sprite = sprite_skills
 chirrSecondary.subimage = 1
@@ -428,7 +530,8 @@ stateChirrBurrow:onEnter(function( actor, data )
 	-- anim stuff will go here when its added
 	actor.image_index = 0
 	actor.pVspeed = -12
-	tempVSpeed = -12
+	rooted = true
+	diving = true
 end)
 
 stateChirrBurrow:onStep(function( actor, data )
@@ -440,9 +543,13 @@ stateChirrBurrow:onStep(function( actor, data )
 	actor:freeze_active_skill(Skill.SLOT.secondary) 
 	actor:set_immune(3) -- prevents instant death from fall damage
 
-	if actor:is_grounded() and actor.pVspeed >= 0 then 
+	if not gm.bool(actor.free) and actor.pVspeed >= 0 then 
 		actor:enter_state(stateChirrDigging)
 	end
+end)
+
+stateChirrBurrow:onExit(function( actor, data )
+	diving = false
 end)
 
 -- digging around behavior
@@ -500,6 +607,8 @@ stateChirrDigging:onExit(function( actor, data )
 			attack_info:set_stun(3, dir, standard)
 		end
 	end
+
+	rooted = false
 end)
 
 
