@@ -22,6 +22,8 @@ DamageCalculate.add(function(api)
 	if not Instance.exists(api.parent) then return end
 
 	local count = api.parent:item_count(brassKnuckles)
+	if count <= 0 then return end
+	
 	if count > 0 then
 		local radius = 30 + 30 * count
 		local dx = api.hit_x - api.parent.x

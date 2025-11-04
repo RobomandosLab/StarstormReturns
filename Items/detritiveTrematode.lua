@@ -23,7 +23,7 @@ Callback.add(buffDisease.on_step, function(actor)
 	if Net.client then return end
 	
 	if Global._current_frame % 30 == 0 then
-		local dmg = actor.__ssr_trematode_damage or 1
+		local dmg = Instance.get_data(actor).__ssr_trematode_damage or 1
 		gm.damage_inflict(actor.id, dmg, 0, -4, actor.x, actor.y, dmg, 1, DAMAGE_COLOR)
 	end
 end)
@@ -44,7 +44,7 @@ DamageCalculate.add(function(api)
 
 		if api.hit.hp <= api.hit.maxhp * threshold then
 			api.hit:buff_apply(buffDisease, 60)
-			api.hit.__ssr_trematode_damage = api.parent.damage * 0.5
+			Instance.get_data(api.hit).__ssr_trematode_damage = api.parent.damage * 0.5
 		end
 	end
 end)

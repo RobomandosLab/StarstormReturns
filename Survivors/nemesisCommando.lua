@@ -929,8 +929,9 @@ end)
 Callback.add(stateSpecial2.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+	data.airborne = not actor:is_grounded() -- airborne is determined only on state entry so you can do the tech where you jump after pressing the button but before firing
 
-	if Util.bool(data.airborne) then
+	if data.airborne then
 		actor.sprite_index = sprite_shoot4b_a
 	else
 		actor.sprite_index = sprite_shoot4b
@@ -943,8 +944,7 @@ Callback.add(stateSpecial2.on_step, function(actor, data)
 
 	actor:actor_animation_set(actor.sprite_index, 0.2)
 
-	local airborne = not actor:is_grounded()
-	local should_fire = actor.image_index >= 3 or (actor.image_index >= 2 and airborne)
+	local should_fire = actor.image_index >= 3 or (actor.image_index >= 2 and data.airborne)
 
 	if should_fire and data.fired == 0 then
 		data.fired = 1
@@ -958,7 +958,7 @@ Callback.add(stateSpecial2.on_step, function(actor, data)
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i=0, actor:buff_count(buff_shadow_clone) do
 				local backblast = actor:fire_explosion(actor.x - 50 * actor.image_xscale, actor.y-12, 100, 60, 1.0)
-				if airborne then
+				if data.airborne then
 					-- rotate explosion attack ... cursed, but funny
 					backblast.image_angle = actor.image_xscale * -45
 					backblast.y = backblast.y - 50
@@ -976,7 +976,7 @@ Callback.add(stateSpecial2.on_step, function(actor, data)
 		rocket.scepter = actor:item_count(Item.find("ancientScepter"))
 
 		actor.pHspeed = actor.pHspeed + actor.pHmax * -2 * actor.image_xscale
-		if airborne then
+		if data.airborne then
 			rocket.direction = 270 + actor.image_xscale * 45
 
 			actor.pVspeed = actor.pVmax * -1.2

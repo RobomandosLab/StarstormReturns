@@ -32,6 +32,7 @@ DamageCalculate.add(function(api)
 	if not Instance.exists(api.parent) then return end
 	
 	local count = api.hit:buff_count(buffNeedles)
+	if count <= 0 then return end
 	
 	if count > 0 then
 		api:set_critical(true)
