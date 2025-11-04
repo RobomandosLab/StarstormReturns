@@ -18,6 +18,43 @@ iceTool.loot_tags = Item.LootTag.CATEGORY_UTILITY
 
 ItemLog.new_from_item(iceTool)
 
+local packet = Packet.new("SyncIceTool")
+
+local serializer = function(buffer, self, dir)
+	buffer:write_instance(self)
+	buffer:write_short(dir)
+end
+
+local deserializer = function(buffer, self)
+	local actor = buffer:read_instance()
+	local collision_dir = buffer:read_short()
+	
+	local data = Instance.get_data(actor)
+	
+	actor.pVspeed = -actor.pVmax - 1.5
+	actor.free_jump_timer = 0
+	actor.jumping = true
+	actor.moveUp = false
+	actor.moveUp_buffered = false
+	
+	actor.pHspeed = -actor.pHmax * collision_dir
+	actor.image_xscale = -collision_dir
+
+	data.iceTool_jumps = data.iceTool_jumps - 1
+
+	if actor:buff_count(buffIceTool) > 0 then
+		GM.set_buff_time_nosync(actor, buffIceTool, 30)
+	else
+		GM.apply_buff_internal(actor, buffIceTool, 30, 3)
+	end
+
+	actor:sound_play(sound, 1, 1)
+	particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
+	ssr_create_fadeout(actor.x, actor.y, -collision_dir, sprite_effect, 0.25, 0.2)
+end
+
+packet:set_serializers(serializer, deserializer)
+
 Callback.add(iceTool.on_acquired, function(actor, stack)
 	local data = Instance.get_data(actor)
 	data.iceTool_jumps = stack
@@ -58,11 +95,10 @@ Callback.add(Callback.ON_STEP, function()
 
 		if actor:is_grounded() or actor:is_climbing() then
 			data.iceTool_jumps = stack
-			return
 		end
 
-		if gm.bool(actor.moveUp_buffered) and can_do_it then
-			print("hi")
+		-- moveUp_buffered isnt synced so all of this only occurs for the guys who is currently walljumping
+		if Util.bool(actor.moveUp_buffered) and can_do_it then
 			actor.pVspeed = -actor.pVmax - 1.5
 			actor.free_jump_timer = 0
 			actor.jumping = true
@@ -74,11 +110,6 @@ Callback.add(Callback.ON_STEP, function()
 
 			data.iceTool_jumps = data.iceTool_jumps - 1
 
-			if actor:is_authority() then
-				-- send actor_position_info packet to sync the jumping velocity and stuff
-				actor:net_send_instance_message(0)
-			end
-
 			if actor:buff_count(buffIceTool) > 0 then
 				GM.set_buff_time_nosync(actor, buffIceTool, 30)
 			else
@@ -88,6 +119,10 @@ Callback.add(Callback.ON_STEP, function()
 			actor:sound_play(sound, 1, 1)
 			particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
 			ssr_create_fadeout(actor.x, actor.y, -collision_dir, sprite_effect, 0.25, 0.2)
+			
+			if Net.online then
+				packet:send_to_all(actor, collision_dir)
+			end
 		end
 	end
 end)
