@@ -9,14 +9,16 @@ brassKnuckles.loot_tags = Item.LootTag.CATEGORY_DAMAGE
 
 ItemLog.new_from_item(brassKnuckles)
 
-brassKnuckles.effect_display = EffectDisplay.func(function(actor, x, y)
-	local radius = 30 + 30 * Instance.wrap(actor):item_count(brassKnuckles)
+brassKnuckles.effect_display = EffectDisplay.func(function(actor_unwrapped)
+	local actor = Instance.wrap(actor_unwrapped)
+	
+	local radius = 30 + 30 * actor:item_count(brassKnuckles)
 	gm.draw_set_alpha(0.2)
 	gm.draw_set_colour(0)
-	gm.draw_circle(x, y, radius - 1, true)
-	gm.draw_circle(x, y, radius + 1, true)
+	gm.draw_circle_colour(actor.x, actor.y, radius + 1, 0, 0, true)
+	gm.draw_circle_colour(actor.x, actor.y, radius - 1, 0, 0, true)
 	gm.draw_set_alpha(1)
-end)
+end, EffectDisplay.DrawPriority.BODY_POST)
 
 DamageCalculate.add(function(api)
 	if not Instance.exists(api.parent) then return end

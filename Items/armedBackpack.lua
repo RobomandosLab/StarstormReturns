@@ -55,7 +55,7 @@ Callback.add(Callback.ON_ATTACK_CREATE, function(attack_info)
 			dir = 0
 		end
 
-		local attack = actor:fire_bullet(actor.x - gm.sign(attack_xvector) * 5, actor.y, 500, dir, 1.5, nil, sprite_sparks2.value, tracer, false)
+		local attack = actor:fire_bullet(actor.x - gm.sign(attack_xvector) * 5, actor.y, 500, dir, 1.5, nil, sprite_sparks2, tracer, false)
 		actor:sound_play_networked(sound, 0.8, 1 + math.random() * 0.2, actor.x, actor.y)
 	end
 end)

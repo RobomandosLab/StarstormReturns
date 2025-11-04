@@ -11,39 +11,40 @@ local HEAL_COLOR = Color.from_rgb(143, 255, 38)
 
 local preserve_number
 
-gm.pre_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
-	--local actor = Instance.wrap(args[1].value)
-	--local stack = actor:item_stack_count(wonderHerbs)
+Hook.add_pre(gm.constants.actor_heal_networked, function(self, other, result, args)
+	local actor = args[1].value
+	if not Instance.exists(actor) then return end
+	
+	local stack = actor:item_count(wonderHerbs)
+	if stack <= 0 then return end
+	
+	local in_amount = args[2].value
+	local is_passive = args[3].value
+	preserve_number = in_amount
 
-	-- it's a smidge faster to just use these directly
-	local actor = args[1].value or -4
-	local stack = gm.item_count(actor, wonderHerbs.value) or 0
+	local mult = 1 + stack * 0.12
+	
+	-- non-regen healing will always be increased by atleast 1
+	new_amount = math.max(in_amount * mult, in_amount + 1)
+		
+	local diff = new_amount - in_amount
+	gm.draw_damage(actor.x, actor.bbox_top + 8, diff, 0, HEAL_COLOR, 4, 0)
 
-	if stack > 0 then
-		local in_amount = args[2].value
-		local is_passive = args[3].value
-		preserve_number = in_amount
-
-		local mult = 1 + stack * 0.12
-
-		local new_amount = in_amount * mult
-		if not is_passive then
-			-- non-regen healing will always be increased by atleast 1
-			new_amount = math.max(new_amount, in_amount + 1)
-
-			local diff = new_amount - in_amount
-			gm.draw_damage(actor.x, actor.bbox_top+2, diff, 0, HEAL_COLOR, 4, 0)
-		end
-
-		args[2].value = new_amount
-	end
-end)
+	args[2].value = new_amount
+end, Callback.Priority.AFTER)
 
 -- the argument is set back to its unmodified value to avoid weird inconsistencies where some cases end up modifying the vanilla healing number and others don't
 -- it's weird and annoying and stupid and i hate it, but it is what it is
-gm.post_script_hook(gm.constants.actor_heal_raw, function(self, other, result, args)
+Hook.add_post(gm.constants.actor_heal_networked, function(self, other, result, args)
 	if preserve_number then
 		args[2].value = preserve_number
 		preserve_number = nil
 	end
+end)
+
+RecalculateStats.add(function(actor)
+	local stack = actor:item_count(wonderHerbs)
+    if stack <= 0 then return end
+	
+	actor.hp_regen = actor.hp_regen * (1 + stack * 0.12)
 end)

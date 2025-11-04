@@ -9,6 +9,8 @@ distinctiveStick:set_sprite(sprite_item)
 distinctiveStick:set_tier(ItemTier.COMMON)
 distinctiveStick.loot_tags = Item.LootTag.CATEGORY_HEALING
 
+ItemLog.new_from_item(distinctiveStick)
+
 local efTree = Object.new("EfDistinctiveTree")
 efTree:set_sprite(sprite_effect)
 efTree:set_depth(50)

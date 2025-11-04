@@ -18,7 +18,7 @@ local function get_true_xscale(actor)
 	return actor.image_xscale
 end
 
-guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped, x, y)
+guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	local actor = Instance.wrap(actor_unwrapped)
 	
 	local pulse = Instance.get_data(actor).amulet_pulse * 0.2
@@ -27,8 +27,8 @@ guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped, x, 
 	local xscale = (1 + pulse) * actor_xscale
 	local yscale = 1 + pulse
 	
-	local xx = x - 10 * actor_xscale
-	local yy = y + math.sin(Global._current_frame * 0.04)
+	local xx = actor.x - 10 * actor_xscale
+	local yy = actor.y + math.sin(Global._current_frame * 0.04)
 	
 	gm.gpu_set_blendmode(1)
 	GM.draw_sprite_ext(effect_sprite, 0, xx, yy, xscale, yscale, 0, Color.WHITE, 0.75 + math.sin(Global._current_frame * 0.02) * 0.1)
@@ -36,7 +36,7 @@ guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped, x, 
 		GM.draw_sprite_ext(effect_sprite, 0, xx, yy, xscale, yscale, 0, Color.WHITE, pulse * 3)
 	end
 	gm.gpu_set_blendmode(0)
-end)
+end, EffectDisplay.DrawPriority.BODY_POST)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(guardingAmulet:get_holding_actors()) do	
