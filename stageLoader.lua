@@ -177,13 +177,14 @@ woodland_stage:set_index(4)
 
 woodland_stage:clear_rooms()
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland1.rorlvl"))
+woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland2.rorlvl"))
 
 --Spawn list
 woodland_stage:add_monster({
     "mushrum",
     "greaterWisp",
     "wanderingVagrant",
-    "lynxTotem",
+    "lynxTribe",
     "impOverlord",
     "jellyfish",
     "stoneGolem",
