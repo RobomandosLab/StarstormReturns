@@ -19,7 +19,6 @@ Callback.add(Callback.ON_HEAL, function(actor, amount)
 	new_amount = math.max(amount.value * (1 + stack * 0.12), amount.value + 1)
 		
 	local diff = new_amount - amount.value
-	gm.draw_damage(actor.x, actor.bbox_top + 8, diff, 0, HEAL_COLOR, 4, 0)
 
 	if Net.client then return end -- healing amount cant be changed as client
 	amount.value = new_amount

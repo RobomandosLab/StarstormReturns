@@ -98,11 +98,11 @@ local serializer = function(buffer, actor, index, target)
 end
 
 local deserializer = function(buffer, self)
-	local actor = msg:read_instance()
-	local index = msg:read_uint() + 1
-	local target = msg:read_instance()
+	local actor = buffer:read_instance()
+	local index = buffer:read_uint() + 1
+	local target = buffer:read_instance()
 
-	if not actor:exists() then return end
+	if not Instance.exists(actor) then return end
 
 	local wurm_pets = Instance.get_data(actor).wurm_pets
 	if not wurm_pets then return end
