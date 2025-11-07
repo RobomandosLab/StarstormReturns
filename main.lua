@@ -5,6 +5,10 @@ mods["ReturnsAPI-ReturnsAPI"].auto{mp = true, namespace = "ssr"}
 PATH = _ENV["!plugins_mod_folder_path"]
 
 local init = function()
+	--options = ModOptions.new("ssr")
+    --settings = {}
+    --toml = TOML.new()
+	
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
 		"Language",
@@ -30,6 +34,9 @@ local init = function()
 			end
 		end
 	end
+
+	--local saved_settings = toml:read()
+    --if saved_settings then settings = saved_settings end
 
 	-- once we have loaded everything, enable hot/live reloading.
 	-- this variable may be used by content code to make sure it behaves correctly when hotloading

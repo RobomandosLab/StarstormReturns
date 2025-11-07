@@ -506,5 +506,31 @@ return {
 			subname = "Silent Sunburn",
 			story = "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
 		}
+	},
+	
+	ui = {
+		options = {
+			ssr = {
+				header = "STARSTORM RETURNS",
+				enableChars = "Enable Survivors",
+				["enableChars.desc"] = "Enables survivors added by Starstorm Returns.",
+				enableItems = "Enable Items",
+				["enableItems.desc"] = "Enables items added by Starstorm Returns.",
+				enableEnemies = "Enable Enemies",
+				["enableEnemies.desc"] = "Enables enemies added by Starstorm Returns.",
+				enableElites = "Enable Elites",
+				["enableElites.desc"] = "Enabless elites added by Starstorm Returns.",
+				enableTyphoon = "Enable Typhoon",
+				["enableTyphoon.desc"] = "Enables typhoon added by Starstorm Returns.",
+				enableInteractables = "Enable Interactables",
+				["enableInteractables.desc"] = "Enables interactables added by Starstorm Returns.",
+				enableArtifacts = "Enable Artifacts",
+				["enableArtifacts.desc"] = "Enables artifacts added by Starstorm Returns.",
+				enableStages = "Enable Stages",
+				["enableStages.desc"] = "Enables stages added by Starstorm Returns.",
+				enableBeta = "Enable Unfinished Content",
+				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>"
+			}
+		}
 	}
 }
