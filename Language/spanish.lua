@@ -472,39 +472,51 @@ return {
 	
 	
 	actor = {
-		Exploder.name = "Estallador",
-		Mimic.name = "Cofre de seguridad",
-		Admonitor.name = "Admonitor de Arcilla",
-		Gatekeeper.name = "Centinela",
-		Protector.name = "Protector",
-		Protector.text = "Guardián del Artefacto",
-		nemmandoEnemy.name = "Comando Némesis",
-		nemmandoEnemy.text = "Eco Solitario",
-		nemmercEnemy.name = "Mercenario Némesis",
-		nemmercEnemy.text = "Desertor Vengativo",
-		nemforcerEnemy.name = "Agente Némesis",
-		nemforcerEnemy.text = "Sombra Incorruptible",
-		nemloaderEnemy.name = "Cargador Némesis",
-		nemloaderEnemy.text = "Mastodonte Hidráulico",
+		Exploder = {
+			name = "Estallador"
+		},
+		Mimic = {
+			name = "Cofre de seguridad"
+		},
+		Admonitor = {
+			name = "Admonitor de Arcilla"
+		},
+		Gatekeeper = {
+			name = "Centinela"
+		},
+		Protector = {
+			name = "Protector",
+			text = "Guardián del Artefacto"
+		}
 	},
 
 	interactable = {
-		TeleporterEthereal.text = "Activar Teletransportador Etéreo.",
-		TeleporterEthereal.text2 = "¡Esto incrementara la dificultad radicalmente!",
-		MimicInactive.text = "..?",
-		MimicInactive.name = "Cofre Grande..?",
+		TeleporterEthereal = {
+			text = "Activar Teletransportador Etéreo.",
+			text2 = "¡Esto incrementara la dificultad radicalmente!"
+		},
+		MimicInactive = {
+			text = "..?",
+			name = "Cofre Grande..?"
+		}
 	},
 
 	elite = {
-		poison.name = "Venenoso %s",
+		poison = {
+			name = "Venenoso %s"
+		}
 	},
+	
 	stage = {
-		whistlingBasin.name = "Cuenca Silbante",
-		whistlingBasin.subname = "Oasis Menguante",
-		whistlingBasin.story = "Este planeta sigue reservándome sorpresas. Teniendo en cuenta las acciones de sus habitantes antes de llegar aquí, nunca habría imaginado que tales criaturas pudieran construir una arquitectura tan extensa y decadente. Impresionantes pilares de ébano profundo y arcos hechos de piedra hermosa que se alzan desde el suelo, todos adornados con grabados realizados por manos deliberadas. A lo largo de las paredes, hay unas exhibiciones increíblemente intrincadas de formas que, aunque parecen simples, esconden complejidad. Un follaje turquesa, extrañamente peculiar, ataca las estructuras, trepando sutilmente por sus bases. Parece que la idea preconcebida de salvajismo que tenía sobre este planeta está desapareciendo. Aun así, mantengo la guardia alta. Es demasiado pronto para descansar, a pesar de las protestas de mis músculos doloridos.",
-
-		torridOutlands.name = "Tierras Torridas",
-		torridOutlands.subname = "Quemadura Silenciosa",
-		torridOutlands.story = "Incluso con mi traje, puedo sentir los pulsantes rayos solares impactar y doblar la atmósfera de este planeta maldito por los dioses. Cada vez me cuesta más mantener la cordura con este calor, y la condensación que empieza a empañar las paredes de mi casco tampoco ayuda. Aunque, sin él, mis pulmones estarían a medio llenar de todo el polvo y los restos que he levantado durante mis andanzas-“buscar el lado positivo”, como dicen. Con el sol en lo alto, siquiera imaginar recorrer mi entorno con cierta facilidad es un sueño imposible. Me resulta fácil tropezar con cactus y rocas en mi delirio, encontrando breves refugios dentro de esos extensos túneles y cuevas que salpican la superficie. Con el terreno tan abrupto ralentizando mi avance, el sudor que me gotea por la frente hacia los ojos será, con seguridad, el menor de mis problemas.",
+		whistlingBasin = {
+			name = "Cuenca Silbante",
+			subname = "Oasis Menguante",
+			story = "Este planeta sigue reservándome sorpresas. Teniendo en cuenta las acciones de sus habitantes antes de llegar aquí, nunca habría imaginado que tales criaturas pudieran construir una arquitectura tan extensa y decadente. Impresionantes pilares de ébano profundo y arcos hechos de piedra hermosa que se alzan desde el suelo, todos adornados con grabados realizados por manos deliberadas. A lo largo de las paredes, hay unas exhibiciones increíblemente intrincadas de formas que, aunque parecen simples, esconden complejidad. Un follaje turquesa, extrañamente peculiar, ataca las estructuras, trepando sutilmente por sus bases. Parece que la idea preconcebida de salvajismo que tenía sobre este planeta está desapareciendo. Aun así, mantengo la guardia alta. Es demasiado pronto para descansar, a pesar de las protestas de mis músculos doloridos."
+		},
+		torridOutlands = {
+			name = "Tierras Torridas",
+			subname = "Quemadura Silenciosa",
+			story = "Incluso con mi traje, puedo sentir los pulsantes rayos solares impactar y doblar la atmósfera de este planeta maldito por los dioses. Cada vez me cuesta más mantener la cordura con este calor, y la condensación que empieza a empañar las paredes de mi casco tampoco ayuda. Aunque, sin él, mis pulmones estarían a medio llenar de todo el polvo y los restos que he levantado durante mis andanzas-“buscar el lado positivo”, como dicen. Con el sol en lo alto, siquiera imaginar recorrer mi entorno con cierta facilidad es un sueño imposible. Me resulta fácil tropezar con cactus y rocas en mi delirio, encontrando breves refugios dentro de esos extensos túneles y cuevas que salpican la superficie. Con el terreno tan abrupto ralentizando mi avance, el sudor que me gotea por la frente hacia los ojos será, con seguridad, el menor de mis problemas."
+		}
 	},
 }

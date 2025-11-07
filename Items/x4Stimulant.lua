@@ -33,20 +33,18 @@ RecalculateStats.add(function(actor)
 	secondary.cooldown = math.ceil(secondary.cooldown * mult)
 end)
 
-Hook.add_post(gm.constants.skill_activate, function(self, other, result, args)
-    if args[1].value ~= Skill.Slot.SECONDARY then return end
+Callback.add(Callback.ON_SKILL_ACTIVATE, function(actor, slot)
+    if slot ~= Skill.Slot.SECONDARY then return end
 
-    local stack = self:item_count(x4Stimulant)
+    local stack = actor:item_count(x4Stimulant)
     if stack <= 0 then return end
 	
-    self:buff_apply(x4Buff, 60 * 3)
+    actor:buff_apply(x4Buff, 60 * 3)
 end)
 
 Callback.add(Callback.ON_STEP, function()
-	for _, actor in ipairs(x4Stimulant:get_holding_actors()) do
-		local stack = actor:item_count(x4Stimulant)
-	
-		if math.random() < 0.1 then
+	for _, actor in ipairs(x4Buff:get_holding_actors()) do
+		if math.random() < 0.15 then
 			particleHeal:create(actor.x - 4 + math.random() * 8, actor.y - 6 + math.random() * 12, 1)
 		end
 	end
