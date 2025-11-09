@@ -474,6 +474,10 @@ return {
 		admonitor = {
 			name = "Clay Admonitor",
 			story = "In the distance, a familiar clay 'person' trudged across the temple grounds. However, despite their similar appearances, this creature was not the same type I had seen before. For what it lacked in cunning, unlike its smaller brethren, this potted protector bore two skulking fists, clenched in a vice grip. The stride it assumed almost made it look... confident. I know I would be a fool to assume it couldn't produce intelligent emotions such as conviction. Nevertheless, out of concern for my general wellbeing, I chose not to test the mettle of this swaggering oil slick and hid inside an upturned ruin. \n\nIf I'm to make it off of this planet alive, I'd prefer my femur to be intact."
+		},
+		exploder = {
+			name = "Exploder",
+			story = "There's nothing I hate more than being chased down by these creatures. Although they can be easily dealt with alone, whenever they come in packs, I'm better off running away. It's as if their entire bloodstream is filled with this viscous, acidic material that managed to dissolve the circuits of one of my drones with a single drop.\n\nI.. really don't want to know what it would do to my skin."
 		}
 	},
 

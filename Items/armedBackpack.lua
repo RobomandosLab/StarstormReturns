@@ -36,6 +36,7 @@ ItemLog.new_from_item(armedBackpack)
 
 Callback.add(Callback.ON_ATTACK_CREATE, function(attack_info)
 	if not attack_info.proc then return end
+	if not Instance.exists(attack_info.parent) then return end
 	
 	local actor = attack_info.parent
 	local stack = actor:item_count(armedBackpack)

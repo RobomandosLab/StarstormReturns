@@ -4,51 +4,48 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Admonitor")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Admonitor")
 
-local sprite_mask		= Resources.sprite_load(NAMESPACE, "AdmonitorMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 11, 26)
-local sprite_palette	= Resources.sprite_load(NAMESPACE, "AdmonitorPalette",	path.combine(SPRITE_PATH, "palette.png"))
-local sprite_portrait	= Resources.sprite_load(NAMESPACE, "AdmonitorPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
-local sprite_spawn		= Resources.sprite_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SPRITE_PATH, "spawn.png"), 15, 58, 39)
-local sprite_idle		= Resources.sprite_load(NAMESPACE, "AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27)
-local sprite_walk		= Resources.sprite_load(NAMESPACE, "AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
-local sprite_jump		= Resources.sprite_load(NAMESPACE, "AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 26, 33)
-local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 26, 33)
-local sprite_fall		= Resources.sprite_load(NAMESPACE, "AdmonitorFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 26, 33)
-local sprite_death		= Resources.sprite_load(NAMESPACE, "AdmonitorDeath",	path.combine(SPRITE_PATH, "death.png"), 14, 33, 53)
-local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "AdmonitorShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 30, 53, 86)
+local sprite_mask		= Sprite.new("AdmonitorMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 11, 26)
+local sprite_palette	= Sprite.new("AdmonitorPalette",	path.combine(SPRITE_PATH, "palette.png"))
+local sprite_portrait	= Sprite.new("AdmonitorPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
+local sprite_spawn		= Sprite.new("AdmonitorSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 15, 58, 39)
+local sprite_idle		= Sprite.new("AdmonitorIdle",		path.combine(SPRITE_PATH, "idle.png"), 18, 30, 27, 0.8)
+local sprite_walk		= Sprite.new("AdmonitorWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 27, 31)
+local sprite_jump		= Sprite.new("AdmonitorJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 26, 33)
+local sprite_jump_peak	= Sprite.new("AdmonitorJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 26, 33)
+local sprite_fall		= Sprite.new("AdmonitorFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 26, 33)
+local sprite_death		= Sprite.new("AdmonitorDeath",		path.combine(SPRITE_PATH, "death.png"), 14, 33, 53)
+local sprite_shoot1		= Sprite.new("AdmonitorShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 30, 53, 86)
 
-gm.elite_generate_palettes(sprite_palette)
+GM.elite_generate_palettes(sprite_palette)
 
-local sound_spawn		= Resources.sfx_load(NAMESPACE, "AdmonitorSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
-local sound_shoot1a		= Resources.sfx_load(NAMESPACE, "AdmonitorShoot1A",	path.combine(SOUND_PATH, "shoot1_1.ogg"))
-local sound_shoot1b		= Resources.sfx_load(NAMESPACE, "AdmonitorShoot1B",	path.combine(SOUND_PATH, "shoot1_2.ogg"))
-local sound_death		= Resources.sfx_load(NAMESPACE, "AdmonitorDeath",	path.combine(SOUND_PATH, "death.ogg"))
+local sound_spawn		= Sound.new("AdmonitorSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
+local sound_shoot1a		= Sound.new("AdmonitorShoot1A",	path.combine(SOUND_PATH, "shoot1_1.ogg"))
+local sound_shoot1b		= Sound.new("AdmonitorShoot1B",	path.combine(SOUND_PATH, "shoot1_2.ogg"))
+local sound_death		= Sound.new("AdmonitorDeath",	path.combine(SOUND_PATH, "death.ogg"))
 
-local push = Buff.new(NAMESPACE, "AdmonitorPush")
+local push = Buff.new("AdmonitorPush")
 push.show_icon = false
 push.is_debuff = true
-push:clear_callbacks()
 
-push:onPostStep(function(actor, stack)
-	-- anyways we want to apply this to only classic actors (actors who interact with physics, have skills, etc)
-	if GM.actor_is_classic(actor) and actor:get_data().puncher_push then
-		actor:skill_util_nudge_forward(actor.pHmax * actor:get_data().puncher_push) -- this will move the victim by their max speed * the strength of the push
-	end
-	
-	-- reduce the strength of the push, approaching 0 (technical: functionaly identical to math.approach from rorml)
-	if actor:get_data().puncher_push < 0 then 
-		actor:get_data().puncher_push = math.min(0, actor:get_data().puncher_push + 0.1)
-	elseif actor:get_data().puncher_push > 0 then
-		actor:get_data().puncher_push = math.max(0, actor:get_data().puncher_push - 0.1)
-	end
-	
-	-- if the strength of the push is 0, end the debuff early
-	if actor:get_data().puncher_push == 0 then
-		GM.remove_buff(actor, push)
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(push:get_holding_actors()) do
+		local data = Instance.get_data(actor)
+		
+		-- anyways we want to apply this to only classic actors (actors who interact with physics, have skills, etc)
+		if GM.actor_is_classic(actor) and data.puncher_push then
+			actor:skill_util_nudge_forward(actor.pHmax * data.puncher_push) -- this will move the victim by their max speed * the strength of the push
+			data.puncher_push = ssr_approach(data.puncher_push, 0, 0.1) -- reduce the strength of the push, approaching 0
+		end
+		
+		-- if the strength of the push is 0, end the debuff
+		if not data.puncher_push or data.puncher_push == 0 then
+			actor:buff_remove(push)
+		end
 	end
 end)
 
 -- create the monster log
-local mlog = Monster_Log.new(NAMESPACE, "admonitor")
+local mlog = ssr_create_monster_log("admonitor")
 mlog.sprite_id = sprite_idle
 mlog.portrait_id = sprite_portrait
 mlog.sprite_offset_x = 44
@@ -57,17 +54,14 @@ mlog.stat_hp = 350
 mlog.stat_damage = 17
 mlog.stat_speed = 1.6
 
-local puncher = Object.new(NAMESPACE, "Admonitor", Object.PARENT.enemyClassic)
-local puncher_id = puncher.value
+local puncher = Object.new("Admonitor", Object.Parent.ENEMY_CLASSIC)
+puncher:set_sprite(sprite_idle)
+puncher:set_depth(11) -- depth of vanilla pEnemyClassic objects
 
-puncher.obj_sprite = sprite_idle
-puncher.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
+local primary = Skill.new("admonitorZ")
+local statePrimary = ActorState.new("admonitorPrimary")
 
-local puncherPrimary = Skill.new(NAMESPACE, "admonitorZ")
-local statePuncherPrimary = State.new(NAMESPACE, "admonitorPrimary")
-
-puncher:clear_callbacks()
-puncher:onCreate(function(actor)
+Callback.add(puncher.on_create, function(actor)
 	actor.sprite_palette = sprite_palette
 	actor.sprite_spawn = sprite_spawn
 	actor.sprite_idle = sprite_idle
@@ -77,7 +71,7 @@ puncher:onCreate(function(actor)
 	actor.sprite_fall = sprite_fall
 	actor.sprite_death = sprite_death
 
-	actor.can_jump = false
+	actor.can_jump = true
 
 	actor.mask_index = sprite_mask
 
@@ -90,23 +84,21 @@ puncher:onCreate(function(actor)
 
 	actor.z_range = 150 -- range of the primary
 	actor.monster_log_drop_id = mlog.value
-	actor:set_default_skill(Skill.SLOT.primary, puncherPrimary)
+	actor:set_default_skill(Skill.Slot.PRIMARY, primary)
 
 	actor:init_actor_late()
 end)
 
-puncherPrimary:clear_callbacks()
-puncherPrimary:onActivate(function(actor)
-	actor:enter_state(statePuncherPrimary)
+Callback.add(primary.on_activate, function(actor, skill, slot)
+	actor:set_state(statePrimary)
 end)
 
-statePuncherPrimary:clear_callbacks()
-statePuncherPrimary:onEnter(function(actor, data)
+Callback.add(statePrimary.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
 end)
 
-statePuncherPrimary:onStep(function(actor, data)
+Callback.add(statePrimary.on_step, function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1, 0.23) -- 0.23 is anim speed value, its 0.23 to make the animation match the sound
 
@@ -122,7 +114,7 @@ statePuncherPrimary:onStep(function(actor, data)
 	
 	if data.fired == 2 and actor.image_index >= 16 then
 		data.fired = 3
-		if gm._mod_net_isHost() then
+		if Net.host then
 			local attack = actor:fire_explosion(actor.x + 75 * actor.image_xscale, actor.y - 13, 130, 40, 4.2, nil, gm.constants.wSparks4).attack_info
 			attack.__ssr_puncher_push = 4 * actor.image_xscale
 		end
@@ -131,66 +123,72 @@ statePuncherPrimary:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-local puncherPushSync = Packet.new()
-puncherPushSync:onReceived(function(msg)
-	local actor = msg:read_instance() -- send to clients who got hit
-	local strength = msg:read_short() -- send to clients the strength of knockback
+local packet = Packet.new("SyncAdmonitorPush")
 
-	if not actor:exists() then return end
-	
-	actor:get_data().puncher_push = strength
-	GM.apply_buff(actor, push, 3 * 60, 1) -- apply the knockback to the person who got hit
-end)
-
-local function sync_puncher_push(actor, strength)
-	if not gm._mod_net_isHost() then
-		log.warning("sync_puncher_push called on client!")
-		return
-	end
-
-	local msg = puncherPushSync:message_begin()
-	msg:write_instance(actor)
-	msg:write_short(strength)
-	msg:send_to_all()
+local serializer = function(buffer, actor, strength)
+	buffer:write_instance(actor)
+	buffer:write_short(strength)
 end
 
+local deserializer = function(buffer)
+	local actor = buffer:read_instance() -- send to clients who got hit
+	local strength = buffer:read_short() -- send to clients the strength of knockback
+
+	if not Instance.exists(actor) then return end
+	
+	Instance.get_data(actor).puncher_push = strength
+	actor:buff_apply(push, 3 * 60) -- apply the knockback to the person who got hit
+	actor:screen_shake(6)
+end
+
+packet:set_serializers(serializer, deserializer)
+
 -- onAttackHit callbacks arent synced and only run for the host >>
-Callback.add(Callback.TYPE.onAttackHit, "SSRPuncherPush", function(hit_info)
+Callback.add(Callback.ON_ATTACK_HIT, function(hit_info)
 	if hit_info.attack_info.__ssr_puncher_push then
 		if hit_info.target and GM.actor_is_classic(hit_info.target) then
-			if gm._mod_net_isOnline() then
-				sync_puncher_push(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the knockback effect for clients in multiplayer
+			if Net.online then
+				packet:send_to_all(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the knockback effect for clients in multiplayer
 			end
-			hit_info.target:get_data().puncher_push = hit_info.attack_info.__ssr_puncher_push
-			GM.apply_buff(hit_info.target, push, 3 * 60, 1)
+			Instance.get_data(hit_info.target).puncher_push = hit_info.attack_info.__ssr_puncher_push
+			hit_info.target:buff_apply(push, 3 * 60)
+			hit_info.target:screen_shake(6)
 		end
 	end
 end)
 
-local monsterCardPuncher = Monster_Card.new(NAMESPACE, "admonitor")
-monsterCardPuncher.object_id = puncher_id
-monsterCardPuncher.spawn_cost = 160
-monsterCardPuncher.spawn_type = Monster_Card.SPAWN_TYPE.classic
-monsterCardPuncher.can_be_blighted = true
+local card = MonsterCard.new("admonitor")
+card.object_id = puncher.value
+card.spawn_cost = 160
+card.spawn_type = 0 --MonsterCard.SpawnType.CLASSIC
+card.can_be_blighted = true
+
+if HOTLOADING then return end
 
 local stages = {
-	"ror-templeOfTheElders",
-	"ror-riskOfRain",
-	"ror-boarBeach", -- ive got no idea why nk put them there in ss1 but we decided it would be funny to keep it, also moved to pre loop
+	"templeOfTheElders",
+	"riskOfRain",
+	"boarBeach", -- ive got no idea why nk put them there in ss1 but we decided it would be funny to keep it, also moved to pre loop
 }
 
 local postLoopStages = {
-	"ror-sunkenTombs",
-	"ror-ancientValley",
-	"ror-magmaBarracks",
+	"sunkenTombs",
+	"ancientValley",
+	"magmaBarracks",
 }
 
 for _, s in ipairs(stages) do
 	local stage = Stage.find(s)
-	stage:add_monster(monsterCardPuncher)
+	
+	if stage then
+		stage:add_monster(card)
+	end
 end
 
 for _, s in ipairs(postLoopStages) do
 	local stage = Stage.find(s)
-	stage:add_monster_loop(monsterCardPuncher)
+	
+	if stage then
+		stage:add_monster_loop(card)
+	end
 end

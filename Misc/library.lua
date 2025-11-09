@@ -1,3 +1,54 @@
+-- TEMPORARY RETURNS API UNFINISHED THINGS
+-- basically lifted from rmt since returns api doesnt have them yet, once rapi adds them delete all this shit and use that instead
+
+-- MONSTER LOGS
+function ssr_set_monster_log_boss(self, is_boss)
+	if type(is_boss) ~= "boolean" then log.error("is_boss should be a boolean, got a "..type(is_boss), 2) return end
+
+	if is_boss then
+		self.log_backdrop_index = 1
+	else
+		self.log_backdrop_index = 0
+	end
+
+	-- Remove previous monster log position (if found)
+	local monster_log_order = List.wrap(gm.variable_global_get("monster_log_display_list"))
+	local pos = monster_log_order:find(self)
+	if pos then monster_log_order:delete(pos) end
+
+	local pos = monster_log_order:size()
+	for i, id in ipairs(monster_log_order) do
+		if MonsterLog.wrap(id).log_backdrop_index > self.log_backdrop_index then
+			pos = i
+			break
+		end
+	end
+	
+	monster_log_order:insert(pos - 1, self)
+end
+
+function ssr_create_monster_log(identifier)
+	-- check if monster_log already exists
+	local monster_log = MonsterLog.find(identifier)
+    if monster_log then return monster_log end
+
+    -- create monster_log
+    monster_log = MonsterLog.wrap(
+        gm.monster_log_create(
+            "ssr",      
+            identifier      
+        )
+    )
+
+    monster_log.sprite_id = gm.constants.sLizardWalk
+    monster_log.portrait_id = gm.constants.sPortrait
+	
+	ssr_set_monster_log_boss(monster_log, false)
+
+    return monster_log
+end
+-- END OF TEMPORARY RETURNS API UNFINISHED THINGS
+
 -- play animation and then fade it out object
 local SSREfFadeout = Object.new("SSREfFadeout")
 
@@ -24,4 +75,13 @@ function ssr_create_fadeout(x, y, xscale, sprite, animation_speed, rate)
 	fadeout.sprite_index = sprite
 	fadeout.image_speed = animation_speed
 	fadeout.fadeout_rate = rate
+end
+
+-- math.approach from rorml
+function ssr_approach(current, target, change)
+	if current < target then 
+		return math.min(target, current + change)
+	elseif current > target then
+		return math.max(target, current - change)
+	end
 end

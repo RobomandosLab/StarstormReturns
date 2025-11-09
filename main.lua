@@ -5,13 +5,16 @@ mods["ReturnsAPI-ReturnsAPI"].auto{mp = true, namespace = "ssr"}
 --- GLOBALS (Should be in ALL-CAPS for constants, Uppercase Initial for variables)
 PATH = _ENV["!plugins_mod_folder_path"]
 -- mod options stuff
+
 Options = ModOptions.new("ssr")
 -- Settings with defaults
 -- (useful for setting the default settings when the toml file hasn't been generated
 -- or config options are missing due to a new update adding more)
+
 Settings = {
 	title_replacement = true,
 }
+
 SettingsFile = TOML.new()
 
 local init = function()
@@ -25,7 +28,7 @@ local init = function()
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
 		"Language",
-		--"Actors",
+		"Actors",
 		--"Elites",
 		"Gameplay",
 		"Survivors",
