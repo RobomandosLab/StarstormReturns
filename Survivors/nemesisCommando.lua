@@ -10,8 +10,7 @@ local sprite_palette 		= Sprite.new("NemCommandoPalette", path.combine(SPRITE_PA
 local sprite_idle			= Sprite.new("NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
 local sprite_idle2			= Sprite.new("NemCommandoIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 15, 12)
 local sprite_idle_half		= Sprite.new("NemCommandoIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 15, 12)
--- walk sprites have a sprite speed of 0.8, the slower animation looks better
-local sprite_walk			= Sprite.new("NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8)
+local sprite_walk			= Sprite.new("NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8) -- walk sprites have a sprite speed of 0.8, the slower animation looks better
 local sprite_walk2			= Sprite.new("NemCommandoWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 15, 18, 0.8)
 local sprite_walk_half		= Sprite.new("NemCommandoWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 17, 13, 0.8)
 local sprite_walk_back		= Sprite.new("NemCommandoWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 20, 25, 0.8)

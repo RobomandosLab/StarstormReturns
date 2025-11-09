@@ -494,7 +494,7 @@ Callback.add(Callback.ON_STAGE_START, function()
 
 	-- try spawning up to 3 mimics, though more than 1 is extremely unlikely
 	for i = 0, 3 do
-		if math.random() <= 1 then
+		if math.random() <= 0.1 then
 			-- function used by the game's director when spawninginteractables.
 			gm._mod_game_getDirector():mapobject_spawn(mimicInactive.value, 1) -- second arg is required tile space
 		else

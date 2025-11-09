@@ -33,7 +33,7 @@ local init = function()
 		"Gameplay",
 		"Survivors",
 		"Items",
-		--"Equipments",
+		"Equipments",
 		--"Artifacts",
 		"Stages"
 	}
