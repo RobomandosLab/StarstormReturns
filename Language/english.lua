@@ -5,7 +5,7 @@ return {
 			description = "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes."
 		}
 	},
-	
+
 	survivor = {
 		executioner = {
 			name = "Executioner",
@@ -59,7 +59,7 @@ return {
 			description = "Swap to the regular set of survivors."
 		}
 	},
-	
+
 	skill = {
 		executionerZ = {
 			name = "Service Pistol",
@@ -430,7 +430,7 @@ return {
 			priority = "<r>Volatile</c>"
 		}
 	},
-	
+
 	artifact = {
 		multitude = {
 			pickupName = "Artifact of Multitude",
@@ -450,7 +450,7 @@ return {
 			description = "Gold drops are doubled but they must be picked up.",
 		}
 	},
-	
+
 	actor = {
 		Exploder = {
 			name = "Exploder"
@@ -469,7 +469,7 @@ return {
 			text = "Keeper of the Artifact"
 		}
 	},
-	
+
 	monster = {
 		admonitor = {
 			name = "Clay Admonitor",
@@ -494,7 +494,7 @@ return {
 			worm = "Prismatic Leviathan"
 		}
 	},
-	
+
 	stage = {
 		whistlingBasin = {
 			name = "Whistling Basin",
@@ -507,11 +507,13 @@ return {
 			story = "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
 		}
 	},
-	
+
 	ui = {
 		options = {
 			ssr = {
 				header = "STARSTORM RETURNS",
+				titleReplacement = "Replace Title",
+				["titleReplacement.desc"] = "Whether the game's title screen logo should be replaced with Starstorm's",
 				enableChars = "Enable Survivors",
 				["enableChars.desc"] = "Enables survivors added by Starstorm Returns.",
 				enableItems = "Enable Items",
