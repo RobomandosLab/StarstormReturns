@@ -33,12 +33,7 @@ function ssr_create_monster_log(identifier)
     if monster_log then return monster_log end
 
     -- create monster_log
-    monster_log = MonsterLog.wrap(
-        gm.monster_log_create(
-            "ssr",      
-            identifier      
-        )
-    )
+    monster_log = MonsterLog.wrap(gm.monster_log_create("ssr", identifier))
 
     monster_log.sprite_id = gm.constants.sLizardWalk
     monster_log.portrait_id = gm.constants.sPortrait

@@ -106,7 +106,7 @@ Callback.add(Callback.ON_STEP, function()
 end)
 
 RecalculateStats.add(function(actor)
-	local stack = actor:item_count(balloon)
+	local stack = actor:buff_count(buff)
 	if stack <= 0 then return end
 	
 	local exponent = stack ^ 0.7 -- try and somewhat reduce the potency of stacking
