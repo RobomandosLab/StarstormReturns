@@ -1,4 +1,4 @@
--- TEMPORARY RETURNS API UNFINISHED THINGS
+-- TEMPORARY RETURNS API UNFINISHED THINGS --
 -- basically lifted from rmt since returns api doesnt have them yet, once rapi adds them delete all this shit and use that instead
 
 -- MONSTER LOGS
@@ -42,7 +42,19 @@ function ssr_create_monster_log(identifier)
 
     return monster_log
 end
--- END OF TEMPORARY RETURNS API UNFINISHED THINGS
+
+-- ELITES
+function ssr_create_elite(identifier)
+	-- check if monster_log already exists
+	local elite = Elite.find(identifier)
+    if elite then return elite end
+
+    -- create monster_log
+    elite = Elite.wrap(gm.elite_type_create("ssr", identifier))
+
+    return elite
+end
+-- END OF TEMPORARY RETURNS API UNFINISHED THINGS --
 
 -- play animation and then fade it out object
 local SSREfFadeout = Object.new("SSREfFadeout")

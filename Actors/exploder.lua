@@ -13,15 +13,11 @@ local sprite_fall		= Sprite.new("ExploderFall",		path.combine(SPRITE_PATH, "fall
 local sprite_death		= Sprite.new("ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
 local sprite_shoot1		= Sprite.new("ExploderShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55)
 
-GM.elite_generate_palettes(sprite_palette)
-
 local sound_spawn		= Sound.new("ExploderSpawn",		path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit			= Sound.new("ExploderHit",			path.combine(SOUND_PATH, "hit.ogg"))
 local sound_death		= Sound.new("ExploderDeath",		path.combine(SOUND_PATH, "death.ogg"))
 local sound_shoot1a		= Sound.new("ExploderShoot1a",		path.combine(SOUND_PATH, "skill1a.ogg"))
 local sound_shoot1b		= Sound.new("ExploderShoot1b",		path.combine(SOUND_PATH, "skill1b.ogg"))
-
-local exploder_kill_queue = {}
 
 local exploder = Object.new("Exploder", Object.Parent.ENEMY_CLASSIC)
 exploder:set_sprite(sprite_idle)
@@ -89,7 +85,7 @@ Callback.add(statePrimary.on_step, function(actor, _)
 	if data.exploded == 0 and actor.image_index >= 14 then
 		data.exploded = 1
 		actor.intangible = true -- make the exploder untouchable, so it can't be hit after it has exploded but before it's deleted
-		table.insert(exploder_kill_queue, actor.id) -- add to the kill queue
+		--table.insert(exploder_kill_queue, actor.id) -- add to the kill queue
 
 		actor:sound_play(sound_shoot1b, 1.0, (0.9 + math.random() * 0.2) * actor.attack_speed)
 		actor:screen_shake(2)
@@ -97,35 +93,11 @@ Callback.add(statePrimary.on_step, function(actor, _)
 		-- every player's game simulates the explosion locally, making it easier to dodge on high ping.
 		actor:fire_explosion_local(actor.x, actor.y - 16, 120, 56, 2)
 	end
-end)
-
--- destroying an actor anywhere in its state or step code causes errors in certain cases. do this in a separate pass
-Callback.add(Callback.POST_STEP, function()
-	if #exploder_kill_queue <= 0 then return end -- exit early if no exploders are in the kill queue
 	
-	for i, id in ipairs(exploder_kill_queue) do
-		local actor = Instance.wrap(id)
-		if Instance.exists(actor) then
-			local data = Instance.get_data(actor)
-			
-			-- check that it's advanced to the next frame. this gives time for the attack's procs and game report ("Killed by" info) to work
-			if data.exploded == 1 and actor.image_index >= 15 then
-				-- manually create a corpse. plays the remainder of the explosion animation
-				local body = Object.find("Body"):create(actor.x, actor.y)
-				body.sprite_index = actor.sprite_index
-				body.image_xscale = actor.image_xscale
-				body.image_index = actor.image_index
-				body.image_speed = actor.image_speed
-				body.image_blend = actor.image_blend
-				body.sprite_palette = actor.sprite_palette
-				body.elite_type = actor.elite_type
-
-				actor:destroy()
-				table.remove(exploder_kill_queue, i)
-			end
-		else
-			table.remove(exploder_kill_queue, i)
-		end
+	if data.exploded == 1 and actor.image_index >= 15 then -- 1 image_index gap is needed to make the results screen show who you got killed by
+		data.exploded = 2
+		actor.exp_worth = 0 -- dont drop money on death
+		actor.hp = -10000 -- kill !
 	end
 end)
 
@@ -133,7 +105,7 @@ local card = MonsterCard.new("exploder")
 card.object_id = exploder.value
 card.spawn_cost = 18
 card.spawn_type = 0 --Monster_Card.SPAWN_TYPE.classic
-card.can_be_blighted = false -- HELL no
+card.can_be_blighted = false -- least threatening blighted enemy because they just blow up lol
 
 if HOTLOADING then return end
 
