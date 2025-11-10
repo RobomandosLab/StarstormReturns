@@ -44,7 +44,7 @@ outlands_stage:add_monster({
     "clayMan",
     "toxicBeast",
     "scavenger",
-	MonsterCard.find("admonitor")
+	"admonitor"
 })
 
 outlands_stage:add_interactable({
@@ -52,7 +52,7 @@ outlands_stage:add_interactable({
     "barrelEquipment",
     "chest1",
     "chest4",
-    "chest3",
+    "shop1",
     "drone6",
     "drone4",
     "shrine2",

@@ -48,7 +48,7 @@ basin_stage:add_monster({
 basin_stage:add_monster_loop({
     "impOverlord",
     "lemrider",
-	MonsterCard.find("admonitor")
+	"admonitor"
 })
 
 basin_stage:add_interactable({
@@ -56,7 +56,7 @@ basin_stage:add_interactable({
     "barrelEquipment",
     "chest1",
     "chest2",
-    "chest3",
+    "shop1",
     "drone3",
     "drone4",
     "shrine2",
