@@ -75,8 +75,9 @@ Callback.add(efTossedCan.on_step, function(self)
 
 		local target
 		local target_hp = -math.huge
-		for _, candidate in ipairs(self:get_collisions_circle(gm.constants.pActor, INTOXICATION_RADIUS, self.x, self.y)) do
-			if candidate.team ~= self.team then
+		for _, hitbox in ipairs(self:get_collisions_circle(gm.constants.pActorCollisionBase, INTOXICATION_RADIUS, self.x, self.y)) do
+			local candidate = GM.attack_collision_resolve(hitbox)
+			if gm.team_canhit(candidate.team, self.team) then
 				-- find enemy that has the highest maxhp, isn't intoxicated, and isn't immune to intoxication
 				if candidate.maxhp > target_hp and candidate:buff_count(buff) == 0 and not candidate.buff_immune:get(buff) then
 					target = candidate

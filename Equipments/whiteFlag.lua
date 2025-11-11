@@ -78,7 +78,7 @@ Callback.add(efFlag.on_draw, function(self)
 	local pulse = (self.life % 60) / 60
 	local r2 = r1 * (1 - pulse)
 
-	gm.draw_set_alpha(a*10)
+	gm.draw_set_alpha(a * 10)
 	gm.draw_set_colour(Color.WHITE)
 	gm.draw_circle(self.x, self.y, r1, true)
 

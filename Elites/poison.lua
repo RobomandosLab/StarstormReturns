@@ -42,24 +42,26 @@ Callback.add(Callback.ON_STEP, function()
 	if Net.client then return end
 
 	for _, actor in ipairs(itemEliteOrbPoison:get_holding_actors()) do
-		local data = Instance.get_data(actor)
-		
-		if not data.poison_timer then
-			data.poison_timer = 30
-		end
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			
+			if not data.poison_timer then
+				data.poison_timer = 30
+			end
 
-		data.poison_timer = data.poison_timer - 1
-		if data.poison_timer < 0 then
-			data.poison_timer = 30 + math.random(30)
+			data.poison_timer = data.poison_timer - 1
+			if data.poison_timer < 0 then
+				data.poison_timer = 30 + math.random(30)
 
-			if math.random() < 0.05 then
-				GM.sound_play_networked(sound_poison_cloud, 1, 0.9 + math.random() * 0.2, actor.x, actor.y)
+				if math.random() < 0.05 and actor.damage then
+					GM.sound_play_networked(sound_poison_cloud, 1, 0.9 + math.random() * 0.2, actor.x, actor.y)
 
-				local cloud = Object.find("MushDust"):create(actor.x, actor.bbox_bottom - 24)
-				cloud.parent = actor
-				cloud.team = actor.team
-				cloud.damage = actor.damage * 0.3
-				cloud:alarm_set(0, 60 * 5) -- set lifetime
+					local cloud = Object.find("MushDust"):create(actor.x, actor.bbox_bottom - 24)
+					cloud.parent = actor
+					cloud.team = actor.team
+					cloud.damage = actor.damage * 0.3
+					cloud:alarm_set(0, 60 * 5) -- set lifetime
+				end
 			end
 		end
 	end
