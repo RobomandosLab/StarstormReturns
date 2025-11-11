@@ -9,6 +9,8 @@ local splash_sprite = Sprite.new("ParticleEmpyreanSpawnSplash", path.combine(SPR
 local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
 local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
+GM.elite_generate_palettes()
+
 local gotanythingsharp = Sound.new("EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
 local sound_spawn = Sound.new("EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_spawn_alt = Sound.new("EmpyreanSpawnShortAlt", path.combine(SOUND_PATH, "spawn_alt.ogg"))
@@ -363,7 +365,7 @@ Callback.add(Callback.ON_STEP, function()
 					local arr = Array.new({actor})
 					local party = actor:actor_create_enemy_party_from_ids(arr)
 					local director = gm._mod_game_getDirector()
-					gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+					--gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 				end
 				
 				-- make them move again !! yippie!!
@@ -380,7 +382,7 @@ Callback.add(Callback.ON_STEP, function()
 						local arr = Array.new({actor})
 						local party = actor:actor_create_enemy_party_from_ids(arr)
 						local director = gm._mod_game_getDirector()
-						gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+						--gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 					end
 				end
 			end
@@ -625,6 +627,7 @@ Hook.add_pre("gml_Object_oWormWarning_Step_0", function(self, other)
 		self.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
 	end
 end)
+]]--
 
 local blacklist = {
 	["lemrider"] = true, -- the spawn anim breaks since its 2 of them at once, also doesnt actually do most elite effects
@@ -643,10 +646,11 @@ local whitelist = {
 	["wanderingVagrant"] = true,
 	["youngVagrant"] = true,
 }
-]]--
 
 Callback.add(Callback.ON_STAGE_START, function()
-	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02 -- higher chance so you see your first empyrean sooner
+	if not GM._mod_game_getDirector().__ssr_empyrean_chance then
+		GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02 -- higher chance so you see your first empyrean sooner
+	end
 end)
 
 Callback.add(Callback.ON_ELITE_INIT, function(actor)

@@ -12,6 +12,8 @@ elitePoison.healthbar_icon = sprite_icon
 elitePoison.palette = sprite_palette
 elitePoison.blend_col = Color.PURPLE
 
+GM.elite_generate_palettes()
+
 local itemEliteOrbPoison = Item.new("eliteOrbPoison")
 itemEliteOrbPoison.is_hidden = true
 

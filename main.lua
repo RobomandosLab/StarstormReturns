@@ -39,7 +39,6 @@ local init = function()
 	}
 
 	Stage.remove_all_rooms() -- reload stages
-	GM.elite_generate_palettes() -- generate elite palettes for new and existing enemies
 
 	for _, folder in ipairs(folders) do
 		-- NOTE: this includes filepaths within subdirectories of the above folders

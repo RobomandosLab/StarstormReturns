@@ -16,6 +16,8 @@ local sprite_fall		= Sprite.new("AdmonitorFall",		path.combine(SPRITE_PATH, "fal
 local sprite_death		= Sprite.new("AdmonitorDeath",		path.combine(SPRITE_PATH, "death.png"), 14, 33, 53)
 local sprite_shoot1		= Sprite.new("AdmonitorShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 30, 53, 86)
 
+GM.elite_generate_palettes(sprite_palette)
+
 local sound_spawn		= Sound.new("AdmonitorSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_shoot1a		= Sound.new("AdmonitorShoot1A",	path.combine(SOUND_PATH, "shoot1_1.ogg"))
 local sound_shoot1b		= Sound.new("AdmonitorShoot1B",	path.combine(SOUND_PATH, "shoot1_2.ogg"))

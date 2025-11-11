@@ -13,6 +13,8 @@ local sprite_fall		= Sprite.new("ExploderFall",		path.combine(SPRITE_PATH, "fall
 local sprite_death		= Sprite.new("ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
 local sprite_shoot1		= Sprite.new("ExploderShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55)
 
+GM.elite_generate_palettes(sprite_palette)
+
 local sound_spawn		= Sound.new("ExploderSpawn",		path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit			= Sound.new("ExploderHit",			path.combine(SOUND_PATH, "hit.ogg"))
 local sound_death		= Sound.new("ExploderDeath",		path.combine(SOUND_PATH, "death.ogg"))
