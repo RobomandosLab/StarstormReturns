@@ -6,8 +6,8 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
 local sprite_icon = Sprite.new("EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
 local splash_sprite = Sprite.new("ParticleEmpyreanSpawnSplash", path.combine(SPRITE_PATH, "splash.png"), 6)
-local beam_sprite = Sprite.new("ParticleEmpyreanSpawnBeam", path.combine(SPRITE_PATH, "beam.png"), 11)
 local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
+local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
 local gotanythingsharp = Sound.new("EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
 local sound_spawn = Sound.new("EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
@@ -28,17 +28,6 @@ local evil = Particle.new("EmpyreanSpawnEvil")
 evil:set_sprite(splash_sprite, true, true, false)
 evil:set_life(15, 30)
 
-local beam = Particle.new("EmpyreanSpawnBeam")
-beam:set_direction(270, 270, 0, 0)
-beam:set_speed(8, 8, 0, 0)
-beam:set_sprite(beam_sprite, true, true, false)
-beam:set_life(10, 10)
-
-local splash = Particle.new("EmpyreanSpawnSplash")
-splash:set_sprite(splash_sprite, true, true, false)
-splash:set_scale(1.5, 1.5)
-splash:set_life(15, 30)
-
 local rainbowspark = Particle.new("EmpyreanRainbowSpark")
 rainbowspark:set_shape(Particle.Shape.LINE)
 rainbowspark:set_blend(true)
@@ -51,22 +40,13 @@ rainbowspark:set_scale(0.1, 0.1)
 rainbowspark:set_life(20, 100)
 
 local teleport = Particle.new("EmpyreanTeleport")
-teleport:set_shape(Particle.Shape.STAR)
+teleport:set_sprite(star_small_sprite, true, true, false)
 teleport:set_alpha3(0.75, 0.75, 0)
 teleport:set_color2(Color.WHITE, Color.WHITE)
 teleport:set_orientation(0, 0, 0, 0, true)
-teleport:set_speed(0, 3, -0.03, 0.05)
+teleport:set_speed(1, 3, -0.03, 0.05)
 teleport:set_direction(0, 360, 0, 10)
-teleport:set_scale(0.1, 0.1)
 teleport:set_life(20, 100)
-
-local telegraph = Particle.new("EmpyreanStarTelegraph")
-telegraph:set_shape(Particle.Shape.DISK)
-telegraph:set_alpha2(0.6, 0)
-telegraph:set_blend(true)
-telegraph:set_speed(6, 6, 0, 0)
-telegraph:set_scale(0.1, 0.1)
-telegraph:set_life(100, 100)
 
 local empyorb = Item.new("eliteOrbEmpyrean")
 empyorb.is_hidden = true
@@ -75,39 +55,39 @@ local teleorb = Item.new("elitePassiveTeleportEmpyrean")
 teleorb.is_hidden = true
 
 -- PUT ASPECTS HERE --
--- format is {"namespace-identifier", stack}
+-- format is {"identifier", "namespace", stack}
 local aspects = {
 	-- VANILLA --
 	
 	-- volatile
-	{"eliteOrbExplosiveShot", 2},
-	{"elitePassiveVolatile", 1},
+	{"eliteOrbExplosiveShot", "ror", 2},
+	{"elitePassiveVolatile", "ror", 1},
 	
 	-- overloading
-	{"eliteOrbLightning", 1},
-	{"elitePassiveOverloading", 1},
+	{"eliteOrbLightning", "ror", 1},
+	{"elitePassiveOverloading", "ror", 1},
 	
 	-- leeching
-	{"elitePassiveLeeching", 1},
-	{"eliteOrbLifesteal", 7},
+	{"elitePassiveLeeching", "ror", 1},
+	{"eliteOrbLifesteal", "ror", 7},
 	
 	-- frenzied (minus their teleporting orb)
-	{"eliteOrbAttackSpeed", 3},
-	{"eliteOrbMoveSpeed", 5},
+	{"eliteOrbAttackSpeed", "ror", 3},
+	{"eliteOrbMoveSpeed", "ror", 5},
 	
 	-- blazing
-	{"eliteOrbFireTrail", 5},
+	{"eliteOrbFireTrail", "ror", 5},
 	
 	
 	
 	-- STARSTORM --
 	
 	-- poison
-	{"eliteOrbPoison", 1}
+	{"eliteOrbPoison", "ssr", 1}
 }
 function ssr_give_empyrean_aspects(actor)
 	for _, aspect in ipairs(aspects) do
-		local item = Item.find(aspect[1])
+		local item = Item.find(aspect[1], aspect[2])
 		
 		-- if the elite already has these orbs, remove them
 		if actor:item_count(item) > 0 then
@@ -115,7 +95,7 @@ function ssr_give_empyrean_aspects(actor)
 		end
  		
 		-- give the orbs
-		actor:item_give(item, aspect[2])
+		actor:item_give(item, aspect[3])
 	end
 	
 	for id, stack in ipairs(actor.inventory_item_stack) do
@@ -145,6 +125,12 @@ Callback.add(empy.on_apply, function(actor)
 	actor.knockback_immune = true
 	actor.stun_immune = true
 	actor.fall_immune = true
+	if actor.sprite_jump then
+		actor.can_jump = true
+	end
+	actor.leap_max_distance = math.max(actor.leap_max_distance or 0, 2)
+	
+	Instance.get_data(actor).empy_quality = Global.__pref_graphics_quality -- get quality
 	
 	-- make maxhp_base modification take effect
 	GM.actor_queue_dirty(actor) 
@@ -239,6 +225,18 @@ empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	gm.draw_set_color(Color.WHITE)
 	gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
 	
+	gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	local move_down = 0
+	for i = 0, 6 do
+		GM.draw_sprite_ext(gm.constants.sTurtleWave, (data.empy_beam % 20) / 5 - 1, actor.x + width, actor.bbox_bottom - 115 - 231 * i + 90 * move_down, -1 * ((-1) ^ i), -0.5, 90, Color.WHITE, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
+		GM.draw_sprite_ext(gm.constants.sTurtleWave, (data.empy_beam % 20) / 5 - 1, actor.x - width, actor.bbox_bottom - 115 - 231 * i + 90 * move_down, 1 * ((-1) ^ i), -0.5, -90, Color.WHITE, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
+		
+		if i % 2 == 1 then
+			move_down = move_down + 1
+		end
+	end
+	gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	
 	-- make it black and move
 	GM.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
 	gm.draw_set_alpha(1)
@@ -324,9 +322,19 @@ Callback.add(Callback.ON_STEP, function()
 				local part_height = math.ceil(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
 				local silhouette_y = actor.y - 16 - (16 * Math.dsin(270 + data.empy_beam * 2))
 				
-				if math.random() >= 0.5 then
+				if math.random() <= 0.2 * data.empy_quality then
 					-- create the black particles around the enemy
 					evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.System.ABOVE)
+				end
+				
+				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then
+					local fadeout1 = ssr_create_fadeout(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, 1, gm.constants.sEfSplashWater, 0.3, 04)
+					fadeout1.direction = 0
+					fadeout1.speed = 8
+					
+					local fadeout2 = ssr_create_fadeout(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, -1, gm.constants.sEfSplashWater, 0.3, 0.4)
+					fadeout2.direction = 180
+					fadeout2.speed = 8
 				end
 				
 				data.empy_beam = data.empy_beam - 1
@@ -377,8 +385,8 @@ Callback.add(Callback.ON_STEP, function()
 				end
 			end
 			
-			if gm.inside_view(actor.x, actor.y) == 1 and data.empy_beam_over == 1 and data.empy_beam <= 0 and data.empy_color % 2 == 0 then
-				rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((data.empy_color + actor.y * (0.75)) % 360, 100, 100), 1, Particle.System.BELOW)
+			if data.empy_beam_over == 1 and data.empy_beam <= 0 and data.empy_color % 2 == 0 and data.empy_quality >= 2 then
+				rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((data.empy_color) % 360, 100, 100), 1, Particle.System.BELOW)
 			end
 			
 			if actor.object_index == gm.constants.oWorm or actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
@@ -410,7 +418,7 @@ Callback.add(Callback.ON_STEP, function()
 		if Instance.exists(actor) then
 			local data = Instance.get_data(actor)
 			
-			if GM.actor_is_classic(actor) then
+			if GM.actor_is_classic(actor) and not actor:is_climbing() then
 				if data.empyrean_teleport > 0 then
 					data.empyrean_teleport = data.empyrean_teleport - 1
 				else
@@ -453,11 +461,7 @@ Callback.add(Callback.ON_STEP, function()
 							end
 						end
 						
-						--for i = 1, 36 do
-							--teleport:set_direction(10 * i, 10 * i, 0, 10)
-							--teleport:set_color2(Color.WHITE, gm.round(math.random(360)))
-							--teleport:create(actor.x, actor.y, 1, Particle.System.MIDDLE)
-						--end
+						teleport:create(actor.x, actor.y, (data.empy_quality - 1) * 15, Particle.System.MIDDLE)
 						
 						-- play one of 3 sounds randomly
 						actor:sound_play(tp_sounds[math.random(1, 3)], 1, 0.8 + math.random() * 0.2)

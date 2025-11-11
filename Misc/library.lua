@@ -82,6 +82,8 @@ function ssr_create_fadeout(x, y, xscale, sprite, animation_speed, rate)
 	fadeout.sprite_index = sprite
 	fadeout.image_speed = animation_speed
 	fadeout.fadeout_rate = rate
+	
+	return fadeout
 end
 
 -- math.approach from rorml

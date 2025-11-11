@@ -114,6 +114,8 @@ Callback.add(statePrimary.on_step, function(actor, data)
 		data.fired = 3
 		if Net.host then
 			local attack = actor:fire_explosion(actor.x + 75 * actor.image_xscale, actor.y - 13, 130, 40, 4.2, nil, gm.constants.wSparks4).attack_info
+			attack.x = actor.x + 114 * actor.image_xscale
+			attack.y = actor.y - 6
 			attack.__ssr_puncher_push = 4 * actor.image_xscale
 		end
 	end

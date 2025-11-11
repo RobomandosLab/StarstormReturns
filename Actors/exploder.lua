@@ -47,7 +47,6 @@ Callback.add(exploder.on_create, function(actor)
 	actor.sprite_death = sprite_death
 
 	actor.can_jump = true
-	actor.leap_max_distance = 3
 
 	actor.mask_index = sprite_mask
 
