@@ -129,6 +129,7 @@ nemmando.sprite_loadout_palette = sprite_palette
 nemmando.select_sound_id = sound_select
 nemmando.cape_offset = Array.new({0, -8, 0, -5})
 
+--[[
 --skins
 nemmando:add_skin("Mk. II", 1, Sprite.new("NemCommandoSelect2", path.combine(SPRITE_PATH, "select2.png"), 34, 28, 0),
 Sprite.new("NemCommandoPortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 3),
@@ -145,6 +146,7 @@ Sprite.new("NemCommandoPortraitSmall4", path.combine(SPRITE_PATH, "portraitTiny4
 nemmando:add_skin("Callback", 4, Sprite.new("NemCommandoSelect5", path.combine(SPRITE_PATH, "select5.png"), 34, 28, 0),
 Sprite.new("NemCommandoPortrait5", path.combine(SPRITE_PATH, "portrait5.png"), 3),
 Sprite.new("NemCommandoPortraitSmall5", path.combine(SPRITE_PATH, "portraitTiny5.png")))
+]]--
 
 -- utility function for updating his basic sprites depending on if his last skill was the gun
 local function nemmando_update_sprites(actor, has_gun)
@@ -202,6 +204,8 @@ Callback.add(nemmando.on_init, function(actor)
 	actor.sprite_decoy = sprite_decoy
 	actor.sprite_drone_idle = sprite_drone_idle
 	actor.sprite_drone_shoot = sprite_drone_shoot
+	
+	actor.is_nemesis = true -- toggles the portal spawning animation
 
 	actor:survivor_util_init_half_sprites()
 end)

@@ -12,7 +12,7 @@ local HEAL_COLOR = Color.from_rgb(143, 255, 38)
 Callback.add(Callback.ON_HEAL, function(actor_unwrapped, amount)
 	local actor = Instance.wrap(actor_unwrapped)
 	if not Instance.exists(actor) then return end
-
+	
 	local stack = actor:item_count(wonderHerbs)
 	if stack <= 0 then return end
 	
