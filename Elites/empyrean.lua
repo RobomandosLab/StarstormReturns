@@ -6,6 +6,7 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
 local sprite_icon = Sprite.new("EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
 local splash_sprite = Sprite.new("ParticleEmpyreanSpawnSplash", path.combine(SPRITE_PATH, "splash.png"), 6)
+local sprite_beam = Sprite.new("EmpyreanBeam", path.combine(SPRITE_PATH, "beam.png"), 4, 0, 350)
 local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
 local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
@@ -227,17 +228,13 @@ empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	gm.draw_set_color(Color.WHITE)
 	gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
 	
-	gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
-	local move_down = 0
+	--gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	local closing_anim = math.min(1, ((180 - data.empy_beam) ^ 3) / 1000)
 	for i = 0, 6 do
-		GM.draw_sprite_ext(gm.constants.sTurtleWave, (data.empy_beam % 20) / 5 - 1, actor.x + width, actor.bbox_bottom - 115 - 231 * i + 90 * move_down, -1 * ((-1) ^ i), -0.5, 90, Color.WHITE, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
-		GM.draw_sprite_ext(gm.constants.sTurtleWave, (data.empy_beam % 20) / 5 - 1, actor.x - width, actor.bbox_bottom - 115 - 231 * i + 90 * move_down, 1 * ((-1) ^ i), -0.5, -90, Color.WHITE, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
-		
-		if i % 2 == 1 then
-			move_down = move_down + 1
-		end
+		GM.draw_sprite_ext(sprite_beam, 4 - ((data.empy_beam % 16) / 4), actor.x + width, actor.bbox_bottom - 350 * i, closing_anim, 1, 0, Color.WHITE, closing_anim)
+		GM.draw_sprite_ext(sprite_beam, 4 - ((data.empy_beam % 16) / 4), actor.x - width, actor.bbox_bottom - 350 * i, -closing_anim, 1, 0, Color.WHITE, closing_anim)
 	end
-	gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	--gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
 	
 	-- make it black and move
 	GM.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
@@ -365,7 +362,7 @@ Callback.add(Callback.ON_STEP, function()
 					local arr = Array.new({actor})
 					local party = actor:actor_create_enemy_party_from_ids(arr)
 					local director = gm._mod_game_getDirector()
-					--gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+					gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 				end
 				
 				-- make them move again !! yippie!!
@@ -382,7 +379,7 @@ Callback.add(Callback.ON_STEP, function()
 						local arr = Array.new({actor})
 						local party = actor:actor_create_enemy_party_from_ids(arr)
 						local director = gm._mod_game_getDirector()
-						--gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+						gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
 					end
 				end
 			end

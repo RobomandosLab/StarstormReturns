@@ -16,8 +16,6 @@ Callback.add(portal.on_create, function(self)
 	data.timer = 0
 	data.draw_timer = 0
 	data.state = 0
-	
-	self:move_contact_solid(270, -1)
 end)
 
 Callback.add(portal.on_step, function(self)
@@ -36,6 +34,8 @@ Callback.add(portal.on_step, function(self)
 		
 		self.parent.pVspeed = -5
 		self.parent.pHspeed = 3.5
+		
+		gm.sound_play_global(gm.constants.wMercenary_EviscerateWhiff, 1, 1)
 		
 		gm.actor_activity_set(self.parent.id, 0, 0)
 	elseif data.timer >= 240 and data.state == 2 then
