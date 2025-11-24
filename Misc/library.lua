@@ -94,3 +94,50 @@ function ssr_approach(current, target, change)
 		return math.max(target, current - change)
 	end
 end
+
+-- check if a point is colliding with the stage
+function ssr_is_point_colliding_stage(x, y, actor)
+	local collision = actor:collision_point(x, y, gm.constants.pBlock, false, true)
+	
+	if not collision or (type(collision) == "number" and collision < 0) then
+		return false
+	end
+	
+	return true
+end
+
+-- move a point in a specified direction until it collides with the stage, or has reached the max amount
+-- 90 is down, 270 up, 180 left, and 0/360 right
+function ssr_move_point_contact_solid(x, y, angle, amount, actor)
+	amount = amount or 1000
+	
+	local totalMoved = 0
+	local xx = math.cos(math.rad(angle))
+	local yy = math.sin(math.rad(angle))
+	
+	while totalMoved < amount do
+		x = x + xx * 32
+		y = y + yy * 32
+		
+		totalMoved = totalMoved + 32
+		
+		if totalMoved >= amount then
+			x = x - xx * (totalMoved - amount)
+			y = y - yy * (totalMoved - amount)
+			break
+		end
+		
+		if ssr_is_point_colliding_stage(x, y, actor) then
+			for i = 0, 31 do
+				x = x - xx
+				y = y - yy
+				if not ssr_is_point_colliding_stage(x, y, actor) then
+					break
+				end
+			end
+			break
+		end
+	end
+	
+	return x, y
+end

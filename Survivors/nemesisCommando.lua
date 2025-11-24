@@ -100,6 +100,7 @@ nemmando:set_stats_base({
 	damage = 11,
 	regen = 0.011,
 })
+
 nemmando:set_stats_level({
 	health = 36,
 	damage = 3,
@@ -347,17 +348,17 @@ tracer:set_callback(function(x1, y1, x2, y2, color)
 	y1 = y1 - 8
 	y2 = y2 - 8
 
-	local dist = gm.point_distance(x1, y1, x2, y2)
-	local dir = gm.point_direction(x1, y1, x2, y2)
+	local dist = Math.distance(x1, y1, x2, y2)
+	local dir = Math.direction(x1, y1, x2, y2)
 
 	-- tracer
-	local t = GM.instance_create(x1, y1, gm.constants.oEfProjectileTracer)
-	t.direction = dir
-	t.speed = 60
-	t.length = 80
-	t.blend_1 = Color.from_rgb(252, 118, 98)
-	t.blend_2 = Color.from_rgb(252, 118, 98)
-	t:alarm_set(0, math.max(1, dist / t.speed))
+	local inst = Object.find("EfProjectileTracer"):create(x1, y1)
+	inst.direction = dir
+	inst.speed = 60
+	inst.length = 80
+	inst.blend_1 = Color.from_rgb(252, 118, 98)
+	inst.blend_2 = Color.from_rgb(252, 118, 98)
+	inst:alarm_set(0, math.max(1, dist / inst.speed))
 
 	-- particles
 	particleTracer:set_direction(dir, dir, 0, 0)
@@ -457,7 +458,7 @@ Callback.add(stateSecondary2.on_step, function(actor, data)
 		data.fired = 1
 
 		local buff_shadow_clone = Buff.find("shadowClone")
-		for i=0, actor:buff_count(buff_shadow_clone) do
+		for i = 0, actor:buff_count(buff_shadow_clone) do
 			local slash = objSlash:create(actor.x - i * 12 * actor.image_xscale, actor.y)
 			slash.parent = actor
 			slash.team = actor.team
@@ -889,7 +890,7 @@ Callback.add(objGrenade.on_destroy, function(inst)
 
 	if boosted then
 		-- this doesn't sync, but it doesn't matter because the client that threw them is the one that fires the attacks, and it'll feel fine for them
-		for i=-1, 1 do
+		for i = -1, 1 do
 			local nade = objGrenade:create(inst.x, inst.y)
 			Instance.get_data(nade).timer = GRENADE_FUSE_TIMER * (0.4 + math.random() * 0.1 - i * 0.05)
 			Instance.get_data(nade).damage = 1.5

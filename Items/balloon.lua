@@ -56,56 +56,60 @@ end, EffectDisplay.DrawPriority.BODY_POST)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(balloon:get_holding_actors()) do
-		if actor.in_danger_last_frame < Global._current_frame and actor:buff_count(buff) == 0 then
-			actor:buff_apply(buff, 1)
+		if Instance.exists(actor) then
+			if actor.in_danger_last_frame < Global._current_frame and actor:buff_count(buff) == 0 then
+				actor:buff_apply(buff, 1)
+			end
 		end
 	end
 	
 	for _, actor in ipairs(buff:get_holding_actors()) do
-		local stack = actor:item_count(balloon)
-		local data = Instance.get_data(actor)
+		if Instance.exists(actor) then
+			local stack = actor:item_count(balloon)
+			local data = Instance.get_data(actor)
 
-		if not data.balloons then
-			data.balloons = {}
-		end
-
-		while #data.balloons < stack do
-			table.insert(data.balloons, {
-				x = actor.x,
-				y = actor.y,
-				rot = 0,
-			})
-		end
-
-		for i = 1, stack do
-			local b = data.balloons[i]
-
-			local tx = actor.ghost_x
-			local ty = actor.ghost_y-50
-
-			local ang = math.floor(i * 0.5) * GOLDEN_RATIO
-			local mag = math.sqrt(ang) * 1.8
-
-			if i % 2 == 0 then
-				mag = -mag
+			if not data.balloons then
+				data.balloons = {}
 			end
 
-			tx = tx + math.sin(ang) * mag
-			ty = ty + math.cos(ang) * mag
+			while #data.balloons < stack do
+				table.insert(data.balloons, {
+					x = actor.x,
+					y = actor.y,
+					rot = 0,
+				})
+			end
 
-			local lerp = 0.05 * (0.95 ^ i ) + 0.05
+			for i = 1, stack do
+				local b = data.balloons[i]
 
-			b.x = Math.lerp(b.x, tx, lerp)
-			b.y = Math.lerp(b.y, ty, lerp)
-		end
-		
-		if actor.in_danger_last_frame > Global._current_frame then
-			actor:buff_remove(buff)
+				local tx = actor.ghost_x
+				local ty = actor.ghost_y-50
+
+				local ang = math.floor(i * 0.5) * GOLDEN_RATIO
+				local mag = math.sqrt(ang) * 1.8
+
+				if i % 2 == 0 then
+					mag = -mag
+				end
+
+				tx = tx + math.sin(ang) * mag
+				ty = ty + math.cos(ang) * mag
+
+				local lerp = 0.05 * (0.95 ^ i ) + 0.05
+
+				b.x = Math.lerp(b.x, tx, lerp)
+				b.y = Math.lerp(b.y, ty, lerp)
+			end
+			
+			if actor.in_danger_last_frame > Global._current_frame then
+				actor:buff_remove(buff)
+			end
 		end
 	end
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buff)
 	if stack <= 0 then return end
 	
@@ -114,10 +118,10 @@ RecalculateStats.add(function(actor)
 	-- modifying downward/default gravity is iffy, rusty jetpack doesn't do this and doing it makes falling uncontrollably slower
 	-- ... but also, let mimics/non-players benefit from balloon
 	if actor.object_index ~= gm.constants.oP then
-		actor.pGravity1 = actor.pGravity1 * 0.65 ^ exponent
+		api.pGravity1_mult(0.65 ^ exponent)
 	end
 	
-	actor.pGravity2 = actor.pGravity2 * 0.65 ^ exponent
+	api.pGravity2_mult(0.65 ^ exponent)
 end)
 
 Callback.add(balloon.on_removed, function(actor, stack)

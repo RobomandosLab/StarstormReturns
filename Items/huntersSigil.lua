@@ -44,22 +44,24 @@ end)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(huntersSigil:get_holding_actors()) do
-		if Net.client then return end
-		
-		local stack = actor:item_count(huntersSigil)
-		local data = Instance.get_data(actor)
+		if Net.host then
+			if Instance.exists(actor) then
+				local stack = actor:item_count(huntersSigil)
+				local data = Instance.get_data(actor)
 
-		if actor.pHspeed == 0 and actor.pVspeed == 0 and not actor:is_climbing() then
-			data.sigil_timer = data.sigil_timer + 1
-			
-			if data.sigil_timer > 60 and not Instance.exists(data.sigil_zone) then
-				local zone = objSigilZone:create(actor.x, actor.y)
-				zone.parent = actor
-				zone.stack = stack
-				data.sigil_zone = zone.id -- use the inst's ID instead of the inst wrapper directly because that caused random errors ...
+				if actor.pHspeed == 0 and actor.pVspeed == 0 and not actor:is_climbing() then
+					data.sigil_timer = data.sigil_timer + 1
+					
+					if data.sigil_timer > 60 and not Instance.exists(data.sigil_zone) then
+						local zone = objSigilZone:create(actor.x, actor.y)
+						zone.parent = actor
+						zone.stack = stack
+						data.sigil_zone = zone.id -- use the inst's ID instead of the inst wrapper directly because that caused random errors ...
+					end
+				else
+					data.sigil_timer = 0
+				end
 			end
-		else
-			data.sigil_timer = 0
 		end
 	end
 end)
@@ -122,12 +124,12 @@ Callback.add(objSigilZone.on_draw, function(self)
 	gm.gpu_set_blendmode(0)
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffSigil)
     if stack <= 0 then return end
 	
-	actor.armor = actor.armor + 5 + (10 * stack)
-	actor.critical_chance = actor.critical_chance + 5 + (20 * stack)
+	api.armor_add(5 + 10 * stack)
+	api.critical_chance_add(5 + 20 * stack)
 end)
 
 -- networking

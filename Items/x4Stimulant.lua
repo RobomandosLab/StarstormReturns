@@ -15,11 +15,11 @@ x4Buff.show_icon = false
 
 local particleHeal = Particle.find("Heal")
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(x4Buff)
     if stack <= 0 then return end
 	
-	actor.hp_regen = actor.hp_regen + REGEN + REGEN_STACK * (actor:item_count(x4Stimulant) - 1)
+	api.hp_regen_mult(REGEN + REGEN_STACK * (actor:item_count(x4Stimulant) - 1))
 end)
 
 RecalculateStats.add(function(actor)
@@ -44,8 +44,10 @@ end)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(x4Buff:get_holding_actors()) do
-		if math.random() < 0.15 then
-			particleHeal:create(actor.x - 4 + math.random() * 8, actor.y - 6 + math.random() * 12, 1)
+		if Instance.exists(actor) then
+			if math.random() < 0.15 then
+				particleHeal:create(actor.x - 4 + math.random() * 8, actor.y - 6 + math.random() * 12, 1)
+			end
 		end
 	end
 end)

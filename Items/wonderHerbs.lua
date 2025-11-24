@@ -25,9 +25,9 @@ Callback.add(Callback.ON_HEAL, function(actor_unwrapped, amount)
 	amount.value = new_amount
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(Callback.Priority.AFTER, function(actor, api)
 	local stack = actor:item_count(wonderHerbs)
     if stack <= 0 then return end
 	
-	actor.hp_regen = actor.hp_regen * (1 + stack * 0.12)
+	api.hp_regen_mult(1 + stack * 0.12)
 end)

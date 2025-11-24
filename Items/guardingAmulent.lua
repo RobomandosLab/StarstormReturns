@@ -39,15 +39,17 @@ guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped)
 end, EffectDisplay.DrawPriority.BODY_POST)
 
 Callback.add(Callback.ON_STEP, function()
-	for _, actor in ipairs(guardingAmulet:get_holding_actors()) do	
-		local data = Instance.get_data(actor)
-		
-		if not data.amulet_pulse then
-			data.amulet_pulse = 0
-		end
-		
-		if data.amulet_pulse > 0 then
-			data.amulet_pulse = data.amulet_pulse - 1
+	for _, actor in ipairs(guardingAmulet:get_holding_actors()) do
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			
+			if not data.amulet_pulse then
+				data.amulet_pulse = 0
+			end
+			
+			if data.amulet_pulse > 0 then
+				data.amulet_pulse = data.amulet_pulse - 1
+			end
 		end
 	end
 end)

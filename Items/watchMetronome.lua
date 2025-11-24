@@ -78,48 +78,50 @@ end)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(watchMetronome:get_holding_actors()) do
-		local stack = actor:item_count(watchMetronome)
-		local data = Instance.get_data(actor)
-		local motion_frac = math.abs(actor.pHspeed) / actor.pHmax
+		if Instance.exists(actor) then
+			local stack = actor:item_count(watchMetronome)
+			local data = Instance.get_data(actor)
+			local motion_frac = math.abs(actor.pHspeed) / actor.pHmax
 
-		if actor:is_climbing() then
-			motion_frac = 0
+			if actor:is_climbing() then
+				motion_frac = 0
 
-			if Util.bool(actor.ropeUp) or Util.bool(actor.ropeDown) then
-				motion_frac = 1
-			end
-		end
-
-		if actor:buff_count(buffChrono) <= 0 then
-			motion_frac = 1 - motion_frac
-			
-			if motion_frac > 0.01 then
-				data.chrono_charge = math.min(1, data.chrono_charge + motion_frac * CHARGE_RATE)
-
-				if data.chrono_charge >= 0.666 and data.chrono_tick + TICK_INTERVAL < data.chrono_charge then
-					actor:sound_play(sound_tick1, 0.8, 1.0)
-					data.chrono_tick = data.chrono_charge
-				end
-
-				if data.chrono_charge >= 1 then
-					actor:buff_apply(buffChrono, 60)
-					data.chrono_tick = 1
+				if Util.bool(actor.ropeUp) or Util.bool(actor.ropeDown) then
+					motion_frac = 1
 				end
 			end
-		else
-			if motion_frac > 0.01 then
-				local decay_reduction = 1 / (1 + (stack - 1) * 0.333)
 
-				data.chrono_charge = math.max(0, data.chrono_charge - motion_frac * CHARGE_RATE * decay_reduction)
+			if actor:buff_count(buffChrono) <= 0 then
+				motion_frac = 1 - motion_frac
+				
+				if motion_frac > 0.01 then
+					data.chrono_charge = math.min(1, data.chrono_charge + motion_frac * CHARGE_RATE)
 
-				if data.chrono_charge <= 0.333 * decay_reduction and data.chrono_tick - TICK_INTERVAL * decay_reduction > data.chrono_charge then
-					actor:sound_play(sound_tick2, 0.8, 1.0)
-					data.chrono_tick = data.chrono_charge
+					if data.chrono_charge >= 0.666 and data.chrono_tick + TICK_INTERVAL < data.chrono_charge then
+						actor:sound_play(sound_tick1, 0.8, 1.0)
+						data.chrono_tick = data.chrono_charge
+					end
+
+					if data.chrono_charge >= 1 then
+						actor:buff_apply(buffChrono, 60)
+						data.chrono_tick = 1
+					end
 				end
+			else
+				if motion_frac > 0.01 then
+					local decay_reduction = 1 / (1 + (stack - 1) * 0.333)
 
-				if data.chrono_charge <= 0 then
-					actor:buff_remove(buffChrono)
-					data.chrono_tick = 0
+					data.chrono_charge = math.max(0, data.chrono_charge - motion_frac * CHARGE_RATE * decay_reduction)
+
+					if data.chrono_charge <= 0.333 * decay_reduction and data.chrono_tick - TICK_INTERVAL * decay_reduction > data.chrono_charge then
+						actor:sound_play(sound_tick2, 0.8, 1.0)
+						data.chrono_tick = data.chrono_charge
+					end
+
+					if data.chrono_charge <= 0 then
+						actor:buff_remove(buffChrono)
+						data.chrono_tick = 0
+					end
 				end
 			end
 		end
@@ -149,9 +151,9 @@ Callback.add(buffChrono.on_remove, function(actor, stack)
 	flash.rate = 0.08
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffChrono)
     if stack <= 0 then return end
 	
-	actor.pHmax = actor.pHmax + 1.4
+	api.pHmax_add(1.4)
 end)

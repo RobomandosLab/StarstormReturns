@@ -5,8 +5,9 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Elites/Empyrean")
 local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
 local sprite_icon = Sprite.new("EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
-local splash_sprite = Sprite.new("ParticleEmpyreanSpawnSplash", path.combine(SPRITE_PATH, "splash.png"), 6)
-local sprite_beam = Sprite.new("EmpyreanBeam", path.combine(SPRITE_PATH, "beam.png"), 4, 0, 350)
+local particle_sprite = Sprite.new("ParticleEmpyreanSpawnParticle", path.combine(SPRITE_PATH, "particle.png"), 6)
+local sprite_beam = Sprite.new("EmpyreanBeam", path.combine(SPRITE_PATH, "beam.png"), 4, 0, 176)
+local sprite_splash = Sprite.new("EmpyreanBeamSplash", path.combine(SPRITE_PATH, "splash.png"), 4, 0, 50)
 local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
 local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
@@ -28,7 +29,7 @@ empy.palette = gm.constants.sElitePaletteDummy
 empy.blend_col = Color.WHITE
 
 local evil = Particle.new("EmpyreanSpawnEvil")
-evil:set_sprite(splash_sprite, true, true, false)
+evil:set_sprite(particle_sprite, true, true, false)
 evil:set_life(15, 30)
 
 local rainbowspark = Particle.new("EmpyreanRainbowSpark")
@@ -112,13 +113,6 @@ Callback.add(empy.on_apply, function(actor)
 	actor:item_give(empyorb) -- applies most empyrean effects
 	actor:item_give(teleorb) -- makes it teleport to the player from any location
 	
-	-- stat changes are multiplicative with normal elite stat changes
-	-- so max hp for example will be base * 12 * 2.8 = 33.6x total multiplier
-	
-	-- giga health
-	actor.maxhp_base = actor.maxhp_base * 12
-	actor.hp = actor.maxhp
-	
 	-- giga gold and exp
 	if actor.exp_worth then
 		actor.exp_worth = actor.exp_worth * 30 -- totals to 60x
@@ -140,35 +134,46 @@ Callback.add(empy.on_apply, function(actor)
 end)
 
 Callback.add(empyorb.on_acquired, function(actor, stack)
-	-- move the actor to the ground
-	actor:move_contact_solid(270, -1)
-	
-	-- apply screenshake
-	actor:screen_shake(10)
-	
 	local data = Instance.get_data(actor)
 	
+	local all_monster_cards = MonsterCard.find_all()
+	local normal_spawn = true
+	for i, card in ipairs(all_monster_cards) do
+		if card.object_id == actor.object_index then -- if the actor has a monster card
+			print(card.spawn_type)
+			if card.spawn_type ~= 0 then
+				normal_spawn = false
+				break
+			end
+		end
+	end
+	
 	-- start the beam
-	if gm.inside_view(actor.x, actor.y) == 1 and actor.team ~= 1 then
+	if actor.team ~= 1 and normal_spawn then
+		actor:move_contact_solid(270, -1) -- move the actor to the ground
+		
 		data.empy_beam = 180
 		data.empy_beam_over = 0
 		data.empy_color = 0
 		actor:sound_play(gotanythingsharp, 2, 1)
-	elseif gm.inside_view(actor.x, actor.y) ~= 1 or actor.team == 1 then
+	else
 		data.empy_beam = 0
 		data.empy_beam_over = 1
 		data.no_beam_loser = 5
 		data.empy_color = 0
 		
 		if math.random() <= 0.5 then
-			actor:sound_play(sound_spawn, 2, 1)
+			actor:sound_play(sound_spawn, 3, 1)
 		else
-			actor:sound_play(sound_spawn_alt, 2, 1)
+			actor:sound_play(sound_spawn_alt, 3, 1)
 		end
 		
 		-- give them all elite aspects
 		ssr_give_empyrean_aspects(actor)
 	end
+	
+	-- apply screenshake
+	actor:screen_shake(10)
 	
 	-- remove the passive teleport orb since empyreans have a custom one
 	if actor:item_count(Item.find("elitePassiveTeleport")) > 0 then 
@@ -228,13 +233,19 @@ empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	gm.draw_set_color(Color.WHITE)
 	gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
 	
-	--gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
 	local closing_anim = math.min(1, ((180 - data.empy_beam) ^ 3) / 1000)
+	local frame = (4 - ((data.empy_beam % 13) / 3))
 	for i = 0, 6 do
-		GM.draw_sprite_ext(sprite_beam, 4 - ((data.empy_beam % 16) / 4), actor.x + width, actor.bbox_bottom - 350 * i, closing_anim, 1, 0, Color.WHITE, closing_anim)
-		GM.draw_sprite_ext(sprite_beam, 4 - ((data.empy_beam % 16) / 4), actor.x - width, actor.bbox_bottom - 350 * i, -closing_anim, 1, 0, Color.WHITE, closing_anim)
+		if i < 1 then
+			GM.draw_sprite_ext(sprite_splash, frame, actor.x + (width - 2), actor.bbox_bottom, closing_anim, 1, 0, Color.WHITE, closing_anim)
+			GM.draw_sprite_ext(sprite_splash, frame, actor.x - (width - 2), actor.bbox_bottom, -closing_anim, 1, 0, Color.WHITE, closing_anim)
+		else
+			GM.draw_sprite_ext(sprite_beam, frame, actor.x + (width - 2), actor.bbox_bottom - 50 - 176 * (i - 1), closing_anim, 1, 0, Color.WHITE, closing_anim)
+			GM.draw_sprite_ext(sprite_beam, frame, actor.x - (width - 2), actor.bbox_bottom - 50 - 176 * (i - 1), -closing_anim, 1, 0, Color.WHITE, closing_anim)
+		end
 	end
-	--gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
 	
 	-- make it black and move
 	GM.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
@@ -362,7 +373,7 @@ Callback.add(Callback.ON_STEP, function()
 					local arr = Array.new({actor})
 					local party = actor:actor_create_enemy_party_from_ids(arr)
 					local director = gm._mod_game_getDirector()
-					gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+					gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party.value)
 				end
 				
 				-- make them move again !! yippie!!
@@ -379,7 +390,7 @@ Callback.add(Callback.ON_STEP, function()
 						local arr = Array.new({actor})
 						local party = actor:actor_create_enemy_party_from_ids(arr)
 						local director = gm._mod_game_getDirector()
-						gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
+						gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party.value)
 					end
 				end
 			end
@@ -395,11 +406,15 @@ Callback.add(Callback.ON_STEP, function()
 	end
 end)
 
-RecalculateStats.add(Callback.Priority.AFTER, function(actor)
+RecalculateStats.add(Callback.Priority.AFTER, function(actor, api)
     if actor.elite_type ~= empy.value then return end
 	
-	actor.damage = actor.damage * (5.4 / 1.9) -- totals to 5.4x
-	actor.cdr = actor.cdr * (0.5 / 0.3) -- totals to 50%
+	-- stat changes are multiplicative with normal elite stat changes
+	-- so max hp for example will be base * 12 * 2.8 = 33.6x total multiplier
+	
+	api.maxhp_mult(12)
+	api.damage_mult(5.4 / 1.9) -- totals to 5.4x
+	api.cooldown_mult(0.5 / 0.3) -- totals to 50%
 end)
 
 Callback.add(teleorb.on_acquired, function(actor, stack)
@@ -652,6 +667,7 @@ end)
 
 Callback.add(Callback.ON_ELITE_INIT, function(actor)
 	if GM._mod_game_getDirector().stages_passed <= 8 then return end -- only spawns if its stage 9+
+	if Global.__gamemode_current >= 2 then return end -- dont spawn empyreans in judgement
 	if not Net.host then return end
 	
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean

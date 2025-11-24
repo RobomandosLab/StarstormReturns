@@ -122,78 +122,66 @@ Callback.add(Callback.ON_MINUTE, function(minute, second)
 	if Net.client then return end
 
 	for _, actor in ipairs(roulette:get_holding_actors()) do
-		roulette_roll(actor)
+		if Instance.exists(actor) then
+			roulette_roll(actor)
+		end
 	end
 end)
 
--- -- adjust hp value so the player doesn't have missing hp after the buff
-local maxhp_old
-local hp_old
-
-Hook.add_pre(gm.constants.recalculate_stats, function(self, other, result, args)
-	if self:item_count(roulette) <= 0 then return end
-	
-	maxhp_old = self.maxhp
-	hp_old = self.hp
-end)
-
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffMaxHP)
     if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.maxhp = actor.maxhp + 60 * (0.6 + 0.4 * item)
-	
-	local hp_restore = hp_old - actor.hp
-	actor.hp = math.min(actor.maxhp, actor.hp + math.max(0, actor.maxhp - maxhp_old + hp_restore))
+	api.maxhp_add(60 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffRegen)
     if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.hp_regen = actor.hp_regen + 0.06 * (0.6 + 0.4 * item)
+	api.hp_regen_add(0.06 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffDamage)
     if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.damage = actor.damage + 14 * (0.6 + 0.4 * item)
+	api.damage_add(14 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffAttackSpeed)
     if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.attack_speed = actor.attack_speed + 0.35 * (0.6 + 0.4 * item)
+	api.attack_speed_add(0.35 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffCritChance)
     if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.critical_chance = actor.critical_chance + 25 * (0.6 + 0.4 * item)
+	api.critical_chance_add(25 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffMoveSpeed)
 	if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.pHmax = actor.pHmax + 0.52 * (0.6 + 0.4 * item)
+	api.pHmax_add(0.52 * (0.6 + 0.4 * item))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buffArmor)
 	if stack <= 0 then return end
 	
 	local item = actor:item_count(roulette)
-	actor.armor = actor.armor + 35 * (0.6 + 0.4 * item)
+	api.armor_add(35 * (0.6 + 0.4 * item))
 end)
 
 -- networking

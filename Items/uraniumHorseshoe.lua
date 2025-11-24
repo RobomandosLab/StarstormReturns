@@ -22,42 +22,44 @@ horseshoe.loot_tags = Item.LootTag.CATEGORY_UTILITY
 ItemLog.new_from_item(horseshoe)
 
 -- setup the effects of the item
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:item_count(horseshoe)
     if stack <= 0 then return end
 	
-	actor.pHmax = actor.pHmax + 0.28 * stack -- default player speed is almost always 2.8, meaning that increasing the speed by +0.28 were essentially increasing it by 10%
-	actor.pVmax = actor.pVmax + 0.6 * stack -- same as above except the default max jump height is 6
+	api.pHmax_add(0.28 * stack) -- default player speed is almost always 2.8, meaning that increasing the speed by +0.28 were essentially increasing it by 10%
+	api.pVmax_add(0.6 * stack) -- same as above except the default max jump height is 6
 end)
 
 -- making the footstep particle actually appear in game
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(horseshoe:get_holding_actors()) do
-		local stack = actor:item_count(horseshoe)
-		local data = Instance.get_data(actor) -- get_data() can be used for storing any information about an instance (the player here). were gonna be using it in the code below
-		
-		-- the horseshoe timer will be nil when we start the game, and since trying to do math on a nil value is impossible we just detect if a value is nil and then set it to 1 instead
-		if not data.horseshoeTimer then
-			data.horseshoeTimer = 1 
-		end
-		
-		if actor.pHspeed ~= 0 and actor:is_grounded() then -- if the player is moving on the ground, we increase the timer by one on every frame
-			data.horseshoeTimer = data.horseshoeTimer + 1
-		else -- if they arent, we reset it back to 1
-			data.horseshoeTimer = 1
-		end
-		
-		-- if the timer is a multiple of 10, we create a footstep particle
-		-- the operator % in lua will return the remainder of a division
-		-- this is also why we have been using 1 as our starting value instead of 0, cuz 0 divided by 10 will have a remainder of 0, meaning that this code will run on every tick while youre in the air or moving (which is bad cuz we dont want to do that)
-		if data.horseshoeTimer % 10 == 0 then
-			local orientation = 90 + 90 * actor.image_xscale -- actor.image_xscale is the direction the player is looking in, with 1 being right and -1 being left
-			local offset = 0
-			if orientation == 180 then
-				offset = 1 -- compensate for 1-pixel offset when the particle is flipped
+		if Instance.exists(actor) then
+			local stack = actor:item_count(horseshoe)
+			local data = Instance.get_data(actor) -- get_data() can be used for storing any information about an instance (the player here). were gonna be using it in the code below
+			
+			-- the horseshoe timer will be nil when we start the game, and since trying to do math on a nil value is impossible we just detect if a value is nil and then set it to 1 instead
+			if not data.horseshoeTimer then
+				data.horseshoeTimer = 1 
 			end
-			parHorseshoe:set_orientation(orientation, orientation, 0, 0, false)
-			parHorseshoe:create(actor.x, actor.bbox_bottom + offset, 1) -- the bbox_bottom variable always holds the global y coordinate of the bottom of the actor's hitbox
+			
+			if actor.pHspeed ~= 0 and actor:is_grounded() then -- if the player is moving on the ground, we increase the timer by one on every frame
+				data.horseshoeTimer = data.horseshoeTimer + 1
+			else -- if they arent, we reset it back to 1
+				data.horseshoeTimer = 1
+			end
+			
+			-- if the timer is a multiple of 10, we create a footstep particle
+			-- the operator % in lua will return the remainder of a division
+			-- this is also why we have been using 1 as our starting value instead of 0, cuz 0 divided by 10 will have a remainder of 0, meaning that this code will run on every tick while youre in the air or moving (which is bad cuz we dont want to do that)
+			if data.horseshoeTimer % 10 == 0 then
+				local orientation = 90 + 90 * actor.image_xscale -- actor.image_xscale is the direction the player is looking in, with 1 being right and -1 being left
+				local offset = 0
+				if orientation == 180 then
+					offset = 1 -- compensate for 1-pixel offset when the particle is flipped
+				end
+				parHorseshoe:set_orientation(orientation, orientation, 0, 0, false)
+				parHorseshoe:create(actor.x, actor.bbox_bottom + offset, 1) -- the bbox_bottom variable always holds the global y coordinate of the bottom of the actor's hitbox
+			end
 		end
 	end
 end)

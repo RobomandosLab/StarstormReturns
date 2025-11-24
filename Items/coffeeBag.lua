@@ -19,10 +19,10 @@ Callback.add(Callback.ON_INTERACTABLE_ACTIVATE, function(interactable, actor)
 	actor:buff_apply(coffeeBuff, 60 * (5 + stack * 5))
 end)
 
-RecalculateStats.add(function(actor)
-	local stack = actor:buff_count(coffeeBuff)
+RecalculateStats.add(function(actor, api)
+	local stack = actor:buff_count(coffeeBuff, api)
 	if stack <= 0 then return end 
 	
-	actor.pHmax = actor.pHmax + 0.6
-	actor.attack_speed = actor.attack_speed + 0.22	
+	api.pHmax_add(0.6)
+	api.attack_speed_add(0.22)
 end)

@@ -26,8 +26,10 @@ local function update_trees(removal)
 
 	local stack = 0
 	
-	for _, actor in ipairs(Instance.find_all(gm.constants.oP)) do
-		stack = stack + actor:item_count(distinctiveStick)
+	for _, actor in ipairs(distinctiveStick:get_holding_actors()) do
+		if Instance.exists(actor) then
+			stack = stack + actor:item_count(distinctiveStick)
+		end
 	end
 	
 	if removal then

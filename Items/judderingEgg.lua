@@ -80,9 +80,11 @@ end)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(judderingEgg:get_holding_actors()) do
-		local data = Instance.get_data(actor)
-		if not wurm_owners[actor.id] then
-			wurm_owners[actor.id] = true
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			if not wurm_owners[actor.id] then
+				wurm_owners[actor.id] = true
+			end
 		end
 	end
 end)
@@ -350,17 +352,19 @@ end)
 
 Callback.add(Callback.ON_STAGE_START, function()
 	for _, actor in ipairs(judderingEgg:get_holding_actors()) do
-		local wurm_pets = Instance.get_data(actor).wurm_pets
-		if not wurm_pets then return end
+		if Instance.exists(actor) then
+			local wurm_pets = Instance.get_data(actor).wurm_pets
+			if not wurm_pets then return end
 
-		for _, wurm in ipairs(wurm_pets) do
-			wurm.firing = false
+			for _, wurm in ipairs(wurm_pets) do
+				wurm.firing = false
 
-			local head = wurm.segments[1]
-			local angle = math.random() * math.pi * 2
-			
-			head.x = actor.x + math.sin(angle) * WURM_FOLLOW_RADIUS
-			head.y = actor.y + math.cos(angle) * WURM_FOLLOW_RADIUS
+				local head = wurm.segments[1]
+				local angle = math.random() * math.pi * 2
+				
+				head.x = actor.x + math.sin(angle) * WURM_FOLLOW_RADIUS
+				head.y = actor.y + math.cos(angle) * WURM_FOLLOW_RADIUS
+			end
 		end
 	end
 end)
