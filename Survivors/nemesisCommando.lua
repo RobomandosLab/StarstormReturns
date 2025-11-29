@@ -710,10 +710,10 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					-- it also sets the actor's xscale i guess
 					if Net.host then
 						-- args: [not sure], packet id, object index, net id, value to write to activity_var2, actor xscale
-						gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, gm.sign(actor.image_xscale))
+						gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, Math.sign(actor.image_xscale))
 					else
 						-- args: packet id, value to write to activity_var2, actor xscale
-						gm.client_message_send(43, 1, gm.sign(actor.image_xscale))
+						gm.client_message_send(43, 1, Math.sign(actor.image_xscale))
 					end
 				end
 
