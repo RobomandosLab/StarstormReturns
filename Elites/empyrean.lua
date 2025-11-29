@@ -149,7 +149,7 @@ Callback.add(empyorb.on_acquired, function(actor, stack)
 	end
 	
 	-- start the beam
-	if actor.team ~= 1 and normal_spawn then
+	if actor.team ~= gm.constants.TEAM_PLAYER and normal_spawn then
 		actor:move_contact_solid(270, -1) -- move the actor to the ground
 		
 		data.empy_beam = 180
@@ -369,7 +369,7 @@ Callback.add(Callback.ON_STEP, function()
 				ssr_give_empyrean_aspects(actor)
 				
 				-- make the boss bar appear
-				if actor.team ~= 1 and Net.host then
+				if actor.team ~= gm.constants.TEAM_PLAYER and Net.host then
 					local arr = Array.new({actor})
 					local party = actor:actor_create_enemy_party_from_ids(arr)
 					local director = gm._mod_game_getDirector()
@@ -386,7 +386,7 @@ Callback.add(Callback.ON_STEP, function()
 					data.no_beam_loser = data.no_beam_loser - 1
 				else
 					data.no_beam_loser = nil
-					if actor.team ~= 1 then -- make the boss bar appear
+					if actor.team ~= gm.constants.TEAM_PLAYER then -- make the boss bar appear
 						local arr = Array.new({actor})
 						local party = actor:actor_create_enemy_party_from_ids(arr)
 						local director = gm._mod_game_getDirector()

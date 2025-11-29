@@ -10,11 +10,11 @@ local sprite_palette 		= Sprite.new("NemCommandoPalette", path.combine(SPRITE_PA
 local sprite_idle			= Sprite.new("NemCommandoIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 15, 12)
 local sprite_idle2			= Sprite.new("NemCommandoIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 15, 12)
 local sprite_idle_half		= Sprite.new("NemCommandoIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 15, 12)
-local sprite_walk			= Sprite.new("NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13, 0.8) -- walk sprites have a sprite speed of 0.8, the slower animation looks better
-local sprite_walk2			= Sprite.new("NemCommandoWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 15, 18, 0.8)
-local sprite_walk_half		= Sprite.new("NemCommandoWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 17, 13, 0.8)
-local sprite_walk_back		= Sprite.new("NemCommandoWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 20, 25, 0.8)
-local sprite_walk_back2		= Sprite.new("NemCommandoWalkBack2", path.combine(SPRITE_PATH, "walkBack2.png"), 8, 20, 25, 0.8)
+local sprite_walk			= Sprite.new("NemCommandoWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 17, 13) 
+local sprite_walk2			= Sprite.new("NemCommandoWalk2", path.combine(SPRITE_PATH, "walk2.png"), 8, 15, 18)
+local sprite_walk_half		= Sprite.new("NemCommandoWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 17, 13)
+local sprite_walk_back		= Sprite.new("NemCommandoWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 20, 25)
+local sprite_walk_back2		= Sprite.new("NemCommandoWalkBack2", path.combine(SPRITE_PATH, "walkBack2.png"), 8, 20, 25)
 local sprite_jump			= Sprite.new("NemCommandoJump", path.combine(SPRITE_PATH, "jump.png"), 1, 18, 17)
 local sprite_jump2			= Sprite.new("NemCommandoJump2", path.combine(SPRITE_PATH, "jump2.png"), 1, 18, 18)
 local sprite_jump_half		= Sprite.new("NemCommandoJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 18, 16)
@@ -55,6 +55,13 @@ local sprite_rocket			= Sprite.new("NemCommandoRocket", path.combine(SPRITE_PATH
 local sprite_rocket_mask	= Sprite.new("NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
 
 local sprite_log			= Sprite.new("NemCommandoLog", path.combine(SPRITE_PATH, "log.png"))
+
+-- walk sprites have a sprite speed of 0.8, the slower animation looks better
+sprite_walk:set_speed(0.8)
+sprite_walk2:set_speed(0.8)
+sprite_walk_half:set_speed(0.8)
+sprite_walk_back:set_speed(0.8)
+sprite_walk_back2:set_speed(0.8)
 
 local sound_select			= Sound.new("UISurvivorsNemCommando", path.combine(SOUND_PATH, "select.ogg"))
 local sound_slash			= Sound.new("NemCommandoGash", path.combine(SOUND_PATH, "shoot2b.ogg"))

@@ -54,6 +54,16 @@ function ssr_create_elite(identifier)
 
     return elite
 end
+
+-- SKILLS
+function ssr_skill_override_cooldown(skill, value)
+	if GM.stopwatch_is_active(skill.cooldown_stopwatch) then
+		GM.stopwatch_stop(skill.cooldown_stopwatch)
+	end
+	
+	GM.stopwatch_start(skill.cooldown_stopwatch, Global._current_frame + value, Global._current_frame)
+end
+
 -- END OF TEMPORARY RETURNS API UNFINISHED THINGS --
 
 -- play animation and then fade it out object
@@ -86,6 +96,27 @@ function ssr_create_fadeout(x, y, xscale, sprite, animation_speed, rate)
 	return fadeout
 end
 
+-- used for skins
+obj_sprite_layer = Object.new("sprite_layer")
+obj_sprite_layer:set_sprite(gm.constants.sEfChestRain)
+obj_sprite_layer:set_depth(1)
+
+Callback.add(obj_sprite_layer.on_create, function(inst)
+	inst.image_speed = 0
+end)
+
+Callback.add(obj_sprite_layer.on_step, function(inst)
+	if not inst.parent or not Instance.exists(inst.parent) then
+		inst:destroy()
+	end
+end)
+
+Callback.add(obj_sprite_layer.on_draw, function(inst)
+	if inst.skinnable then
+		inst:actor_skin_skinnable_draw_self()
+	end
+end)
+
 -- math.approach from rorml
 function ssr_approach(current, target, change)
 	if current < target then 
@@ -104,6 +135,11 @@ function ssr_is_point_colliding_stage(x, y, actor)
 	end
 	
 	return true
+end
+
+-- check if an instance is colliding with the stage
+function ssr_is_colliding_stage(inst, x, y)
+	return inst:is_colliding(gm.constants.pBlock, x or inst.x, y or inst.y)
 end
 
 -- move a point in a specified direction until it collides with the stage, or has reached the max amount
@@ -140,4 +176,141 @@ function ssr_move_point_contact_solid(x, y, angle, amount, actor)
 	end
 	
 	return x, y
+end
+
+-- move a point in a specified direction until it stops colliding with the stage, or has reached the max amount
+-- 90 is down, 270 up, 180 left, and 0/360 right
+function ssr_move_point_contact_air(x, y, angle, amount, actor)
+	amount = amount or 1000
+	
+	local totalMoved = 0
+	local xx = math.cos(math.rad(angle))
+	local yy = math.sin(math.rad(angle))
+	
+	while totalMoved < amount do
+		x = x + xx * 32
+		y = y + yy * 32
+		
+		totalMoved = totalMoved + 32
+		
+		if totalMoved >= amount then
+			x = x - xx * (totalMoved - amount)
+			y = y - yy * (totalMoved - amount)
+			break
+		end
+		
+		if not ssr_is_point_colliding_stage(x, y, actor) then
+			for i = 0, 31 do
+				x = x - xx
+				y = y - yy
+				
+				if ssr_is_point_colliding_stage(x, y, actor) then
+					x = x + xx
+					y = y + yy
+					break
+				end
+			end
+			break
+		end
+	end
+	
+	return x, y
+end
+
+-- move an instance in a specified direction until it collides with the stage, or has reached the max amount
+-- 90 is down, 270 up, 180 left, and 0/360 right
+function ssr_move_contact_solid(inst, angle, amount)
+	amount = amount or 1000
+	
+	local totalMoved = 0
+	local xx = math.cos(math.rad(angle))
+	local yy = math.sin(math.rad(angle))
+	
+	while totalMoved < amount do
+		inst.x = inst.x + xx * 32
+		inst.y = inst.y + yy * 32
+		
+		totalMoved = totalMoved + 32
+		
+		if totalMoved >= amount then
+			inst.x = inst.x - xx * (totalMoved - amount)
+			inst.y = inst.y - yy * (totalMoved - amount)
+		end
+		
+		if ssr_is_colliding_stage(inst) then
+			for i = 0, 31 do
+				inst.x = inst.x - xx
+				inst.y = inst.y - yy
+				
+				if not ssr_is_colliding_stage(inst) then
+					break
+				end
+			end
+			break
+		end
+	end
+	
+	return x, y
+end
+
+-- move an instance in a specified direction until it stops colliding with the stage, or has reached the max amount
+-- 90 is down, 270 up, 180 left, and 0/360 right
+function ssr_move_contact_air(inst, angle, amount)
+	amount = amount or 1000
+	
+	local totalMoved = 0
+	local xx = math.cos(math.rad(angle))
+	local yy = math.sin(math.rad(angle))
+	
+	while totalMoved < amount do
+		inst.x = inst.x + xx * 32
+		inst.y = inst.y + yy * 32
+		
+		totalMoved = totalMoved + 32
+		
+		if totalMoved >= amount then
+			inst.x = inst.x - xx * (totalMoved - amount)
+			inst.y = inst.y - yy * (totalMoved - amount)
+		end
+		
+		if not is_colliding_stage(inst) then
+			for i = 0, 31 do
+				inst.x = inst.x - xx
+				inst.y = inst.y - yy
+				
+				if is_colliding_stage(inst) then
+					inst.x = inst.x + xx
+					inst.y = inst.y + yy
+					break
+				end
+			end
+			break
+		end
+	end
+	
+	return x, y
+end
+
+-- kinda useless but whatever... feels better anyways
+function ssr_get_tiles(x)
+	return (x or 1) * 32
+end
+
+-- sets the achievement to the survivors category, locks the survivor behind it, and sets the sprites and unlock text ("X" unlocked.)
+function ssr_set_survivor_achievement(achievement, survivor)
+	achievement.group = Achievement.GROUP.character
+	achievement.token_unlock_name = survivor.token_name
+	achievement:set_sprite(survivor.sprite_portrait, 0)
+	survivor:set_survivor_achievement(achievement)
+end
+
+-- adds X to the achievement's progress (achievement completes when progress reaches the requirement)
+function ssr_progress_achievement(achievement, value)
+	gm.achievement_add_progress(achievement.value, value)
+end
+
+-- makes the attack not proc the damage number yellow
+function ssr_set_no_proc(attack_info)
+	attack_info.proc = false
+	attack_info.damage_color = Color.from_hex(0xC9B736)
 end
