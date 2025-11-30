@@ -289,17 +289,29 @@ end
 -- MULTIPLAYER: create a new packet, when it is retrieved by a client the cooresponding machine flashes and plays a sound
 local machine_temp_visual_packet = Packet.new("SyncTechnicianMachineVisuals")
 
-local machine_temp_visual_packet_deserializer = function(buffer, self)
+local machine_temp_visual_packet_deserializer = function(buffer)
 	local inst = buffer:read_instance()
 	local isFinal = buffer:read_byte() -- plays a different sound when downgrading finishes
 	
 	machineFlash(inst, color_tech_red)
-	gm.sound_play_at(Util.bool(isFinal) and sound_downgrade or sound_downgradeBeep, 1, 1, inst.x, inst.y)
+	
+	local sound = sound_downgradeBeep.value
+	if Util.bool(isFinal) then
+		sound = sound_downgrade.value
+	end
+	
+	gm.sound_play_at(sound, 1, 1, inst.x, inst.y)
 end
 
-local machine_temp_visual_packet_serializer = function(buffer, self, inst, timer)
+local machine_temp_visual_packet_serializer = function(buffer, inst)
 	buffer:write_instance(inst) -- add the machine as an argument to the packet
-	buffer:write_byte(timer) -- tells the client whether or not to play the full downgrade sound (1) or beep sound (0)
+	
+	local final = 0
+	if inst.upgrade_progress_temp_timer <= 0 then
+		final = 1
+	end
+	
+	buffer:write_byte(final) -- tells the client whether or not to play the full downgrade sound (1) or beep sound (0)
 end
 
 machine_temp_visual_packet:set_serializers(machine_temp_visual_packet_serializer, machine_temp_visual_packet_deserializer)
@@ -320,13 +332,28 @@ local machine_update_temp = function(inst)
 				
 				-- MULTIPLAYER: create and send the temp packet visual which runs code similar to above on all clients
 				if Net.online then
-					machine_temp_visual_packet:send_to_all(inst, inst.upgrade_progress_temp_timer <= 0 and 1 or 0)
+					machine_temp_visual_packet:send_to_all(inst)
 				end
 			end
 		end
 		inst.upgrade_progress_temp_timer = inst.upgrade_progress_temp_timer - 1
 	end
 end
+
+local create_particles_packet = Packet.new("SyncTechnicianUpgradeParticles")
+
+local create_particles_packet_deserializer = function(buffer)
+	local inst = buffer:read_instance()
+	
+	particle_spark:create(inst.x, inst.y, math.random(2, 4), Particle.System.MIDDLE) -- creates 2-4 spark particles at the machine's location
+	gm.sound_play_at(sound_wrenchHit.value, 1, 0.9 + math.random() * 0.2, inst.x, inst.y) -- plays a non-moving sound at the machine's location
+end
+
+local create_particles_packet_serializer = function(buffer, inst)
+	buffer:write_instance(inst)
+end
+
+create_particles_packet:set_serializers(create_particles_packet_serializer, create_particles_packet_deserializer)
 
 -- increments the upgrade_progress variable on a machine
 local upgrade_machine = function(inst, amount, tempTimer)
@@ -339,10 +366,12 @@ local upgrade_machine = function(inst, amount, tempTimer)
 				end
 				inst.upgrade_progress_temp_timer = math.max(inst.upgrade_progress_temp_timer, tempTimer or 0) -- reset the machine's temporary upgrade timer
 			end
+			
 			inst.upgrade_progress = math.min(inst.upgrade_progress + amount, inst.upgrade_progress_max) -- increments the machine's upgrade_progress variable; The machine itself handles the reprecussions
+			particle_spark:create(inst.x, inst.y, math.random(2, 4), Particle.System.MIDDLE) -- creates 2-4 spark particles at the machine's location
+			gm.sound_play_at(sound_wrenchHit.value, 1, 0.9 + math.random() * 0.2, inst.x, inst.y) -- plays a non-moving sound at the machine's location
+			create_particles_packet:send_to_all(inst)
 		end
-		particle_spark:create(inst.x, inst.y, math.random(2, 4), Particle.System.MIDDLE) -- creates 2-4 spark particles at the machine's location
-		gm.sound_play_at(sound_wrenchHit.value, 1, 0.9 + math.random() * 0.2, inst.x, inst.y) -- plays a non-moving sound at the machine's location
 	end
 end
 
@@ -354,15 +383,21 @@ end
 -- plays the fire animation and sound when recieved by clients
 local turret_shoot_packet = Packet.new("SyncTechnicianTurretAttack")
 
-local turret_shoot_packet_deserializer = function(buffer, self)
+local turret_shoot_packet_deserializer = function(buffer)
 	local inst = buffer:read_instance()
 	
 	inst.playanim = 1
 	inst.image_index = 0
-	gm.sound_play_at(inst.upgradeState >= 1 and sound_turretShoot2.value or sound_turretShoot1.value, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
+	
+	local sound = sound_turretShoot1.value
+	if inst.upgradeState >= 1 then
+		sound = sound_turretShoot2.value
+	end
+	
+	gm.sound_play_at(sound, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
 end
 
-local turret_shoot_packet_serializer = function(buffer, self, inst)
+local turret_shoot_packet_serializer = function(buffer, inst)
 	buffer:write_instance(inst)
 end
 
@@ -371,18 +406,24 @@ turret_shoot_packet:set_serializers(turret_shoot_packet_serializer, turret_shoot
 -- plays the fire animation and sound when recieved by the host, then sends the above packet to all clients except the one who sent this packet
 local turret_shoot_packet_host = Packet.new("SyncTechnicianTurretAttackHost")
 
-local turret_shoot_packet_host_deserializer = function(buffer, self)
+local turret_shoot_packet_host_deserializer = function(buffer)
 	local inst = buffer:read_instance()
 	local owner = buffer:read_instance()
 	
 	inst.playanim = 1
 	inst.image_index = 0
-	gm.sound_play_at(inst.upgradeState >= 1 and sound_turretShoot2.value or sound_turretShoot1.value, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
+	
+	local sound = sound_turretShoot1.value
+	if inst.upgradeState >= 1 then
+		sound = sound_turretShoot2.value
+	end
+	
+	gm.sound_play_at(sound, 1, 0.9 + math.random() * 0.2, inst.x, inst.y)
 	
 	turret_shoot_packet:send_exclude(owner, inst)
 end
 
-local turret_shoot_packet_host_serializer = function(buffer, self, inst, owner)
+local turret_shoot_packet_host_serializer = function(buffer, inst, owner)
 	buffer:write_instance(inst)
 	buffer:write_instance(owner)
 end
@@ -392,16 +433,16 @@ turret_shoot_packet_host:set_serializers(turret_shoot_packet_host_serializer, tu
 -- changes the display state of the missile silo on Scepter turret when recieved by clients
 local turret_missile_state_packet = Packet.new("SyncTechnicianTurretMissileState")
 
-local turret_missile_state_packet_deserializer = function(buffer, self)
+local turret_missile_state_packet_deserializer = function(buffer)
 	local inst = buffer:read_instance()
 	local missileState = buffer:read_byte() - 1
 	
 	inst.switchMissileState = missileState
 end
 
-local turret_missile_state_packet_serializer = function(buffer, self, inst, missileState)
+local turret_missile_state_packet_serializer = function(buffer, inst)
 	buffer:write_instance(inst)
-	buffer:write_byte(missileState)
+	buffer:write_byte(inst.switchMissileState + 1)
 end
 
 turret_missile_state_packet:set_serializers(turret_missile_state_packet_serializer, turret_missile_state_packet_deserializer)
@@ -646,7 +687,7 @@ Callback.add(obj_turret.on_step, function(inst)
 								inst.switchMissileState = -1
 								
 								if Net.online then
-									turret_missile_state_packet:send_to_all(inst, inst.switchMissileState + 1)
+									turret_missile_state_packet:send_to_all(inst)
 								end
 							end
 						end
@@ -655,7 +696,7 @@ Callback.add(obj_turret.on_step, function(inst)
 						inst.switchMissileState = 1
 						
 						if Net.online then
-							turret_missile_state_packet:send_to_all(inst, inst.switchMissileState + 1)
+							turret_missile_state_packet:send_to_all(inst)
 						end
 					end
 				end
@@ -664,7 +705,7 @@ Callback.add(obj_turret.on_step, function(inst)
 					inst.switchMissileState = -1
 					
 					if Net.online then
-						turret_missile_state_packet:send_to_all(inst, inst.switchMissileState + 1)
+						turret_missile_state_packet:send_to_all(inst)
 					end
 				end
 				if inst.secondarycooldown <= 0 then
@@ -1257,7 +1298,7 @@ local machines = {obj_turret, obj_vending, obj_mine, obj_amplifier}
 local healable_survivors = {
 	[Survivor.find("chef").value] = true,
 	[Survivor.find("hand").value] = true,
-	--[Survivor.find("mule").value] = true,
+	[Survivor.find("mule").value] = true,
 }
 
 local healable_objects = {Object.find("EngiTurret"), Object.find("EngiTurretB")}
@@ -1282,7 +1323,7 @@ Callback.add(Callback.ON_ATTACK_HIT, function(hit_info)
 		local sparks = object_sparks:create(hit_info.target.x, hit_info.target.y)
 		sparks.sprite_index = (hit_info.attack_info.__wrench_hit == 3 and sprite_sparks5 or sprite_sparks4)
 		sparks.image_speed = 0.33
-		sparks.image_xscale = gm.sign(hit_info.target.x - hit_info.inflictor.x)
+		sparks.image_xscale = Math.sign(hit_info.target.x - hit_info.inflictor.x)
 		sparks.depth = hit_info.target.depth - 1
 	end
 end)
@@ -1380,7 +1421,7 @@ Callback.add(statePrimary.on_step, function(actor, data)
 					if instance.object_index ~= gm.constants.oP or healable_survivors[instance.class] then
 						instance:heal(10)
 						gm.sound_play_at(sound_wrenchHit.value, 1, 0.9 + math.random() * 0.2, instance.x, instance.y)
-						particle_spark:create(instance.x, instance.y, math.random(2, 4), Particle.SYSTEM.middle)
+						particle_spark:create(instance.x, instance.y, math.random(2, 4), Particle.System.MIDDLE)
 					end
 				end
 				
@@ -1522,7 +1563,7 @@ Callback.add(obj_wrench.on_step, function(inst)
 		for _, instance in ipairs(healablesHit) do
 			if (instance.object_index ~= gm.constants.oP or healable_survivors[instance.class]) and not data.hit[instance.id] then
 				instance:heal(10)
-				particle_spark:create(instance.x, instance.y, math.random(2, 4), Particle.SYSTEM.middle)
+				particle_spark:create(instance.x, instance.y, math.random(2, 4), Particle.System.MIDDLE)
 				gm.sound_play_at(sound_wrenchHit.value, 1, 0.9 + math.random() * 0.2, instance.x, instance.y)
 				data.hit[instance.id] = true
 			end

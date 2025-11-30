@@ -199,7 +199,7 @@ trap.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	end
 	
 	GM.draw_sprite(sprite_trap_debuff, data.trapspeed, actor.x, actor.y)
-	
+	if not data.trapped_enemies then return end
 	for _, victim in ipairs(data.trapped_enemies) do
 		if Instance.exists(victim) then
 			local parent = victim.trap_parent
@@ -207,7 +207,7 @@ trap.effect_display = EffectDisplay.func(function(actor_unwrapped)
 				if not (data.trap_offset_a and data.trap_offset_b) then
 					data.trap_offset_a = math.random(-8, 8)
 					data.trap_offset_b = victim.x + math.random(-16, 16)
-					
+						
 					local yy = 0
 					while yy < 100 and victim:collision_point(victim.x, victim.y + yy, gm.constants.pBlock, true, false) == -4.0 do
 						yy = yy + 2
@@ -218,7 +218,7 @@ trap.effect_display = EffectDisplay.func(function(actor_unwrapped)
 						data.trap_offset_c = nil
 					end
 				end
-				
+					
 				gm.draw_set_alpha(0.8)
 				gm.draw_set_colour(Color.from_rgb(205, 205, 205))
 				gm.draw_line_width(victim.x, victim.y, parent.x, parent.y + data.trap_offset_a, 2)
@@ -388,10 +388,14 @@ Callback.add(statePrimaryCharge.on_step, function(actor, data)
 				end
 			end
 			
-			actor:set_state(statePrimaryPunch)
+			if actor:is_authority() then
+				GM.actor_set_state_networked(actor, statePrimaryPunch)
+			end
 		end
 	else
-		actor:set_state(statePrimarySlam)
+		if actor:is_authority() then
+			GM.actor_set_state_networked(actor, statePrimarySlam)
+		end
 	end
 end)
 
@@ -533,20 +537,19 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-local immobilizeSyncPacket = Packet.new("SyncImmobilize")
+local packet = Packet.new("SyncImmobilize")
 
-local serializer = function(buffer, self, actor)
+local serializer = function(buffer, actor)
 	buffer:write_instance(actor)
 end
 
-local deserializer = function(buffer, self)
+local deserializer = function(buffer)
 	local actor = buffer:read_instance()
 
 	if not Instance.exists(actor) then return end
 	local data = Instance.get_data(actor)
 	
 	GM.apply_buff(actor, trap, 3 * 60, 1)
-	
 	data.trapped_enemies = {}
 	
 	local victims = List.new()
@@ -571,12 +574,14 @@ local deserializer = function(buffer, self)
 	victims:destroy()
 end
 
+packet:set_serializers(serializer, deserializer)
+
 Callback.add(Callback.ON_ATTACK_HIT, function(hit_info)
 	if hit_info.attack_info.mule_immobilize == 1 then
 		actor = hit_info.target
 		
 		if Net.online then
-			immobilizeSyncPacket:send_to_all(actor)
+			packet:send_to_all(actor)
 		end
 		
 		local data = Instance.get_data(actor)
