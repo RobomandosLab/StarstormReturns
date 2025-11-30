@@ -439,7 +439,7 @@ Callback.add(Callback.ON_STEP, function()
 					local target = Instance.find(gm.constants.oP)
 					
 					-- teleport!
-					if target and Math.distance(actor.x, actor.y, target.x, target.y) > 250 and not target.dead then
+					if target and Math.distance(actor.x, actor.y, target.x, target.y) > 250 and Instance.exists(target) then
 						if Net.host then
 							GM.teleport_nearby(actor, target.x - (150 + math.random(50)) * Math.sign(target.pHspeed), target.y) -- teleport to this fool
 							
