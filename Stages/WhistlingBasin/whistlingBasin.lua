@@ -65,6 +65,10 @@ basin_stage:add_interactable({
     "droneRecycler"
 })
 
+if ssr_chirrsmas_active then
+	basin_stage:add_interactable(InteractableCard.find("chirrsmasPresent"))
+end
+
 basin_stage:add_interactable_loop({
     "chestHealing2",
     "chest4",

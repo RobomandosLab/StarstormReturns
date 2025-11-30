@@ -489,6 +489,10 @@ return {
 		MimicInactive = {
 			text = "..?",
 			name = "Large Chest?"
+		},
+		chirrsmasPresent = {
+			text = "Recieve a gift!",
+			name = "Gift Box"
 		}
 	},
 
@@ -539,7 +543,12 @@ return {
 				enableStages = "Enable Stages",
 				["enableStages.desc"] = "Enables stages added by Starstorm Returns.",
 				enableBeta = "Enable Unfinished Content",
-				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>"
+				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>",
+				enableChirrsmas = "Enable Chirrsmas Content",
+				["enableChirrsmas.desc"] = "Whether Chirrsmas-exclusive content should be present. \nBy default active from December 15th to January 15th. \n<r>RESTART REQUIRED</c>",
+				["enableChirrsmas.default"] = "Default",
+				["enableChirrsmas.always"] = "Always",
+				["enableChirrsmas.never"] = "Never"
 			}
 		}
 	}

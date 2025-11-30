@@ -314,3 +314,6 @@ function ssr_set_no_proc(attack_info)
 	attack_info.proc = false
 	attack_info.damage_color = Color.from_hex(0xC9B736)
 end
+
+-- easy shortcut for checking if chirrsmas is active
+ssr_chirrsmas_active = ((os.date("%m") == 12 and os.date("%d") >= 15) or (os.date("%m") == 1 and os.date("%d") <= 15) or Settings.chirrsmas == 1)

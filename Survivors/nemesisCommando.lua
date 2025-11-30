@@ -667,7 +667,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		if data.fuse_timer % GRENADE_TICK_INTERVAL == 0 then
 			actor:sound_play(gm.constants.wPickupOLD, 0.7, 4)
 
-			local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
+			local flash = Object.find("EfFlash"):create(actor.x, actor.y)
 			flash.parent = actor
 			flash.rate = 0.1
 			flash.image_alpha = 0.5

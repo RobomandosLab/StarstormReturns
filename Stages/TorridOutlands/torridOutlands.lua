@@ -60,6 +60,10 @@ outlands_stage:add_interactable({
     "droneRecycler"
 })
 
+if ssr_chirrsmas_active then
+	outlands_stage:add_interactable(InteractableCard.find("chirrsmasPresent"))
+end
+
 -- Main Menu
 outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
 

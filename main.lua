@@ -17,6 +17,8 @@ Settings = {
 
 SettingsFile = TOML.new()
 
+ssr_chirrsmas_active = false -- gets set in the library file
+
 local init = function()
 	--- Initialize settings here before requiring anything, useful if some options require a restart to apply.
 	if SettingsFile:read() == nil then
@@ -34,6 +36,7 @@ local init = function()
 		"Survivors",
 		"Items",
 		"Equipments",
+		"Interactables",
 		"Artifacts",
 		"Stages"
 	}

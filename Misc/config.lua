@@ -114,3 +114,21 @@
     -- settings.enable_beta = value
     -- saved_settings:write(settings)
 -- end)
+
+-- chirrsmas
+local enable_chirrsmas_checkbox = Options:add_dropdown("enableChirrsmas")
+
+enable_chirrsmas_checkbox:add_getter(function()
+	return Settings.chirrsmas
+end)
+
+enable_chirrsmas_checkbox:add_setter(function(value)
+    Settings.chirrsmas = value
+    SettingsFile:write(Settings)
+end)
+
+enable_chirrsmas_checkbox:add_choice(
+    "ui.options.ssr.enableChirrsmas.default",
+    "ui.options.ssr.enableChirrsmas.always",
+    "ui.options.ssr.enableChirrsmas.never"
+)

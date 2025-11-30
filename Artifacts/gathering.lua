@@ -43,7 +43,7 @@ local alarm_hook = Hook.add_post("gml_Object_oEfGold_Alarm_1", function(self, ot
 		end
 	end
 	if data.lifetime <= 0 then
-		gm.instance_destroy(self)
+		GM.instance_destroy(self)
 	end
 end)
 
