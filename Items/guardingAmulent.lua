@@ -20,6 +20,7 @@ end
 
 guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	local actor = Instance.wrap(actor_unwrapped)
+	if not Instance.get_data(actor).amulet_pulse then return end
 	
 	local pulse = Instance.get_data(actor).amulet_pulse * 0.2
 	

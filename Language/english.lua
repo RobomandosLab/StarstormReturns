@@ -490,7 +490,7 @@ return {
 			text = "..?",
 			name = "Large Chest?"
 		},
-		chirrsmasPresent = {
+		ChirrsmasPresent = {
 			text = "Recieve a gift!",
 			name = "Gift Box"
 		}

@@ -99,7 +99,7 @@ card.spawn_with_sacrifice = true
 card.spawn_cost = 7
 card.spawn_weight = 8
 
-for i = 1, 5 do
+for i = 1, 6 do
 	local tier = List.wrap(gm._mod_stage_get_pool_list(i))
 	for _, stage in ipairs(tier) do
 		Stage.wrap(stage):add_interactable(card)
