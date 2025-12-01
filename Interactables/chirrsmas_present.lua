@@ -1,4 +1,4 @@
-local sprite = Sprite.new("ChirrsmasPresent", path.combine(PATH, "Sprites/Interactables/ChirrsmasPresent/present.png"), 11, 41, 112)
+local sprite = Sprite.new("ChirrsmasPresent", path.combine(PATH, "Sprites/Interactables/ChirrsmasPresent/present.png"), 13, 41, 112)
 
 local firework = Object.new("ChirrsmasPresentFirework")
 firework:set_sprite(gm.constants.sEFFirework)
