@@ -28,7 +28,6 @@ Callback.add(buffDisease.on_step, function(actor)
 	end
 end)
 
--- can't use attack callbacks because they run before the actual hp is decreased, so just hook this instead
 DamageCalculate.add(function(api)
 	if not Instance.exists(api.hit) then return end
 	if not Instance.exists(api.parent) then return end
@@ -38,7 +37,7 @@ DamageCalculate.add(function(api)
 
 	if count > 0 then
 		if api.hit.hp <= 0 then return end
-		if api.hit == api.parent then return end -- meteor counts as self-damage. prevent this from becoming an issue lmaoooo
+		if api.hit.team == api.parent.team then return end -- meteor procs trematode on your teammates and yourself. prevent this from becoming an issue lmaoooo
 		
 		local threshold = 0.1 + 0.05 * count
 

@@ -13,6 +13,8 @@ coffeeBag.loot_tags = Item.LootTag.CATEGORY_UTILITY
 ItemLog.new_from_item(coffeeBag)
 
 Callback.add(Callback.ON_INTERACTABLE_ACTIVATE, function(interactable, actor)
+	if not Instance.exists(actor) then return end
+	
 	local stack = actor:item_count(coffeeBag)
 	if stack <= 0 then return end
 	

@@ -776,7 +776,7 @@ Callback.add(objDrone.on_step, function(self)
 		end
 	end
 	
-	if not (data.healing == 1 and self.sprite_index == data.heal_sprite and self.image_index < 4) then
+	if not (data.healing == 1 and self.sprite_index == data.heal_sprite.value and self.image_index < 4) then
 		self.sprite_index = data.base_sprite
 	end
 	

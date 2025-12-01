@@ -56,7 +56,7 @@ end, EffectDisplay.DrawPriority.BODY_POST)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(balloon:get_holding_actors()) do
-		if Instance.exists(actor) then
+		if Instance.exists(actor) and actor.in_danger_last_frame then
 			if actor.in_danger_last_frame < Global._current_frame and actor:buff_count(buff) == 0 then
 				actor:buff_apply(buff, 1)
 			end

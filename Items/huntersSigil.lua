@@ -45,7 +45,7 @@ end)
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(huntersSigil:get_holding_actors()) do
 		if Net.host then
-			if Instance.exists(actor) then
+			if Instance.exists(actor) and GM.actor_is_alive(actor) then
 				local stack = actor:item_count(huntersSigil)
 				local data = Instance.get_data(actor)
 
@@ -90,10 +90,10 @@ Callback.add(objSigilZone.on_step, function(self)
 				local diff = data.stack - target:buff_count(buffSigil)
 				if diff > 0 then
 					-- only has an effect on the host
-					target:buff_apply(buffSigil, 10, diff)
+					target:buff_apply(buffSigil, 15, diff)
 				else
 					-- maintain the buff without clobbering the network
-					GM.set_buff_time_nosync(target, buffSigil, 10)
+					GM.set_buff_time_nosync(target, buffSigil, 15)
 				end
 			end
 		end

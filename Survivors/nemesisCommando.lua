@@ -847,9 +847,9 @@ Callback.add(objGrenade.on_step, function(inst)
 	if data.timer % GRENADE_TICK_INTERVAL == 0 then
 		inst:sound_play(gm.constants.wPickupOLD, 0.7, 4)
 
-		local ef = GM.instance_create(0, 0, gm.constants.oEfFlash)
+		local ef = Object.find("EfFlash"):create(inst.x, inst.y)
 		ef.parent = inst
-		ef.image_blend = Color.from_hex(0x454EFC)
+		ef.image_blend = Color.WHITE
 		ef.rate = 0.2
 	end
 
