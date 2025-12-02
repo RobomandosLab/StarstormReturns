@@ -198,11 +198,12 @@ trap.effect_display = EffectDisplay.func(function(actor_unwrapped)
 		data.trapspeed = 0 
 	end
 	
-	GM.draw_sprite(sprite_trap_debuff, data.trapspeed, actor.x, actor.y)
+	GM.draw_sprite(sprite_trap_debuff.value, data.trapspeed, actor.x, actor.y)
+	
 	if not data.trapped_enemies then return end
 	for _, victim in ipairs(data.trapped_enemies) do
 		if Instance.exists(victim) then
-			local parent = victim.trap_parent
+			local parent = Instance.get_data(victim).trap_parent
 			if parent and Instance.exists(parent) then
 				if not (data.trap_offset_a and data.trap_offset_b) then
 					data.trap_offset_a = math.random(-8, 8)
@@ -230,7 +231,7 @@ trap.effect_display = EffectDisplay.func(function(actor_unwrapped)
 			end
 		end
 	end
-end)
+end, EffectDisplay.DrawPriority.BODY_POST)
 
 Callback.add(trap.on_remove, function(actor, stack)
 	local data = Instance.get_data(actor)
@@ -559,7 +560,7 @@ local deserializer = function(buffer)
 	for _, victim in ipairs(victims) do
 		if victim.team == actor.team then
 			GM.apply_buff(victim, snare, 3 * 60, 1)
-			victim.trap_parent = actor
+			Instance.get_data(victim).trap_parent = actor
 			Instance.get_data(victim).trap_offset_a = nil
 			Instance.get_data(victim).trap_offset_b = nil
 			Instance.get_data(victim).trap_offset_c = nil
@@ -599,8 +600,8 @@ Callback.add(Callback.ON_ATTACK_HIT, function(hit_info)
 		for _, victim in ipairs(victims) do
 			if victim.team == actor.team then
 				GM.apply_buff(victim, snare, 3 * 60, 1)
-				victim.trap_parent = actor
-				Instance.get_data(victim)trap_offset_a = nil
+				Instance.get_data(victim).trap_parent = actor
+				Instance.get_data(victim).trap_offset_a = nil
 				Instance.get_data(victim).trap_offset_b = nil
 				Instance.get_data(victim).trap_offset_c = nil
 				table.insert(data.trapped_enemies, victim.value)
