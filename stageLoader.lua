@@ -175,6 +175,9 @@ woodland_stage.teleporter_index = 0
 woodland_stage.interactable_spawn_points = 920
 woodland_stage:set_index(4)
 
+--Menu Resources
+local EnvironmentVerdantWoodland = Resources.sprite_load(NAMESPACE, "EnvironmentVerdantWoodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "EnvironmentVerdantWoodland.png"))
+
 woodland_stage:clear_rooms()
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland1.rorlvl"))
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland2.rorlvl"))
@@ -218,3 +221,20 @@ woodland_stage:add_interactable_loop({
     "equipmentActivator",
     "droneRecycler"
 })
+
+--Environment Log
+woodland_stage:set_log_icon(EnvironmentVerdantWoodland)
+
+--[[
+-- Glacial Cavern --
+--Stage Resources
+Resources.sprite_load(NAMESPACE, "Tile16MushSnowy", path.combine(PATH.."/Sprites/Stages/SnowyCavern", "Tile16MushSnowy.png"), 1, 0, 0)
+
+--Stage
+local cavern_stage = Stage.new(NAMESPACE, "snowyCavern")
+cavern_stage:set_index(2)
+
+--Rooms
+cavern_stage:clear_rooms()
+cavern_stage:add_room(path.combine(PATH.."/Stages/SnowyCaverns", "snowyCavern1.rorlvl"))
+]]
