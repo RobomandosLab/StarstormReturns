@@ -520,7 +520,7 @@ Callback.add(objSlash.on_step, function(inst)
 	end
 
 	if data.lifetime % 8 == 0 then
-		local trail = GM.instance_create(inst.x, inst.y, gm.constants.oEfTrail)
+		local trail = Object.find("EfTrail"):create(inst.x, inst.y)
 		trail.sprite_index = inst.sprite_index
 		trail.image_index = inst.image_index
 		trail.image_blend = gm.merge_colour(inst.image_blend, Color.BLACK, 0.5)
@@ -741,10 +741,12 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 				nade.vspeed = nade.vspeed + actor.pVspeed * GRENADE_VELOCITY_INHERIT_MULT
 
 				nade.parent = actor
-				Instance.get_data(nade).scepter = actor:item_count(Item.find("ancientScepter"))
-				Instance.get_data(nade).timer = data.fuse_timer
-				if Instance.get_data(nade).timer <= GRENADE_SELFSTUN_THRESHOLD then
-					Instance.get_data(nade).stun_parent = 1
+				
+				local nade_data = Instance.get_data(nade)
+				nade_data.scepter = actor:item_count(Item.find("ancientScepter"))
+				nade_data.timer = data.fuse_timer
+				if nade_data.timer <= GRENADE_SELFSTUN_THRESHOLD then
+					nade_data.stun_parent = 1
 				end
 			end
 		end

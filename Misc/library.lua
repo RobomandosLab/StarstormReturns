@@ -55,15 +55,6 @@ function ssr_create_elite(identifier)
     return elite
 end
 
--- SKILLS
-function ssr_skill_override_cooldown(skill, value)
-	if GM.stopwatch_is_active(skill.cooldown_stopwatch) then
-		GM.stopwatch_stop(skill.cooldown_stopwatch)
-	end
-	
-	GM.stopwatch_start(skill.cooldown_stopwatch, Global._current_frame + value, Global._current_frame)
-end
-
 -- END OF TEMPORARY RETURNS API UNFINISHED THINGS --
 
 -- play animation and then fade it out object
@@ -313,6 +304,26 @@ end
 function ssr_set_no_proc(attack_info)
 	attack_info.proc = false
 	attack_info.damage_color = Color.from_hex(0xC9B736)
+end
+
+-- return true if there is no collision between the first set of coordinates and the second one
+function ssr_in_line_of_sight(inst, x1, y1, x2, y2)
+	local list = List.new()
+	
+	inst:collision_line_list(x1, y1, x2, y2, gm.constants.pBlock, false, true, list, false)
+	
+	local flag = true
+	
+	for _, block in ipairs(list) do
+		if block then
+			flag = false
+			break
+		end
+	end
+	
+	list:destroy()
+	
+	return flag
 end
 
 -- easy shortcut for checking if chirrsmas is active

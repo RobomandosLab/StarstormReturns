@@ -143,11 +143,11 @@ return {
 		},
 		nemesisMercenaryZ = {
 			name = "Lascerate",
-			description = "Injure enemies with your shotgun's attachment for <y>130% damage</c>."
+			description = "Slash enemies in front of you for for <y>100% damage</c>."
 		},
 		nemesisMercenaryX = {
 			name = "Quick Trigger",
-			description = "Fire your shotgun, <y>stunning</c> and hitting enemies nearby for <y>600% damage</c>."
+			description = "Fire your shotgun, <y>stunning</c> and hitting nearby enemies for <y>600% damage</c>."
 		},
 		nemesisMercenaryC = {
 			name = "Blinding Slide",
@@ -155,11 +155,11 @@ return {
 		},
 		nemesisMercenaryV = {
 			name = "Devitalize",
-			description = "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			description = "Target the weakest enemy in front of you, attacking them for <y>850% damage</c>, dealing <y>1.5x damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		nemesisMercenaryVBoosted = {
 			name = "Absolute Devitalization",
-			description = "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>+50% TOTAL damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
+			description = "Target the weakest enemy in front of you, attacking them for <y>1100% damage</c>, dealing <y>1.5x damage</c> to <y>stunned</c> enemies.</c> \n<b>You cannot be hit for the duration</c>."
 		},
 		technicianZ = {
 			name = "Fine Tune",
@@ -428,6 +428,15 @@ return {
 			date = "10/5/2056",
 			story = "Save this for me until I get back home, I didn't need it. In fact, we became friends! I can't wait to tell you all about it soon. It's been a long trip and an unexpected series of events. I've told them about you and they want me to invite you over the next time. How's that, huh!? Love you.",
 			priority = "<r>Volatile</c>"
+		},
+		eclipseGummies = {
+			name = "Eclipse Gummies",
+			pickup = "Killing enemies drops buffing gummies.",
+			description = "Killing an enemy <b>drops a buffing gummy</c> that raises <y>attack</c> and <b>movement</c> speed by <y>2.5%</c> <c_stack>(+2.5% per stack)</c> up to <y>25%</c> <c_stack>(+25% per stack)</c> for <y>10 seconds</c>.",
+			destination = "idk",
+			date = "idk",
+			story = "idk",
+			priority = "<r>Standard</c>"
 		}
 	},
 

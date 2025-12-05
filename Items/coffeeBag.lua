@@ -22,7 +22,7 @@ Callback.add(Callback.ON_INTERACTABLE_ACTIVATE, function(interactable, actor)
 end)
 
 RecalculateStats.add(function(actor, api)
-	local stack = actor:buff_count(coffeeBuff, api)
+	local stack = actor:buff_count(coffeeBuff)
 	if stack <= 0 then return end 
 	
 	api.pHmax_add(0.6)

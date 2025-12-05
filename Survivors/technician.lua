@@ -1741,7 +1741,7 @@ end)
 Callback.add(secondary_det.on_activate, function(actor, skill, slot)
 	actor:remove_skill_override(Skill.Slot.SECONDARY, secondary_det)
 	actor:get_default_skill(Skill.Slot.SECONDARY).stock = actor.tech_saved_stock
-	ssr_skill_override_cooldown(actor:get_default_skill(Skill.Slot.SECONDARY), actor:get_default_skill(Skill.Slot.SECONDARY).cooldown_base * (1 - actor.cdr))
+	actor:get_default_skill(Skill.Slot.SECONDARY):override_cooldown(actor:get_default_skill(Skill.Slot.SECONDARY).cooldown_base * (1 - actor.cdr))
 	
 	if Net.host then
 		local mines, _ = Instance.find_all(obj_mine)
