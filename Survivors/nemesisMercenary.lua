@@ -143,6 +143,14 @@ Callback.add(nemmerc.on_step, function(actor)
 	
 	if data.nemmerc_slide > 0 then
 		data.nemmerc_slide = data.nemmerc_slide - 1
+		
+		local braking_left = (Util.bool(actor.moveLeft) and not Util.bool(actor.moveRight) and data.nemmerc_slide_dir > 0)
+		local braking_right = (Util.bool(actor.moveRight) and not Util.bool(actor.moveLeft) and data.nemmerc_slide_dir < 0)
+		
+		if braking_left or braking_right then
+			data.nemmerc_slide = math.max(data.nemmerc_slide - 1, 0)
+		end
+		
 		actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * data.nemmerc_slide_dir + actor.pHmax * data.nemmerc_slide_dir
 		actor.moveLeft = 0
 		actor.moveRight = 0
@@ -221,7 +229,7 @@ local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, comb
 		
 		actor:sound_play(sound, 1, 0.9 + math.random() * 0.2)
 		
-		if data.fired ~= 2 then
+		if get_data.nemmerc_slide <= 0 then
 			actor:skill_util_nudge_forward(2 * actor.image_xscale)
 		end
 		
@@ -424,6 +432,20 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		release = Util.bool(actor.activity_var2)
 	end
 	
+	if release then
+		if Net.online then
+			if Net.host then
+				gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, Math.sign(actor.image_xscale))
+			else
+				gm.client_message_send(43, 1, Math.sign(actor.image_xscale))
+			end
+		end
+		
+		if actor.image_index < 6 then
+			actor.image_index = 6
+		end
+	end
+	
 	if get_data.nemmerc_slide < 25 then
 		actor:skill_util_fix_hspeed()
 	end
@@ -432,14 +454,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		actor.invincible = math.max(actor.invincible, 5)
 	end
 	
-	if (actor.image_index >= 6 or release) and data.fired == 0 then
-		if Net.online then
-			if Net.host then
-				gm.server_message_send(0, 43, actor:get_object_index_self(), actor.m_id, 1, Math.sign(actor.image_xscale))
-			else
-				gm.client_message_send(43, 1, Math.sign(actor.image_xscale))
-			end
-		end
+	if actor.image_index >= 6 and data.fired == 0 then
 		
 		data.counter = 11
 		data.fired = 1
@@ -464,7 +479,7 @@ end)
 
 Callback.add(stateUtility.on_get_interrupt_priority, function(actor, data)
 	if actor.image_index >= 6 then
-		return ActorState.InterruptPriority.SKILL
+		return ActorState.InterruptPriority.ANY
 	else
 		return ActorState.InterruptPriority.PRIORITY_SKILL
 	end
@@ -503,28 +518,11 @@ local stateSpecial = ActorState.new("nemMercenaryDevitalize")
 local stateSpecialAttack = ActorState.new("nemMercenaryDevitalizeAttack")
 local stateSpecialEnd = ActorState.new("nemMercenaryDevitalizePost")
 
-local function nemmerc_can_fit_tp(actor, target)
-	local flag = true
-	local x1 = target.x - (actor.x - actor.bbox_left) + 2
-	local x2 = target.x - (actor.x - actor.bbox_right) - 2
-	local y1 = target.y - (actor.y - actor.bbox_bottom) - 2
-	local y2 = target.y - (actor.y - actor.bbox_top) + 2
-	
-	for _, block in ipairs(actor:get_collisions_rectangle(gm.constants.pBlock, x1, y1, x2, y2)) do
-		if block then
-			flag = false
-			break
-		end
-	end
-	
-	return flag
-end
-
 local function nemmerc_get_target(actor)
 	local target = nil
 		
 	for _, enemy in ipairs(actor:get_collisions_rectangle(gm.constants.pActorCollisionBase, actor.x - 500 * actor.image_xscale, actor.y - 500, actor.x + 500 * actor.image_xscale, actor.y + 500)) do
-		if actor:attack_collision_canhit(enemy) and Math.distance(actor.x, actor.y, enemy.x, enemy.y) < 500 and GM.attack_collision_resolve(enemy).stunned and ssr_in_line_of_sight(actor, actor.x, actor.y, enemy.x, enemy.y) and nemmerc_can_fit_tp(actor, enemy) then
+		if actor:attack_collision_canhit(enemy) and Math.distance(actor.x, actor.y, enemy.x, enemy.y) < 500 and GM.attack_collision_resolve(enemy).stunned and ssr_instance_line_of_sight(actor, enemy) then
 			if target == nil then
 				target = enemy
 			else
@@ -537,12 +535,12 @@ local function nemmerc_get_target(actor)
 		
 	if target == nil then
 		for _, enemy in ipairs(actor:get_collisions_rectangle(gm.constants.pActorCollisionBase, actor.x - 500 * actor.image_xscale, actor.y - 500, actor.x + 500 * actor.image_xscale, actor.y + 500)) do
-			if actor:attack_collision_canhit(enemy) and Math.distance(actor.x, actor.y, enemy.x, enemy.y) < 500 and ssr_in_line_of_sight(actor, actor.x, actor.y, enemy.x, enemy.y) and nemmerc_can_fit_tp(actor, enemy) then
+			if actor:attack_collision_canhit(enemy) and Math.distance(actor.x, actor.y, enemy.x, enemy.y) < 500 and ssr_instance_line_of_sight(actor, enemy) then
 				if target == nil then
 					target = enemy
 				else
 					if GM.attack_collision_resolve(enemy).hp < GM.attack_collision_resolve(target).hp then
-						target = tenemy
+						target = enemy
 					end
 				end
 			end
@@ -562,7 +560,25 @@ end)
 
 Callback.add(stateSpecialPre.on_enter, function(actor, data)
 	actor.image_index = 0
-	data.target = nil
+	
+	local target = nemmerc_get_target(actor)
+	
+	if target then
+		data.target = target.value
+		data.target_x = target.x
+		data.target_y = target.y
+		
+		if target.x >= actor.x then
+			actor.image_xscale = 1
+		else
+			actor.image_xscale = -1
+		end
+	else
+		data.target = nil
+	end
+	
+	data.begin_x = actor.x
+	data.begin_y = actor.y
 end)
 
 Callback.add(stateSpecialPre.on_step, function(actor, data)
@@ -571,22 +587,6 @@ Callback.add(stateSpecialPre.on_step, function(actor, data)
 	
 	actor:get_active_skill(Skill.Slot.SPECIAL):freeze_cooldown()
 	actor.invincible = math.max(actor.invincible, 5)
-	
-	if not data.target then
-		local target = nemmerc_get_target(actor)
-		
-		if target then
-			data.target = target.value
-			data.target_x = target.x
-			data.target_y = target.y
-		
-			if target.x >= actor.x then
-				actor.image_xscale = 1
-			else
-				actor.image_xscale = -1
-			end
-		end
-	end
 	
 	if (actor.image_index + 1 >= actor.image_number) or (data.killed and data.killed == 1) then
 		if data.target then
@@ -607,9 +607,6 @@ Callback.add(stateSpecial.on_enter, function(actor, data)
 	data.fired = 0
 	data.killed = 0
 	data.v_held = 1
-	
-	data.begin_x = actor.x
-	data.begin_y = actor.y
 end)
 
 Callback.add(stateSpecial.on_step, function(actor, data)
@@ -654,7 +651,8 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		trail.image_xscale = actor.image_xscale
 		trail.rate = 0.04
 			
-		actor:actor_teleport(xx, yy)
+		actor:actor_teleport(data.begin_x, data.begin_y)
+		actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
 		actor:move_contact_solid(90 + 90 * actor.image_xscale, 64)
 		
 		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
@@ -665,32 +663,32 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		
 		actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 0.9 + math.random() * 0.2)
 		data.fired = 1
-	elseif actor.image_index >= 2 and data.fired == 1 then
+	elseif actor.image_index >= 2 and data.fired == 1 then		
+		data.fired = 2
+			
+		local trail = Object.find("EfTrail"):create(actor.x, actor.y)
+		trail.sprite_index = actor.sprite_index
+		trail.image_index = actor.image_index
+		trail.image_xscale = actor.image_xscale
+		trail.rate = 0.03
+			
+		actor:sound_play(sound_shoot4.value, 1, 0.9 + math.random() * 0.2)
+		actor:screen_shake(3)
+			
+		data.begin_x = actor.x
+		data.begin_y = actor.y
+			
+		actor:actor_teleport(data.begin_x, data.begin_y)
+		actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
+		actor:move_contact_solid(90 - 90 * actor.image_xscale, 64)
+			
+		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
+		for i = 1, amount do
+			particleSpecialTrail:set_size(0.45 * (1 - (i / amount)), 0.45 * (1 - (i / amount)), -0.015, 0)
+			particleSpecialTrail:create(Math.lerp(data.begin_x, actor.x, 1 - (i / amount)), Math.lerp(data.begin_y, actor.y, 1 - (i / amount)), 1)
+		end
+			
 		if target and Instance.exists(target) then
-			
-			data.fired = 2
-			
-			local trail = Object.find("EfTrail"):create(actor.x, actor.y)
-			trail.sprite_index = actor.sprite_index
-			trail.image_index = actor.image_index
-			trail.image_xscale = actor.image_xscale
-			trail.rate = 0.03
-			
-			actor:sound_play(sound_shoot4.value, 1, 0.9 + math.random() * 0.2)
-			actor:screen_shake(3)
-			
-			data.begin_x = actor.x
-			data.begin_y = actor.y
-			
-			actor:actor_teleport(xx, yy)
-			actor:move_contact_solid(90 - 90 * actor.image_xscale, 64)
-			
-			local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
-			for i = 1, amount do
-				particleSpecialTrail:set_size(0.45 * (1 - (i / amount)), 0.45 * (1 - (i / amount)), -0.015, 0)
-				particleSpecialTrail:create(Math.lerp(data.begin_x, actor.x, 1 - (i / amount)), Math.lerp(data.begin_y, actor.y, 1 - (i / amount)), 1)
-			end
-			
 			if actor:is_authority() then
 				local damage = actor:skill_get_damage(special)
 				local sparks = sprite_sparks.value
@@ -706,6 +704,8 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 				end
 			end
 		else
+			local sparks = Object.find("EfExplosion"):create(xx, yy)
+			sparks.sprite_index = gm.constants.sSparks10r
 			data.killed = 1
 		end
 	end

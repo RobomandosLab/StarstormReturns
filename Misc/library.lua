@@ -307,7 +307,7 @@ function ssr_set_no_proc(attack_info)
 end
 
 -- return true if there is no collision between the first set of coordinates and the second one
-function ssr_in_line_of_sight(inst, x1, y1, x2, y2)
+function ssr_line_of_sight(inst, x1, y1, x2, y2, edges)
 	local list = List.new()
 	
 	inst:collision_line_list(x1, y1, x2, y2, gm.constants.pBlock, false, true, list, false)
@@ -319,6 +319,43 @@ function ssr_in_line_of_sight(inst, x1, y1, x2, y2)
 			flag = false
 			break
 		end
+	end
+	
+	list:destroy()
+	
+	return flag
+end
+
+function ssr_instance_line_of_sight(inst, inst2)
+	local list = List.new()
+	local flag = false
+	
+	local coords = {
+		{inst2.x, inst2.y}, 
+		{inst2.bbox_left, inst2.bbox_top}, 
+		{inst2.bbox_right, inst2.bbox_top}, 
+		{inst2.bbox_left, inst2.bbox_bottom}, 
+		{inst2.bbox_right, inst2.bbox_bottom}
+	}
+	
+	for _, coord in ipairs(coords) do
+		inst:collision_line_list(inst.x, inst.y, coord[1], coord[2], gm.constants.pBlock, false, true, list, false)
+		
+		local flag2 = true
+		
+		for _, block in ipairs(list) do
+			if block then
+				flag2 = false
+				break
+			end
+		end
+		
+		if flag2 == true then
+			flag = true
+			break
+		end
+		
+		list:clear()
 	end
 	
 	list:destroy()
