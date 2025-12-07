@@ -1712,7 +1712,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 	actor:actor_animation_set(sprite_shoot2, 0.2, true)
 	
 	if actor.image_index >= 3 and not data.used then
-		actor.tech_saved_stock = actor:get_default_skill(Skill.Slot.SECONDARY).stock
+		actor.tech_saved_stock = actor:get_active_skill(Skill.Slot.SECONDARY).stock
 		actor:add_skill_override(Skill.Slot.SECONDARY, secondary_det, 1) -- replaces the secondary with a new secondary (Remote Detonator)
 		actor:get_active_skill(Skill.Slot.SECONDARY).stock = math.max(actor.tech_saved_stock, 1)
 		
@@ -1730,7 +1730,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 	end
 	
 	if not data.used then
-		actor:get_default_skill(Skill.Slot.SECONDARY):freeze_cooldown()
+		actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 	end
 	
 	actor:skill_util_exit_state_on_anim_end()
@@ -1740,8 +1740,8 @@ end)
 
 Callback.add(secondary_det.on_activate, function(actor, skill, slot)
 	actor:remove_skill_override(Skill.Slot.SECONDARY, secondary_det)
-	actor:get_default_skill(Skill.Slot.SECONDARY).stock = actor.tech_saved_stock
-	actor:get_default_skill(Skill.Slot.SECONDARY):override_cooldown(actor:get_default_skill(Skill.Slot.SECONDARY).cooldown_base * (1 - actor.cdr))
+	actor:get_active_skill(Skill.Slot.SECONDARY).stock = actor.tech_saved_stock
+	actor:get_active_skill(Skill.Slot.SECONDARY):override_cooldown(actor:get_active_skill(Skill.Slot.SECONDARY).cooldown_base * (1 - actor.cdr))
 	
 	if Net.host then
 		local mines, _ = Instance.find_all(obj_mine)
@@ -1754,7 +1754,7 @@ Callback.add(secondary_det.on_activate, function(actor, skill, slot)
 end)
 
 Callback.add(secondary_det.on_step, function(actor, data)
-	actor:get_default_skill(Skill.Slot.SECONDARY):freeze_cooldown()
+	actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 end)
 
 -- skill overrides aren't removed when transitioning between stages so this does that
@@ -1781,7 +1781,7 @@ utility.ignore_aim_direction = true
 Callback.add(utility.on_activate, function(actor, skill, slot)
 	if Net.host then
 		local vendings, _ = Instance.find_all(obj_vending)
-		if #vendings >= actor:get_default_skill(Skill.Slot.UTILITY).max_stock then
+		if #vendings >= actor:get_active_skill(Skill.Slot.UTILITY).max_stock then
 			local oldestID = math.huge
 			local oldestInst = nil
 			
@@ -1893,7 +1893,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	
 	if not data.created and actor.image_index >= 6 and Net.host then
 		local turrets, _ = Instance.find_all(obj_turret)
-		if #turrets >= actor:get_default_skill(Skill.Slot.SPECIAL).max_stock then
+		if #turrets >= actor:get_active_skill(Skill.Slot.SPECIAL).max_stock then
 			local oldestID = math.huge
 			local oldestInst = nil
 			

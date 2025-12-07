@@ -74,23 +74,23 @@ par_debris:set_life(20, 100)
 
 local mule = Survivor.new("mule")
 
-local mule_log = SurvivorLog.new_from_survivor(mule)
-mule_log.portrait_id = sprite_log
-mule_log.sprite_id = sprite_walk
-mule_log.sprite_icon_id = sprite_portrait
-
 mule:set_stats_base({
 	health = 115,
 	damage = 11,
-	regen = 0.012
+	regen = 0.012,
 })
 
 mule:set_stats_level({
 	health = 37,
 	damage = 3,
 	regen = 0.0018,
-	armor = 3
+	armor = 3,
 })
+
+local mule_log = SurvivorLog.new_from_survivor(mule)
+mule_log.portrait_id = sprite_log
+mule_log.sprite_id = sprite_walk
+mule_log.sprite_icon_id = sprite_portrait
 
 mule.primary_color = Color.from_rgb(211, 176, 122)
 
@@ -389,14 +389,10 @@ Callback.add(statePrimaryCharge.on_step, function(actor, data)
 				end
 			end
 			
-			if actor:is_authority() then
-				GM.actor_set_state_networked(actor, statePrimaryPunch)
-			end
+			actor:set_state(statePrimaryPunch)
 		end
 	else
-		if actor:is_authority() then
-			GM.actor_set_state_networked(actor, statePrimarySlam)
-		end
+		actor:set_state(statePrimarySlam)
 	end
 end)
 

@@ -95,11 +95,6 @@ local buffShadowClone = Buff.find("shadowClone")
 -- Okay, let's start Executing, some Monsters ..
 local executioner = Survivor.new("executioner")
 
-local executioner_log = SurvivorLog.new_from_survivor(executioner)
-executioner_log.portrait_id = sprite_log
-executioner_log.sprite_id = sprite_walk
-executioner_log.sprite_icon_id = sprite_portrait
-
 executioner:set_stats_base({
 	health = 95,
 	damage = 14,
@@ -112,6 +107,11 @@ executioner:set_stats_level({
 	regen = 0.0012,
 	armor = 2,
 })
+
+local executioner_log = SurvivorLog.new_from_survivor(executioner)
+executioner_log.portrait_id = sprite_log
+executioner_log.sprite_id = sprite_walk
+executioner_log.sprite_icon_id = sprite_portrait
 
 executioner.primary_color = Color.from_rgb(175, 113, 126)
 

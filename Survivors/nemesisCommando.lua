@@ -298,7 +298,7 @@ Callback.add(statePrimary.on_step, function(actor, data)
 			for i=0, actor:buff_count(Buff.find("shadowClone")) do
 				local attack_info
 				if cracker_shot then
-					attack_info = actor:fire_bullet(actor.x, actor.y, 700, direction, damage, 1, gm.constants.sSparks1, Attack_Info.TRACER.drill).attack_info
+					attack_info = actor:fire_bullet(actor.x, actor.y, 700, direction, damage, 1, gm.constants.sSparks1, Tracer.DRILL).attack_info
 				else
 					attack_info = actor:fire_explosion(actor.x + actor.image_xscale * 30, actor.y, 100, 65, damage, nil, gm.constants.sSparks9r).attack_info
 				end

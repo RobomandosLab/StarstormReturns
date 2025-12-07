@@ -56,7 +56,7 @@ Callback.add(Callback.ON_STEP, function()
 						local zone = objSigilZone:create(actor.x, actor.y)
 						zone.parent = actor
 						zone.stack = stack
-						data.sigil_zone = zone.id -- use the inst's ID instead of the inst wrapper directly because that caused random errors ...
+						data.sigil_zone = zone.value -- use the inst's ID instead of the inst wrapper directly because that caused random errors ...
 					end
 				else
 					data.sigil_timer = 0
