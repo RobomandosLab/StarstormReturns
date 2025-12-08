@@ -128,6 +128,8 @@ Callback.add(nemmerc.on_init, function(actor)
 	data.nemmerc_slide_prep = 0
 	data.nemmerc_primary_combo_timer = 0
 	data.nemmerc_primary_combo_count = 0
+	
+	actor.is_nemesis = true -- toggles the portal spawning animation
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -588,7 +590,7 @@ Callback.add(stateSpecialPre.on_step, function(actor, data)
 	actor:get_active_skill(Skill.Slot.SPECIAL):freeze_cooldown()
 	actor.invincible = math.max(actor.invincible, 5)
 	
-	if (actor.image_index + 1 >= actor.image_number) or (data.killed and data.killed == 1) then
+	if (actor.image_index + actor.image_speed >= actor.image_number) or (data.killed and data.killed == 1) then
 		if data.target then
 			actor:set_state(stateSpecial)
 		else
@@ -699,7 +701,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, gm.constants.sSparks10r).attack_info
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, gm.constants.sSparks10r)
 					attack.__ssr_nemmerc_devitalize = 1
 				end
 			end
@@ -710,7 +712,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		end
 	end
 	
-	if actor.image_index + 1 >= actor.image_number then
+	if actor.image_index + actor.image_speed >= actor.image_number then
 		if not Instance.exists(target) or (Instance.exists(target) and not GM.actor_is_alive(target)) or data.killed == 1 then
 			data.killed = 1
 		else
@@ -753,11 +755,11 @@ Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
 end)
 
 DamageCalculate.add(function(api)
+	if not api.hit_info.__ssr_nemmerc_devitalize then return end
 	if not Instance.exists(api.parent) then return end
 	if not api.hit_info then return end
-	if not api.hit_info.attack_info.__ssr_nemmerc_devitalize then return end
 	
-	if api.hit_info.attack_info.__ssr_nemmerc_devitalize == 1 then
+	if api.hit_info.__ssr_nemmerc_devitalize == 1 then
 		if api.hit.stunned == true and Instance.exists(api.parent) then
 			particleBlood:set_direction(0, 360, 0, 0)
 			particleBlood:create(api.hit_x, api.hit_y, 25, Particle.System.MIDDLE)

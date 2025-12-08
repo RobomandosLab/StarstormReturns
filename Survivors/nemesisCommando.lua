@@ -54,6 +54,10 @@ local sprite_explosion		= Sprite.new("NemCommandoExplosion", path.combine(SPRITE
 local sprite_rocket			= Sprite.new("NemCommandoRocket", path.combine(SPRITE_PATH, "rocket.png"), 3, 33, 10)
 local sprite_rocket_mask	= Sprite.new("NemCommandoRocketMask", path.combine(SPRITE_PATH, "rocketMask.png"), 1, 0, 2)
 
+local sprite_portal 		= Sprite.new("NemCommandoPortal", path.combine(SPRITE_PATH, "portal.png"), 25, 78, 100)
+local sprite_portal_inside	= Sprite.new("NemCommandoPortalInside", path.combine(SPRITE_PATH, "portal_inside.png"), 25, 78, 100)
+local sound_portal 			= Sound.new("NemCommandoPortal", path.combine(SOUND_PATH, "portal.ogg"))
+
 local sprite_log			= Sprite.new("NemCommandoLog", path.combine(SPRITE_PATH, "log.png"))
 
 -- walk sprites have a sprite speed of 0.8, the slower animation looks better
@@ -214,6 +218,9 @@ Callback.add(nemmando.on_init, function(actor)
 	actor.sprite_drone_shoot = sprite_drone_shoot
 	
 	actor.is_nemesis = true -- toggles the portal spawning animation
+	actor.sprite_portal = sprite_portal
+	actor.sprite_portal_inside = sprite_portal_inside
+	actor.sound_portal = sound_portal
 
 	actor:survivor_util_init_half_sprites()
 end)

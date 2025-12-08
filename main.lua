@@ -32,13 +32,13 @@ local init = function()
 		"Language",
 		"Actors",
 		"Elites",
-		"Gameplay",
 		"Survivors",
 		"Items",
 		"Equipments",
 		"Interactables",
 		"Artifacts",
-		"Stages"
+		"Stages",
+		"Gameplay"
 	}
 
 	Stage.remove_all_rooms() -- reload stages

@@ -34,7 +34,7 @@ return {
 		nemesisMercenary = {
 			name = "Nemesis Mercenary",
 			nameUpper = "NEMESIS MERCENARY",
-			description = "The <y>Nemesis Mercenary</c> uses dirty tactics and ruthless speed to dominate oncoming foes. Overwhelm opponents with his <y>Quick Trigger</c>, make a clean getaway with <y>Blinding Slide</c>, and deal with remaining targets effortlessly with Devitalize.",
+			description = "The <y>Nemesis Mercenary</c> uses dirty tactics and ruthless speed to dominate oncoming foes. Weaken opponents with his <y>Quick Trigger</c>, recuperate ammo with <y>Blinding Slide</c>, and chain-kill your remaining targets effortlessly with <y>Devitalize</c>.",
 			endQuote = "..and so he left, loaded up for more.",
 			story = "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
 		},
@@ -155,11 +155,11 @@ return {
 		},
 		nemesisMercenaryV = {
 			name = "Devitalize",
-			description = "Target the weakest enemy near you, dealing <y>700% damage</c> damage. \n<b>Prioritizes</c> and <y>critically strikes stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
+			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
 		},
 		nemesisMercenaryVBoosted = {
 			name = "Absolute Devitalization",
-			description = "Target the weakest enemy near you, dealing <y>700% damage</c> damage. \n<b>Prioritizes</c> and <y>critically strikes stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
+			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
 		},
 		technicianZ = {
 			name = "Fine Tune",
