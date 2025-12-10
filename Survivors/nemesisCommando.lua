@@ -423,7 +423,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i=0, actor:buff_count(buff_shadow_clone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y, 1400, dir, damage, nil, gm.constants.sSparks23r, tracer).attack_info
-				attack_info.climb = i * 8
+				attack_info.climb = i * 8 * 1.35
 			end
 		end
 	end

@@ -435,7 +435,7 @@ Callback.add(statePrimaryPunch.on_step, function(actor, data)
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
 					local attack_info = actor:fire_explosion(actor.x + 30 * actor.image_xscale, actor.y, 80, 60, 1.25 * data.strength, nil, sprite_sparks1).attack_info
-					attack_info.climb = i * 8
+					attack_info.climb = i * 8 * 1.35
 					attack_info.knockback_direction = actor.image_xscale
 				end
 			end
@@ -474,7 +474,7 @@ Callback.add(statePrimarySlam.on_step, function(actor, data)
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
 					local attack_info = actor:fire_explosion(actor.x + 20 * actor.image_xscale, actor.y, 120, 60, 10, nil, sprite_sparks1).attack_info
-					attack_info.climb = i * 8
+					attack_info.climb = i * 8 * 1.35
 					attack_info.knockback = attack_info.knockback + 9
 					attack_info.knockback_direction = actor.image_xscale
 					attack_info.knockup = 6
@@ -525,7 +525,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i=0, actor:buff_count(buff_shadow_clone) do
 				local attack_info = actor:fire_bullet(actor.x, actor.y - 4, 1300, actor:skill_util_facing_direction(), actor:skill_get_damage(secondary), nil, sprite_sparks3).attack_info
-				attack_info.climb = i * 8
+				attack_info.climb = i * 8 * 1.35
 				attack_info.mule_immobilize = 1
 			end
 		end
@@ -657,7 +657,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i = 0, actor:buff_count(buff_shadow_clone) do
 				local attack_info = actor:fire_explosion(actor.x, actor.y, 160, 100, actor:skill_get_damage(utility), nil, sprite_sparks2).attack_info
-				attack_info.climb = i * 8
+				attack_info.climb = i * 8 * 1.35
 				attack_info.knockback = 5
 				attack_info.knockback_direction = actor.image_xscale
 				if data.fired == 4 then 

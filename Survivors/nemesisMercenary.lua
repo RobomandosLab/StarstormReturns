@@ -31,8 +31,8 @@ local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRIT
 local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 18, 10)
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 60, 32)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 4, 60, 32)
-local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "slash.png"), 5, 52, 50)
-local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "slash2.png"), 5, 52, 50)
+local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
+local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "sparks2.png"), 5, 56, 40)
 
 local sprite_log			= Sprite.new("NemesisMercenaryLog", path.combine(SPRITE_PATH, "log.png"))
 
@@ -249,7 +249,7 @@ local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, comb
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_explosion(actor.x + offset * actor.image_xscale, actor.y, range, 80, damage, nil, gm.constants.sSparks9r).attack_info
+					local attack = actor:fire_explosion(actor.x + offset * actor.image_xscale, actor.y, range, 80, damage, nil, sprite_sparks).attack_info
 					attack.climb = i * 8 * 1.35
 					
 					if combo == 3 then
@@ -373,9 +373,9 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 			
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i=0, actor:buff_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y, 200, actor:skill_util_facing_direction(), damage, 1, gm.constants.sSparks4, Tracer.ENFORCER1)
+				local attack = actor:fire_bullet(actor.x, actor.y - 4, 200, actor:skill_util_facing_direction(), damage, 1, sprite_sparks2, Tracer.ENFORCER1)
 				attack.attack_info.stun = 2
-				attack.attack_info.climb = i * 8
+				attack.attack_info.climb = i * 8 * 1.35
 			end
 		end
 	end
@@ -563,7 +563,8 @@ end)
 Callback.add(stateSpecialPre.on_enter, function(actor, data)
 	actor.image_index = 0
 	
-	local target = nemmerc_get_target(actor)
+	local target = nil
+	target = nemmerc_get_target(actor)
 	
 	if target then
 		data.target = target.value
@@ -693,15 +694,15 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		if target and Instance.exists(target) then
 			if actor:is_authority() then
 				local damage = actor:skill_get_damage(special)
-				local sparks = sprite_sparks.value
+				
 				if actor:item_count(Item.find("ancientScepter")) > 0 then
 					damage = actor:skill_get_damage(specialS)
-					sparks = sprite_sparks2.value
 				end
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, gm.constants.sSparks10r)
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, sprite_sparks)
+					attack.climb = i * 8 * 1.35
 					attack.__ssr_nemmerc_devitalize = 1
 				end
 			end
