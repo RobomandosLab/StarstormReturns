@@ -30,7 +30,6 @@ Callback.add(portal.on_step, function(self)
 		data.state = 2
 		
 		self.parent.pVspeed = -5
-		self.parent.pHspeed = 3.5
 		
 		gm.actor_activity_set(self.parent.id, 0, 0)
 

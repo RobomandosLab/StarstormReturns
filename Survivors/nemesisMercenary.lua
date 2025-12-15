@@ -28,7 +28,7 @@ local sprite_shoot1_4a		= Sprite.new("NemesisMercenaryShoot1_4a", path.combine(S
 local sprite_shoot1b		= Sprite.new("NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
 local sprite_shoot2a		= Sprite.new("NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 17, 60)
 local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
-local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 18, 10)
+local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 16, 16)
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 60, 32)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 4, 60, 32)
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
@@ -203,11 +203,16 @@ end)
 local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, combo)
 	local get_data = Instance.get_data(actor)
 	
+	local speed = 0.2
+	if combo == 3 then
+		speed = 0.17
+	end
+	
 	if get_data.nemmerc_slide > 0 then
-		actor:actor_animation_set(sprite_b, 0.22)
+		actor:actor_animation_set(sprite_b, speed)
 	else
 		actor:skill_util_fix_hspeed()
-		actor:actor_animation_set(sprite_a, 0.22)
+		actor:actor_animation_set(sprite_a, speed)
 	end
 	
 	local condition = (actor.image_index >= 1 and data.fired == 0)
