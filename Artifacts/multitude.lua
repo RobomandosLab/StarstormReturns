@@ -18,7 +18,7 @@ local step_callback = Callback.add(Callback.ON_STEP, function()
 	local spawn = true
 	
 	-- tbh not sure why in ss1 it uses a different method here for determining whether it should display or not, but who cares, it works
-	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporter)) do
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.pTeleporter)) do
 		if teleporter.active >= 2 then
 			spawn = false
 			break
@@ -79,7 +79,7 @@ local draw_callback = Callback.add(Callback.ON_HUD_DRAW, function()
 	local spawn = true
 	
 	-- tbh not sure why in ss1 it uses a different method here for determining whether it should display or not, but who cares, it works
-	for _, teleporter in ipairs(Instance.find_all(gm.constants.oTeleporter)) do
+	for _, teleporter in ipairs(Instance.find_all(gm.constants.pTeleporter)) do
 		if teleporter.active >= 2 then
 			spawn = false
 			break

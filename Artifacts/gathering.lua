@@ -17,7 +17,9 @@ local create_hook = Hook.add_post("gml_Object_oEfGold_Create_0", function(self, 
 	
 	-- value gets set after creation, so waiting a frame to change it
 	Alarm.add(1, function()
-		self.value.value = self.value.value * 2
+		if Instance.exists(self) then
+			self.value.value = self.value.value * 2
+		end
 	end)
 
 	local data = Instance.get_data(self)

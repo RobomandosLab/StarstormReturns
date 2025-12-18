@@ -8,7 +8,7 @@ local sprite_skills			= Sprite.new("NemesisMercenarySkills", path.combine(SPRITE
 local sprite_credits		= Sprite.new("CreditsSurvivorNemesisMercenary", path.combine(SPRITE_PATH, "credits.png"), 1, 8, 10)
 
 local sprite_idle			= Sprite.new("NemesisMercenaryIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 11, 15)
-local sprite_idle2			= Sprite.new("NemesisMercenaryIdle2", path.combine(SPRITE_PATH, "idle2.png"), 1, 8, 10)
+local sprite_idle2			= Sprite.new("NemesisMercenaryIdle2", path.combine(SPRITE_PATH, "idle2.png"), 3, 19, 14)
 local sprite_walk			= Sprite.new("NemesisMercenaryWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 12, 17)
 local sprite_walk_back		= Sprite.new("NemesisMercenaryWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 12, 17)
 local sprite_jump			= Sprite.new("NemesisMercenaryJump", path.combine(SPRITE_PATH, "jump.png"), 1, 10, 16)
@@ -28,7 +28,7 @@ local sprite_shoot1_4a		= Sprite.new("NemesisMercenaryShoot1_4a", path.combine(S
 local sprite_shoot1b		= Sprite.new("NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
 local sprite_shoot2a		= Sprite.new("NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 17, 60)
 local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
-local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 8, 16, 16)
+local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 10, 16, 16)
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 60, 32)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 4, 60, 32)
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
@@ -423,9 +423,8 @@ Callback.add(stateUtility.on_enter, function(actor, data)
 	
 	actor.image_index = 0
 	data.fired = 0
+	data.sound = 0
 	data.counter = 0
-	
-	actor:sound_play(gm.constants.wMercenary_Parry_Release, 1, 0.9 + math.random() * 0.2)
 end)
 
 Callback.add(stateUtility.on_step, function(actor, data)
@@ -448,9 +447,14 @@ Callback.add(stateUtility.on_step, function(actor, data)
 			end
 		end
 		
-		if actor.image_index < 6 then
-			actor.image_index = 6
+		if actor.image_index < 7 then
+			actor.image_index = 7
 		end
+	end
+	
+	if actor.image_index >= 1 and data.sound == 0 then
+		data.sound = 1
+		actor:sound_play(gm.constants.wMercenary_Parry_Release, 1, 0.9 + math.random() * 0.2)
 	end
 	
 	if get_data.nemmerc_slide < 25 then
@@ -461,7 +465,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		actor.invincible = math.max(actor.invincible, 5)
 	end
 	
-	if actor.image_index >= 6 and data.fired == 0 then
+	if actor.image_index >= 7 and data.fired == 0 then
 		
 		data.counter = 11
 		data.fired = 1
