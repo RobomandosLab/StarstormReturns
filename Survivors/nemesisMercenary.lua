@@ -25,14 +25,19 @@ local sprite_shoot1_1a		= Sprite.new("NemesisMercenaryShoot1_1a", path.combine(S
 local sprite_shoot1_2a		= Sprite.new("NemesisMercenaryShoot1_2a", path.combine(SPRITE_PATH, "shoot1_2a.png"), 5, 21, 16)
 local sprite_shoot1_3a		= Sprite.new("NemesisMercenaryShoot1_3a", path.combine(SPRITE_PATH, "shoot1_3a.png"), 5, 19, 42)
 local sprite_shoot1_4a		= Sprite.new("NemesisMercenaryShoot1_4a", path.combine(SPRITE_PATH, "shoot1_4a.png"), 5, 31, 25)
-local sprite_shoot1b		= Sprite.new("NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 9, 18, 20)
+local sprite_shoot1b		= Sprite.new("NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 5, 20, 31)
+
 local sprite_shoot2a		= Sprite.new("NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 17, 60)
-local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 14, 28)
-local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 10, 16, 16)
+local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 21, 53)
+
+local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 9, 21, 16)
+
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 60, 32)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 4, 60, 32)
+
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
 local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "sparks2.png"), 5, 56, 40)
+local sprite_boost 			= Sprite.new("NemesisMercenaryBoost", path.combine(SPRITE_PATH, "boost.png"), 5, 59, 20)
 
 local sprite_log			= Sprite.new("NemesisMercenaryLog", path.combine(SPRITE_PATH, "log.png"))
 
@@ -186,21 +191,27 @@ local statePrimaryA = ActorState.new("nemMercenaryAttachmentStabA")
 local statePrimaryB = ActorState.new("nemMercenaryAttachmentStabB")
 local statePrimaryC = ActorState.new("nemMercenaryAttachmentStabC")
 local statePrimaryD = ActorState.new("nemMercenaryAttachmentStabD")
+local statePrimaryE = ActorState.new("nemMercenaryAttachmentStabE")
 
 Callback.add(primary.on_activate, function(actor, skill, slot)
 	local data = Instance.get_data(actor)
-	if data.nemmerc_primary_combo_count == 0 then
-		actor:set_state(statePrimaryA)
-	elseif data.nemmerc_primary_combo_count == 1 then
-		actor:set_state(statePrimaryB)
-	elseif data.nemmerc_primary_combo_count == 2 then
-		actor:set_state(statePrimaryC)
-	elseif data.nemmerc_primary_combo_count == 3 then
-		actor:set_state(statePrimaryD)
+	
+	if data.nemmerc_slide <= 0 then
+		if data.nemmerc_primary_combo_count == 0 then
+			actor:set_state(statePrimaryA)
+		elseif data.nemmerc_primary_combo_count == 1 then
+			actor:set_state(statePrimaryB)
+		elseif data.nemmerc_primary_combo_count == 2 then
+			actor:set_state(statePrimaryC)
+		elseif data.nemmerc_primary_combo_count == 3 then
+			actor:set_state(statePrimaryD)
+		end
+	else
+		actor:set_state(statePrimaryE)
 	end
 end)
 
-local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, combo)
+local function nemmerc_primary_code(actor, data, sprite_a, sound, combo)
 	local get_data = Instance.get_data(actor)
 	
 	local speed = 0.2
@@ -208,12 +219,8 @@ local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, comb
 		speed = 0.17
 	end
 	
-	if get_data.nemmerc_slide > 0 then
-		actor:actor_animation_set(sprite_b, speed)
-	else
-		actor:skill_util_fix_hspeed()
-		actor:actor_animation_set(sprite_a, speed)
-	end
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_a, speed)
 	
 	local condition = (actor.image_index >= 1 and data.fired == 0)
 	if combo == 1 then
@@ -235,10 +242,7 @@ local function nemmerc_primary_code(actor, data, sprite_a, sprite_b, sound, comb
 		end
 		
 		actor:sound_play(sound, 1, 0.9 + math.random() * 0.2)
-		
-		if get_data.nemmerc_slide <= 0 then
-			actor:skill_util_nudge_forward(2 * actor.image_xscale)
-		end
+		actor:skill_util_nudge_forward(2 * actor.image_xscale)
 		
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(primary)
@@ -273,8 +277,7 @@ Callback.add(statePrimaryA.on_enter, function(actor, data)
 end)
 
 Callback.add(statePrimaryA.on_step, function(actor, data)
-	local get_data = Instance.get_data(actor)
-	nemmerc_primary_code(actor, data, sprite_shoot1_1a, sprite_shoot1_1a, gm.constants.wMercenaryShoot1_2, 0)
+	nemmerc_primary_code(actor, data, sprite_shoot1_1a, gm.constants.wMercenaryShoot1_2, 0)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -292,8 +295,7 @@ Callback.add(statePrimaryB.on_enter, function(actor, data)
 end)
 
 Callback.add(statePrimaryB.on_step, function(actor, data)
-	local get_data = Instance.get_data(actor)
-	nemmerc_primary_code(actor, data, sprite_shoot1_2a, sprite_shoot1_2a, gm.constants.wMercenaryShoot1_1, 1)
+	nemmerc_primary_code(actor, data, sprite_shoot1_2a, gm.constants.wMercenaryShoot1_1, 1)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -311,8 +313,7 @@ Callback.add(statePrimaryC.on_enter, function(actor, data)
 end)
 
 Callback.add(statePrimaryC.on_step, function(actor, data)
-	local get_data = Instance.get_data(actor)
-	nemmerc_primary_code(actor, data, sprite_shoot1_3a, sprite_shoot1_3a, gm.constants.wMercenaryShoot1_2, 2)
+	nemmerc_primary_code(actor, data, sprite_shoot1_3a, gm.constants.wMercenaryShoot1_2, 2)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
@@ -330,12 +331,47 @@ Callback.add(statePrimaryD.on_enter, function(actor, data)
 end)
 
 Callback.add(statePrimaryD.on_step, function(actor, data)
-	local get_data = Instance.get_data(actor)
-	nemmerc_primary_code(actor, data, sprite_shoot1_4a, sprite_shoot1_4a, gm.constants.wMercenary_Parry_StandardSlash, 3)
+	nemmerc_primary_code(actor, data, sprite_shoot1_4a, gm.constants.wMercenary_Parry_StandardSlash, 3)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
 Callback.add(statePrimaryD.on_get_interrupt_priority, function(actor, data)
+	return ActorState.InterruptPriority.PRIORITY_SKILL
+end)
+
+Callback.add(statePrimaryE.on_enter, function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+end)
+
+Callback.add(statePrimaryE.on_step, function(actor, data)
+	local get_data = Instance.get_data(actor)
+	actor:actor_animation_set(sprite_shoot1b, 0.2)
+	
+	if actor.image_index >= 1 and data.fired == 0 then
+		data.fired = 1
+		
+		actor:sound_play(gm.constants.wMercenaryShoot1_2, 1, 0.9 + math.random() * 0.2)
+		
+		if actor:is_authority() then
+			local damage = actor:skill_get_damage(primary)
+			local offset = 40
+			local range = 100
+			
+			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
+					local attack = actor:fire_explosion(actor.x + offset * actor.image_xscale, actor.y, range, 80, damage, nil, sprite_sparks).attack_info
+					attack.climb = i * 8 * 1.35
+				end
+			end
+		end
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
+end)
+
+Callback.add(statePrimaryE.on_get_interrupt_priority, function(actor, data)
 	return ActorState.InterruptPriority.PRIORITY_SKILL
 end)
 
@@ -447,8 +483,8 @@ Callback.add(stateUtility.on_step, function(actor, data)
 			end
 		end
 		
-		if actor.image_index < 7 then
-			actor.image_index = 7
+		if actor.image_index < 6 then
+			actor.image_index = 6
 		end
 	end
 	
@@ -465,11 +501,18 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		actor.invincible = math.max(actor.invincible, 5)
 	end
 	
-	if actor.image_index >= 7 and data.fired == 0 then
+	if actor.image_index >= 6 and data.fired == 0 then
 		
 		data.counter = 11
 		data.fired = 1
+		
+		local sparks = Object.find("EfSparks"):create(actor.x, actor.y - 2)
+		sparks.sprite_index = sprite_boost
+		sparks.image_xscale = actor.image_xscale
+		sparks.image_yscale = 1
+		
 		actor:sound_play(gm.constants.wCommandoSlide, 1, 0.9 + math.random() * 0.2)
+		
 		get_data.nemmerc_slide = 50
 		get_data.nemmerc_slide_dir = actor.image_xscale
 	end
@@ -489,7 +532,7 @@ Callback.add(stateUtility.on_exit, function(actor, data)
 end)
 
 Callback.add(stateUtility.on_get_interrupt_priority, function(actor, data)
-	if actor.image_index >= 6 then
+	if actor.image_index >= 7 then
 		return ActorState.InterruptPriority.ANY
 	else
 		return ActorState.InterruptPriority.PRIORITY_SKILL
@@ -648,9 +691,9 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		data.v_held = 0
 	end
 	
-	local target = GM.attack_collision_resolve(Instance.wrap(data.target))
-	local xx = data.target_x
-	local yy = data.target_y
+	local target = Instance.wrap(GM.attack_collision_resolve(data.target))
+	local xx = target.x or data.target_x
+	local yy = target.y or data.target_y
 	
 	if not (xx and yy) then
 		actor:set_state(stateSpecialEnd)
@@ -662,10 +705,12 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		trail.image_index = 0
 		trail.image_xscale = actor.image_xscale
 		trail.rate = 0.04
-			
-		actor:actor_teleport(data.begin_x, data.begin_y)
-		actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
-		actor:move_contact_solid(90 + 90 * actor.image_xscale, 64)
+		
+		if ssr_is_near_ground(target, 64) then
+			GM.teleport_nearby(actor, xx, yy)
+		else
+			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
+		end
 		
 		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
 		for i = 1, amount do
@@ -686,20 +731,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 			
 		actor:sound_play(sound_shoot4.value, 1, 0.9 + math.random() * 0.2)
 		actor:screen_shake(3)
-			
-		data.begin_x = actor.x
-		data.begin_y = actor.y
-			
-		actor:actor_teleport(data.begin_x, data.begin_y)
-		actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
-		actor:move_contact_solid(90 - 90 * actor.image_xscale, 64)
-			
-		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
-		for i = 1, amount do
-			particleSpecialTrail:set_size(0.45 * (1 - (i / amount)), 0.45 * (1 - (i / amount)), -0.015, 0)
-			particleSpecialTrail:create(Math.lerp(data.begin_x, actor.x, 1 - (i / amount)), Math.lerp(data.begin_y, actor.y, 1 - (i / amount)), 1)
-		end
-			
+
 		if target and Instance.exists(target) then
 			if actor:is_authority() then
 				local damage = actor:skill_get_damage(special)
@@ -716,7 +748,8 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 				end
 			end
 		else
-			local sparks = Object.find("EfExplosion"):create(xx, yy)
+			local sparks = Object.find("EfSparks"):create(xx, yy)
+			sparks.image_yscale = 1
 			sparks.sprite_index = gm.constants.sSparks10r
 			data.killed = 1
 		end

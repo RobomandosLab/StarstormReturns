@@ -264,12 +264,12 @@ function ssr_move_contact_air(inst, angle, amount)
 			inst.y = inst.y - yy * (totalMoved - amount)
 		end
 		
-		if not is_colliding_stage(inst) then
+		if not ssr_is_colliding_stage(inst) then
 			for i = 0, 31 do
 				inst.x = inst.x - xx
 				inst.y = inst.y - yy
 				
-				if is_colliding_stage(inst) then
+				if ssr_is_colliding_stage(inst) then
 					inst.x = inst.x + xx
 					inst.y = inst.y + yy
 					break
@@ -359,6 +359,18 @@ function ssr_instance_line_of_sight(inst, inst2)
 	end
 	
 	list:destroy()
+	
+	return flag
+end
+
+function ssr_is_near_ground(inst, radius)
+	local flag = false
+	for _, block in ipairs(inst:get_collisions_circle(gm.constants.oB, radius)) do
+		if block then
+			flag = true
+			break
+		end
+	end
 	
 	return flag
 end
