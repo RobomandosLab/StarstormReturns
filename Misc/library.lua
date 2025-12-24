@@ -363,9 +363,9 @@ function ssr_instance_line_of_sight(inst, inst2)
 	return flag
 end
 
-function ssr_is_near_ground(inst, radius)
+function ssr_is_near_ground(inst, x, y, radius)
 	local flag = false
-	for _, block in ipairs(inst:get_collisions_circle(gm.constants.oB, radius)) do
+	for _, block in ipairs(inst:get_collisions_circle(gm.constants.oB, radius, x, y)) do
 		if block then
 			flag = true
 			break

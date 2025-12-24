@@ -39,7 +39,7 @@ Callback.add(portal.on_step, function(self)
 	data.timer = data.timer + 1
 
 	if data.state < 2 then
-		self.parent:actor_teleport(self.x, self.y - 40)
+		self.parent:actor_teleport(self.x, self.bbox_bottom - gm.sprite_get_height(self.sprite_index) / 2)
 	elseif data.state >= 2 and self.image_index + self.image_speed >= self.image_number then
 		self:destroy()
 	end

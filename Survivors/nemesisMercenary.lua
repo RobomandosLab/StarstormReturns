@@ -9,6 +9,7 @@ local sprite_credits		= Sprite.new("CreditsSurvivorNemesisMercenary", path.combi
 
 local sprite_idle			= Sprite.new("NemesisMercenaryIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 11, 15)
 local sprite_idle2			= Sprite.new("NemesisMercenaryIdle2", path.combine(SPRITE_PATH, "idle2.png"), 3, 19, 14)
+local sprite_idle2l			= Sprite.new("NemesisMercenaryIdle2l", path.combine(SPRITE_PATH, "idle2l.png"), 3, 19, 7)
 local sprite_walk			= Sprite.new("NemesisMercenaryWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 12, 17)
 local sprite_walk_back		= Sprite.new("NemesisMercenaryWalkBack", path.combine(SPRITE_PATH, "walkBack.png"), 8, 12, 17)
 local sprite_jump			= Sprite.new("NemesisMercenaryJump", path.combine(SPRITE_PATH, "jump.png"), 1, 10, 16)
@@ -26,18 +27,23 @@ local sprite_shoot1_2a		= Sprite.new("NemesisMercenaryShoot1_2a", path.combine(S
 local sprite_shoot1_3a		= Sprite.new("NemesisMercenaryShoot1_3a", path.combine(SPRITE_PATH, "shoot1_3a.png"), 5, 19, 42)
 local sprite_shoot1_4a		= Sprite.new("NemesisMercenaryShoot1_4a", path.combine(SPRITE_PATH, "shoot1_4a.png"), 5, 31, 25)
 local sprite_shoot1b		= Sprite.new("NemesisMercenaryShoot1b", path.combine(SPRITE_PATH, "shoot1b.png"), 5, 20, 31)
+local sprite_shoot1lb		= Sprite.new("NemesisMercenaryShoot1lb", path.combine(SPRITE_PATH, "shoot1lb.png"), 5, 64, 13)
 
 local sprite_shoot2a		= Sprite.new("NemesisMercenaryShoot2a", path.combine(SPRITE_PATH, "shoot2a.png"), 5, 17, 60)
 local sprite_shoot2b		= Sprite.new("NemesisMercenaryShoot2b", path.combine(SPRITE_PATH, "shoot2b.png"), 5, 21, 53)
+local sprite_shoot2lb		= Sprite.new("NemesisMercenaryShoot2lb", path.combine(SPRITE_PATH, "shoot2lb.png"), 5, 84, 60)
 
 local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 9, 21, 16)
 
-local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 60, 32)
-local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 4, 60, 32)
+local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 28, 29)
+local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 24, 15)
 
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
 local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "sparks2.png"), 5, 56, 40)
 local sprite_boost 			= Sprite.new("NemesisMercenaryBoost", path.combine(SPRITE_PATH, "boost.png"), 5, 59, 20)
+
+local sprite_portal 		= Sprite.new("NemesisMercenaryPortal", path.combine(SPRITE_PATH, "portal.png"), 27, 108, 170)
+local sprite_portal_inside	= Sprite.new("NemesisMercenaryPortalInside", path.combine(SPRITE_PATH, "portal_inside.png"), 27, 108, 170)
 
 local sprite_log			= Sprite.new("NemesisMercenaryLog", path.combine(SPRITE_PATH, "log.png"))
 
@@ -98,11 +104,11 @@ nemmerc.cape_offset = Array.new({-3, -8, 0, -5})
 
 Callback.add(nemmerc.on_init, function(actor)
 	-- setup half-sprite nonsense
-	actor.sprite_idle_half = Array.new({sprite_idle, sprite_idle_half, 0})
-	actor.sprite_walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk_back})
-	actor.sprite_jump_half = Array.new({sprite_jump, sprite_jump_half, 0})
-	actor.sprite_jump_peak_half = Array.new({sprite_jump_peak, sprite_jump_peak_half, 0})
-	actor.sprite_fall_half = Array.new({sprite_fall, sprite_fall_half, 0})
+	actor.sprite_idle_half = Array.new({sprite_idle, nil, 0})
+	actor.sprite_walk_half = Array.new({sprite_walk, nil, 0, sprite_walk_back})
+	actor.sprite_jump_half = Array.new({sprite_jump, nil, 0})
+	actor.sprite_jump_peak_half = Array.new({sprite_jump_peak, nil, 0})
+	actor.sprite_fall_half = Array.new({sprite_fall, nil, 0})
 	
 	actor.sprite_idle = sprite_idle
 	actor.sprite_walk = sprite_walk
@@ -117,9 +123,12 @@ Callback.add(nemmerc.on_init, function(actor)
 	
 	-- slide sprites	
 	actor.sprite_idle_slide = sprite_idle2
-	actor.sprite_jump_slide = sprite_idle2
-	actor.sprite_jump_peak_slide = sprite_idle2
-	actor.sprite_fall_slide = sprite_idle2
+	actor.sprite_shoot1_slide = sprite_shoot1b
+	actor.sprite_shoot2_slide = sprite_shoot2b
+	
+	actor.sprite_idle_slide_left = sprite_idle2l
+	actor.sprite_shoot1_slide_left = sprite_shoot1lb
+	actor.sprite_shoot2_slide_left = sprite_shoot2lb
 	
 	actor.sprite_idle_normal = sprite_idle
 	actor.sprite_jump_normal = sprite_jump
@@ -135,6 +144,9 @@ Callback.add(nemmerc.on_init, function(actor)
 	data.nemmerc_primary_combo_count = 0
 	
 	actor.is_nemesis = true -- toggles the portal spawning animation
+	
+	actor.sprite_portal = sprite_portal
+	actor.sprite_portal_inside = sprite_portal_inside
 
 	actor:survivor_util_init_half_sprites()
 end)
@@ -159,12 +171,25 @@ Callback.add(nemmerc.on_step, function(actor)
 		end
 		
 		actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * data.nemmerc_slide_dir + actor.pHmax * data.nemmerc_slide_dir
+		actor.image_xscale = data.nemmerc_slide_dir
 		actor.moveLeft = 0
 		actor.moveRight = 0
-		actor.sprite_idle = actor.sprite_idle_slide
-		actor.sprite_jump = actor.sprite_jump_slide
-		actor.sprite_jump_peak = actor.sprite_jump_peak_slide
-		actor.sprite_fall = actor.sprite_fall_slide
+		
+		if actor.hold_facing_direction_xscale ~= data.nemmerc_slide_dir then
+			actor.sprite_idle = actor.sprite_idle_slide_left
+			actor.sprite_jump = actor.sprite_idle_slide_left
+			actor.sprite_jump_peak = actor.sprite_idle_slide_left
+			actor.sprite_fall = actor.sprite_idle_slide_left
+			actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
+			actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
+		else
+			actor.sprite_idle = actor.sprite_idle_slide
+			actor.sprite_jump = actor.sprite_idle_slide
+			actor.sprite_jump_peak = actor.sprite_idle_slide
+			actor.sprite_fall = actor.sprite_idle_slide
+			actor.sprite_shoot1 = actor.sprite_shoot1_slide
+			actor.sprite_shoot2 = actor.sprite_shoot2_slide
+		end
 	else
 		actor.sprite_idle = actor.sprite_idle_normal
 		actor.sprite_jump = actor.sprite_jump_normal
@@ -342,11 +367,12 @@ end)
 Callback.add(statePrimaryE.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
+	data.dir = actor.hold_facing_direction_xscale
 end)
 
 Callback.add(statePrimaryE.on_step, function(actor, data)
 	local get_data = Instance.get_data(actor)
-	actor:actor_animation_set(sprite_shoot1b, 0.2)
+	actor:actor_animation_set(actor.sprite_shoot1, 0.2)
 	
 	if actor.image_index >= 1 and data.fired == 0 then
 		data.fired = 1
@@ -361,7 +387,7 @@ Callback.add(statePrimaryE.on_step, function(actor, data)
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_explosion(actor.x + offset * actor.image_xscale, actor.y, range, 80, damage, nil, sprite_sparks).attack_info
+					local attack = actor:fire_explosion(actor.x + offset * data.dir, actor.y, range, 80, damage, nil, sprite_sparks).attack_info
 					attack.climb = i * 8 * 1.35
 				end
 			end
@@ -389,19 +415,27 @@ Callback.add(secondary.on_activate, function(actor, skill, slot)
 end)
 
 Callback.add(stateSecondary.on_enter, function(actor, data)
+	local get_data = Instance.get_data(actor)
+	
 	actor.image_index = 0
 	data.fired = 0
 	data.reloaded = 0
+	
+	data.sprite = nil
+	if get_data.nemmerc_slide > 0 then
+		data.sprite = actor.sprite_shoot2
+	else
+		data.sprite = sprite_shoot2a.value
+	end
 end)
 
 Callback.add(stateSecondary.on_step, function(actor, data)
 	local get_data = Instance.get_data(actor)
 	
-	if get_data.nemmerc_slide > 0 then
-		actor:actor_animation_set(sprite_shoot2b, 0.2)
-	else
+	actor:actor_animation_set(data.sprite, 0.2)
+	
+	if get_data.nemmerc_slide <= 0 then
 		actor:skill_util_fix_hspeed()
-		actor:actor_animation_set(sprite_shoot2a, 0.2)
 	end
 	
 	if data.fired == 0 then
@@ -548,6 +582,12 @@ DamageDodge.add(function(api, current_dodge)
 		api.hit:get_default_skill(Skill.Slot.SECONDARY):reset_cooldown()
 		data.nemmerc_slide_prep = 0
 		api.hit:sound_play(sound_shoot2b.value, 0.6, 0.9 + math.random() * 0.2)
+		
+		local flash = Object.find("EfFlash"):create(api.hit.x, api.hit.y)
+		flash.parent = api.hit
+		flash.rate = 0.1
+		flash.image_alpha = 1
+		
 		api.hit.invincible = math.max(api.hit.invincible, 50)
 		return DamageDodge.DEFLECTED
 	end
@@ -569,7 +609,6 @@ specialS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
 local stateSpecialPre = ActorState.new("nemMercenaryDevitalizePre")
 local stateSpecial = ActorState.new("nemMercenaryDevitalize")
-local stateSpecialAttack = ActorState.new("nemMercenaryDevitalizeAttack")
 local stateSpecialEnd = ActorState.new("nemMercenaryDevitalizePost")
 
 local function nemmerc_get_target(actor)
@@ -613,7 +652,10 @@ Callback.add(specialS.on_activate, function(actor, skill, slot)
 end)
 
 Callback.add(stateSpecialPre.on_enter, function(actor, data)
+	Instance.get_data(actor).nemmerc_slide = 0
 	actor.image_index = 0
+
+	actor:sound_play(gm.constants.wMercenary_EviscerateActivate, 1, 1)
 	
 	local target = nil
 	target = nemmerc_get_target(actor)
@@ -706,7 +748,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		trail.image_xscale = actor.image_xscale
 		trail.rate = 0.04
 		
-		if ssr_is_near_ground(target, 64) then
+		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)
 		else
 			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
@@ -782,6 +824,8 @@ Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 	actor.image_index = 0
 	actor.free = 1
 	
+	actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 1)
+	
 	if data.killed == 1 then
 		actor:get_active_skill(Skill.Slot.SPECIAL):reset_cooldown()
 	end
@@ -790,11 +834,19 @@ Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 end)
 
 Callback.add(stateSpecialEnd.on_step, function(actor, data)
-	actor:skill_util_reset_activity_state()
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot4_3, 0.25, false)
+	actor.invincible = math.max(actor.invincible, 5)
+	
+	actor:skill_util_exit_state_on_anim_end()
 end)
 
 Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
-	return ActorState.InterruptPriority.PRIORITY_SKILL
+	if actor.image_index >= 2 then
+		return ActorState.InterruptPriority.ANY
+	else
+		return ActorState.InterruptPriority.PRIORITY_SKILL
+	end
 end)
 
 DamageCalculate.add(function(api)
