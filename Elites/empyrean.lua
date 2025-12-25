@@ -31,10 +31,6 @@ empy.healthbar_icon = sprite_icon
 empy.palette = gm.constants.sElitePaletteDummy
 empy.blend_col = Color.WHITE
 
-local shockwave = Particle.new("EmpyreanSpawnShockwave")
-shockwave:set_sprite(shockwave_sprite, true, true, false)
-shockwave:set_life(15, 30)
-
 local evil = Particle.new("EmpyreanSpawnEvil")
 evil:set_sprite(particle_sprite, true, true, false)
 evil:set_life(15, 30)
@@ -284,6 +280,33 @@ Hook.add_post(gm.constants.actor_phy_on_landed, function(self, other, result, ar
     end
 end)
 
+local objShockwave = Object.new("EmpyreanSpawnShockwave")
+objShockwave:set_sprite(shockwave_sprite)
+objShockwave:set_depth(-200)
+
+Callback.add(objShockwave.on_create, function(self)
+	local data = Instance.get_data(self)
+	data.life = 12
+	
+	self.image_speed = 0.25
+end)
+
+Callback.add(objShockwave.on_step, function(self)
+	local data = Instance.get_data(self)
+	
+	self.speed = self.speed * 0.9
+	
+	if data.life > 0 then
+		data.life = data.life - 1
+	else
+		if self.image_alpha > 0 then
+			self.image_alpha = self.image_alpha - 0.25
+		else
+			self:destroy()
+		end
+	end
+end)
+
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(empyorb:get_holding_actors()) do
 		if Instance.exists(actor) then
@@ -338,13 +361,12 @@ Callback.add(Callback.ON_STEP, function()
 				end
 				
 				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then
-					local fadeout1 = ssr_create_fadeout(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, 1, shockwave_sprite, 0.3, 0.4)
-					fadeout1.direction = 0
-					fadeout1.speed = 8
+					local shockwave1 = objShockwave:create(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom)
+					shockwave1.speed = 12
 					
-					local fadeout2 = ssr_create_fadeout(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, -1, shockwave_sprite, 0.3, 0.4)
-					fadeout2.direction = 180
-					fadeout2.speed = 8
+					local shockwave2 = objShockwave:create(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom)
+					shockwave2.speed = -12
+					shockwave2.image_xscale = -1
 				end
 				
 				data.empy_beam = data.empy_beam - 1

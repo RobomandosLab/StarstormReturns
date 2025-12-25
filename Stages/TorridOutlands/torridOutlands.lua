@@ -12,6 +12,7 @@ Sprite.new("CanyonsBack2TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack2
 Sprite.new("Clouds1TorridOutlands", path.combine(SPRITE_PATH, "Clouds1TorridOutlands.png"), 1, 0, 0)
 Sprite.new("CanyonsBack1TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
 Sprite.new("CanyonsBack3TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack3TorridOutlands.png"), 1, 0, 0)
+Sprite.new("EelBone", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "skeelton.png"), 1, 0, 0)
 
 -- Menu Resources
 local EnvironmentTorridOutlands = Sprite.new("EnvironmentTorridOutlands", path.combine(SPRITE_PATH, "EnvironmentTorridOutlands.png"))

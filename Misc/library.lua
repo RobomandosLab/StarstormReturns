@@ -376,4 +376,4 @@ function ssr_is_near_ground(inst, x, y, radius)
 end
 
 -- easy shortcut for checking if chirrsmas is active
-ssr_chirrsmas_active = ((os.date("%m") == 12 and os.date("%d") >= 15) or (os.date("%m") == 1 and os.date("%d") <= 15) or Settings.chirrsmas == 1)
+ssr_chirrsmas_active = ((tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 15) or (tonumber(os.date("%m")) == 1 and tonumber(os.date("%d")) <= 15) or Settings.chirrsmas == 1)
