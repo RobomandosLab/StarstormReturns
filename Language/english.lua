@@ -433,10 +433,10 @@ return {
 			name = "Eclipse Gummies",
 			pickup = "Killing enemies drops buffing gummies.",
 			description = "Killing an enemy <b>drops a buffing gummy</c> that raises <y>attack</c> and <b>movement</c> speed by <y>2.5%</c> <c_stack>(+2.5% per stack)</c> up to <y>25%</c> <c_stack>(+25% per stack)</c> for <y>10 seconds</c>.",
-			destination = "idk",
-			date = "idk",
-			story = "idk",
-			priority = "<r>Standard</c>"
+			destination = "199\nAbraham St.\nEarth",
+			date = "8/16/2056",
+			story = "Hey Dani! It's Vi, you won't believe what I just found. A box of old Eclipse Gummies! At work we were cleaning out this old ma' and pop convenience store and I found this box unopened in the back. My boss let me keep it since we'd just throw it out otherwise. It has to have been nearly 8 years since I last had one of these. Oh lil' Francesca Frog, Robot Reg and all of you other lil' fruity flavors. For a show that solely existed to sell merch, it sure did leave a mark on my childhood. I'm so glad these gummies taste the same as they did so long ago. Even giving me the same wiggly tingles as back then too. It really makes me think, why did they stop selling such popular gummies? Anyways I can't hog all of these to myself so I'm sending you a bunch to have too. Enjoy :heart:",
+			priority = "Standard"
 		}
 	},
 

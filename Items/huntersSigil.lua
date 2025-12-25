@@ -49,7 +49,7 @@ Callback.add(Callback.ON_STEP, function()
 				local stack = actor:item_count(huntersSigil)
 				local data = Instance.get_data(actor)
 
-				if actor.pHspeed == 0 and actor.pVspeed == 0 and not actor:is_climbing() then
+				if actor.pHspeed == 0 and actor.pVspeed == 0 and not actor:is_climbing() and (not Instance.get_data(actor).nemmerc_special_state or (Instance.get_data(actor).nemmerc_special_state and Instance.get_data(actor).nemmerc_special_state == 0)) then
 					data.sigil_timer = data.sigil_timer + 1
 					
 					if data.sigil_timer > 60 and not Instance.exists(data.sigil_zone) then

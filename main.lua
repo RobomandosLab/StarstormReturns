@@ -13,6 +13,7 @@ Options = ModOptions.new("ssr")
 
 Settings = {
 	title_replacement = true,
+	chirrsmas = 0,
 }
 
 SettingsFile = TOML.new()

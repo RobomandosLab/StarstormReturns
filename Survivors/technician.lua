@@ -895,7 +895,7 @@ Callback.add(obj_vending.on_step, function(inst)
 				trail.image_yscale = inst.image_yscale
 				trail.image_alpha = trail.image_alpha * (0.2 * (inst.vspeed / MACHINE_VENDING_DAMAGE_THRESHOLD))
 				trail.depth = inst.depth + 1
-				trail:actor_skin_skinnable_set_skin(inst.parent)
+				--trail:actor_skin_skinnable_set_skin(inst.parent) BUG
 			end
 		end
 		

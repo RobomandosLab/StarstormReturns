@@ -52,7 +52,10 @@ sprite_walk_back:set_speed(0.75)
 
 local sound_shoot2a			= Sound.new("NemesisMercenaryShoot2a", path.combine(SOUND_PATH, "shoot2a.ogg"))
 local sound_shoot2b			= Sound.new("NemesisMercenaryShoot2b", path.combine(SOUND_PATH, "shoot2b.ogg"))
+local sound_shoot3a			= Sound.new("NemesisMercenaryShoot3a", path.combine(SOUND_PATH, "shoot3a.ogg"))
+local sound_shoot3b			= Sound.new("NemesisMercenaryShoot3b", path.combine(SOUND_PATH, "shoot3b.ogg"))
 local sound_shoot4			= Sound.new("NemesisMercenaryShoot4", path.combine(SOUND_PATH, "shoot4.ogg"))
+local sound_slide			= Sound.new("NemesisMercenarySlide", path.combine(SOUND_PATH, "slide.ogg"))
 --local sound_select			= Sound.new("UISurvivorsNemesisMercenary", path.combine(SOUND_PATH, "select.ogg"))
 
 local particleWispGTracer 	= Particle.find("WispGTracer")
@@ -440,7 +443,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 	
 	if data.fired == 0 then
 		data.fired = 1
-		actor:sound_play(sound_shoot2a.value, 1, 0.9 + math.random() * 0.2)
+		actor:sound_play(sound_shoot2a.value, 1.5, 0.9 + math.random() * 0.2)
 		actor:screen_shake(3)
 		
 		if actor:is_authority() then
@@ -524,7 +527,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 	
 	if actor.image_index >= 1 and data.sound == 0 then
 		data.sound = 1
-		actor:sound_play(gm.constants.wMercenary_Parry_Release, 1, 0.9 + math.random() * 0.2)
+		actor:sound_play(sound_shoot3a.value, 1, 0.9 + math.random() * 0.2)
 	end
 	
 	if get_data.nemmerc_slide < 25 then
@@ -545,7 +548,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		sparks.image_xscale = actor.image_xscale
 		sparks.image_yscale = 1
 		
-		actor:sound_play(gm.constants.wCommandoSlide, 1, 0.9 + math.random() * 0.2)
+		actor:sound_play(sound_slide.value, 1, 0.9 + math.random() * 0.2)
 		
 		get_data.nemmerc_slide = 50
 		get_data.nemmerc_slide_dir = actor.image_xscale
@@ -581,6 +584,7 @@ DamageDodge.add(function(api, current_dodge)
 	if data.nemmerc_slide_prep == 1 then
 		api.hit:get_default_skill(Skill.Slot.SECONDARY):reset_cooldown()
 		data.nemmerc_slide_prep = 0
+		api.hit:sound_play(sound_shoot3b.value, 0.7, 0.9 + math.random() * 0.2)
 		api.hit:sound_play(sound_shoot2b.value, 0.6, 0.9 + math.random() * 0.2)
 		
 		local flash = Object.find("EfFlash"):create(api.hit.x, api.hit.y)
@@ -676,6 +680,8 @@ Callback.add(stateSpecialPre.on_enter, function(actor, data)
 	
 	data.begin_x = actor.x
 	data.begin_y = actor.y
+	
+	Instance.get_data(actor).nemmerc_special_state = 1
 end)
 
 Callback.add(stateSpecialPre.on_step, function(actor, data)
@@ -831,6 +837,8 @@ Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 	end
 	
 	data.killed = 0
+	
+	Instance.get_data(actor).nemmerc_special_state = 0
 end)
 
 Callback.add(stateSpecialEnd.on_step, function(actor, data)

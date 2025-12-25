@@ -6,8 +6,11 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
 local sprite_icon = Sprite.new("EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
 local particle_sprite = Sprite.new("ParticleEmpyreanSpawnParticle", path.combine(SPRITE_PATH, "particle.png"), 6)
+local particle2_sprite = Sprite.new("ParticleEmpyreanSpawnParticle2", path.combine(SPRITE_PATH, "particle2.png"), 6)
+local particle3_sprite = Sprite.new("ParticleEmpyreanSpawnParticle3", path.combine(SPRITE_PATH, "particle3.png"), 7)
 local sprite_beam = Sprite.new("EmpyreanBeam", path.combine(SPRITE_PATH, "beam.png"), 4, 0, 176)
 local sprite_splash = Sprite.new("EmpyreanBeamSplash", path.combine(SPRITE_PATH, "splash.png"), 4, 0, 50)
+local shockwave_sprite = Sprite.new("EmpyreanBeamShockwave", path.combine(SPRITE_PATH, "shockwave.png"), 6, 32, 64)
 local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
 local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
@@ -28,9 +31,21 @@ empy.healthbar_icon = sprite_icon
 empy.palette = gm.constants.sElitePaletteDummy
 empy.blend_col = Color.WHITE
 
+local shockwave = Particle.new("EmpyreanSpawnShockwave")
+shockwave:set_sprite(shockwave_sprite, true, true, false)
+shockwave:set_life(15, 30)
+
 local evil = Particle.new("EmpyreanSpawnEvil")
 evil:set_sprite(particle_sprite, true, true, false)
 evil:set_life(15, 30)
+
+local good_small = Particle.new("EmpyreanSpawnGood")
+good_small:set_sprite(particle3_sprite, true, true, false)
+good_small:set_life(45, 75)
+
+local good_big = Particle.new("EmpyreanSpawnGoodBig")
+good_big:set_sprite(particle2_sprite, true, true, false)
+good_big:set_life(45, 75)
 
 local rainbowspark = Particle.new("EmpyreanRainbowSpark")
 rainbowspark:set_shape(Particle.Shape.LINE)
@@ -209,21 +224,6 @@ empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)
 		width = width * (1.3 - ((169 - data.empy_beam) / 10)) -- make the beam shrink back to its normal size after it widens
 	end
 			
-	--if data.empy_beam > 15 and data.empy_beam <= 170 then
-		-- create the beam particles that touch the ground
-		--beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - 88, Color.from_hsv(data.empy_color % 360, 100, 100), 1, Particle.System.MIDDLE)
-		--beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(data.empy_color % 360, 100, 100), 1, Particle.System.MIDDLE)
-		
-		-- create the beam particles around the beam
-		--for i = 1, 22 do
-		--	local rnd = math.random(80, 1728)
-		--	if gm.inside_view(actor.x, actor.y - rnd) == 1 then
-		--		beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(data.empy_color % 360, 100, 100), 1, Particle.System.MIDDLE)
-		--		beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(data.empy_color % 360, 100, 100), 1, Particle.System.MIDDLE)
-		--	end
-		--end
-	--end
-			
 	-- draw the beam
 	if data._imalpha then
 		gm.draw_set_alpha(data._imalpha)
@@ -338,11 +338,11 @@ Callback.add(Callback.ON_STEP, function()
 				end
 				
 				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then
-					local fadeout1 = ssr_create_fadeout(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, 1, gm.constants.sEfSplashWater, 0.3, 04)
+					local fadeout1 = ssr_create_fadeout(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, 1, shockwave_sprite, 0.3, 0.4)
 					fadeout1.direction = 0
 					fadeout1.speed = 8
 					
-					local fadeout2 = ssr_create_fadeout(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, -1, gm.constants.sEfSplashWater, 0.3, 0.4)
+					local fadeout2 = ssr_create_fadeout(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom, -1, shockwave_sprite, 0.3, 0.4)
 					fadeout2.direction = 180
 					fadeout2.speed = 8
 				end

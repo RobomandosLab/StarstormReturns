@@ -54,7 +54,7 @@ watchMetronome.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	
 	gm.draw_rectangle(bar_left, bar_top, bar_left + bar_width * fraction, bar_bottom, false)
 	GM.draw_sprite(bar_sprite, 0, x, y)
-end, EffectDisplay.DrawPriority.BODY_POST)
+end, EffectDisplay.DrawPriority.ABOVE)
 
 Callback.add(watchMetronome.on_acquired, function(actor, stack)
 	local data = Instance.get_data(actor)
@@ -86,7 +86,7 @@ Callback.add(Callback.ON_STEP, function()
 			if actor:is_climbing() then
 				motion_frac = 0
 
-				if Util.bool(actor.ropeUp) or Util.bool(actor.ropeDown) then
+				if (Util.bool(actor.ropeUp) or Util.bool(actor.ropeDown)) and actor.activity_type ~= 8 then
 					motion_frac = 1
 				end
 			end
@@ -94,7 +94,7 @@ Callback.add(Callback.ON_STEP, function()
 			if actor:buff_count(buffChrono) <= 0 then
 				motion_frac = 1 - motion_frac
 				
-				if motion_frac > 0.01 then
+				if motion_frac > 0.01 and (not Instance.get_data(actor).nemmerc_special_state or (Instance.get_data(actor).nemmerc_special_state and Instance.get_data(actor).nemmerc_special_state == 0)) then
 					data.chrono_charge = math.min(1, data.chrono_charge + motion_frac * CHARGE_RATE)
 
 					if data.chrono_charge >= 0.666 and data.chrono_tick + TICK_INTERVAL < data.chrono_charge then
@@ -108,7 +108,7 @@ Callback.add(Callback.ON_STEP, function()
 					end
 				end
 			else
-				if motion_frac > 0.01 then
+				if motion_frac > 0.01 and (not Instance.get_data(actor).nemmerc_special_state or (Instance.get_data(actor).nemmerc_special_state and Instance.get_data(actor).nemmerc_special_state == 0)) then
 					local decay_reduction = 1 / (1 + (stack - 1) * 0.333)
 
 					data.chrono_charge = math.max(0, data.chrono_charge - motion_frac * CHARGE_RATE * decay_reduction)
