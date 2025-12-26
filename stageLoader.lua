@@ -177,11 +177,18 @@ woodland_stage:set_index(4)
 
 --Menu Resources
 local EnvironmentVerdantWoodland = Resources.sprite_load(NAMESPACE, "EnvironmentVerdantWoodland", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "EnvironmentVerdantWoodland.png"))
+local GroundStripVerdantWoodland_1 = Resources.sprite_load(NAMESPACE, "GroundStripVerdantWoodland_1", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "GroundStripVerdantWoodland_1.png"))
+local GroundStripVerdantWoodland_2 = Resources.sprite_load(NAMESPACE, "GroundStripVerdantWoodland_2", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "GroundStripVerdantWoodland_2.png"))
+local GroundStripVerdantWoodland_3 = Resources.sprite_load(NAMESPACE, "GroundStripVerdantWoodland_3", path.combine(PATH.."/Sprites/Stages/VerdantWoodland", "GroundStripVerdantWoodland_3.png"))
+woodland_stage:set_title_screen_properties(GroundStripVerdantWoodland_3) --pls make this randomize between 1, 2 and 3 azuline :pleading_face:
 
 woodland_stage:clear_rooms()
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland1.rorlvl"))
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland2.rorlvl"))
 woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland3.rorlvl"))
+woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland4.rorlvl"))
+woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland5.rorlvl"))
+woodland_stage:add_room(path.combine(PATH.."/Stages/VerdantWoodland", "VerdantWoodland6.rorlvl"))
 
 --Spawn list
 woodland_stage:add_monster({
@@ -225,17 +232,3 @@ woodland_stage:add_interactable_loop({
 
 --Environment Log
 woodland_stage:set_log_icon(EnvironmentVerdantWoodland)
-
---[[
--- Glacial Cavern --
---Stage Resources
-Resources.sprite_load(NAMESPACE, "Tile16MushSnowy", path.combine(PATH.."/Sprites/Stages/SnowyCavern", "Tile16MushSnowy.png"), 1, 0, 0)
-
---Stage
-local cavern_stage = Stage.new(NAMESPACE, "snowyCavern")
-cavern_stage:set_index(2)
-
---Rooms
-cavern_stage:clear_rooms()
-cavern_stage:add_room(path.combine(PATH.."/Stages/SnowyCaverns", "snowyCavern1.rorlvl"))
-]]
