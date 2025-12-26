@@ -36,7 +36,11 @@ local sprite_shoot2lb		= Sprite.new("NemesisMercenaryShoot2lb", path.combine(SPR
 local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 9, 21, 16)
 
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 28, 29)
+local sprite_shoot4_2		= Sprite.new("NemesisMercenaryShoot4_2", path.combine(SPRITE_PATH, "shoot4_2.png"), 11, 47, 180)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 24, 15)
+
+local sprite_trail			= Sprite.new("NemesisMercenaryTrail", path.combine(SPRITE_PATH, "trail.png"), 1, 12, 0)
+local sprite_trail2			= Sprite.new("NemesisMercenaryTrail2", path.combine(SPRITE_PATH, "trail2.png"), 1, 9, 21)
 
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
 local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "sparks2.png"), 5, 56, 40)
@@ -82,12 +86,12 @@ nemmerc:set_stats_level({
 	regen = 0.0025,
 	armor = 3,
 })
-
+--[[
 local nemmerc_log = SurvivorLog.new_from_survivor(nemmerc)
 nemmerc_log.portrait_id = sprite_log
 nemmerc_log.sprite_id = sprite_walk
 nemmerc_log.sprite_icon_id = sprite_portrait
-
+]]
 nemmerc.primary_color = Color.from_hex(0xFC4E45)
 
 nemmerc.sprite_loadout = sprite_loadout
@@ -625,6 +629,8 @@ local function nemmerc_get_target(actor)
 			else
 				if GM.attack_collision_resolve(enemy).hp < GM.attack_collision_resolve(target).hp then
 					target = enemy
+				elseif GM.attack_collision_resolve(enemy).hp == GM.attack_collision_resolve(target).hp and Math.distance(actor.x, actor.y, enemy.x, enemy.y) <= Math.distance(actor.x, actor.y, target.x, target.y) then
+					target = enemy
 				end
 			end
 		end
@@ -637,6 +643,8 @@ local function nemmerc_get_target(actor)
 					target = enemy
 				else
 					if GM.attack_collision_resolve(enemy).hp < GM.attack_collision_resolve(target).hp then
+						target = enemy
+					elseif GM.attack_collision_resolve(enemy).hp == GM.attack_collision_resolve(target).hp and Math.distance(actor.x, actor.y, enemy.x, enemy.y) <= Math.distance(actor.x, actor.y, target.x, target.y) then
 						target = enemy
 					end
 				end
@@ -678,8 +686,10 @@ Callback.add(stateSpecialPre.on_enter, function(actor, data)
 		data.target = nil
 	end
 	
-	data.begin_x = actor.x
-	data.begin_y = actor.y
+	if not (data.killed and data.killed == 1) then
+		data.begin_x = actor.x
+		data.begin_y = actor.y
+	end
 	
 	Instance.get_data(actor).nemmerc_special_state = 1
 end)
@@ -710,16 +720,36 @@ Callback.add(stateSpecial.on_enter, function(actor, data)
 	data.fired = 0
 	data.killed = 0
 	data.v_held = 1
+	data.life = 0
+end)
+
+local efFollow = Object.new("NemmercSpecialFollow")
+efFollow:set_sprite(sprite_shoot4_2)
+efFollow:set_depth(-200)
+
+Callback.add(efFollow.on_create, function(self)
+	self.image_speed = 0.25
+end)
+
+Callback.add(efFollow.on_step, function(self)
+	if self.image_index < 4 and self.target and Instance.exists(self.target) then
+		self.x = self.target.x
+		self.y = self.target.y
+	end
+	
+	if self.image_index >= 10 then
+		self:destroy()
+	end
 end)
 
 Callback.add(stateSpecial.on_step, function(actor, data)
-	actor:actor_animation_set(sprite_shoot1_4a, 0.15, false)
-	
 	actor:get_default_skill(Skill.Slot.SPECIAL):freeze_cooldown()
 	actor.invincible = math.max(actor.invincible, 5)
 	actor.activity_type = 8
+	actor.visible = false
 	actor.pVspeed = actor.pVspeed * 0.7
 	actor.pHspeed = 0
+	data.life = data.life + 1
 	
 	local release = not Util.bool(actor.v_skill)
 	
@@ -747,35 +777,34 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		actor:set_state(stateSpecialEnd)
 	end
 	
-	if actor.image_index >= 0 and data.fired == 0 then
-		local trail = Object.find("EfTrail"):create(actor.x, actor.y)
-		trail.sprite_index = sprite_fall.value
-		trail.image_index = 0
-		trail.image_xscale = actor.image_xscale
-		trail.rate = 0.04
+	if data.fired == 0 then
+		
+		local spark = efFollow:create(xx, yy)
+		spark.target = target
 		
 		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)
 		else
 			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
+			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy + 40), Math.distance(actor.x, actor.y, xx, yy + 40))
 		end
 		
-		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, actor.x, actor.y) / 16)
+		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, xx, yy - 180) / 16)
 		for i = 1, amount do
 			particleSpecialTrail:set_size(0.45 * (1 - (i / amount)), 0.45 * (1 - (i / amount)), -0.015, 0) -- set the size of the particle, bigger near the enemy
-			particleSpecialTrail:create(Math.lerp(data.begin_x, actor.x, 1 - (i / amount)), Math.lerp(data.begin_y, actor.y, 1 - (i / amount)), 1) -- create the particle, each time approaching the enemy more and more
+			particleSpecialTrail:create(Math.lerp(data.begin_x, xx, 1 - (i / amount)), Math.lerp(data.begin_y, yy - 180, 1 - (i / amount)), 1) -- create the particle, each time approaching the enemy more and more
 		end
+		
+		data.begin_x = xx
+		data.begin_y = yy - 180
 		
 		actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 0.9 + math.random() * 0.2)
 		data.fired = 1
-	elseif actor.image_index >= 2 and data.fired == 1 then		
+	elseif data.life >= 14 and data.fired == 1 then		
 		data.fired = 2
-			
-		local trail = Object.find("EfTrail"):create(actor.x, actor.y)
-		trail.sprite_index = actor.sprite_index
-		trail.image_index = actor.image_index
-		trail.image_xscale = actor.image_xscale
-		trail.rate = 0.03
+		
+		data.begin_x = xx
+		data.begin_y = yy + 40
 			
 		actor:sound_play(sound_shoot4.value, 1, 0.9 + math.random() * 0.2)
 		actor:screen_shake(3)
@@ -790,20 +819,17 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, sprite_sparks).attack_info
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y).attack_info
 					attack.climb = i * 8 * 1.35
-					attack.__ssr_nemmerc_devitalize = 1
+					attack.__ssr_nemmerc_devitalize = 1 + actor:item_count(Item.find("ancientScepter"))
 				end
 			end
 		else
-			local sparks = Object.find("EfSparks"):create(xx, yy)
-			sparks.image_yscale = 1
-			sparks.sprite_index = gm.constants.sSparks10r
 			data.killed = 1
 		end
 	end
 	
-	if actor.image_index + actor.image_speed >= actor.image_number then
+	if data.life >= 35 then -- after 35 frames, end
 		if not Instance.exists(target) or (Instance.exists(target) and not GM.actor_is_alive(target)) or data.killed == 1 then
 			data.killed = 1
 		else
@@ -829,6 +855,11 @@ end)
 Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 	actor.image_index = 0
 	actor.free = 1
+	actor.visible = true
+	
+	if ssr_is_near_ground(actor, actor.x, actor.y, 128) then
+		GM.teleport_nearby(actor, actor.x, actor.y)
+	end
 	
 	actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 1)
 	
@@ -862,16 +893,23 @@ DamageCalculate.add(function(api)
 	if not Instance.exists(api.parent) then return end
 	if not api.hit_info then return end
 	
-	if api.hit_info.attack_info.__ssr_nemmerc_devitalize == 1 then
-		if api.hit.stunned == true and Instance.exists(api.parent) then
+	if api.hit_info.attack_info.__ssr_nemmerc_devitalize >= 1 then
+		if api.hit.stunned == true then
 			particleBlood:set_direction(0, 360, 0, 0)
 			particleBlood:create(api.hit_x, api.hit_y, 25, Particle.System.MIDDLE)
 			api.hit:screen_shake(2)
 			
 			if api.critical then
-				api.damage = api.damage * 2
+				api.damage_mult(2, true)
 			else
 				api:set_critical(true)
+			end
+		end
+		
+		if api.hit_info.attack_info.__ssr_nemmerc_devitalize >= 2 then
+			if GM.actor_get_hp_percent(api.hit) <= 0.25 then
+				api.damage_col = Color.from_hex(0xf77c8e)
+				api.hit.hp = -10000
 			end
 		end
 	end

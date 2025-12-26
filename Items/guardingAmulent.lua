@@ -67,8 +67,13 @@ DamageCalculate.add(function(api)
 	if count <= 0 then return end
 	
 	if count > 0 then
-		local attack_x = api.parent.x or api.hit_x.value
-
+		local attack_x = nil
+		if api.parent and Instance.exists(api_parent) then
+			attack_x = api_parent.x
+		else
+			attack_x = api.hit_x.value
+		end
+		
 		-- use the x locations of the actors to determine blocking .... not ideal but it works?
 		if Math.sign(api.hit.x - attack_x) == get_true_xscale(api.hit) then
 			api.damage = math.ceil(api.damage * DAMAGE_MULTIPLIER ^ count)

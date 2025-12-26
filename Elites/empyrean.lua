@@ -151,7 +151,6 @@ Callback.add(empyorb.on_acquired, function(actor, stack)
 	local normal_spawn = true
 	for i, card in ipairs(all_monster_cards) do
 		if card.object_id == actor.object_index then -- if the actor has a monster card
-			print(card.spawn_type)
 			if card.spawn_type ~= 0 then
 				normal_spawn = false
 				break
@@ -160,7 +159,7 @@ Callback.add(empyorb.on_acquired, function(actor, stack)
 	end
 	
 	-- start the beam
-	if actor.team ~= gm.constants.TEAM_PLAYER and normal_spawn then
+	if actor.team ~= 1 and normal_spawn then
 		actor:move_contact_solid(270, -1) -- move the actor to the ground
 		
 		data.empy_beam = 180
@@ -391,7 +390,7 @@ Callback.add(Callback.ON_STEP, function()
 				ssr_give_empyrean_aspects(actor)
 				
 				-- make the boss bar appear
-				if actor.team ~= gm.constants.TEAM_PLAYER and Net.host then
+				if actor.team ~= 1 and Net.host then
 					local arr = Array.new({actor})
 					local party = actor:actor_create_enemy_party_from_ids(arr)
 					local director = gm._mod_game_getDirector()
@@ -408,7 +407,7 @@ Callback.add(Callback.ON_STEP, function()
 					data.no_beam_loser = data.no_beam_loser - 1
 				else
 					data.no_beam_loser = nil
-					if actor.team ~= gm.constants.TEAM_PLAYER then -- make the boss bar appear
+					if actor.team ~= 1 then -- make the boss bar appear
 						local arr = Array.new({actor})
 						local party = actor:actor_create_enemy_party_from_ids(arr)
 						local director = gm._mod_game_getDirector()
@@ -432,9 +431,9 @@ RecalculateStats.add(Callback.Priority.AFTER, function(actor, api)
     if actor.elite_type ~= empy.value then return end
 	
 	-- stat changes are multiplicative with normal elite stat changes
-	-- so max hp for example will be base * 12 * 2.8 = 33.6x total multiplier
+	-- so max hp for example will be base * 10 * 2.8 = 28x total multiplier
 	
-	api.maxhp_mult(12)
+	api.maxhp_mult(10)
 	api.damage_mult(5.4 / 1.9) -- totals to 5.4x
 	api.cooldown_mult(0.5 / 0.3) -- totals to 50%
 end)
@@ -699,13 +698,20 @@ Callback.add(Callback.ON_ELITE_INIT, function(actor)
 		for i, card in ipairs(all_monster_cards) do
 			if card.object_id == actor.object_index then -- if the actor has a monster card
 				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or is in the whitelist
-					local cost = math.min(4, math.max(1, card.spawn_cost / 40 * diff))
-					if Util.chance(chance / cost) then
+					local penalty = 0
+					if card.is_boss then -- decrease the chance for an empyrean by 2-3 stages worth of scaling if the target is a boss
+						penalty = 1
+					end
+					
+					local cost = math.min(10, math.max(1, card.spawn_cost / 40 * (diff - penalty)))
+					
+					if Util.chance(math.min(0, chance / cost)) then
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else
 						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
 					end
+					
 					break
 				end
 			end

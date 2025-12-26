@@ -159,7 +159,7 @@ return {
 		},
 		nemesisMercenaryVBoosted = {
 			name = "Absolute Devitalization",
-			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
+			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<b>Instantly kills</c> enemies under <r>25%</c> health."
 		},
 		technicianZ = {
 			name = "Fine Tune",

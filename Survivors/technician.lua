@@ -467,7 +467,7 @@ Callback.add(obj_turret.on_create, function(inst)
 	inst.intangible = true
 	inst.init = nil
 	
-	inst.team = gm.constants.TEAM_PLAYER
+	inst.team = 1
 	
 	inst.upgrade_progress = 0
 	inst.upgrade_progress_max = 3
