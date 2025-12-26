@@ -526,6 +526,11 @@ return {
 			name = "Torrid Outlands",
 			subname = "Silent Sunburn",
 			story = "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
+		},
+		verdantWoodland = {
+			name = "Verdant Woodland",
+			subname = "Breathing Overgrowth",
+			story = "A maze of the largest trees I've ever seen unwinds in front of me, a constricting natural wonder with scales of bark and teeth like splinters. These pillars of wood rise endlessly, protecting this rich acropolis- their overbearing presence makes me reflect upon my actions as I tear through the overgrowth. I can hardly blame these sharp brambles that line my suit. With each piercing step, they remind me that I am just a guest within their fortress. Teeming bug's nests erupt with their knights, guiding me away from their young just as you or I would with our own. I can hear swarms of raging insects overhead, chirruping like birdsong. It reminds me of home. I want nothing more than to lie down in the lush grass that this incredible planet has provided, but I must keep moving. Melancholic pangs sting at my insides. This endeavouring venom that courses through my veins, giving me the will to keep fighting.. I can't help but to regret its presence.\n\nI fear that this planet is starting to get to my head."
 		}
 	},
 

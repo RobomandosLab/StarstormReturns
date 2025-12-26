@@ -2,15 +2,15 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Stages/WhistlingBasin")
 local SOUND_PATH = path.combine(PATH, "Sounds/Music")
 
 -- Stage Resources
-Sprite.new("tile16basin", path.combine(SPRITE_PATH, "tile16basin.png"), 1, 0, 0)
-Sprite.new("BackTilesModded2", path.combine(SPRITE_PATH, "BackTilesModded2.png"), 1, 0, 0)
-Sprite.new("LandCloudWhistlingBasin", path.combine(SPRITE_PATH, "LandCloudWhistlingBasin.png"), 1, 0, 0)
-Sprite.new("SkyBasin", path.combine(SPRITE_PATH, "SkyBasin.png"), 1, 0, 0)
-Sprite.new("MoonBasin", path.combine(SPRITE_PATH, "MoonBasin.png"), 1, 0, 0)
-Sprite.new("MountainsBasinNew", path.combine(SPRITE_PATH, "MountainsBasinNew.png"), 1, 0, 0)
-Sprite.new("MountainsBasinNew2", path.combine(SPRITE_PATH, "MountainsBasinNew2.png"), 1, 0, 0)
-Sprite.new("LandCloud4WhistlingBasin", path.combine(SPRITE_PATH, "LandCloud4WhistlingBasin.png"), 1, 0, 0)
-Sprite.new("LandCloud5WhistlingBasin", path.combine(SPRITE_PATH, "LandCloud5WhistlingBasin.png"), 1, 0, 0)
+Sprite.new("tile16basin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "tile16basin.png"), 1, 0, 0)
+Sprite.new("BackTilesModded2", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "BackTilesModded2.png"), 1, 0, 0)
+Sprite.new("LandCloudWhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloudWhistlingBasin.png"), 1, 0, 0)
+Sprite.new("SkyBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "SkyBasin.png"), 1, 0, 0)
+Sprite.new("MoonBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "MoonBasin.png"), 1, 0, 0)
+Sprite.new("MountainsBasinNew", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "MountainsBasinNew.png"), 1, 0, 0)
+Sprite.new("MountainsBasinNew2", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "MountainsBasinNew2.png"), 1, 0, 0)
+Sprite.new("LandCloud4WhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloud4WhistlingBasin.png"), 1, 0, 0)
+Sprite.new("LandCloud5WhistlingBasin", path.combine(PATH.."/Sprites/Stages/WhistlingBasin", "LandCloud5WhistlingBasin.png"), 1, 0, 0)
 
 -- Menu Resources
 local EnvironmentWhistlingBasin = Sprite.new("EnvironmentWhistlingBasin", path.combine(SPRITE_PATH, "EnvironmentWhistlingBasin.png"))
@@ -60,8 +60,16 @@ basin_stage:add_interactable({
     "drone3",
     "drone4",
     "shrine2",
-    "chestHealing1",
-    "equipmentActivator",
+    "chestHealing1"
+})
+
+basin_stage:add_interactable_loop({
+    "chestHealing2",
+    "chest4",
+    "shrine3S",
+    "barrel2",
+    "chest5",
+	"equipmentActivator",
     "droneRecycler"
 })
 
@@ -69,18 +77,10 @@ if ssr_chirrsmas_active then
 	basin_stage:add_interactable(InteractableCard.find("chirrsmasPresent"))
 end
 
-basin_stage:add_interactable_loop({
-    "chestHealing2",
-    "chest4",
-    "shrine3S",
-    "barrel2",
-    "chest5"
-})
-
 -- Main Menu
 basin_stage:set_title_screen_properties(GroundStripWhistlingBasin)
 
 -- Environment Log
 local stage_log = EnvironmentLog.new_from_stage(basin_stage)
 stage_log.spr_icon = EnvironmentWhistlingBasin
-stage_log:set_initial_camera_position(4900, 1900)
+stage_log:set_initial_camera_position(3013, 2279)

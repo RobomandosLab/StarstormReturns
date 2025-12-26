@@ -740,7 +740,7 @@ Callback.add(objDrone.on_step, function(self)
 			if data.regen then
 				Particle.find("Spark"):create(parent.ghost_x + 8 * parent.image_xscale, parent.ghost_y - 6, 3, Particle.System.MIDDLE)
 				
-				self:sound_play(mule_heal_sounds[math.random(3)], 1, 0.9 + math.random() * 0.2)
+				self:sound_play(mule_heal_sounds[math.random(4)], 1, 0.9 + math.random() * 0.2)
 				
 				if parent.maxhp > parent.hp then
 					if Net.host then

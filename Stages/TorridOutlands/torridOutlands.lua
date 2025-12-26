@@ -2,16 +2,16 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Stages/TorridOutlands")
 local SOUND_PATH = path.combine(PATH, "Sounds/Music")
 
 -- Stage Resources
-Sprite.new("Tile16Outlands", path.combine(SPRITE_PATH, "Tile16Outlands.png"), 1, 0, 0)
-Sprite.new("BackTilesOutlands", path.combine(SPRITE_PATH, "BackTilesOutlands.png"), 1, 0, 0)
-Sprite.new("MoonOutlands", path.combine(SPRITE_PATH, "MoonOutlands.png"), 1, 0, 0)
-Sprite.new("Arch2TorridOutlands", path.combine(SPRITE_PATH, "Arch2TorridOutlands.png"), 1, 0, 0)
-Sprite.new("Arch1TorridOutlands", path.combine(SPRITE_PATH, "Arch1TorridOutlands.png"), 1, 0, 0)
-Sprite.new("Arch3TorridOutlands", path.combine(SPRITE_PATH, "Arch3TorridOutlands.png"), 1, 0, 0)
-Sprite.new("CanyonsBack2TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack2TorridOutlands.png"), 1, 0, 0)
-Sprite.new("Clouds1TorridOutlands", path.combine(SPRITE_PATH, "Clouds1TorridOutlands.png"), 1, 0, 0)
-Sprite.new("CanyonsBack1TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
-Sprite.new("CanyonsBack3TorridOutlands", path.combine(SPRITE_PATH, "CanyonsBack3TorridOutlands.png"), 1, 0, 0)
+Sprite.new("Tile16Outlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Tile16Outlands.png"), 1, 0, 0)
+Sprite.new("BackTilesOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "BackTilesOutlands.png"), 1, 0, 0)
+Sprite.new("MoonOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "MoonOutlands.png"), 1, 0, 0)
+Sprite.new("Arch2TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Arch2TorridOutlands.png"), 1, 0, 0)
+Sprite.new("Arch1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Arch1TorridOutlands.png"), 1, 0, 0)
+Sprite.new("Arch3TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Arch3TorridOutlands.png"), 1, 0, 0)
+Sprite.new("CanyonsBack2TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack2TorridOutlands.png"), 1, 0, 0)
+Sprite.new("Clouds1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "Clouds1TorridOutlands.png"), 1, 0, 0)
+Sprite.new("CanyonsBack1TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack1TorridOutlands.png"), 1, 0, 0)
+Sprite.new("CanyonsBack3TorridOutlands", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "CanyonsBack3TorridOutlands.png"), 1, 0, 0)
 Sprite.new("EelBone", path.combine(PATH.."/Sprites/Stages/TorridOutlands", "skeelton.png"), 1, 0, 0)
 
 -- Menu Resources
@@ -41,11 +41,17 @@ outlands_stage:add_monster({
     "imp",
     "bison",
     "spitter",
+	"tuber",
     "colossus",
     "clayMan",
     "toxicBeast",
     "scavenger",
 	MonsterCard.find("admonitor")
+})
+
+outlands_stage:add_monster_loop({
+    "greaterWisp",
+    "archaicWisp",
 })
 
 outlands_stage:add_interactable({
@@ -58,7 +64,12 @@ outlands_stage:add_interactable({
     "drone4",
     "shrine2",
     "equipmentActivator",
-    "droneRecycler"
+    "droneRecycler",
+	"droneUpgrader"
+})
+
+outlands_stage:add_interactable_loop({
+    "shrine3S"
 })
 
 if ssr_chirrsmas_active then
@@ -71,4 +82,4 @@ outlands_stage:set_title_screen_properties(GroundStripTorridOutlands)
 -- Environment Log
 local stage_log = EnvironmentLog.new_from_stage(outlands_stage)
 stage_log.spr_icon = EnvironmentTorridOutlands
-stage_log:set_initial_camera_position(6600, 2550)
+stage_log:set_initial_camera_position(9247, 2300)
