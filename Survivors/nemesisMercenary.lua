@@ -57,6 +57,8 @@ local sound_shoot2a			= Sound.new("NemesisMercenaryShoot2a", path.combine(SOUND_
 local sound_shoot2b			= Sound.new("NemesisMercenaryShoot2b", path.combine(SOUND_PATH, "shoot2b.ogg"))
 local sound_shoot3a			= Sound.new("NemesisMercenaryShoot3a", path.combine(SOUND_PATH, "shoot3a.ogg"))
 local sound_shoot3b			= Sound.new("NemesisMercenaryShoot3b", path.combine(SOUND_PATH, "shoot3b.ogg"))
+local sound_disappear		= Sound.new("NemesisMercenaryDisappear", path.combine(SOUND_PATH, "disappear.ogg"))
+local sound_teleport		= Sound.new("NemesisMercenaryTeleport", path.combine(SOUND_PATH, "teleport.ogg"))
 local sound_shoot4			= Sound.new("NemesisMercenaryShoot4", path.combine(SOUND_PATH, "shoot4.ogg"))
 local sound_slide			= Sound.new("NemesisMercenarySlide", path.combine(SOUND_PATH, "slide.ogg"))
 --local sound_select			= Sound.new("UISurvivorsNemesisMercenary", path.combine(SOUND_PATH, "select.ogg"))
@@ -666,7 +668,7 @@ Callback.add(stateSpecialPre.on_enter, function(actor, data)
 	Instance.get_data(actor).nemmerc_slide = 0
 	actor.image_index = 0
 
-	actor:sound_play(gm.constants.wMercenary_EviscerateActivate, 1, 1)
+	actor:sound_play(sound_disappear.value, 1, 1)
 	
 	local target = nil
 	target = nemmerc_get_target(actor)
@@ -806,7 +808,6 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	end
 	
 	if data.fired == 0 then
-		
 		local spark = efFollow:create(xx, yy)
 		spark.sprite_index = slashes[data.slash]
 		spark.target = target
@@ -828,7 +829,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		data.begin_x = xx + x_offset
 		data.begin_y = yy + y_offset
 		
-		actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 0.9 + math.random() * 0.2)
+		actor:sound_play(sound_teleport.value, 0.7, 0.9 + math.random() * 0.2)
 		data.fired = 1
 	elseif data.life >= 14 and data.fired == 1 then		
 		data.fired = 2
