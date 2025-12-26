@@ -47,6 +47,7 @@ local sprite_boost 			= Sprite.new("NemesisMercenaryBoost", path.combine(SPRITE_
 
 local sprite_portal 		= Sprite.new("NemesisMercenaryPortal", path.combine(SPRITE_PATH, "portal.png"), 27, 108, 170)
 local sprite_portal_inside	= Sprite.new("NemesisMercenaryPortalInside", path.combine(SPRITE_PATH, "portal_inside.png"), 27, 108, 170)
+local sound_portal			= Sound.new("NemesisMercenaryPortal", path.combine(SOUND_PATH, "portal.ogg"))
 
 local sprite_log			= Sprite.new("NemesisMercenaryLog", path.combine(SPRITE_PATH, "log.png"))
 
@@ -155,6 +156,7 @@ Callback.add(nemmerc.on_init, function(actor)
 	
 	actor.sprite_portal = sprite_portal
 	actor.sprite_portal_inside = sprite_portal_inside
+	actor.sound_portal = sound_portal
 
 	actor:survivor_util_init_half_sprites()
 end)
