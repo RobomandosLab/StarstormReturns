@@ -71,7 +71,7 @@ DamageCalculate.add(function(api)
 		if api.parent and Instance.exists(api_parent) then
 			attack_x = api_parent.x
 		else
-			attack_x = api.hit_x.value
+			attack_x = api.hit_x
 		end
 		
 		-- use the x locations of the actors to determine blocking .... not ideal but it works?

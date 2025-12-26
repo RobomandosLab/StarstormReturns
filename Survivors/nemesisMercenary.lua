@@ -39,9 +39,6 @@ local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPR
 local sprite_shoot4_2		= Sprite.new("NemesisMercenaryShoot4_2", path.combine(SPRITE_PATH, "shoot4_2.png"), 11, 47, 180)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 24, 15)
 
-local sprite_trail			= Sprite.new("NemesisMercenaryTrail", path.combine(SPRITE_PATH, "trail.png"), 1, 12, 0)
-local sprite_trail2			= Sprite.new("NemesisMercenaryTrail2", path.combine(SPRITE_PATH, "trail2.png"), 1, 9, 21)
-
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
 local sprite_sparks2		= Sprite.new("NemesisMercenarySparks2", path.combine(SPRITE_PATH, "sparks2.png"), 5, 56, 40)
 local sprite_boost 			= Sprite.new("NemesisMercenaryBoost", path.combine(SPRITE_PATH, "boost.png"), 5, 59, 20)
