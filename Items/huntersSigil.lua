@@ -36,7 +36,6 @@ Callback.add(huntersSigil.on_removed, function(actor, stack)
 	
 	if stack == 1 then
 		local data = Instance.get_data(actor)
-		Instance.wrap(data.sigil_zone):destroy()
 		data.sigil_timer = nil
 		data.sigil_zone = nil
 	end
@@ -77,7 +76,7 @@ Callback.add(objSigilZone.on_create, function(self)
 end)
 
 Callback.add(objSigilZone.on_step, function(self)
-	if not GM.actor_is_alive(self.parent) then
+	if not GM.actor_is_alive(self.parent) or self.parent:item_count(huntersSigil) <= 0 then
 		self:destroy()
 		return
 	end

@@ -790,7 +790,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, sprite_sparks)
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y, sprite_sparks).attack_info
 					attack.climb = i * 8 * 1.35
 					attack.__ssr_nemmerc_devitalize = 1
 				end
@@ -858,11 +858,11 @@ Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
 end)
 
 DamageCalculate.add(function(api)
-	if not api.hit_info.__ssr_nemmerc_devitalize then return end
+	if not api.hit_info.attack_info.__ssr_nemmerc_devitalize then return end
 	if not Instance.exists(api.parent) then return end
 	if not api.hit_info then return end
 	
-	if api.hit_info.__ssr_nemmerc_devitalize == 1 then
+	if api.hit_info.attack_info.__ssr_nemmerc_devitalize == 1 then
 		if api.hit.stunned == true and Instance.exists(api.parent) then
 			particleBlood:set_direction(0, 360, 0, 0)
 			particleBlood:create(api.hit_x, api.hit_y, 25, Particle.System.MIDDLE)

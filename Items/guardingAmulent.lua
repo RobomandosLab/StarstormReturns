@@ -28,8 +28,14 @@ guardingAmulet.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	local xscale = (1 + pulse) * actor_xscale
 	local yscale = 1 + pulse
 	
-	local xx = actor.x - 10 * actor_xscale
-	local yy = actor.y + math.sin(Global._current_frame * 0.04)
+	local xx = 0
+	if actor.sprite_walk_half ~= nil and actor.sprite_walk_half[4] ~= nil then
+		xx = actor.x - (gm.round(gm.sprite_get_width(actor.sprite_walk_half[4]) / 2 + 5)) * actor_xscale
+	else
+		xx = actor.x - 20 * actor_xscale
+	end
+	
+	local yy = actor.bbox_bottom - gm.round(gm.sprite_get_height(actor.sprite_idle) / 2) + math.sin(Global._current_frame * 0.04)
 	
 	gm.gpu_set_blendmode(1)
 	GM.draw_sprite_ext(effect_sprite, 0, xx, yy, xscale, yscale, 0, Color.WHITE, 0.75 + math.sin(Global._current_frame * 0.02) * 0.1)

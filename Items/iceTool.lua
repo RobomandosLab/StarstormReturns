@@ -77,7 +77,7 @@ Callback.add(Callback.ON_STEP, function()
 				collision_dir = 1
 			end
 			
-			local can_do_it = not actor:is_grounded() and collision_dir ~= 0 and data.iceTool_jumps > 0
+			local can_do_it = not actor:is_grounded() and collision_dir ~= 0 and data.iceTool_jumps > 0 and not actor:is_climbing()
 
 			-- do some dumb jank to make ice tool take precedence over hopoo feather
 			if can_do_it and not data.iceTool_feather_preserve then
