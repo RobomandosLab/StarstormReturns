@@ -36,7 +36,9 @@ local sprite_shoot2lb		= Sprite.new("NemesisMercenaryShoot2lb", path.combine(SPR
 local sprite_shoot3			= Sprite.new("NemesisMercenaryShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 9, 21, 16)
 
 local sprite_shoot4_1		= Sprite.new("NemesisMercenaryShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 8, 28, 29)
-local sprite_shoot4_2		= Sprite.new("NemesisMercenaryShoot4_2", path.combine(SPRITE_PATH, "shoot4_2.png"), 11, 47, 180)
+local sprite_shoot4_2		= Sprite.new("NemesisMercenaryShoot4_2a", path.combine(SPRITE_PATH, "shoot4_2a.png"), 11, 47, 130)
+local sprite_shoot4_2b		= Sprite.new("NemesisMercenaryShoot4_2b", path.combine(SPRITE_PATH, "shoot4_2b.png"), 11, 77, 77)
+local sprite_shoot4_2c		= Sprite.new("NemesisMercenaryShoot4_2c", path.combine(SPRITE_PATH, "shoot4_2c.png"), 11, 82, 85)
 local sprite_shoot4_3		= Sprite.new("NemesisMercenaryShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 24, 15)
 
 local sprite_sparks			= Sprite.new("NemesisMercenarySparks", path.combine(SPRITE_PATH, "sparks.png"), 5, 13, 17)
@@ -718,7 +720,14 @@ Callback.add(stateSpecial.on_enter, function(actor, data)
 	data.killed = 0
 	data.v_held = 1
 	data.life = 0
+	data.slash = math.random(3)
 end)
+
+local slashes = {
+	sprite_shoot4_2,
+	sprite_shoot4_2b,
+	sprite_shoot4_2c,
+}
 
 local efFollow = Object.new("NemmercSpecialFollow")
 efFollow:set_sprite(sprite_shoot4_2)
@@ -774,34 +783,58 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		actor:set_state(stateSpecialEnd)
 	end
 	
+	local x_offset = 0
+	local y_offset = 0
+	local x2_offset = 0
+	local y2_offset = 0
+	
+	if data.slash == 1 then
+		x_offset = 0
+		y_offset = -130
+		x2_offset = 0
+		y2_offset = 90
+	elseif data.slash == 2 then
+		x_offset = -45 * actor.image_xscale
+		y_offset = 70
+		x2_offset = 60 * actor.image_xscale
+		y2_offset = -50
+	else
+		x_offset = -70 * actor.image_xscale
+		y_offset = -70
+		x2_offset = 50 * actor.image_xscale
+		y2_offset = 65
+	end
+	
 	if data.fired == 0 then
 		
 		local spark = efFollow:create(xx, yy)
+		spark.sprite_index = slashes[data.slash]
 		spark.target = target
+		spark.image_xscale = actor.image_xscale
 		
 		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)
 		else
 			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy), Math.distance(actor.x, actor.y, xx, yy))
-			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx, yy + 40), Math.distance(actor.x, actor.y, xx, yy + 40))
+			actor:move_contact_solid(Math.direction(actor.x, actor.y, xx + x2_offset, yy + y2_offset), Math.distance(actor.x, actor.y, xx + x2_offset, yy + y2_offset))
 		end
 		
-		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, xx, yy - 180) / 16)
+		local amount = gm.round(Math.distance(data.begin_x, data.begin_y, xx + x_offset, yy + y_offset) / 16)
 		for i = 1, amount do
 			particleSpecialTrail:set_size(0.45 * (1 - (i / amount)), 0.45 * (1 - (i / amount)), -0.015, 0) -- set the size of the particle, bigger near the enemy
-			particleSpecialTrail:create(Math.lerp(data.begin_x, xx, 1 - (i / amount)), Math.lerp(data.begin_y, yy - 180, 1 - (i / amount)), 1) -- create the particle, each time approaching the enemy more and more
+			particleSpecialTrail:create(Math.lerp(data.begin_x, xx + x_offset, 1 - (i / amount)), Math.lerp(data.begin_y, yy + y_offset, 1 - (i / amount)), 1) -- create the particle, each time approaching the enemy more and more
 		end
 		
-		data.begin_x = xx
-		data.begin_y = yy - 180
+		data.begin_x = xx + x_offset
+		data.begin_y = yy + y_offset
 		
 		actor:sound_play(gm.constants.wMercenary_EviscerateWhiff, 1, 0.9 + math.random() * 0.2)
 		data.fired = 1
 	elseif data.life >= 14 and data.fired == 1 then		
 		data.fired = 2
 		
-		data.begin_x = xx
-		data.begin_y = yy + 40
+		data.begin_x = xx + x2_offset
+		data.begin_y = yy + y2_offset
 			
 		actor:sound_play(sound_shoot4.value, 1, 0.9 + math.random() * 0.2)
 		actor:screen_shake(3)
