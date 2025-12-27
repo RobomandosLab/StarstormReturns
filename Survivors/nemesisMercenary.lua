@@ -719,6 +719,23 @@ Callback.add(stateSpecialPre.on_get_interrupt_priority, function(actor, data)
 	return ActorState.InterruptPriority.PRIORITY_SKILL
 end)
 
+local devitalize_packet = Packet.new("SyncNemmercDevialize")
+
+local devitalize_serializer = function(buffer, actor, num)
+	buffer:write_instance(actor)
+	buffer:write_byte(num)
+end
+
+local devitalize_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local num = buffer:read_byte()
+	
+	actor.actor_state_current_data_table.slash = num
+	print(num)
+end
+
+devitalize_packet:set_serializers(devitalize_serializer, devitalize_deserializer)
+
 Callback.add(stateSpecial.on_enter, function(actor, data)
 	actor.image_index = 0
 	
@@ -726,7 +743,16 @@ Callback.add(stateSpecial.on_enter, function(actor, data)
 	data.killed = 0
 	data.v_held = 1
 	data.life = 0
+	
 	data.slash = math.random(3)
+	
+	--if Net.host then
+	--	data.slash = math.random(3)
+	--	print(data.slash)
+	--	if Net.online then
+	--		devitalize_packet:send_to_all(actor, data.slash)
+	--	end
+	--end
 end)
 
 local slashes = {
@@ -855,9 +881,9 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y).attack_info
-					attack.climb = i * 8 * 1.35
-					attack.__ssr_nemmerc_devitalize = 1 + actor:item_count(Item.find("ancientScepter"))
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y)
+					attack.attack_info.climb = i * 8 * 1.35
+					attack.attack_info.__ssr_nemmerc_devitalize = 1 + math.min(1, actor:item_count(Item.find("ancientScepter")))
 				end
 			end
 		else
@@ -924,11 +950,24 @@ Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
 	end
 end)
 
+-- sync nemmerc devitalize tag
+Hook.add_post(gm.constants.write_attackinfo, function(self, other, result, args)
+	if not args[1].value.__ssr_nemmerc_devitalize then
+		GM.writebyte(0)
+	else
+		GM.writebyte(args[1].value.__ssr_nemmerc_devitalize)
+	end
+end)
+
+Hook.add_post(gm.constants.read_attackinfo, function(self, other, result, args)
+	result.value.__ssr_nemmerc_devitalize = GM.readbyte()
+end)
+
 DamageCalculate.add(function(api)
+	if not api.hit_info then return end
 	if not api.hit_info.attack_info.__ssr_nemmerc_devitalize then return end
 	if not Instance.exists(api.parent) then return end
-	if not api.hit_info then return end
-	
+			
 	if api.hit_info.attack_info.__ssr_nemmerc_devitalize >= 1 then
 		if api.hit.stunned == true then
 			particleBlood:set_direction(0, 360, 0, 0)

@@ -145,13 +145,14 @@ end
 
 packet:set_serializers(serializer, deserializer)
 
--- onAttackHit callbacks arent synced and only run for the host >>
+-- custom attack_info isnt synced >>
 Callback.add(Callback.ON_ATTACK_HIT, function(hit_info)
 	if hit_info.attack_info.__ssr_puncher_push then
 		if hit_info.target and GM.actor_is_classic(hit_info.target) then
 			if Net.online then
-				packet:send_to_all(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we use a packet to sync the knockback effect for clients in multiplayer
+				packet:send_to_all(hit_info.target, hit_info.attack_info.__ssr_puncher_push) -- >> we check if the host has it, and if it does use a packet to sync the knockback effect for clients in multiplayer
 			end
+			
 			Instance.get_data(hit_info.target).puncher_push = hit_info.attack_info.__ssr_puncher_push
 			hit_info.target:buff_apply(push, 3 * 60)
 			hit_info.target:screen_shake(6)
