@@ -161,6 +161,53 @@ Callback.add(nemmerc.on_init, function(actor)
 	actor:survivor_util_init_half_sprites()
 end)
 
+local slide_packet = Packet.new("SyncNemmercSlide")
+
+local slide_serializer = function(buffer, actor, dir, hold_dir, br_left, br_right)
+	buffer:write_instance(actor)
+	buffer:write_short(dir)
+	buffer:write_short(hold_dir)
+	buffer:write_bool(br_left)
+	buffer:write_bool(br_right)
+end
+
+local slide_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local dir = buffer:read_short()
+	local hold_dir = buffer:read_short()
+	local br_left = buffer:read_bool()
+	local br_right = buffer:read_bool()
+	
+	local data = Instance.get_data(actor)
+			
+	if br_left or br_right then
+		data.nemmerc_slide = math.max(data.nemmerc_slide - 1, 0)
+	end
+		
+	actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * dir + actor.pHmax * dir
+	actor.image_xscale = dir
+	actor.moveLeft = 0
+	actor.moveRight = 0
+	
+	if hold_dir ~= dir then
+		actor.sprite_idle = actor.sprite_idle_slide_left
+		actor.sprite_jump = actor.sprite_idle_slide_left
+		actor.sprite_jump_peak = actor.sprite_idle_slide_left
+		actor.sprite_fall = actor.sprite_idle_slide_left
+		actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
+		actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
+	else
+		actor.sprite_idle = actor.sprite_idle_slide
+		actor.sprite_jump = actor.sprite_idle_slide
+		actor.sprite_jump_peak = actor.sprite_idle_slide
+		actor.sprite_fall = actor.sprite_idle_slide
+		actor.sprite_shoot1 = actor.sprite_shoot1_slide
+		actor.sprite_shoot2 = actor.sprite_shoot2_slide
+	end
+end
+
+slide_packet:set_serializers(slide_serializer, slide_deserializer)
+
 Callback.add(nemmerc.on_step, function(actor)
 	local data = Instance.get_data(actor)
 	
@@ -172,33 +219,38 @@ Callback.add(nemmerc.on_step, function(actor)
 	
 	if data.nemmerc_slide > 0 then
 		data.nemmerc_slide = data.nemmerc_slide - 1
-		
-		local braking_left = (Util.bool(actor.moveLeft) and not Util.bool(actor.moveRight) and data.nemmerc_slide_dir > 0)
-		local braking_right = (Util.bool(actor.moveRight) and not Util.bool(actor.moveLeft) and data.nemmerc_slide_dir < 0)
-		
-		if braking_left or braking_right then
-			data.nemmerc_slide = math.max(data.nemmerc_slide - 1, 0)
-		end
-		
-		actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * data.nemmerc_slide_dir + actor.pHmax * data.nemmerc_slide_dir
-		actor.image_xscale = data.nemmerc_slide_dir
-		actor.moveLeft = 0
-		actor.moveRight = 0
-		
-		if actor.hold_facing_direction_xscale ~= data.nemmerc_slide_dir then
-			actor.sprite_idle = actor.sprite_idle_slide_left
-			actor.sprite_jump = actor.sprite_idle_slide_left
-			actor.sprite_jump_peak = actor.sprite_idle_slide_left
-			actor.sprite_fall = actor.sprite_idle_slide_left
-			actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
-			actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
-		else
-			actor.sprite_idle = actor.sprite_idle_slide
-			actor.sprite_jump = actor.sprite_idle_slide
-			actor.sprite_jump_peak = actor.sprite_idle_slide
-			actor.sprite_fall = actor.sprite_idle_slide
-			actor.sprite_shoot1 = actor.sprite_shoot1_slide
-			actor.sprite_shoot2 = actor.sprite_shoot2_slide
+		if actor:is_authority() then
+			local braking_left = (Util.bool(actor.moveLeft) and not Util.bool(actor.moveRight) and data.nemmerc_slide_dir > 0)
+			local braking_right = (Util.bool(actor.moveRight) and not Util.bool(actor.moveLeft) and data.nemmerc_slide_dir < 0)
+			
+			if braking_left or braking_right then
+				data.nemmerc_slide = math.max(data.nemmerc_slide - 1, 0)
+			end
+			
+			actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * data.nemmerc_slide_dir + actor.pHmax * data.nemmerc_slide_dir
+			actor.image_xscale = data.nemmerc_slide_dir
+			actor.moveLeft = 0
+			actor.moveRight = 0
+				
+			if actor.hold_facing_direction_xscale ~= data.nemmerc_slide_dir then
+				actor.sprite_idle = actor.sprite_idle_slide_left
+				actor.sprite_jump = actor.sprite_idle_slide_left
+				actor.sprite_jump_peak = actor.sprite_idle_slide_left
+				actor.sprite_fall = actor.sprite_idle_slide_left
+				actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
+				actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
+			else
+				actor.sprite_idle = actor.sprite_idle_slide
+				actor.sprite_jump = actor.sprite_idle_slide
+				actor.sprite_jump_peak = actor.sprite_idle_slide
+				actor.sprite_fall = actor.sprite_idle_slide
+				actor.sprite_shoot1 = actor.sprite_shoot1_slide
+				actor.sprite_shoot2 = actor.sprite_shoot2_slide
+			end
+			
+			if Net.online then
+				slide_packet:send_to_all(actor, data.nemmerc_slide_dir, actor.hold_facing_direction_xscale, braking_left, braking_right)
+			end
 		end
 	else
 		actor.sprite_idle = actor.sprite_idle_normal
@@ -668,6 +720,22 @@ Callback.add(specialS.on_activate, function(actor, skill, slot)
 	actor:set_state(stateSpecialPre)
 end)
 
+local devitalize_packet = Packet.new("SyncNemmercDevialize")
+
+local devitalize_serializer = function(buffer, actor, num)
+	buffer:write_instance(actor)
+	buffer:write_byte(num)
+end
+
+local devitalize_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local num = buffer:read_byte()
+	
+	actor.actor_state_current_data_table.slash = num
+end
+
+devitalize_packet:set_serializers(devitalize_serializer, devitalize_deserializer)
+
 Callback.add(stateSpecialPre.on_enter, function(actor, data)
 	Instance.get_data(actor).nemmerc_slide = 0
 	actor.image_index = 0
@@ -696,6 +764,13 @@ Callback.add(stateSpecialPre.on_enter, function(actor, data)
 		data.begin_y = actor.y
 	end
 	
+	if actor:is_authority() then
+		data.slash = math.random(3) -- select the slash anim, we do this here so that theres a bit of time for the packet to arrive
+		if Net.online then
+			devitalize_packet:send_to_all(actor, data.slash)
+		end
+	end
+	
 	Instance.get_data(actor).nemmerc_special_state = 1
 end)
 
@@ -719,23 +794,6 @@ Callback.add(stateSpecialPre.on_get_interrupt_priority, function(actor, data)
 	return ActorState.InterruptPriority.PRIORITY_SKILL
 end)
 
-local devitalize_packet = Packet.new("SyncNemmercDevialize")
-
-local devitalize_serializer = function(buffer, actor, num)
-	buffer:write_instance(actor)
-	buffer:write_byte(num)
-end
-
-local devitalize_deserializer = function(buffer)
-	local actor = buffer:read_instance()
-	local num = buffer:read_byte()
-	
-	actor.actor_state_current_data_table.slash = num
-	print(num)
-end
-
-devitalize_packet:set_serializers(devitalize_serializer, devitalize_deserializer)
-
 Callback.add(stateSpecial.on_enter, function(actor, data)
 	actor.image_index = 0
 	
@@ -743,16 +801,6 @@ Callback.add(stateSpecial.on_enter, function(actor, data)
 	data.killed = 0
 	data.v_held = 1
 	data.life = 0
-	
-	data.slash = math.random(3)
-	
-	--if Net.host then
-	--	data.slash = math.random(3)
-	--	print(data.slash)
-	--	if Net.online then
-	--		devitalize_packet:send_to_all(actor, data.slash)
-	--	end
-	--end
 end)
 
 local slashes = {
@@ -888,6 +936,13 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 			end
 		else
 			data.killed = 1
+		end
+		
+		if actor:is_authority() then
+			data.slash = math.random(3) -- select the slash anim, we do this here so that theres a bit of time for the packet to arrive
+			if Net.online then
+				devitalize_packet:send_to_all(actor, data.slash)
+			end
 		end
 	end
 	
