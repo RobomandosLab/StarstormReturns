@@ -37,11 +37,15 @@ evil:set_life(15, 30)
 
 local good_small = Particle.new("EmpyreanSpawnGood")
 good_small:set_sprite(particle3_sprite, true, true, false)
-good_small:set_life(45, 75)
+good_small:set_orientation(0, 0, 0, 0, true)
+good_small:set_speed(4, 6, -0.2, 0)
+good_small:set_life(20, 40)
 
 local good_big = Particle.new("EmpyreanSpawnGoodBig")
 good_big:set_sprite(particle2_sprite, true, true, false)
-good_big:set_life(45, 75)
+good_big:set_orientation(0, 0, 0, 0, true)
+good_big:set_speed(4, 6, -0.2, 0)
+good_big:set_life(20, 40)
 
 local rainbowspark = Particle.new("EmpyreanRainbowSpark")
 rainbowspark:set_shape(Particle.Shape.LINE)
@@ -231,7 +235,7 @@ empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
 	local closing_anim = math.min(1, ((180 - data.empy_beam) ^ 3) / 1000)
 	local frame = (4 - ((data.empy_beam % 13) / 3))
-	for i = 0, 6 do
+	for i = 0, 8 do
 		if i < 1 then
 			GM.draw_sprite_ext(sprite_splash, frame, actor.x + (width - 2), actor.bbox_bottom, closing_anim, 1, 0, Color.WHITE, closing_anim)
 			GM.draw_sprite_ext(sprite_splash, frame, actor.x - (width - 2), actor.bbox_bottom, -closing_anim, 1, 0, Color.WHITE, closing_anim)
@@ -306,6 +310,92 @@ Callback.add(objShockwave.on_step, function(self)
 	end
 end)
 
+-- special empyrean worm projectile
+local oStarStorm = Object.new("EmpyreanWormStar")
+oStarStorm:set_sprite(star_sprite)
+
+Callback.add(oStarStorm.on_create, function(self)
+	self.image_speed = 0.4
+	self.image_alpha = 0.75
+	self.direction = 0
+	self.speed = 0
+	
+	local data = Instance.get_data(self)
+	data.state = 0
+	data.life = 120
+	data.life2 = 360
+	data.targetX = 0
+	data.targetY = 0
+	data.team = 2
+	
+	self:sound_play(sound_star_spawn, 0.5, 0.8 + math.random() * 0.2)
+end)
+
+Callback.add(oStarStorm.on_draw, function(self)
+	gm.draw_set_alpha(0.4)
+	gm.draw_circle_colour(self.x, self.y, 20, self.image_blend, self.image_blend, false)
+	gm.draw_set_alpha(1)
+end)
+
+Callback.add(oStarStorm.on_step, function(self)
+	local data = Instance.get_data(self)
+	
+	if not Instance.exists(self.parent) then
+		data.life2 = 0
+	end
+	
+	if data.life > 0 then
+		data.life = data.life - 1
+	elseif data.state == 0 then
+		data.state = 1
+	end
+	
+	if data.life2 > 0 then
+		data.life2 = data.life2 - 1
+		
+		if data.state == 0 then
+			local no_timestop = 1
+			if Global.time_stop == 1 then
+				no_timestop = 0
+			end
+			
+			self.speed = self.speed * (0.85 * no_timestop)
+			
+			if data.life % 8 == 0 then
+				local dir = Math.direction(self.x, self.y, data.targetX, data.targetY)
+				
+				local flow = Particle.find("WurmOrbFlow")
+				flow:set_direction(dir, dir, 0, 0)
+				flow:create(self.x + math.random(-16, 16), self.y + math.random(-16, 16))
+			end
+		elseif data.state == 1 then
+			self:sound_play(sound_star_shoot.value, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
+			self.direction = Math.direction(self.x, self.y, data.targetX, data.targetY)
+			self.speed = -4
+			data.state = 2
+		else
+			self.speed = math.min(self.speed + 0.5, 40)
+			
+			for _, actor in ipairs(self:get_collisions(gm.constants.pActor)) do
+				if actor.team ~= data.team then
+					if Net.host then
+						self.parent:fire_explosion(actor.x, actor.y, 32, 32, 0.1)
+					end
+					
+					self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
+					self:destroy()
+				end
+			end
+		end
+	else
+		if self.image_alpha > 0 then
+			self.image_alpha = self.image_alpha - 0.1
+		else
+			self:destroy()
+		end
+	end
+end)
+
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(empyorb:get_holding_actors()) do
 		if Instance.exists(actor) then
@@ -359,13 +449,28 @@ Callback.add(Callback.ON_STEP, function()
 					evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.System.ABOVE)
 				end
 				
-				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then
-					local shockwave1 = objShockwave:create(actor.x + gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom)
+				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then -- shockwaves
+					local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+					local shockwave1 = objShockwave:create(actor.x + width, actor.bbox_bottom + 1)
 					shockwave1.speed = 12
 					
-					local shockwave2 = objShockwave:create(actor.x - gm.sprite_get_width(actor.mask_index) / 4, actor.bbox_bottom)
+					local shockwave2 = objShockwave:create(actor.x - width, actor.bbox_bottom + 1)
 					shockwave2.speed = -12
 					shockwave2.image_xscale = -1
+				end
+				
+				if data.empy_quality >= 2 and data.empy_beam % math.floor((30 / data.empy_quality) / 2) == 0 then -- particles
+					local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+					local good_side = gm.choose(-1, 1)
+					local good_dir = 90 - 90 * good_side
+					good_big:set_direction(good_dir, good_dir, 0, 0)
+					good_small:set_direction(good_dir, good_dir, 0, 0)
+					
+					if Util.chance(0.5) then
+						good_big:create(actor.x + width * good_side, actor.y - math.random(768))
+					else
+						good_small:create(actor.x + width * good_side, actor.y - math.random(768))
+					end
 				end
 				
 				data.empy_beam = data.empy_beam - 1
@@ -420,10 +525,63 @@ Callback.add(Callback.ON_STEP, function()
 				rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((data.empy_color) % 360, 100, 100), 1, Particle.System.BELOW)
 			end
 			
-			if actor.object_index == gm.constants.oWorm or actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
+			if actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
 				actor.image_blend = Color.from_hsv(data.empy_color % 360, 65, 100)
 			end
+			
+			-- empyrean worms !!!
+			if actor.object_index == gm.constants.oWorm and actor.body then
+				for i, segment_unwrapped in ipairs(actor.body) do
+					local segment = Instance.wrap(segment_unwrapped)
+					
+					if Instance.exists(segment) then
+						segment.image_blend = Color.from_hsv((data.empy_color + i * 18) % 360, 65, 100)
+						
+						if i % 3 == 0 and data.empy_color % 5 == 0 and data.empy_quality >= 2 then
+							rainbowspark:create_color(segment.x, segment.y, Color.from_hsv((data.empy_color + i * 18) % 360, 100, 100), 1, Particle.System.BELOW)
+						end
+						
+						if i % 2 == 0 and actor.target and Instance.exists(actor.target) then
+							if not Instance.get_data(segment).empyrean_orb_attack then
+								Instance.get_data(segment).empyrean_orb_attack = 150 + i * 2
+							end
+							
+							if Instance.get_data(segment).empyrean_orb_attack > 0 then
+								local no_timestop = 1
+								if Global.time_stop == 1 then
+									no_timestop = 0
+								end
+								
+								Instance.get_data(segment).empyrean_orb_attack = Instance.get_data(segment).empyrean_orb_attack - 1 * no_timestop
+							else
+								local star = oStarStorm:create(segment.x, segment.y)
+								star.parent = actor
+								star.direction = segment.image_angle + 90 * gm.choose(-1, 1) + math.random(-45, 45)
+								star.speed = math.random(4, 8)
+								star.image_blend = segment.image_blend
+								
+								local data = Instance.get_data(star)
+								data.team = actor.team
+								
+								data.targetX = actor.target.x
+								data.targetY = actor.target.y
+								
+								Instance.get_data(segment).empyrean_orb_attack = 500
+							end
+						end
+					end
+				end
+			end
 		end
+	end
+end)
+
+-- play the empyrean worm spawn sound
+Hook.add_pre("gml_Object_oWorm_Alarm_3", function(self, other)
+	if self.elite_type ~= empy.value then return end
+	
+	if self.elite_type == empy.value then
+		GM.sound_play_global(sound_spawn_worm, 1, 1)
 	end
 end)
 
@@ -509,159 +667,6 @@ Callback.add(Callback.ON_STEP, function()
 	end
 end)
 
---[[
--- empyrean worms !!!
--- make the worm bodies rainbow too and also make them create sparks
-Hook.add_pre("gml_Object_oWormBody_Step_2", function(self, other)
-	if self.parent.elite_type ~= empy.value then return end
-	local data = Instance.get_data(self.parent)
-	
-	if self.parent.elite_type == empy.value then
-		self.image_blend = Color.from_hsv((data.empy_color + (self.m_id - self.parent.m_id) * 18) % 360, 65, 100)
-		
-		if gm.inside_view(self.x, self.y) == 1 and data.empy_color % 3 == 0 then
-			rainbowspark:create_color(self.x, self.y, Color.from_hsv((data.empy_color + self.y * (0.75)) % 360, 100, 100), 1, Particle.System.MIDDLE)
-		end
-	end
-end)
-
--- make the worm bodies set their first alarm (needed to shoot the orbs)
-Hook.add_pre("gml_Object_oWorm_Alarm_4", function(self, other)
-	if self.elite_type ~= empy.value then return end
-	
-	if self.elite_type == empy.value then
-		for _, segment in ipairs(self.body) do
-			segment:alarm_set(1, 150 + (segment.m_id - self.m_id) * 2)
-		end
-	end
-end)
-
--- play the spawn sound
-Hook.add_pre("gml_Object_oWorm_Alarm_3", function(self, other)
-	if self.elite_type ~= empy.value then return end
-	
-	if self.elite_type == empy.value then
-		GM.sound_play_global(sound_spawn_worm, 1, 1)
-	end
-end)
-
--- special empyrean worm projectile
-local oStarStorm = Object.new("EmpyreanWormStar")
-oStarStorm:set_sprite(star_sprite)
-
-Callback.add(oStarStorm.on_create, function(self)
-	self.image_speed = 0.4
-	self.image_alpha = 0.75
-	self.direction = 0
-	self.speed = 0
-	
-	local data = Instance.get_data(self)
-	data.life = 600
-	data.damage = 1
-	data.targetX = 0
-	data.targetY = 0
-	data.team = 2
-	
-	self:sound_play(sound_star_spawn, 0.5, 0.8 + math.random() * 0.2)
-end)
-
-Callback.add(oStarStorm.on_draw, function(self)
-	gm.draw_set_alpha(0.4)
-	gm.draw_circle_colour(self.x, self.y, 20, self.image_blend, self.image_blend, false)
-	gm.draw_set_alpha(1)
-end)
-
-Callback.add(oStarStorm.on_step, function(self)
-	local data = Instance.get_data(self)
-	
-	if data.life > 0 then
-		data.life = data.life - 1
-	else
-		self:destroy()
-	end
-	
-	if not data.spawn_speed then
-		data.spawn_speed = self.speed
-	end
-	
-	if data.life >= 570 then -- do this for the first 30 frames after spawning
-		self.speed = self.speed - data.spawn_speed / 30
-	elseif data.life == 481 then -- make it idle for a second and a half, then >>
-		local flash = Object.find("EfFlash"):create(self.x, self.y) -- >> make it flash
-		flash.parent = self
-		flash.rate = 0.03
-		flash.image_alpha = 0.6
-		
-		self:sound_play(sound_star_shoot, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
-		
-		self.direction = Math.direction(self.x, self.y, data.targetX, data.targetY) -- >> make it aim at the player
-	--elseif data.life >= 480 then -- while idling, create telegraph particles
-		--if data.life % 10 == 0 then
-			--telegraph:set_direction(Math.direction(self.x, self.y, data.targetX, data.targetY), Math.direction(self.x, self.y, data.targetX, data.targetY), 0, 0)
-			--telegraph:create_color(self.x, self.y, self.image_blend, 1)
-		--end
-	elseif data.life >= 470 then -- once were done idling, descrease its speed to create a wind up effect for 10 frames
-		self.speed = self.speed - 0.4
-	else
-		self.speed = math.min(30, self.speed + 0.6) -- then start increasing its speed for the rest of the duration
-		
-		for _, hitbox in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do -- make it deal damage if it hits the opposite team
-			local actor = GM.attack_collision_resolve(hitbox)
-			
-			if self:attack_collision_canhit(actor) and Instance.exists(self.parent) then
-				if Net.host then
-					local attack = self.parent:fire_direct(actor, data.damage / self.parent.damage)
-				end
-
-				self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
-				self:destroy()
-			end
-		end
-	end
-	
-	if data.life % 5 == 0 then
-		rainbowspark:create_color(self.x, self.y, self.image_blend, 1, Particle.System.MIDDLE)
-	end
-end)
-
--- make the worm shoot the star storm
-Hook.add_pre("gml_Object_oWormBody_Alarm_1", function(self, other)
-	if self.parent.elite_type ~= empy.value then return end
-	
-	if self.parent.elite_type == empy.value then
-		self:alarm_set(1, 330)
-	
-		if self.parent.target then
-			local star = oStarStorm:create(self.x, self.y)
-			data = Instance.get_data(star)
-			star.parent = self.parent
-			data.team = self.parent.team
-			data.targetX = self.parent.target.x
-			data.targetY = self.parent.target.y
-			data.damage = self.parent.damage * 0.07
-			
-			if math.random() <= 0.5 then
-				star.direction = self.image_angle - 90 + math.random(-45, 45)
-			else
-				star.direction = self.image_angle + 90 + math.random(-45, 45)
-			end
-			
-			star.speed = math.random(4, 8)
-			star.image_blend = self.image_blend
-		end
-	end
-end)
-
--- make the warning change color
-Hook.add_pre("gml_Object_oWormWarning_Step_0", function(self, other)
-	if self.image_blend ~= Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then return end
-	
-	if self.image_blend == Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then -- check what color it was on the previous frame
-		self.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
-	end
-end)
-]]--
-
 local blacklist = {
 	["lemrider"] = true, -- the spawn anim breaks since its 2 of them at once, also doesnt actually do most elite effects
 	["bramble"] = true, -- requires major fixes that im not sure are even possible
@@ -704,8 +709,6 @@ Callback.add(Callback.ON_ELITE_INIT, function(actor)
 					end
 					
 					local cost = math.min(6, math.max(1, card.spawn_cost / 40 * (diff - penalty)))
-					
-					print(chance, card.identifier, penalty, diff, cost, math.max(0, chance / cost))
 					
 					if Util.chance(math.max(0, chance / cost)) then
 						GM.elite_set(actor, empy.value) -- make it empyrean

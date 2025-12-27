@@ -35,7 +35,7 @@ return {
 			name = "Nemesis Mercenary",
 			nameUpper = "NEMESIS MERCENARY",
 			description = "The <y>Nemesis Mercenary</c> uses dirty tactics and ruthless speed to dominate oncoming foes. Weaken opponents with his <y>Quick Trigger</c>, recuperate ammo with <y>Blinding Slide</c>, and chain-kill your remaining targets effortlessly with <y>Devitalize</c>.",
-			endQuote = "..and so he left, loaded up for more.",
+			endQuote = "...and so he left, paid handsomely in blood and desolation.",
 			story = "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
 		},
 		technician = {
@@ -511,8 +511,7 @@ return {
 		},
 		empyrean = {
 			name = "<cycle 0 64 128 192>Empyrean %s</cycle>",
-			text = "Harbinger of Judgement",
-			worm = "Prismatic Leviathan"
+			text = "Harbinger of Judgement"
 		}
 	},
 

@@ -108,7 +108,7 @@ nemmerc.sprite_palette = sprite_palette
 nemmerc.sprite_portrait_palette = sprite_palette
 nemmerc.sprite_loadout_palette = sprite_palette
 
-nemmerc.select_sound_id = gm.constants.wUI_Survivors_Bandit --sound_select
+--nemmerc.select_sound_id = sound_select
 nemmerc.cape_offset = Array.new({-3, -8, 0, -5})
 
 Callback.add(nemmerc.on_init, function(actor)
@@ -417,6 +417,7 @@ secondary.subimage = 1
 secondary.cooldown = 6 * 60
 secondary.damage = 4
 secondary.required_interrupt_priority = ActorState.InterruptPriority.SKILL_INTERRUPT_PERIOD
+secondary.require_key_press = true
 
 local stateSecondary = ActorState.new("nemMercenaryQuickTrigger")
 
@@ -500,6 +501,7 @@ end)
 Callback.add(stateUtility.on_enter, function(actor, data)
 	local get_data = Instance.get_data(actor)
 	get_data.nemmerc_slide_prep = 1
+	get_data.nemmerc_slide = 0
 	
 	actor.image_index = 0
 	data.fired = 0
@@ -779,7 +781,8 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		data.v_held = 0
 	end
 	
-	local target = Instance.wrap(GM.attack_collision_resolve(data.target))
+	local target = Instance.wrap(data.target)
+	local true_target = Instance.wrap(GM.attack_collision_resolve(data.target))
 	local xx = target.x or data.target_x
 	local yy = target.y or data.target_y
 	
@@ -863,7 +866,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	end
 	
 	if data.life >= 35 then -- after 35 frames, end
-		if not Instance.exists(target) or (Instance.exists(target) and not GM.actor_is_alive(target)) or data.killed == 1 then
+		if not Instance.exists(target) or (Instance.exists(target) and not GM.actor_is_alive(true_target)) or data.killed == 1 then
 			data.killed = 1
 		else
 			data.killed = 0
