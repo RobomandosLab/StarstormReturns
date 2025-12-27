@@ -1,7 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisMercenary")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisMercenary")
 
-local sprite_loadout		= Sprite.new("NemesisMercenarySelect", path.combine(SPRITE_PATH, "select.png"), 19, 28, 0)
+local sprite_loadout		= Sprite.new("NemesisMercenarySelect", path.combine(SPRITE_PATH, "select.png"), 4, 28, 0)
 local sprite_portrait		= Sprite.new("NemesisMercenaryPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Sprite.new("NemesisMercenaryPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Sprite.new("NemesisMercenarySkills", path.combine(SPRITE_PATH, "skills.png"), 5)

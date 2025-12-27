@@ -431,10 +431,10 @@ RecalculateStats.add(Callback.Priority.AFTER, function(actor, api)
     if actor.elite_type ~= empy.value then return end
 	
 	-- stat changes are multiplicative with normal elite stat changes
-	-- so max hp for example will be base * 10 * 2.8 = 28x total multiplier
+	-- so max hp for example will be base * 9 * 2.8 = 25.2x total multiplier
 	
-	api.maxhp_mult(10)
-	api.damage_mult(5.4 / 1.9) -- totals to 5.4x
+	api.maxhp_mult(9)
+	api.damage_mult(4 / 1.9) -- totals to 4x
 	api.cooldown_mult(0.5 / 0.3) -- totals to 50%
 end)
 
@@ -703,9 +703,11 @@ Callback.add(Callback.ON_ELITE_INIT, function(actor)
 						penalty = 1
 					end
 					
-					local cost = math.min(10, math.max(1, card.spawn_cost / 40 * (diff - penalty)))
+					local cost = math.min(6, math.max(1, card.spawn_cost / 40 * (diff - penalty)))
 					
-					if Util.chance(math.min(0, chance / cost)) then
+					print(chance, card.identifier, penalty, diff, cost, math.max(0, chance / cost))
+					
+					if Util.chance(math.max(0, chance / cost)) then
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else

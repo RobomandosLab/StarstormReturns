@@ -11,6 +11,7 @@ gm.sprite_replace(gm.constants.sGolemJump, path.combine(PATH, "Sprites/Actors/Ch
 gm.sprite_replace(gm.constants.sGolemJumpPeak, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/jump_peak.png"), 1, false, false, 32, 34)
 gm.sprite_replace(gm.constants.sGolemFall, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/fall.png"), 1, false, false, 32, 34)
 gm.sprite_replace(gm.constants.sGolemPal, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/palette.png"), 1, false, false, 0, 0)
+gm.sprite_replace(gm.constants.sCreditsMonsterGolem, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/credits.png"), 1, false, false, 20, 68)
 gm.sprite_replace(gm.constants.sPing_Golem, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/ping.png"), 1, false, false, 32, 32)
 
 gm.sprite_replace(gm.constants.sGolemS2Idle, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/idle.png"), 36, false, false, 26, 35)
@@ -30,6 +31,7 @@ gm.sprite_replace(gm.constants.sGolemSShoot1, path.combine(PATH, "Sprites/Actors
 gm.sprite_replace(gm.constants.sGolemSSpawn, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/spawn.png"), 19, false, false, 43, 99)
 gm.sprite_replace(gm.constants.sGolemSDeath, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/death.png"), 16, false, false, 60, 51)
 gm.sprite_replace(gm.constants.sGolemSPal, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/palette.png"), 1, false, false, 0, 0)
+gm.sprite_replace(gm.constants.sCreditsMonsterGolemS, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/credits.png"), 1, false, false, 20, 68)
 gm.sprite_replace(gm.constants.sPing_GolemS, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/ping.png"), 1, false, false, 32, 32)
 
 gm.sprite_replace(gm.constants.sTitleDoodadsGolemIdle, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/doodad.png"), 1, false, false, 27, 63)
