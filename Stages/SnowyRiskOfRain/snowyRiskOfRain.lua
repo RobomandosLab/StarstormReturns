@@ -1,4 +1,4 @@
---if HOTLOADING then return end
+if HOTLOADING then return end
 if not ssr_chirrsmas_active then return end -- christmas lasts from december 15th to january 15th
 if Settings.chirrsmas == 2 then return end -- if chirrsmas is disabled in the config then we dont do anything
 
