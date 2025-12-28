@@ -929,9 +929,9 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 					
 				local buff_shadow_clone = Buff.find("shadowClone")
 				for i=0, actor:buff_count(buff_shadow_clone) do
-					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y)
-					attack.attack_info.climb = i * 8 * 1.35
-					attack.attack_info.__ssr_nemmerc_devitalize = 1 + math.min(1, actor:item_count(Item.find("ancientScepter")))
+					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y).attack_info
+					attack.climb = i * 8 * 1.35
+					attack.damage_color = Color.from_hex(0x75a551) -- well use this specific color to signify that this is nemmerc's special attack
 				end
 			end
 		else
@@ -1005,42 +1005,32 @@ Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
 	end
 end)
 
--- sync nemmerc devitalize tag
-Hook.add_post(gm.constants.write_attackinfo, function(self, other, result, args)
-	if not args[1].value.__ssr_nemmerc_devitalize then
-		GM.writebyte(0)
-	else
-		GM.writebyte(args[1].value.__ssr_nemmerc_devitalize)
-	end
-end)
-
-Hook.add_post(gm.constants.read_attackinfo, function(self, other, result, args)
-	result.value.__ssr_nemmerc_devitalize = GM.readbyte()
-end)
-
 DamageCalculate.add(function(api)
-	if not api.hit_info then return end
-	if not api.hit_info.attack_info.__ssr_nemmerc_devitalize then return end
+	-- this is incredibly jank but it works so im not gonna complain
+	if not api.damage_col then return end
+	if not api.damage_col == Color.from_hex(0x75a551) then return end
 	if not Instance.exists(api.parent) then return end
-			
-	if api.hit_info.attack_info.__ssr_nemmerc_devitalize >= 1 then
-		if api.hit.stunned == true then
-			particleBlood:set_direction(0, 360, 0, 0)
-			particleBlood:create(api.hit_x, api.hit_y, 25, Particle.System.MIDDLE)
-			api.hit:screen_shake(2)
-			
-			if api.critical then
-				api.damage_mult(2, true)
-			else
-				api:set_critical(true)
-			end
-		end
+	if not api.parent.class == nemmerc.value then return end
+	
+	
+	api.damage_col = Color.WHITE
+	
+	if api.hit.stunned == true then
+		particleBlood:set_direction(0, 360, 0, 0)
+		particleBlood:create(api.hit_x, api.hit_y, 25, Particle.System.MIDDLE)
+		api.hit:screen_shake(2)
 		
-		if api.hit_info.attack_info.__ssr_nemmerc_devitalize >= 2 then
-			if GM.actor_get_hp_percent(api.hit) <= 0.25 then
-				api.damage_col = Color.from_hex(0xf77c8e)
-				api.hit.hp = -10000
-			end
+		if api.critical then
+			api.damage_mult(2, true)
+		else
+			api:set_critical(true)
+		end
+	end
+		
+	if api.parent:item_count(Item.find("ancientScepter")) > 0 then
+		if GM.actor_get_hp_percent(api.hit) <= 0.25 then
+			api.damage_col = Color.from_hex(0xf77c8e)
+			api.hit.hp = -10000
 		end
 	end
 end)

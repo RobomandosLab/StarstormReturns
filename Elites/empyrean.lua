@@ -319,6 +319,8 @@ Callback.add(oStarStorm.on_create, function(self)
 	self.image_alpha = 0.75
 	self.direction = 0
 	self.speed = 0
+	self.image_blend = Color.WHITE
+	self.parent = nil
 	
 	local data = Instance.get_data(self)
 	data.state = 0
@@ -329,6 +331,8 @@ Callback.add(oStarStorm.on_create, function(self)
 	data.team = 2
 	
 	self:sound_play(sound_star_spawn, 0.5, 0.8 + math.random() * 0.2)
+	
+	self:projectile_sync(150)
 end)
 
 Callback.add(oStarStorm.on_draw, function(self)
@@ -368,6 +372,10 @@ Callback.add(oStarStorm.on_step, function(self)
 				flow:set_direction(dir, dir, 0, 0)
 				flow:create(self.x + math.random(-16, 16), self.y + math.random(-16, 16))
 			end
+			
+			if Net.host and Net.online then
+				self:instance_resync()
+			end
 		elseif data.state == 1 then
 			self:sound_play(sound_star_shoot.value, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
 			self.direction = Math.direction(self.x, self.y, data.targetX, data.targetY)
@@ -378,11 +386,13 @@ Callback.add(oStarStorm.on_step, function(self)
 			
 			for _, actor in ipairs(self:get_collisions(gm.constants.pActor)) do
 				if actor.team ~= data.team then
-					if Net.host then
-						self.parent:fire_explosion(actor.x, actor.y, 32, 32, 0.1)
-					end
-					
+					self.parent:fire_explosion_local(actor.x, actor.y, 32, 32, 0.1)
 					self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
+					self:screen_shake(1)
+					
+					if Net.host and Net.online then
+						self:instance_resync()
+					end
 					self:destroy()
 				end
 			end
@@ -392,9 +402,38 @@ Callback.add(oStarStorm.on_step, function(self)
 			self.image_alpha = self.image_alpha - 0.1
 		else
 			self:destroy()
+			
+			if Net.host and Net.online then
+				self:instance_destroy_sync()
+			end
 		end
 	end
 end)
+
+-- networking
+local serializer = function(inst, buffer)
+	buffer:write_instance(inst.parent)
+	buffer:write_byte(Instance.get_data(inst).state)
+	buffer:write_short(inst.direction)
+	buffer:write_short(inst.speed)
+	buffer:write_double(Instance.get_data(inst).targetX)
+	buffer:write_double(Instance.get_data(inst).targetY)
+	buffer:write_byte(Instance.get_data(inst).team)
+	buffer:write_color(inst.image_blend)
+end
+
+local deserializer = function(inst, buffer)
+	inst.parent = buffer:read_instance()
+	Instance.get_data(inst).state = buffer:read_byte()
+	inst.direction = buffer:read_short()
+	inst.speed = buffer:read_short()
+	Instance.get_data(inst).targetX = buffer:read_double()
+	Instance.get_data(inst).targetY = buffer:read_double()
+	Instance.get_data(inst).team = buffer:read_byte()
+	inst.image_blend = buffer:read_color()
+end
+
+Object.add_serializers(oStarStorm, serializer, deserializer)
 
 Callback.add(Callback.ON_STEP, function()
 	for _, actor in ipairs(empyorb:get_holding_actors()) do
@@ -541,7 +580,7 @@ Callback.add(Callback.ON_STEP, function()
 							rainbowspark:create_color(segment.x, segment.y, Color.from_hsv((data.empy_color + i * 18) % 360, 100, 100), 1, Particle.System.BELOW)
 						end
 						
-						if i % 2 == 0 and actor.target and Instance.exists(actor.target) then
+						if i % 2 == 0 and actor.target and Instance.exists(actor.target) and Net.host then
 							if not Instance.get_data(segment).empyrean_orb_attack then
 								Instance.get_data(segment).empyrean_orb_attack = 150 + i * 2
 							end
