@@ -375,5 +375,14 @@ function ssr_is_near_ground(inst, x, y, radius)
 	return flag
 end
 
+function ssr_table_shuffle(tabl)
+	for i = #tabl, 2, -1 do
+		local j = math.random(i)
+		tabl[i], tabl[j] = tabl[j], tabl[i]
+	end
+  
+	return tabl
+end
+
 -- easy shortcut for checking if chirrsmas is active
 ssr_chirrsmas_active = ((tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 15) or (tonumber(os.date("%m")) == 1 and tonumber(os.date("%d")) <= 15) or Settings.chirrsmas == 1)
