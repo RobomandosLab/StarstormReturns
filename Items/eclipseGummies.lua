@@ -19,6 +19,14 @@ buff.icon_sprite = sprite_buff
 buff.icon_stack_subimage = true
 buff.max_stack = 10
 buff.is_timed = true
+				
+Callback.add(buff.on_apply, function(actor)
+	if actor:buff_count(buff) < 9 then
+		actor:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
+	else
+		actor:sound_play(sound_buff_max.value, 3, 1)
+	end
+end)
 
 RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buff)
@@ -33,8 +41,8 @@ RecalculateStats.add(function(actor, api)
 	end
 end)
 
-Callback.add(buff.on_remove, function(self)
-	Instance.get_data(self).gummy_stack_strength = nil
+Callback.add(buff.on_remove, function(actor)
+	Instance.get_data(actor).gummy_stack_strength = nil
 end)
 
 local gummy_colors = {
@@ -65,6 +73,8 @@ Callback.add(obj_gummy.on_create, function(self)
 	data.team = 1
 	data.life = 600
 	data.stack = 1
+	
+	self:instance_sync()
 end)
 
 Callback.add(obj_gummy.on_step, function(self)
@@ -129,6 +139,7 @@ Callback.add(obj_gummy.on_step, function(self)
 			end
 			
 			data.bounces = data.bounces + 1
+			self:instance_resync()
 		end
 	end
 	
@@ -141,15 +152,10 @@ Callback.add(obj_gummy.on_step, function(self)
 				flash.image_alpha = 1
 				flash.image_blend = gummy_colors[math.floor(self.image_index) + 1]
 				
-				if actor:buff_count(buff) < 9 then
-					self:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
-				else
-					self:sound_play(sound_buff_max.value, 3, 1)
-				end
-				
 				Instance.get_data(actor).gummy_stack_strength = data.stack
 				actor:buff_apply(buff, 10 * 60)
 				self:destroy()
+				self:instance_destroy_sync()
 			end
 		end
 	else
@@ -161,21 +167,18 @@ Callback.add(obj_gummy.on_step, function(self)
 				flash.image_alpha = 1
 				flash.image_blend = gummy_colors[math.floor(self.image_index) + 1]
 				
-				if actor:buff_count(buff) < 9 then
-					self:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
-				else
-					self:sound_play(sound_buff_max.value, 3, 1)
-				end
-				
 				Instance.get_data(actor).gummy_stack_strength = data.stack
 				actor:buff_apply(buff, 10 * 60)
 				self:destroy()
+				self:instance_destroy_sync()
 			end
 		end
 	end
 end)
 
 Callback.add(Callback.ON_KILL_PROC, function(victim, killer)
+	if not Net.host then return end
+	
 	local stack = killer:item_count(gummies)
     if stack <= 0 then return end
 	
@@ -183,3 +186,24 @@ Callback.add(Callback.ON_KILL_PROC, function(victim, killer)
 	inst.team = killer.team
 	inst.stack = killer:item_count(gummies)
 end)
+
+-- networking
+local serializer = function(inst, buffer)
+	buffer:write_byte(inst.image_index)
+	buffer:write_short(inst.image_xscale)
+	buffer:write_byte(Instance.get_data(inst).team)
+	buffer:write_int(Instance.get_data(inst).stack)
+	buffer:write_short(inst.speed)
+	buffer:write_int(inst.direction)
+end
+
+local deserializer = function(inst, buffer)
+	inst.image_index = buffer:read_byte()
+	inst.image_xscale = buffer:read_short()
+	Instance.get_data(inst).team = buffer:read_byte()
+	Instance.get_data(inst).stack = buffer:read_int()
+	inst.speed = buffer:read_short()
+	inst.direction = buffer:read_int()
+end
+
+Object.add_serializers(obj_gummy, serializer, deserializer)

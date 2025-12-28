@@ -975,7 +975,7 @@ Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 	actor.free = 1
 	actor.visible = true
 	
-	if ssr_is_near_ground(actor, actor.x, actor.y, 128) then
+	if ssr_is_near_ground(actor, actor.x, actor.y, 128) and data.life > 0 then
 		GM.teleport_nearby(actor, actor.x, actor.y)
 	end
 	
@@ -986,6 +986,7 @@ Callback.add(stateSpecialEnd.on_enter, function(actor, data)
 	end
 	
 	data.killed = 0
+	data.life = 0
 	
 	Instance.get_data(actor).nemmerc_special_state = 0
 end)
