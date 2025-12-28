@@ -1,16 +1,49 @@
-![SSR Title](https://raw.githubusercontent.com/RobomandosLab/StarstormReturns/refs/heads/main/Sprites/Menu/title.png)
+![SSR Title](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Logo.png?raw=true)
 
-Starstorm Returns is a work-in-progress mod for RoRR that remasters the original RoR1 Starstorm mod . It adds new survivors, enemies, stages, difficulties, and items.
+**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **four** survivors, **two** stages, **two** monsters, and over **20** new items to help reshape your runs. 
 
-## Feedback, Bug Reports, and Known Issues
-- Bugs can be reported on the [GitHub Issues page](https://github.com/RobomandosLab/StarstormReturns) or in the [Starstorm Returns Discord server](https://discord.gg/fGShMVEayr).
+![New_Environments_Header](https://github.com/WinslowRoR/testing_grounds1/blob/main/PromoFiles/SSR_Environments.gif?raw=true)
 
-## FAQ
+**New Environments**
+* Explore new and improved stages returning from Starstorm. Brave the **Whistling Basin**, a crumbling and desolate visage of what once was, or journey into the **Torrid Outlands**, a barren and scorching dust bowl, to help spice up your runs!
+
+![New_Items_Header](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Items.gif?raw=true)
+
+**New Items**
+* Make use of the refined and enhanced items, old and new, to help you brave this dangerous planet. Watch your back with the **Guarding Amulet** whilst utilizing the electric capabilities of the **Man-o'-War**, with your new beastly friend hatched from the **Juddering Egg**- and more!
+
+![New_Enemies_Header](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Enemies.gif?raw=true)
+
+**New Enemies**
+* Brand new monsters arise to face you as you tear through Petrichor V. Tango with the **Clay Admonitor**, a beefy pot brawler, and watch your step for **Exploders** that- well, explode- and more as you traverse through your runs! 
+
+![New_Survivors_Header](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Survivors.gif?raw=true)
+
+**New Survivors**
+
+Descend to Petrichor V with reworked, polished and incredibly unique characters. 
+
+* **Executioner**: Armed to the teeth with an ion-powered arsenal, the Executioner makes quick work of the hordes of monsters that stand in his way.
+
+* **MULE**:  The MULE is adequately equipped and ready for duty, packing a rueful piston punch (despite its weathered appearance).
+
+* **Technician**: With his complex gadgets and steel wrench in tow, the Technician is the man for the industrial job. 
+
+* **???**: Old and eroded, twisted and deceptive- familiar faces all the same. 
+
+
+![Bugs](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_FAQ_and_Bugs.gif?raw=true)
+
+* Bugs can be reported on the [**GitHub Issues page**](https://github.com/RobomandosLab/StarstormReturns) or in the [**Starstorm Returns Discord server**](https://discord.gg/QfAxXhuFAe) #ssr-bugs-and-feedback channel.
+* Before reporting a bug, make sure it has not been reported before!
+
+![FAQ](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_FAQ.gif?raw=true)
 ### Is the mod finished?
 No
 
 ### Is it Multiplayer compatible?
-Should be! Please report any issues you find on our [Github](https://github.com/RobomandosLab/StarstormReturns) or [Discord](https://discord.gg/fGShMVEayr).
+Should be! Please report any issues you find.
+
 
 ## Credits
 - Neik: Creator of Starstorm 1
@@ -24,7 +57,7 @@ Should be! Please report any issues you find on our [Github](https://github.com/
 - AnAwesomeDudette: Writer & Programmer
 - Opal: Pixel Artist & Programmer
 - Altzeus: Music & Programmer
-- Redacted: Writer & Pixel Artist
+- Redacted: Writer & Lead Pixel Artist
 - DigBug: Writer & Pixel Artist
 - [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist
 - isDahMaster: Pixel Artist
@@ -41,7 +74,7 @@ Should be! Please report any issues you find on our [Github](https://github.com/
 - Swuff for helping kickstart the codebase
 - Starstorm 2 team for their design guidance and support
 - Starstorm fans everywhere
-- Kris for helping get SSR development started!
-- Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
+- Kris for their previous work on SSR
+- Khlerik, iDeathHD, and other ReturnsAPI contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
-- SwedishFish75, Dragonrster for translations!
+- SwedishFish75 for Spanish Translation
