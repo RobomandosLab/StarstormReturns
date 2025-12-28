@@ -35,5 +35,3 @@ gm.sprite_replace(gm.constants.sCreditsMonsterGolemS, path.combine(PATH, "Sprite
 gm.sprite_replace(gm.constants.sPing_GolemS, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/ping.png"), 1, false, false, 32, 32)
 
 gm.sprite_replace(gm.constants.sTitleDoodadsGolemIdle, path.combine(PATH, "Sprites/Actors/ChirrsmasGolem/doodad.png"), 1, false, false, 27, 63)
-
-Stage.find("riskOfRain"):add_monster(MonsterCard.find("golem"))

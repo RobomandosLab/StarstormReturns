@@ -483,6 +483,7 @@ Callback.add(stateSecondary.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
 	data.reloaded = 0
+	data.dir = 90 - 90 * actor.hold_facing_direction_xscale
 	
 	data.sprite = nil
 	if get_data.nemmerc_slide > 0 then
@@ -511,7 +512,7 @@ Callback.add(stateSecondary.on_step, function(actor, data)
 			
 			local buff_shadow_clone = Buff.find("shadowClone")
 			for i=0, actor:buff_count(buff_shadow_clone) do
-				local attack = actor:fire_bullet(actor.x, actor.y - 4, 200, actor:skill_util_facing_direction(), damage, 1, sprite_sparks2, Tracer.ENFORCER1)
+				local attack = actor:fire_bullet(actor.x, actor.y - 4, 200, data.dir, damage, 1, sprite_sparks2, Tracer.ENFORCER1)
 				attack.attack_info.stun = 2
 				attack.attack_info.climb = i * 8 * 1.35
 			end
