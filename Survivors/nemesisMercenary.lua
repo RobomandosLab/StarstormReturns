@@ -932,7 +932,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 				for i=0, actor:buff_count(buff_shadow_clone) do
 					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y).attack_info
 					attack.climb = i * 8 * 1.35
-					attack.damage_color = Color.from_hex(0x75a551) -- well use this specific color to signify that this is nemmerc's special attack
+					attack.damage_color = 5350773 -- well use this specific color to signify that this is nemmerc's special attack
 				end
 			end
 		else
@@ -1009,11 +1009,10 @@ end)
 DamageCalculate.add(function(api)
 	-- this is incredibly jank but it works so im not gonna complain
 	if not api.damage_col then return end
-	if not api.damage_col == Color.from_hex(0x75a551) then return end
+	if api.damage_col ~= 5350773 then return end
 	if not Instance.exists(api.parent) then return end
 	if not api.parent.class == nemmerc.value then return end
-	
-	
+
 	api.damage_col = Color.WHITE
 	
 	if api.hit.stunned == true then
