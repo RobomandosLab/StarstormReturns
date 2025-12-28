@@ -835,7 +835,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	actor.visible = false
 	actor.pVspeed = actor.pVspeed * 0.7
 	actor.pHspeed = 0
-	data.life = data.life + 1
+	data.life = data.life + 1 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
 	
 	local release = not Util.bool(actor.v_skill)
 	
@@ -891,6 +891,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 		spark.sprite_index = slashes[data.slash]
 		spark.target = target
 		spark.image_xscale = actor.image_xscale
+		spark.image_speed = 0.25 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
 		
 		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)
