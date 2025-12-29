@@ -112,15 +112,9 @@ nemmerc.sprite_loadout_palette = sprite_palette
 nemmerc.cape_offset = Array.new({-3, -8, 0, -5})
 
 Callback.add(nemmerc.on_init, function(actor)
-	-- setup half-sprite nonsense
-	actor.sprite_idle_half = Array.new({sprite_idle, nil, 0})
-	actor.sprite_walk_half = Array.new({sprite_walk, nil, 0, sprite_walk_back})
-	actor.sprite_jump_half = Array.new({sprite_jump, nil, 0})
-	actor.sprite_jump_peak_half = Array.new({sprite_jump_peak, nil, 0})
-	actor.sprite_fall_half = Array.new({sprite_fall, nil, 0})
-	
 	actor.sprite_idle = sprite_idle
 	actor.sprite_walk = sprite_walk
+	actor.sprite_walk_half = Array.new({sprite_walk, nil, 0, sprite_walk_back})
 	actor.sprite_jump = sprite_jump
 	actor.sprite_jump_peak = sprite_jump_peak
 	actor.sprite_fall = sprite_fall
@@ -140,6 +134,8 @@ Callback.add(nemmerc.on_init, function(actor)
 	actor.sprite_shoot2_slide_left = sprite_shoot2lb
 	
 	actor.sprite_idle_normal = sprite_idle
+	actor.sprite_walk_normal = sprite_walk
+	actor.sprite_walk_back_normal = sprite_walk_back
 	actor.sprite_jump_normal = sprite_jump
 	actor.sprite_jump_peak_normal = sprite_jump_peak
 	actor.sprite_fall_normal = sprite_fall
@@ -148,6 +144,7 @@ Callback.add(nemmerc.on_init, function(actor)
 	
 	data.nemmerc_slide = 0
 	data.nemmerc_slide_dir = 0
+	data.nemmerc_slide_turned = 0
 	data.nemmerc_slide_prep = 0
 	data.nemmerc_primary_combo_timer = 0
 	data.nemmerc_primary_combo_count = 0
@@ -158,7 +155,7 @@ Callback.add(nemmerc.on_init, function(actor)
 	actor.sprite_portal_inside = sprite_portal_inside
 	actor.sound_portal = sound_portal
 
-	actor:survivor_util_init_half_sprites()
+	--actor:survivor_util_init_half_sprites()
 end)
 
 local slide_packet = Packet.new("SyncNemmercSlide")
@@ -188,16 +185,36 @@ local slide_deserializer = function(buffer)
 	actor.image_xscale = dir
 	actor.moveLeft = 0
 	actor.moveRight = 0
+end
+
+slide_packet:set_serializers(slide_serializer, slide_deserializer)
+
+local aim_packet = Packet.new("SyncNemmercSlideAim")
+
+local aim_serializer = function(buffer, actor, dir, hold_dir, br_left, br_right)
+	buffer:write_instance(actor)
+	buffer:write_byte(dir)
+end
+
+local aim_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local dir = buffer:read_byte()
 	
-	if hold_dir ~= dir then
+	local data = Instance.get_data(actor)
+	
+	if dir == 0 then
 		actor.sprite_idle = actor.sprite_idle_slide_left
+		actor.sprite_walk = actor.sprite_idle_slide_left
+		actor.sprite_walk_half = Array.new({actor.sprite_idle_slide_left, nil, 0, actor.sprite_idle_slide_left})
 		actor.sprite_jump = actor.sprite_idle_slide_left
 		actor.sprite_jump_peak = actor.sprite_idle_slide_left
 		actor.sprite_fall = actor.sprite_idle_slide_left
 		actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
 		actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
-	else
+	elseif dir == 1 then
 		actor.sprite_idle = actor.sprite_idle_slide
+		actor.sprite_walk = actor.sprite_idle_slide
+		actor.sprite_walk_half = Array.new({actor.sprite_idle_slide, nil, 0, actor.sprite_idle_slide})
 		actor.sprite_jump = actor.sprite_idle_slide
 		actor.sprite_jump_peak = actor.sprite_idle_slide
 		actor.sprite_fall = actor.sprite_idle_slide
@@ -206,7 +223,7 @@ local slide_deserializer = function(buffer)
 	end
 end
 
-slide_packet:set_serializers(slide_serializer, slide_deserializer)
+aim_packet:set_serializers(aim_serializer, aim_deserializer)
 
 Callback.add(nemmerc.on_step, function(actor)
 	local data = Instance.get_data(actor)
@@ -232,20 +249,36 @@ Callback.add(nemmerc.on_step, function(actor)
 			actor.moveLeft = 0
 			actor.moveRight = 0
 				
-			if actor.hold_facing_direction_xscale ~= data.nemmerc_slide_dir then
+			if actor.hold_facing_direction_xscale ~= data.nemmerc_slide_dir and data.nemmerc_slide_turned ~= actor.hold_facing_direction_xscale then
 				actor.sprite_idle = actor.sprite_idle_slide_left
+				actor.sprite_walk = actor.sprite_idle_slide_left
+				actor.sprite_walk_half = Array.new({actor.sprite_idle_slide_left, nil, 0, actor.sprite_idle_slide_left})
 				actor.sprite_jump = actor.sprite_idle_slide_left
 				actor.sprite_jump_peak = actor.sprite_idle_slide_left
 				actor.sprite_fall = actor.sprite_idle_slide_left
 				actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
 				actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
-			else
+				
+				data.nemmerc_slide_turned = actor.hold_facing_direction_xscale
+				
+				if Net.online then
+					aim_packet:send_to_all(actor, 0)
+				end
+			elseif actor.hold_facing_direction_xscale == data.nemmerc_slide_dir and data.nemmerc_slide_turned ~= actor.hold_facing_direction_xscale then
 				actor.sprite_idle = actor.sprite_idle_slide
+				actor.sprite_walk = actor.sprite_idle_slide
+				actor.sprite_walk_half = Array.new({actor.sprite_idle_slide, nil, 0, actor.sprite_idle_slide})
 				actor.sprite_jump = actor.sprite_idle_slide
 				actor.sprite_jump_peak = actor.sprite_idle_slide
 				actor.sprite_fall = actor.sprite_idle_slide
 				actor.sprite_shoot1 = actor.sprite_shoot1_slide
 				actor.sprite_shoot2 = actor.sprite_shoot2_slide
+				
+				data.nemmerc_slide_turned = actor.hold_facing_direction_xscale
+				
+				if Net.online then
+					aim_packet:send_to_all(actor, 1)
+				end
 			end
 			
 			if Net.online then
@@ -254,6 +287,8 @@ Callback.add(nemmerc.on_step, function(actor)
 		end
 	else
 		actor.sprite_idle = actor.sprite_idle_normal
+		actor.sprite_walk = actor.sprite_walk_normal
+		actor.sprite_walk_half = Array.new({sprite_walk, nil, 0, actor.sprite_walk_back_normal})
 		actor.sprite_jump = actor.sprite_jump_normal
 		actor.sprite_jump_peak = actor.sprite_jump_peak_normal
 		actor.sprite_fall = actor.sprite_fall_normal
@@ -614,6 +649,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		
 		get_data.nemmerc_slide = 50
 		get_data.nemmerc_slide_dir = actor.image_xscale
+		get_data.nemmerc_slide_turned = 0
 	end
 	
 	if data.counter > 0 and data.fired == 1 then
@@ -815,19 +851,41 @@ efFollow:set_sprite(sprite_shoot4_2)
 efFollow:set_depth(-200)
 
 Callback.add(efFollow.on_create, function(self)
+	self.target = nil
+	self.sprite_index = sprite_shoot4_2
+	self.image_xscale = 1
 	self.image_speed = 0.25
+	self:instance_sync()
 end)
 
 Callback.add(efFollow.on_step, function(self)
 	if self.image_index < 4 and self.target and Instance.exists(self.target) then
 		self.x = self.target.x
 		self.y = self.target.y
+		self.ghost_x = self.target.x
+		self.ghost_y = self.target.y
 	end
 	
 	if self.image_index >= 10 then
 		self:destroy()
 	end
 end)
+
+local follow_serializer = function(inst, buffer)
+	buffer:write_instance(inst.target)
+	buffer:write_int(inst.sprite_index)
+	buffer:write_short(inst.image_xscale)
+	buffer:write_float(inst.image_speed)
+end
+
+local follow_deserializer = function(inst, buffer)
+	inst.target = buffer:read_instance()
+	inst.sprite_index = buffer:read_int()
+	inst.image_xscale = buffer:read_short()
+	inst.image_speed = buffer:read_float()
+end
+
+Object.add_serializers(efFollow, follow_serializer, follow_deserializer)
 
 Callback.add(stateSpecial.on_step, function(actor, data)
 	actor:get_default_skill(Skill.Slot.SPECIAL):freeze_cooldown()
@@ -888,11 +946,13 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	end
 	
 	if data.fired == 0 then
-		local spark = efFollow:create(xx, yy)
-		spark.sprite_index = slashes[data.slash]
-		spark.target = target
-		spark.image_xscale = actor.image_xscale
-		spark.image_speed = 0.25 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
+		if actor:is_authority() then
+			local spark = efFollow:create(xx, yy)
+			spark.sprite_index = slashes[data.slash]
+			spark.target = target
+			spark.image_xscale = actor.image_xscale
+			spark.image_speed = 0.25 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
+		end
 		
 		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)

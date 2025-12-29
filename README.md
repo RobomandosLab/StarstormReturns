@@ -34,10 +34,15 @@ Descend to Petrichor V with reworked, polished and incredibly unique characters.
 
 ![Bugs](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_FAQ_and_Bugs.gif?raw=true)
 
+**Feedback & Bug Reports**
+
 * Bugs can be reported on the [**GitHub Issues page**](https://github.com/RobomandosLab/StarstormReturns) or in the [**Starstorm Returns Discord server**](https://discord.gg/QfAxXhuFAe) #ssr-bugs-and-feedback channel.
 * Before reporting a bug, make sure it has not been reported before!
 
 ![FAQ](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_FAQ.gif?raw=true)
+
+**FAQ**
+
 ### Is the mod finished?
 No
 
@@ -45,11 +50,17 @@ No
 Should be! Please report any issues you find.
 
 
-## Credits
+
+![Credits](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Credits.gif?raw=true)
+
+**Credits**
+
+
 - Neik: Creator of Starstorm 1
 - Hobart: Morale support
 - Bread: Github Detective
 - Buns: Project management
+- Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
 - Battery: Programmer
 - [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
@@ -68,13 +79,15 @@ Should be! Please report any issues you find.
 - [RicottaKitten](https://bsky.app/profile/boreeddddd.bsky.social): Pixel Artist
 - [Gummies](https://bsky.app/profile/gummies139.bsky.social): Pixel Artist
 
-## Special Thanks
+![Special_Thanks](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_SpecialThanks.gif?raw=true)
+
+**Special Thanks**
+
 - Neik for creating a wonderful mod and community we have loved and enjoyed
 - Dee for design help and development guidance
 - Swuff for helping kickstart the codebase
 - Starstorm 2 team for their design guidance and support
 - Starstorm fans everywhere
-- Kris for their previous work on SSR
-- Khlerik, iDeathHD, and other ReturnsAPI contributors for their work on making modding possible
+- Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
 - SwedishFish75 for Spanish Translation
