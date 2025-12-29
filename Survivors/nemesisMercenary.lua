@@ -191,14 +191,14 @@ local aim_packet = Packet.new("SyncNemmercSlideAim")
 
 local aim_serializer = function(buffer, actor, aim, dir)
 	buffer:write_instance(actor)
-	buffer:write_byte(aim)
-	buffer:write_short(dir)
+	buffer:write_int(aim)
+	buffer:write_byte(dir + 1)
 end
 
 local aim_deserializer = function(buffer)
 	local actor = buffer:read_instance()
-	local aim = buffer:read_byte()
-	local dir = buffer:read_short()
+	local aim = buffer:read_int()
+	local dir = buffer:read_byte() - 1
 	
 	local data = Instance.get_data(actor)
 	
