@@ -154,8 +154,6 @@ Callback.add(nemmerc.on_init, function(actor)
 	actor.sprite_portal = sprite_portal
 	actor.sprite_portal_inside = sprite_portal_inside
 	actor.sound_portal = sound_portal
-
-	--actor:survivor_util_init_half_sprites()
 end)
 
 local slide_packet = Packet.new("SyncNemmercSlide")
@@ -191,18 +189,22 @@ slide_packet:set_serializers(slide_serializer, slide_deserializer)
 
 local aim_packet = Packet.new("SyncNemmercSlideAim")
 
-local aim_serializer = function(buffer, actor, dir, hold_dir, br_left, br_right)
+local aim_serializer = function(buffer, actor, aim, dir)
 	buffer:write_instance(actor)
-	buffer:write_byte(dir)
+	buffer:write_byte(aim)
+	buffer:write_short(dir)
 end
 
 local aim_deserializer = function(buffer)
 	local actor = buffer:read_instance()
-	local dir = buffer:read_byte()
+	local aim = buffer:read_byte()
+	local dir = buffer:read_short()
 	
 	local data = Instance.get_data(actor)
 	
-	if dir == 0 then
+	data.nemmerc_slide_dir = dir
+	
+	if aim == 0 then
 		actor.sprite_idle = actor.sprite_idle_slide_left
 		actor.sprite_walk = actor.sprite_idle_slide_left
 		actor.sprite_walk_half = Array.new({actor.sprite_idle_slide_left, nil, 0, actor.sprite_idle_slide_left})
@@ -211,7 +213,7 @@ local aim_deserializer = function(buffer)
 		actor.sprite_fall = actor.sprite_idle_slide_left
 		actor.sprite_shoot1 = actor.sprite_shoot1_slide_left
 		actor.sprite_shoot2 = actor.sprite_shoot2_slide_left
-	elseif dir == 1 then
+	elseif aim == 1 then
 		actor.sprite_idle = actor.sprite_idle_slide
 		actor.sprite_walk = actor.sprite_idle_slide
 		actor.sprite_walk_half = Array.new({actor.sprite_idle_slide, nil, 0, actor.sprite_idle_slide})
@@ -236,6 +238,8 @@ Callback.add(nemmerc.on_step, function(actor)
 	
 	if data.nemmerc_slide > 0 then
 		data.nemmerc_slide = data.nemmerc_slide - 1
+		
+		actor.image_xscale = data.nemmerc_slide_dir
 		if actor:is_authority() then
 			local braking_left = (Util.bool(actor.moveLeft) and not Util.bool(actor.moveRight) and data.nemmerc_slide_dir > 0)
 			local braking_right = (Util.bool(actor.moveRight) and not Util.bool(actor.moveLeft) and data.nemmerc_slide_dir < 0)
@@ -245,7 +249,6 @@ Callback.add(nemmerc.on_step, function(actor)
 			end
 			
 			actor.pHspeed = data.nemmerc_slide / 50 * 2 * actor.pHmax * data.nemmerc_slide_dir + actor.pHmax * data.nemmerc_slide_dir
-			actor.image_xscale = data.nemmerc_slide_dir
 			actor.moveLeft = 0
 			actor.moveRight = 0
 				
@@ -262,7 +265,7 @@ Callback.add(nemmerc.on_step, function(actor)
 				data.nemmerc_slide_turned = actor.hold_facing_direction_xscale
 				
 				if Net.online then
-					aim_packet:send_to_all(actor, 0)
+					aim_packet:send_to_all(actor, 0, data.nemmerc_slide_dir)
 				end
 			elseif actor.hold_facing_direction_xscale == data.nemmerc_slide_dir and data.nemmerc_slide_turned ~= actor.hold_facing_direction_xscale then
 				actor.sprite_idle = actor.sprite_idle_slide
@@ -277,11 +280,11 @@ Callback.add(nemmerc.on_step, function(actor)
 				data.nemmerc_slide_turned = actor.hold_facing_direction_xscale
 				
 				if Net.online then
-					aim_packet:send_to_all(actor, 1)
+					aim_packet:send_to_all(actor, 1, data.nemmerc_slide_dir)
 				end
 			end
 			
-			if Net.online then
+			if Net.online and Global._current_frame % 10 == 0 then
 				slide_packet:send_to_all(actor, data.nemmerc_slide_dir, actor.hold_facing_direction_xscale, braking_left, braking_right)
 			end
 		end
@@ -851,41 +854,19 @@ efFollow:set_sprite(sprite_shoot4_2)
 efFollow:set_depth(-200)
 
 Callback.add(efFollow.on_create, function(self)
-	self.target = nil
-	self.sprite_index = sprite_shoot4_2
-	self.image_xscale = 1
 	self.image_speed = 0.25
-	self:instance_sync()
 end)
 
 Callback.add(efFollow.on_step, function(self)
 	if self.image_index < 4 and self.target and Instance.exists(self.target) then
 		self.x = self.target.x
 		self.y = self.target.y
-		self.ghost_x = self.target.x
-		self.ghost_y = self.target.y
 	end
 	
 	if self.image_index >= 10 then
 		self:destroy()
 	end
 end)
-
-local follow_serializer = function(inst, buffer)
-	buffer:write_instance(inst.target)
-	buffer:write_int(inst.sprite_index)
-	buffer:write_short(inst.image_xscale)
-	buffer:write_float(inst.image_speed)
-end
-
-local follow_deserializer = function(inst, buffer)
-	inst.target = buffer:read_instance()
-	inst.sprite_index = buffer:read_int()
-	inst.image_xscale = buffer:read_short()
-	inst.image_speed = buffer:read_float()
-end
-
-Object.add_serializers(efFollow, follow_serializer, follow_deserializer)
 
 Callback.add(stateSpecial.on_step, function(actor, data)
 	actor:get_default_skill(Skill.Slot.SPECIAL):freeze_cooldown()
@@ -946,13 +927,11 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 	end
 	
 	if data.fired == 0 then
-		if actor:is_authority() then
-			local spark = efFollow:create(xx, yy)
-			spark.sprite_index = slashes[data.slash]
-			spark.target = target
-			spark.image_xscale = actor.image_xscale
-			spark.image_speed = 0.25 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
-		end
+		local spark = efFollow:create(xx, yy)
+		spark.sprite_index = slashes[data.slash]
+		spark.target = target
+		spark.image_xscale = actor.image_xscale
+		spark.image_speed = 0.25 * math.min(1.5, math.max(1, 1 + (actor.attack_speed - 1) / 2))
 		
 		if ssr_is_near_ground(actor, xx, yy, 64) then
 			GM.teleport_nearby(actor, xx, yy)
