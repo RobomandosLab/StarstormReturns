@@ -177,10 +177,6 @@ return {
 			name = "The Red Button",
 			description = "Detonate the dropped bomb for <y>500% damage.</c>\n<y>Stuns</c> enemies when <b>upgraded."
 		},
-		technicianX2 = {
-			name = "",
-			description = ""
-		},
 		technicianC = {
 			name = "24/7 Energy",
 			description = "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."

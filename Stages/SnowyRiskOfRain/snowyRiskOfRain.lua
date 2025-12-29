@@ -1,4 +1,3 @@
-if HOTLOADING then return end
 if not ssr_chirrsmas_active then return end -- christmas lasts from december 15th to january 15th
 if Settings.chirrsmas == 2 then return end -- if chirrsmas is disabled in the config then we dont do anything
 
@@ -68,14 +67,6 @@ stage_log.spr_icon = Sprite.new("EnvironmentFinal_Snowy", path.combine(PATH, "Sp
 stage_log:set_initial_camera_position(9591, 2818)
 stage_log.token_name = EnvironmentLog.find("riskOfRain").token_name
 stage_log.token_story = EnvironmentLog.find("riskOfRain").token_story
-
-local list = Global.environment_log_display_list
-
-if list:find(EnvironmentLog.find("riskOfRain").value) then
-	list:insert(list:find(EnvironmentLog.find("riskOfRain").value), stage_log.value)
-	list:delete_value(EnvironmentLog.find("riskOfRain").value)
-	list:delete((#list) - 1)
-end
 
 -- Special
 local snow = Object.new("SnowyRORSnow")
@@ -183,7 +174,18 @@ Callback.add(Callback.ON_STAGE_START, function()
 end)
 
 Hook.add_post(gm.constants.stage_roll_next, function(self, other, result, args)
+	print(result.value, Stage.find("riskOfRain").value, cl_stage.value)
 	if result.value == Stage.find("riskOfRain").value then
 		result.value = cl_stage.value
 	end
 end)
+
+if HOTLOADING then return end
+
+local list = Global.environment_log_display_list
+
+if list:find(EnvironmentLog.find("riskOfRain").value) then
+	list:insert(list:find(EnvironmentLog.find("riskOfRain").value), stage_log.value)
+	list:delete_value(EnvironmentLog.find("riskOfRain").value)
+	list:delete((#list) - 1)
+end
