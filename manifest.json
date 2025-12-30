@@ -6,6 +6,6 @@
 	"dependencies": [
 		"ReturnOfModding-ReturnOfModding-1.1.3",
 		"LuaENVY-ENVY-1.2.0",
-		"ReturnsAPI-ReturnsAPI-1.0.0"
+		"ReturnsAPI-ReturnsAPI-0.1.42"
 	]
 }
