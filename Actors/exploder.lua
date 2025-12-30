@@ -1,37 +1,44 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Exploder")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Exploder")
 
-local sprite_mask		= Resources.sprite_load(NAMESPACE, "ExploderMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 15, 13)
-local sprite_palette	= Resources.sprite_load(NAMESPACE, "ExploderPalette",	path.combine(SPRITE_PATH, "palette.png"))
-local sprite_spawn		= Resources.sprite_load(NAMESPACE, "ExploderSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 5, 21, 31)
-local sprite_idle		= Resources.sprite_load(NAMESPACE, "ExploderIdle",		path.combine(SPRITE_PATH, "idle.png"), 6, 15, 14)
-local sprite_walk		= Resources.sprite_load(NAMESPACE, "ExploderWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 15, 15)
-local sprite_jump		= Resources.sprite_load(NAMESPACE, "ExploderJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 24, 16)
-local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "ExploderJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 24, 16)
-local sprite_fall		= Resources.sprite_load(NAMESPACE, "ExploderFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 24, 16)
-local sprite_death		= Resources.sprite_load(NAMESPACE, "ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
+local sprite_mask		= Sprite.new("ExploderMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 15, 13)
+local sprite_palette	= Sprite.new("ExploderPalette",		path.combine(SPRITE_PATH, "palette.png"))
+local sprite_portrait	= Sprite.new("ExploderPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
+local sprite_spawn		= Sprite.new("ExploderSpawn",		path.combine(SPRITE_PATH, "spawn.png"), 5, 21, 31)
+local sprite_idle		= Sprite.new("ExploderIdle",		path.combine(SPRITE_PATH, "idle.png"), 6, 15, 14, 0.8)
+local sprite_walk		= Sprite.new("ExploderWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 15, 15, 0.8)
+local sprite_jump		= Sprite.new("ExploderJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 24, 16)
+local sprite_jump_peak	= Sprite.new("ExploderJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 24, 16)
+local sprite_fall		= Sprite.new("ExploderFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 24, 16)
+local sprite_death		= Sprite.new("ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
+local sprite_shoot1		= Sprite.new("ExploderShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55)
 
-local sprite_shoot1		= Resources.sprite_load(NAMESPACE, "ExploderShoot1",	path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55, nil, -16, -16, 16, 10)
+GM.elite_generate_palettes(sprite_palette)
 
-gm.elite_generate_palettes(sprite_palette)
+local sound_spawn		= Sound.new("ExploderSpawn",		path.combine(SOUND_PATH, "spawn.ogg"))
+local sound_hit			= Sound.new("ExploderHit",			path.combine(SOUND_PATH, "hit.ogg"))
+local sound_death		= Sound.new("ExploderDeath",		path.combine(SOUND_PATH, "death.ogg"))
+local sound_shoot1a		= Sound.new("ExploderShoot1a",		path.combine(SOUND_PATH, "skill1a.ogg"))
+local sound_shoot1b		= Sound.new("ExploderShoot1b",		path.combine(SOUND_PATH, "skill1b.ogg"))
 
-local sound_spawn		= Resources.sfx_load(NAMESPACE, "ExploderSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
-local sound_hit			= Resources.sfx_load(NAMESPACE, "ExploderHit",		path.combine(SOUND_PATH, "hit.ogg"))
-local sound_death		= Resources.sfx_load(NAMESPACE, "ExploderDeath",	path.combine(SOUND_PATH, "death.ogg"))
-local sound_shoot1a		= Resources.sfx_load(NAMESPACE, "ExploderShoot1a",	path.combine(SOUND_PATH, "skill1a.ogg"))
-local sound_shoot1b		= Resources.sfx_load(NAMESPACE, "ExploderShoot1b",	path.combine(SOUND_PATH, "skill1b.ogg"))
+local exploder = Object.new("Exploder", Object.Parent.ENEMY_CLASSIC)
+exploder:set_sprite(sprite_idle)
+exploder:set_depth(11) -- depth of vanilla pEnemyClassic objects
 
-local exploder = Object.new(NAMESPACE, "Exploder", Object.PARENT.enemyClassic)
-local exploder_id = exploder.value
+-- create the monster log
+local mlog = ssr_create_monster_log("exploder")
+mlog.sprite_id = sprite_idle
+mlog.portrait_id = sprite_portrait
+mlog.sprite_offset_x = 44
+mlog.sprite_offset_y = 48
+mlog.stat_hp = 100
+mlog.stat_damage = 17
+mlog.stat_speed = 2.6
 
-exploder.obj_sprite = sprite_idle
-exploder.obj_depth = 11 -- depth of vanilla pEnemyClassic objects
+local primary = Skill.new("exploderZ")
+local statePrimary = ActorState.new("exploderPrimary")
 
-local exploderPrimary = Skill.new(NAMESPACE, "exploderZ")
-local stateExploderPrimary = State.new(NAMESPACE, "exploderPrimary")
-
-exploder:clear_callbacks()
-exploder:onCreate(function(actor)
+Callback.add(exploder.on_create, function(actor)
 	actor.sprite_palette = sprite_palette
 	actor.sprite_spawn = sprite_spawn
 	actor.sprite_idle = sprite_idle
@@ -53,30 +60,33 @@ exploder:onCreate(function(actor)
 	actor.pHmax_base = 2.6
 
 	actor.z_range = 28
-	actor:set_default_skill(Skill.SLOT.primary, exploderPrimary)
+	actor.monster_log_drop_id = mlog.value
+	actor:set_default_skill(Skill.Slot.PRIMARY, primary)
 
 	actor:init_actor_late()
 end)
 
-exploderPrimary:clear_callbacks()
-exploderPrimary:onActivate(function(actor)
-	actor:enter_state(stateExploderPrimary)
+Callback.add(primary.on_activate, function(actor, skill, slot)
+	actor:set_state(statePrimary)
 end)
 
-stateExploderPrimary:clear_callbacks()
-stateExploderPrimary:onEnter(function(actor, data)
-	actor.image_index = 0
+Callback.add(statePrimary.on_enter, function(actor, _) -- not gonna use data here because get_data should be faster
+	local data = Instance.get_data(actor)
 	data.exploded = 0
-
+	actor.image_index = 0
 	actor.interrupt_sound = actor:sound_play(sound_shoot1a, 1.0, (0.9 + math.random() * 0.2) * actor.attack_speed)
 end)
-stateExploderPrimary:onStep(function(actor, data)
+
+Callback.add(statePrimary.on_step, function(actor, _)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1, 0.2)
+	
+	local data = Instance.get_data(actor)
 
 	if data.exploded == 0 and actor.image_index >= 14 then
 		data.exploded = 1
 		actor.intangible = true -- make the exploder untouchable, so it can't be hit after it has exploded but before it's deleted
+		--table.insert(exploder_kill_queue, actor.id) -- add to the kill queue
 
 		actor:sound_play(sound_shoot1b, 1.0, (0.9 + math.random() * 0.2) * actor.attack_speed)
 		actor:screen_shake(2)
@@ -84,48 +94,33 @@ stateExploderPrimary:onStep(function(actor, data)
 		-- every player's game simulates the explosion locally, making it easier to dodge on high ping.
 		actor:fire_explosion_local(actor.x, actor.y - 16, 120, 56, 2)
 	end
-end)
-
--- destroying an actor anywhere in its state or step code causes errors in certain cases. do this in a separate pass
-Callback.add("postStep", "SSDestroyExploders", function()
-	local exploders = Instance.find_all(exploder)
-	for _, actor in ipairs(exploders) do
-		local state_data = actor.actor_state_current_data_table
-
-		-- check that it's advanced to the next frame. this gives time for the attack's procs and game report ("Killed by" info) to work
-		if state_data.exploded == 1 and actor.image_index >= 15 then
-			-- manually create a corpse. plays the remainder of the explosion animation
-			local body = gm.instance_create(actor.x, actor.y, gm.constants.oBody)
-			body.sprite_index = actor.sprite_index
-			body.image_xscale = actor.image_xscale
-			body.image_index = actor.image_index
-			body.image_speed = actor.image_speed
-			body.image_blend = actor.image_blend
-			body.sprite_palette = actor.sprite_palette
-			body.elite_type = actor.elite_type
-
-			actor:destroy()
-		end
+	
+	if data.exploded == 1 and actor.image_index >= 15 then -- 1 image_index gap is needed to make the results screen show who you got killed by
+		data.exploded = 2
+		actor.exp_worth = 0 -- dont drop money on death
+		actor.hp = -10000 -- kill !
 	end
 end)
 
-local monsterCardExploder = Monster_Card.new(NAMESPACE, "exploder")
-monsterCardExploder.object_id = exploder_id
-monsterCardExploder.spawn_cost = 18
-monsterCardExploder.spawn_type = Monster_Card.SPAWN_TYPE.classic
-monsterCardExploder.can_be_blighted = false -- HELL no
+local card = MonsterCard.new("exploder")
+card.object_id = exploder.value
+card.spawn_cost = 18
+card.spawn_type = 0 --Monster_Card.SPAWN_TYPE.classic
+card.can_be_blighted = false -- least threatening blighted enemy because they just blow up lol
 
 if HOTLOADING then return end
 
--- TODO: evaluate a better approach for populating stages..
 local stages = {
-	"ror-dampCaverns",
-	"ror-skyMeadow",
-	"ror-hiveCluster",
-	"ror-riskOfRain",
+	"dampCaverns",
+	"skyMeadow",
+	"hiveCluster",
+	"riskOfRain",
 }
 
 for _, s in ipairs(stages) do
 	local stage = Stage.find(s)
-	stage:add_monster(monsterCardExploder)
+	
+	if stage then
+		stage:add_monster(card)
+	end
 end

@@ -4,45 +4,51 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Elites/Empyrean")
 local SOUND_PATH = path.combine(PATH, "Sounds/Elites/Empyrean")
 
-local sprite_icon = Resources.sprite_load(NAMESPACE, "EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
-local splash_sprite = Resources.sprite_load(NAMESPACE, "ParticleEmpyreanSpawnSplash", path.combine(SPRITE_PATH, "splash.png"), 6)
-local beam_sprite = Resources.sprite_load(NAMESPACE, "ParticleEmpyreanSpawnBeam", path.combine(SPRITE_PATH, "beam.png"), 11)
-local star_sprite = Resources.sprite_load(NAMESPACE, "EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
+local sprite_icon = Sprite.new("EliteIconEmpyrean", path.combine(SPRITE_PATH, "icon.png"), 1, 25, 22)
+local particle_sprite = Sprite.new("ParticleEmpyreanSpawnParticle", path.combine(SPRITE_PATH, "particle.png"), 6)
+local particle2_sprite = Sprite.new("ParticleEmpyreanSpawnParticle2", path.combine(SPRITE_PATH, "particle2.png"), 6)
+local particle3_sprite = Sprite.new("ParticleEmpyreanSpawnParticle3", path.combine(SPRITE_PATH, "particle3.png"), 7)
+local sprite_beam = Sprite.new("EmpyreanBeam", path.combine(SPRITE_PATH, "beam.png"), 4, 0, 176)
+local sprite_splash = Sprite.new("EmpyreanBeamSplash", path.combine(SPRITE_PATH, "splash.png"), 4, 0, 50)
+local shockwave_sprite = Sprite.new("EmpyreanBeamShockwave", path.combine(SPRITE_PATH, "shockwave.png"), 6, 32, 64)
+local star_sprite = Sprite.new("EmpyreanWormStar", path.combine(SPRITE_PATH, "star.png"), 8, 16, 16)
+local star_small_sprite = Sprite.new("EmpyreanWormStarSmall", path.combine(SPRITE_PATH, "star_small.png"), 1, 3, 2)
 
-local gotanythingsharp = Resources.sfx_load(NAMESPACE, "EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
-local sound_spawn = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
-local sound_spawn_alt = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnShortAlt", path.combine(SOUND_PATH, "spawn_alt.ogg"))
-local sound_spawn_worm = Resources.sfx_load(NAMESPACE, "EmpyreanSpawnWorm", path.combine(SOUND_PATH, "spawn_worm.ogg"))
-local sound_star_spawn = Resources.sfx_load(NAMESPACE, "EmpyreanStarSpawn", path.combine(SOUND_PATH, "star_spawn.ogg"))
-local sound_star_shoot = Resources.sfx_load(NAMESPACE, "EmpyreanStarShoot", path.combine(SOUND_PATH, "star_shoot.ogg"))
-local sound_teleport1 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport1", path.combine(SOUND_PATH, "teleport1.ogg"))
-local sound_teleport2 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport2", path.combine(SOUND_PATH, "teleport2.ogg"))
-local sound_teleport3 = Resources.sfx_load(NAMESPACE, "EmpyreanTeleport3", path.combine(SOUND_PATH, "teleport3.ogg"))
+GM.elite_generate_palettes()
 
-local empy = Elite.new(NAMESPACE, "empyrean")
+local gotanythingsharp = Sound.new("EmpyreanSpawn", path.combine(SOUND_PATH, "beam.ogg"))
+local sound_spawn = Sound.new("EmpyreanSpawnShort", path.combine(SOUND_PATH, "spawn.ogg"))
+local sound_spawn_alt = Sound.new("EmpyreanSpawnShortAlt", path.combine(SOUND_PATH, "spawn_alt.ogg"))
+local sound_spawn_worm = Sound.new("EmpyreanSpawnWorm", path.combine(SOUND_PATH, "spawn_worm.ogg"))
+local sound_star_spawn = Sound.new("EmpyreanStarSpawn", path.combine(SOUND_PATH, "star_spawn.ogg"))
+local sound_star_shoot = Sound.new("EmpyreanStarShoot", path.combine(SOUND_PATH, "star_shoot.ogg"))
+local sound_teleport1 = Sound.new("EmpyreanTeleport1", path.combine(SOUND_PATH, "teleport1.ogg"))
+local sound_teleport2 = Sound.new("EmpyreanTeleport2", path.combine(SOUND_PATH, "teleport2.ogg"))
+local sound_teleport3 = Sound.new("EmpyreanTeleport3", path.combine(SOUND_PATH, "teleport3.ogg"))
+
+local empy = ssr_create_elite("empyrean")
 empy.healthbar_icon = sprite_icon
 empy.palette = gm.constants.sElitePaletteDummy
 empy.blend_col = Color.WHITE
 
-GM.elite_generate_palettes()
-
-local evil = Particle.new(NAMESPACE, "EmpyreanSpawnEvil")
-evil:set_sprite(splash_sprite, true, true, false)
+local evil = Particle.new("EmpyreanSpawnEvil")
+evil:set_sprite(particle_sprite, true, true, false)
 evil:set_life(15, 30)
 
-local beam = Particle.new(NAMESPACE, "EmpyreanSpawnBeam")
-beam:set_direction(270, 270, 0, 0)
-beam:set_speed(8, 8, 0, 0)
-beam:set_sprite(beam_sprite, true, true, false)
-beam:set_life(10, 10)
+local good_small = Particle.new("EmpyreanSpawnGood")
+good_small:set_sprite(particle3_sprite, true, true, false)
+good_small:set_orientation(0, 0, 0, 0, true)
+good_small:set_speed(4, 6, -0.2, 0)
+good_small:set_life(20, 40)
 
-local splash = Particle.new(NAMESPACE, "EmpyreanSpawnSplash")
-splash:set_sprite(splash_sprite, true, true, false)
-splash:set_scale(1.5, 1.5)
-splash:set_life(15, 30)
+local good_big = Particle.new("EmpyreanSpawnGoodBig")
+good_big:set_sprite(particle2_sprite, true, true, false)
+good_big:set_orientation(0, 0, 0, 0, true)
+good_big:set_speed(4, 6, -0.2, 0)
+good_big:set_life(20, 40)
 
-local rainbowspark = Particle.new(NAMESPACE, "EmpyreanRainbowSpark")
-rainbowspark:set_shape(Particle.SHAPE.line)
+local rainbowspark = Particle.new("EmpyreanRainbowSpark")
+rainbowspark:set_shape(Particle.Shape.LINE)
 rainbowspark:set_blend(true)
 rainbowspark:set_alpha3(1, 1, 0)
 rainbowspark:set_size(0, 1, 0, 0.01)
@@ -52,72 +58,63 @@ rainbowspark:set_direction(0, 180, 0, 10)
 rainbowspark:set_scale(0.1, 0.1)
 rainbowspark:set_life(20, 100)
 
-local teleport = Particle.new(NAMESPACE, "EmpyreanTeleport")
-teleport:set_shape(Particle.SHAPE.star)
+local teleport = Particle.new("EmpyreanTeleport")
+teleport:set_sprite(star_small_sprite, true, true, false)
 teleport:set_alpha3(0.75, 0.75, 0)
 teleport:set_color2(Color.WHITE, Color.WHITE)
 teleport:set_orientation(0, 0, 0, 0, true)
-teleport:set_speed(0, 3, -0.03, 0.05)
+teleport:set_speed(1, 3, -0.03, 0.05)
 teleport:set_direction(0, 360, 0, 10)
-teleport:set_scale(0.1, 0.1)
 teleport:set_life(20, 100)
 
-local telegraph = Particle.new(NAMESPACE, "EmpyreanStarTelegraph")
-telegraph:set_shape(Particle.SHAPE.disk)
-telegraph:set_alpha2(0.6, 0)
-telegraph:set_blend(true)
-telegraph:set_speed(6, 6, 0, 0)
-telegraph:set_scale(0.1, 0.1)
-telegraph:set_life(100, 100)
-
-local empyorb = Item.new(NAMESPACE, "eliteOrbEmpyrean", true)
+local empyorb = Item.new("eliteOrbEmpyrean")
 empyorb.is_hidden = true
 
-local teleorb = Item.new(NAMESPACE, "elitePassiveTeleportEmpyrean", true)
+local teleorb = Item.new("elitePassiveTeleportEmpyrean")
 teleorb.is_hidden = true
 
 -- PUT ASPECTS HERE --
--- format is {"namespace-identifier", stack}
+-- format is {"identifier", "namespace", stack}
 local aspects = {
 	-- VANILLA --
 	
 	-- volatile
-	{"ror-eliteOrbExplosiveShot", 2},
-	{"ror-elitePassiveVolatile", 1},
+	{"eliteOrbExplosiveShot", "ror", 2},
+	{"elitePassiveVolatile", "ror", 1},
 	
 	-- overloading
-	{"ror-eliteOrbLightning", 1},
-	{"ror-elitePassiveOverloading", 1},
+	{"eliteOrbLightning", "ror", 1},
+	{"elitePassiveOverloading", "ror", 1},
 	
 	-- leeching
-	{"ror-elitePassiveLeeching", 1},
-	{"ror-eliteOrbLifesteal", 7},
+	{"elitePassiveLeeching", "ror", 1},
+	{"eliteOrbLifesteal", "ror", 7},
 	
 	-- frenzied (minus their teleporting orb)
-	{"ror-eliteOrbAttackSpeed", 3},
-	{"ror-eliteOrbMoveSpeed", 5},
+	{"eliteOrbAttackSpeed", "ror", 3},
+	{"eliteOrbMoveSpeed", "ror", 5},
 	
 	-- blazing
-	{"ror-eliteOrbFireTrail", 5},
+	{"eliteOrbFireTrail", "ror", 5},
 	
 	
 	
 	-- STARSTORM --
 	
 	-- poison
-	{"ssr-eliteOrbPoison", 1}
+	{"eliteOrbPoison", "ssr", 1}
 }
 function ssr_give_empyrean_aspects(actor)
 	for _, aspect in ipairs(aspects) do
-		local item = Item.find(aspect[1])
+		local item = Item.find(aspect[1], aspect[2])
 		
 		-- if the elite already has these orbs, remove them
-		if actor:item_stack_count(item) > 0 then
-			actor:item_remove(item, actor:item_stack_count(item))
+		if actor:item_count(item) > 0 then
+			actor:item_take(item, actor:item_count(item))
 		end
  		
 		-- give the orbs
-		actor:item_give(item, aspect[2])
+		actor:item_give(item, aspect[3])
 	end
 	
 	for id, stack in ipairs(actor.inventory_item_stack) do
@@ -127,17 +124,9 @@ function ssr_give_empyrean_aspects(actor)
 	end
 end
 
-empy:clear_callbacks()
-empy:onApply(function(actor)
+Callback.add(empy.on_apply, function(actor)
 	actor:item_give(empyorb) -- applies most empyrean effects
 	actor:item_give(teleorb) -- makes it teleport to the player from any location
-	
-	-- stat changes are multiplicative with normal elite stat changes
-	-- so max hp for example will be base * 12 * 2.8 = 33.6x total multiplier
-	
-	-- giga health
-	actor.maxhp_base = actor.maxhp_base * 12
-	actor.hp = actor.maxhp
 	
 	-- giga gold and exp
 	if actor.exp_worth then
@@ -148,477 +137,572 @@ empy:onApply(function(actor)
 	actor.knockback_immune = true
 	actor.stun_immune = true
 	actor.fall_immune = true
+	if actor.sprite_jump then
+		actor.can_jump = true
+	end
+	actor.leap_max_distance = math.max(actor.leap_max_distance or 0, 2)
+	
+	Instance.get_data(actor).empy_quality = Global.__pref_graphics_quality -- get quality
 	
 	-- make maxhp_base modification take effect
 	GM.actor_queue_dirty(actor) 
 end)
 
-empyorb:clear_callbacks()
-empyorb:onAcquire(function(actor, stack)
-	-- move the actor to the ground
-	actor:move_contact_solid(270, -1)
+Callback.add(empyorb.on_acquired, function(actor, stack)
+	local data = Instance.get_data(actor)
 	
-	-- apply screenshake
-	actor:screen_shake(4)
-	
-	-- play the spawn sound
+	local all_monster_cards = MonsterCard.find_all()
+	local normal_spawn = true
+	for i, card in ipairs(all_monster_cards) do
+		if card.object_id == actor.object_index then -- if the actor has a monster card
+			if card.spawn_type ~= 0 then
+				normal_spawn = false
+				break
+			end
+		end
+	end
 	
 	-- start the beam
-	if gm.inside_view(actor.x, actor.y) == 1 and actor.team ~= 1 then
-		actor:get_data().empy_beam = 180
-		actor:get_data().empy_beam_over = 0
-		actor:sound_play(gotanythingsharp, 2, 1)
-	elseif gm.inside_view(actor.x, actor.y) ~= 1 or actor.team == 1 then
-		actor:get_data().empy_beam = 0
-		actor:get_data().empy_beam_over = 1
-		actor:get_data().no_beam_loser = 5
+	if actor.team ~= 1 and normal_spawn then
+		actor:move_contact_solid(270, -1) -- move the actor to the ground
 		
-		if Helper.chance(0.5) then
-			actor:sound_play(sound_spawn, 2, 1)
+		data.empy_beam = 180
+		data.empy_beam_over = 0
+		data.empy_color = 0
+		actor:sound_play(gotanythingsharp, 2, 1)
+	else
+		data.empy_beam = 0
+		data.empy_beam_over = 1
+		data.no_beam_loser = 5
+		data.empy_color = 0
+		
+		if math.random() <= 0.5 then
+			actor:sound_play(sound_spawn, 3, 1)
 		else
-			actor:sound_play(sound_spawn_alt, 2, 1)
+			actor:sound_play(sound_spawn_alt, 3, 1)
 		end
 		
 		-- give them all elite aspects
 		ssr_give_empyrean_aspects(actor)
 	end
 	
+	-- apply screenshake
+	actor:screen_shake(10)
+	
 	-- remove the passive teleport orb since empyreans have a custom one
-	if actor:item_stack_count(Item.find("ror-elitePassiveTeleport")) > 0 then 
-		actor:item_remove(Item.find("ror-elitePassiveTeleport"), actor:item_stack_count(Item.find("ror-elitePassiveTeleport")))
+	if actor:item_count(Item.find("elitePassiveTeleport")) > 0 then 
+		actor:item_take(Item.find("elitePassiveTeleport"), actor:item_count(Item.find("elitePassiveTeleport")))
 	end
 end)
 
-empyorb:onPostDraw(function(actor, stack)
-	if actor:get_data().empy_beam and actor:get_data().empy_beam_over then
-		if actor:get_data().empy_beam > 0 and actor:get_data().empy_beam_over == 0 then
-			local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
-			local part_width = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
-			local part_height = gm.round(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
-			local silhouette_y = actor.y - 16 - (16 * math.sin(gm.degtorad(270 + actor:get_data().empy_beam * 2)))
+empyorb.effect_display = EffectDisplay.func(function(actor_unwrapped)	
+	local actor = Instance.wrap(actor_unwrapped)
+	local data = Instance.get_data(actor)
+	
+	if not data.empy_beam or not data.empy_beam_over then return end
+	if data.empy_beam <= 0 or data.empy_beam_over ~= 0 then
+		-- make it rainbow
+		if actor.object_index ~= gm.constants.oWorm then
+			GM.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, actor.y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.from_hsv(data.empy_color % 360, 100, 100), actor.image_alpha)
+		end
+		
+		actor.hud_health_color = Color.WHITE
+		return 
+	end
+	
+	local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+	local part_width = math.ceil((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
+	local part_height = math.ceil(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
+	local silhouette_y = actor.y - 16 - (16 * Math.dsin(270 + data.empy_beam * 2))
 
-			if actor:get_data().empy_beam <= 10 then
-				width = width * (1000 - (10 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam shrink when its lifetime ends
-			elseif actor:get_data().empy_beam > 168 then
-				width = width * ((180 - actor:get_data().empy_beam) ^ 3) / 1000 -- make the beam widen when it appears
-			elseif actor:get_data().empy_beam > 165 then
-				width = width * (1.3 - ((169 - actor:get_data().empy_beam) / 10)) -- make the beam shrink back to its normal size after it widens
-			else
-				if math.random() >= 0.5 then
-					-- create the black particles around the enemy
-					evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.SYSTEM.middle)
-					
-					-- create the beam splashing particles
-					local side = 1
-					if math.random() >= 0.5 then
-						side = -1
-					end
-					local ori = 180 + math.random(-45, 45) - 45 * side
-					splash:set_orientation(ori, ori, 0, 0, false)
-					splash:create_color(actor.x + (width + math.random(3)) * side, actor.bbox_bottom, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-				end
-			end
+	if data.empy_beam <= 10 then
+		width = width * (1000 - (10 - data.empy_beam) ^ 3) / 1000 -- make the beam shrink when its lifetime ends
+	elseif data.empy_beam > 168 then
+		width = width * ((180 - data.empy_beam) ^ 3) / 1000 -- make the beam widen when it appears
+	elseif data.empy_beam > 165 then
+		width = width * (1.3 - ((169 - data.empy_beam) / 10)) -- make the beam shrink back to its normal size after it widens
+	end
 			
-			if actor:get_data().empy_beam > 15 and actor:get_data().empy_beam <= 170 then
-				-- create the beam particles that touch the ground
-				beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-				beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - 88, Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-				
-				-- create the beam particles around the beam
-				for i = 1, 22 do
-					local rnd = math.random(80, 1728)
-					if gm.inside_view(actor.x, actor.y - rnd) == 1 then
-						beam:create_color(actor.x - width - math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-						beam:create_color(actor.x + width + math.random(3), actor.bbox_bottom - math.random(88, 1152), Color.from_hsv(Global._current_frame % 360, 100, 100), 1, Particle.SYSTEM.middle)
-					end
-				end
-			end
-			
-			-- draw the beam
-			if actor:get_data()._imalpha then
-				gm.draw_set_alpha(actor:get_data()._imalpha)
-			else
-				gm.draw_set_alpha(1)
-			end
-			gm.draw_set_color(Color.WHITE)
-			gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
-			
-			-- make it black and move
-			gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - actor:get_data().empy_beam) ^ 3) / 1000))
-			gm.draw_set_alpha(1)
+	-- draw the beam
+	if data._imalpha then
+		gm.draw_set_alpha(data._imalpha)
+	else
+		gm.draw_set_alpha(1)
+	end
+	gm.draw_set_color(Color.WHITE)
+	gm.draw_rectangle(actor.x - width, 0, actor.x + width, actor.bbox_bottom, false)
+	
+	gm.gpu_set_fog(1, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	local closing_anim = math.min(1, ((180 - data.empy_beam) ^ 3) / 1000)
+	local frame = (4 - ((data.empy_beam % 13) / 3))
+	for i = 0, 8 do
+		if i < 1 then
+			GM.draw_sprite_ext(sprite_splash, frame, actor.x + (width - 2), actor.bbox_bottom, closing_anim, 1, 0, Color.WHITE, closing_anim)
+			GM.draw_sprite_ext(sprite_splash, frame, actor.x - (width - 2), actor.bbox_bottom, -closing_anim, 1, 0, Color.WHITE, closing_anim)
 		else
-			-- make it rainbow
-			if actor.object_index ~= gm.constants.oWorm then
-				gm.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, actor.y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.from_hsv(Global._current_frame % 360, 100, 100), actor.image_alpha)
-			end
-			
-			actor.hud_health_color = Color.WHITE
+			GM.draw_sprite_ext(sprite_beam, frame, actor.x + (width - 2), actor.bbox_bottom - 50 - 176 * (i - 1), closing_anim, 1, 0, Color.WHITE, closing_anim)
+			GM.draw_sprite_ext(sprite_beam, frame, actor.x - (width - 2), actor.bbox_bottom - 50 - 176 * (i - 1), -closing_anim, 1, 0, Color.WHITE, closing_anim)
 		end
 	end
-end)
+	gm.gpu_set_fog(0, Color.from_hsv((data.empy_color) % 360, 100, 100), 0, 0)
+	
+	-- make it black and move
+	GM.draw_sprite_ext(actor.sprite_index, actor.image_index, actor.x, silhouette_y, actor.image_xscale, actor.image_yscale, actor.image_angle, Color.BLACK, math.min(1, ((180 - data.empy_beam) ^ 3) / 1000))
+	gm.draw_set_alpha(1)
+end, EffectDisplay.DrawPriority.BODY_POST)
 
 -- dont draw the healthbar while the beam is there
-gm.pre_script_hook(gm.constants.draw_hp_bar, function(self, other, result, args)
-	if not Wrap.wrap(self):get_data().empy_beam then return end
+Hook.add_pre(gm.constants.draw_hp_bar, function(self, other, result, args)
+	if self.elite_type ~= empy.value then return end
+	if not Instance.get_data(self).empy_beam then return end
 	
-	if Wrap.wrap(self):get_data().empy_beam then
-		if Wrap.wrap(self):get_data().empy_beam > 0 then
-			return false
-		end
+	if Instance.get_data(self).empy_beam <= 0 then
+		return
+	else
+		return false
 	end
 end)
 
 local guarded = false
 
 -- disable fall damage for the elite to prevent cheese
-gm.pre_script_hook(gm.constants.actor_phy_on_landed, function(self, other, result, args)
-	if not Instance.wrap(self).fall_immune then return end
+Hook.add_pre(gm.constants.actor_phy_on_landed, function(self, other, result, args)
+	if self.elite_type ~= empy.value then return end
+	if not self.fall_immune then return end
 	
-    local real_self = Instance.wrap(self)
-    if not gm.bool(self.invincible) and real_self.fall_immune == true then
+    if not Util.bool(self.invincible) and self.fall_immune == true then
         self.invincible = 1
         guarded = true
     end
 end)
 
-gm.post_script_hook(gm.constants.actor_phy_on_landed, function(self, other, result, args)
+Hook.add_post(gm.constants.actor_phy_on_landed, function(self, other, result, args)
     if guarded then
         self.invincible = 0
         guarded = false
     end
 end)
 
-empyorb:onPostStep(function(actor, stack)
-	if actor:get_data().empy_beam > 0 and actor:get_data().empy_beam_over == 0 then -- freeze the enemy
-		-- store the enemy's certain stats so we can restore it later
-		if not actor:get_data()._hmax then
-			actor:get_data()._hmax = actor.pHmax
-			actor:get_data()._vmax = actor.pVmax
-			actor:get_data()._imspeed = actor.image_speed
-			actor:get_data()._imalpha = actor.image_alpha
-			actor:get_data()._intang = actor.intangible
-		end
-		
-		-- make it not move
-		actor.image_speed = 0.25
-		actor.image_alpha = 0
-		actor.pHmax = 0
-		actor.pVmax = 0
-		actor.intangible = true
-		actor.activity = 50
-		actor.__activity_handler_state = 50
-		actor.state = 0
-		
-		-- smoother transition
-		if actor:get_data()._imalpha then
-			actor.image_alpha = actor:get_data()._imalpha * (10 - actor:get_data().empy_beam) / 10
+local objShockwave = Object.new("EmpyreanSpawnShockwave")
+objShockwave:set_sprite(shockwave_sprite)
+objShockwave:set_depth(-200)
+
+Callback.add(objShockwave.on_create, function(self)
+	local data = Instance.get_data(self)
+	data.life = 12
+	
+	self.image_speed = 0.25
+end)
+
+Callback.add(objShockwave.on_step, function(self)
+	local data = Instance.get_data(self)
+	
+	self.speed = self.speed * 0.9
+	
+	if data.life > 0 then
+		data.life = data.life - 1
+	else
+		if self.image_alpha > 0 then
+			self.image_alpha = self.image_alpha - 0.25
 		else
-			actor.image_alpha = (10 - actor:get_data().empy_beam) / 10
+			self:destroy()
 		end
-		
-		-- (duke nukem voice) shake it baby
-		actor:screen_shake(0.5)
-		
-		-- make it look like its floating
-		if actor.sprite_fall then
-			actor.sprite_index = actor.sprite_fall
-		elseif actor.sprite_idle then
-			actor.sprite_index = actor.sprite_idle
-		end
-		
-		actor:get_data().empy_beam = actor:get_data().empy_beam - 1
-	elseif actor:get_data().empy_beam_over == 0 and actor:get_data().empy_beam <= 0 then -- unfreeze the enemy
-		actor:get_data().empy_beam_over = 1
-		
-		-- restore their speed
-		actor.pHmax = actor:get_data()._hmax
-		actor.pVmax = actor:get_data()._vmax
-		actor.image_speed = actor:get_data()._imspeed
-		actor.image_alpha = actor:get_data()._imalpha
-		actor.intangible = actor:get_data()._intang
-		
-		--remove all the temporary variables
-		actor:get_data()._hmax = nil
-		actor:get_data()._vmax = nil
-		actor:get_data()._imspeed = nil
-		actor:get_data()._imalpha = nil
-		actor:get_data()._intang = nil
-		
-		-- give them all elite aspects
-		ssr_give_empyrean_aspects(actor)
-		
-		-- make the boss bar appear
-		if actor.team ~= 1 and GM._mod_net_isHost() then
-			local arr = Array.new({actor})
-			local party = actor:actor_create_enemy_party_from_ids(arr)
-			local director = gm._mod_game_getDirector()
-			gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
-		end
-		
-		-- make them move again !! yippie!!
-		actor.state = 1
-		actor:skill_util_reset_activity_state()
-	end
-	
-	if actor:get_data().no_beam_loser and gm._mod_net_isHost() then
-		if actor:get_data().no_beam_loser > 0 then -- wait 5 frames before adding empyreans that didnt play the animation to the boss party (prevents issues with max hp being fucked up on the boss bar)
-			actor:get_data().no_beam_loser = actor:get_data().no_beam_loser - 1
-		else
-			actor:get_data().no_beam_loser = nil
-			if actor.team ~= 1 then -- make the boss bar appear
-				local arr = Array.new({actor})
-				local party = actor:actor_create_enemy_party_from_ids(arr)
-				local director = gm._mod_game_getDirector()
-				gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party)
-			end
-		end
-	end
-	
-	if gm.inside_view(actor.x, actor.y) == 1 and actor:get_data().empy_beam_over == 1 and actor:get_data().empy_beam <= 0 and Global._current_frame % 2 == 0 then
-		rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((Global._current_frame + actor.y * (0.75)) % 360, 100, 100), 1, Particle.SYSTEM.below)
-	end
-	
-	if actor.object_index == gm.constants.oWorm or actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
-		actor.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
-	end
-end)
-
-empyorb:onPostStatRecalc(function(actor)
-	-- giga damage
-	if actor.elite_type then
-		if actor.elite_type == empy.value then
-			actor.damage = actor.damage * (5.4 / 1.9) -- totals to 5.4x
-			actor.cdr = actor.cdr * (0.5 / 0.3) -- totals to 50%
-		end
-	end
-end)
-
-teleorb:clear_callbacks()
-teleorb:onAcquire(function(actor, stack)
-	actor:get_data().empyrean_teleport = 480 + math.random(240)
-end)
-
-teleorb:onPostStep(function(actor, stack)
-	if GM.actor_is_classic(actor) then
-		if actor:get_data().empyrean_teleport > 0 then
-			actor:get_data().empyrean_teleport = actor:get_data().empyrean_teleport - 1
-		elseif not gm.actor_state_is_climb_state(actor.actor_state_current_id) then
-			local targets = Instance.find_all(gm.constants.oP)
-			local target_fin = nil
-			
-			-- go through all players and find one that is grounded and not climbing
-			for _, target in ipairs(targets) do
-				if not gm.bool(target.free) and not gm.actor_state_is_climb_state(target.actor_state_current_id) and gm.point_distance(actor.x, actor.y, target.x, target.y) > 200 and not target.dead then
-					target_fin = target
-					break
-				end
-			end
-			
-			-- disable skills for a second to prevent unfair deaths
-			if gm._mod_net_isHost() then
-				for i = 0, 3 do
-					local skill = actor:get_active_skill(i)
-					skill.use_next_frame = math.max(skill.use_next_frame, Global._current_frame + 60)
-				end
-			end
-			
-			-- teleport!
-			if target_fin then
-				if gm._mod_net_isHost() then
-					gm.teleport_nearby(actor.id, target_fin.x - (80 + math.random(20)) * gm.sign(target_fin.pHspeed), target_fin.y) -- teleport to this fool
-					actor:net_send_instance_message(25)
-					
-					actor.ghost_x = actor.x
-					actor.ghost_y = actor.y
-					actor.pVspeed = 0
-					actor.pHspeed = 0
-					actor.ai_tick_rate = 1
-				end
-				
-				actor:get_data().empyrean_teleport = 480 + math.random(240)
-				
-				-- create some effects so you know youre about to die
-				local circle = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle)
-				circle.parent = actor
-				circle.radius = gm.round((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x) + (actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 4) * 1.5 )
-				
-				local flash = GM.instance_create(actor.x, actor.y, gm.constants.oEfFlash)
-				flash.parent = actor
-				flash.rate = 0.02
-				flash.image_alpha = 1
-				
-				for i = 1, 36 do
-					teleport:set_direction(10 * i, 10 * i, 0, 10)
-					teleport:set_color2(Color.WHITE, gm.round(math.random(360)))
-					teleport:create(actor.x, actor.y, 1, Particle.SYSTEM.middle)
-				end
-				
-				-- play one of these 3 sounds randomly
-				local tpsound = math.random()
-				if tpsound >= 0.67 then
-					actor:sound_play(sound_teleport1, 1, 0.8 + math.random() * 0.2) 
-				elseif tpsound >= 0.33 then
-					actor:sound_play(sound_teleport2, 1, 0.8 + math.random() * 0.2)
-				else
-					actor:sound_play(sound_teleport3, 1, 0.8 + math.random() * 0.2)
-				end
-			end
-		end
-	end
-end)
-
--- empyrean worms !!!
--- make the worm bodies rainbow too and also make them create sparks
-gm.pre_code_execute("gml_Object_oWormBody_Step_2", function(self, other)
-	if self.parent.elite_type ~= empy.value then return end
-	
-	if self.parent.elite_type == empy.value then
-		self.image_blend = Color.from_hsv((Global._current_frame + (self.m_id - self.parent.m_id) * 18) % 360, 65, 100)
-		
-		if gm.inside_view(self.x, self.y) == 1 and Global._current_frame % 3 == 0 then
-			rainbowspark:create_color(self.x, self.y, Color.from_hsv((Global._current_frame + self.y * (0.75)) % 360, 100, 100), 1, Particle.SYSTEM.middle)
-		end
-	end
-end)
-
--- make the worm bodies set their first alarm (needed to shoot the orbs)
-gm.pre_code_execute("gml_Object_oWorm_Alarm_4", function(self, other)
-	if self.elite_type ~= empy.value then return end
-	
-	if self.elite_type == empy.value then
-		for _, segment in ipairs(self.body) do
-			segment:alarm_set(1, 150 + (segment.m_id - self.m_id) * 2)
-		end
-	end
-end)
-
--- play the spawn sound
-gm.pre_code_execute("gml_Object_oWorm_Alarm_3", function(self, other)
-	if self.elite_type ~= empy.value then return end
-	
-	if self.elite_type == empy.value then
-		gm.sound_play_global(sound_spawn_worm, 1, 1)
 	end
 end)
 
 -- special empyrean worm projectile
-local oStarStorm = Object.new(NAMESPACE, "EmpyreanWormStar")
-oStarStorm.obj_sprite = star_sprite
-oStarStorm:clear_callbacks()
+local oStarStorm = Object.new("EmpyreanWormStar")
+oStarStorm:set_sprite(star_sprite)
 
-oStarStorm:onCreate(function(self)
-	self.life = 600
-	self.damage = 1
-	self.targetX = 0
-	self.targetY = 0
-	self.team = 2
+Callback.add(oStarStorm.on_create, function(self)
 	self.image_speed = 0.4
 	self.image_alpha = 0.75
 	self.direction = 0
 	self.speed = 0
+	self.image_blend = Color.WHITE
+	self.parent = nil
+	
+	local data = Instance.get_data(self)
+	data.state = 0
+	data.life = 120
+	data.life2 = 360
+	data.targetX = 0
+	data.targetY = 0
+	data.team = 2
 	
 	self:sound_play(sound_star_spawn, 0.5, 0.8 + math.random() * 0.2)
+	
+	self:projectile_sync(150)
 end)
 
-oStarStorm:onDraw(function(self)
+Callback.add(oStarStorm.on_draw, function(self)
 	gm.draw_set_alpha(0.4)
 	gm.draw_circle_colour(self.x, self.y, 20, self.image_blend, self.image_blend, false)
 	gm.draw_set_alpha(1)
 end)
 
-oStarStorm:onStep(function(self)
-	if self.life > 0 then
-		self.life = self.life - 1
-	else
-		self:destroy()
+Callback.add(oStarStorm.on_step, function(self)
+	local data = Instance.get_data(self)
+	
+	if not Instance.exists(self.parent) then
+		data.life2 = 0
 	end
 	
-	if not self.spawn_speed then
-		self.spawn_speed = self.speed
+	if data.life > 0 then
+		data.life = data.life - 1
+	elseif data.state == 0 then
+		data.state = 1
 	end
 	
-	if self.life >= 570 then -- do this for the first 30 frames after spawning
-		self.speed = self.speed - self.spawn_speed / 30
-	elseif self.life == 481 then -- make it idle for a second and a half, then >>
-		local flash = GM.instance_create(self.x, self.y, gm.constants.oEfFlash) -- >> make it flash
-		flash.parent = self
-		flash.rate = 0.03
-		flash.image_alpha = 0.6
+	if data.life2 > 0 then
+		data.life2 = data.life2 - 1
 		
-		self:sound_play(sound_star_shoot, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
-		
-		self.direction = gm.point_direction(self.x, self.y, self.targetX, self.targetY) -- >> make it aim at the player
-	elseif self.life >= 480 then -- while idling, create telegraph particles
-		if self.life % 10 == 0 then
-			telegraph:set_direction(gm.point_direction(self.x, self.y, self.targetX, self.targetY), gm.point_direction(self.x, self.y, self.targetX, self.targetY), 0, 0)
-			telegraph:create_color(self.x, self.y, self.image_blend, 1)
-		end
-	elseif self.life >= 470 then -- once were done idling, descrease its speed to create a wind up effect for 10 frames
-		self.speed = self.speed - 0.4
-	else
-		self.speed = math.min(30, self.speed + 0.6) -- then start increasing its speed for the rest of the duration
-		
-		if self.life % 3 == 0 then -- create trails cuz theyre cool
-			local trail = GM.instance_create(self.x, self.y, gm.constants.oEfTrail)
-			trail.sprite_index = self.sprite_index
-			trail.image_index = self.image_index
-			trail.image_blend = self.image_blend
-			trail.image_alpha = self.image_alpha
-			trail.image_xscale = self.image_xscale
-			trail.image_yscale = self.image_yscale
-			trail.direction = self.direction
-			trail.speed = self.speed * 0.75
-			trail.depth = self.depth + 1
-		end
-		
-		for _, actor in ipairs(self:get_collisions(gm.constants.pActorCollisionBase)) do -- make it deal damage if it hits the opposite team
-			if self:attack_collision_canhit(actor) and Instance.exists(self.parent) then
-				if gm._mod_net_isHost() then
-					local attack = self.parent:fire_direct(actor, self.damage / self.parent.damage)
+		if data.state == 0 then
+			local no_timestop = 1
+			if Global.time_stop == 1 then
+				no_timestop = 0
+			end
+			
+			self.speed = self.speed * (0.85 * no_timestop)
+			
+			if data.life % 8 == 0 then
+				local dir = Math.direction(self.x, self.y, data.targetX, data.targetY)
+				
+				local flow = Particle.find("WurmOrbFlow")
+				flow:set_direction(dir, dir, 0, 0)
+				flow:create(self.x + math.random(-16, 16), self.y + math.random(-16, 16))
+			end
+			
+			if Net.host and Net.online then
+				self:instance_resync()
+			end
+		elseif data.state == 1 then
+			self:sound_play(sound_star_shoot.value, 0.5, 0.8 + math.random() * 0.2) -- >> play this sound
+			self.direction = Math.direction(self.x, self.y, data.targetX, data.targetY)
+			self.speed = -4
+			data.state = 2
+		else
+			self.speed = math.min(self.speed + 0.5, 40)
+			
+			for _, actor in ipairs(self:get_collisions(gm.constants.pActor)) do
+				if actor.team ~= data.team then
+					self.parent:fire_explosion_local(actor.x, actor.y, 32, 32, 0.1)
+					self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
+					self:screen_shake(1)
+					
+					if Net.host and Net.online then
+						self:instance_resync()
+					end
+					self:destroy()
 				end
-
-				self:sound_play(gm.constants.wExplosiveShot, 1, 0.8 + math.random() * 0.2)
-				self:destroy()
 			end
 		end
-	end
-	
-	if gm.inside_view(self.x, self.y) == 1 and self.life % 5 == 0 then
-		rainbowspark:create_color(self.x, self.y, self.image_blend, 1, Particle.SYSTEM.middle)
-	end
-end)
-
--- make the worm shoot the star storm
-gm.pre_code_execute("gml_Object_oWormBody_Alarm_1", function(self, other)
-	if self.parent.elite_type ~= empy.value then return end
-	
-	if self.parent.elite_type == empy.value then
-		self:alarm_set(1, 330)
-	
-		if self.parent.target then
-			local star = oStarStorm:create(self.x, self.y)
-			star.parent = self.parent
-			star.team = self.parent.team
-			star.targetX = self.parent.target.x
-			star.targetY = self.parent.target.y
-			star.damage = self.parent.damage * 0.07
-			if Helper.chance(0.5) then
-				star.direction = self.image_angle - 90 + math.random(-45, 45)
-			else
-				star.direction = self.image_angle + 90 + math.random(-45, 45)
+	else
+		if self.image_alpha > 0 then
+			self.image_alpha = self.image_alpha - 0.1
+		else
+			self:destroy()
+			
+			if Net.host and Net.online then
+				self:instance_destroy_sync()
 			end
-			star.speed = math.random(4, 8)
-			star.image_blend = self.image_blend
 		end
 	end
 end)
 
--- make the warning change color
-gm.pre_code_execute("gml_Object_oWormWarning_Step_0", function(self, other)
-	if self.image_blend ~= Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then return end
+-- networking
+local serializer = function(inst, buffer)
+	buffer:write_instance(inst.parent)
+	buffer:write_byte(Instance.get_data(inst).state)
+	buffer:write_short(inst.direction)
+	buffer:write_short(inst.speed)
+	buffer:write_double(Instance.get_data(inst).targetX)
+	buffer:write_double(Instance.get_data(inst).targetY)
+	buffer:write_byte(Instance.get_data(inst).team)
+	buffer:write_color(inst.image_blend)
+end
+
+local deserializer = function(inst, buffer)
+	inst.parent = buffer:read_instance()
+	Instance.get_data(inst).state = buffer:read_byte()
+	inst.direction = buffer:read_short()
+	inst.speed = buffer:read_short()
+	Instance.get_data(inst).targetX = buffer:read_double()
+	Instance.get_data(inst).targetY = buffer:read_double()
+	Instance.get_data(inst).team = buffer:read_byte()
+	inst.image_blend = buffer:read_color()
+end
+
+Object.add_serializers(oStarStorm, serializer, deserializer)
+
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(empyorb:get_holding_actors()) do
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			
+			data.empy_color = data.empy_color + 1
+			
+			if data.empy_beam > 0 and data.empy_beam_over == 0 then -- freeze the enemy
+				-- store the enemy's certain stats so we can restore it later
+				if not data._hmax then
+					data._hmax = actor.pHmax
+					data._vmax = actor.pVmax
+					data._imspeed = actor.image_speed
+					data._imalpha = actor.image_alpha
+					data._intang = actor.intangible
+				end
+				
+				-- make it not move
+				actor.image_speed = 0.25
+				actor.image_alpha = 0
+				actor.pHmax = 0
+				actor.pVmax = 0
+				actor.intangible = true
+				actor.activity = 50
+				actor.__activity_handler_state = 50
+				actor.state = 0
+				
+				-- smoother transition
+				if data._imalpha then
+					actor.image_alpha = data._imalpha * (10 - data.empy_beam) / 10
+				else
+					actor.image_alpha = (10 - data.empy_beam) / 10
+				end
+				
+				-- (duke nukem voice) shake it baby
+				actor:screen_shake(1)
+				
+				-- make it look like its floating
+				if actor.sprite_fall then
+					actor.sprite_index = actor.sprite_fall
+				elseif actor.sprite_idle then
+					actor.sprite_index = actor.sprite_idle
+				end
+				
+				local part_width = math.ceil((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x)) / 2) * 1.5)
+				local part_height = math.ceil(((actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 2)
+				local silhouette_y = actor.y - 16 - (16 * Math.dsin(270 + data.empy_beam * 2))
+				
+				if math.random() <= 0.2 * data.empy_quality then
+					-- create the black particles around the enemy
+					evil:create_color(actor.x + math.random(-part_width, part_width), silhouette_y - part_height / 2 - math.random(part_height), Color.BLACK, 1, Particle.System.ABOVE)
+				end
+				
+				if data.empy_quality >= 2 and data.empy_beam % (30 / data.empy_quality) == 0 then -- shockwaves
+					local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+					local shockwave1 = objShockwave:create(actor.x + width, actor.bbox_bottom + 1)
+					shockwave1.speed = 12
+					
+					local shockwave2 = objShockwave:create(actor.x - width, actor.bbox_bottom + 1)
+					shockwave2.speed = -12
+					shockwave2.image_xscale = -1
+				end
+				
+				if data.empy_quality >= 2 and data.empy_beam % math.floor((30 / data.empy_quality) / 2) == 0 then -- particles
+					local width = gm.sprite_get_width(actor.mask_index) / 2 + 32
+					local good_side = gm.choose(-1, 1)
+					local good_dir = 90 - 90 * good_side
+					good_big:set_direction(good_dir, good_dir, 0, 0)
+					good_small:set_direction(good_dir, good_dir, 0, 0)
+					
+					if Util.chance(0.5) then
+						good_big:create(actor.x + width * good_side, actor.y - math.random(768))
+					else
+						good_small:create(actor.x + width * good_side, actor.y - math.random(768))
+					end
+				end
+				
+				data.empy_beam = data.empy_beam - 1
+			elseif data.empy_beam_over == 0 and data.empy_beam <= 0 then -- unfreeze the enemy
+				data.empy_beam_over = 1
+				
+				-- restore their speed
+				actor.pHmax = data._hmax
+				actor.pVmax = data._vmax
+				actor.image_speed = data._imspeed
+				actor.image_alpha = data._imalpha
+				actor.intangible = data._intang
+				
+				--remove all the temporary variables
+				data._hmax = nil
+				data._vmax = nil
+				data._imspeed = nil
+				data._imalpha = nil
+				data._intang = nil
+				
+				-- give them all elite aspects
+				ssr_give_empyrean_aspects(actor)
+				
+				-- make the boss bar appear
+				if actor.team ~= 1 and Net.host then
+					local arr = Array.new({actor})
+					local party = actor:actor_create_enemy_party_from_ids(arr)
+					local director = gm._mod_game_getDirector()
+					gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party.value)
+				end
+				
+				-- make them move again !! yippie!!
+				actor.state = 1
+				actor:skill_util_reset_activity_state()
+			end
+			
+			if data.no_beam_loser and Net.host then
+				if data.no_beam_loser > 0 then -- wait 5 frames before adding empyreans that didnt play the animation to the boss party (prevents issues with max hp being fucked up on the boss bar)
+					data.no_beam_loser = data.no_beam_loser - 1
+				else
+					data.no_beam_loser = nil
+					if actor.team ~= 1 then -- make the boss bar appear
+						local arr = Array.new({actor})
+						local party = actor:actor_create_enemy_party_from_ids(arr)
+						local director = gm._mod_game_getDirector()
+						gm.call("register_boss_party@gml_Object_oDirectorControl_Create_0", director, director, party.value)
+					end
+				end
+			end
+			
+			if data.empy_beam_over == 1 and data.empy_beam <= 0 and data.empy_color % 2 == 0 and data.empy_quality >= 2 then
+				rainbowspark:create_color(actor.x, actor.y, Color.from_hsv((data.empy_color) % 360, 100, 100), 1, Particle.System.BELOW)
+			end
+			
+			if actor.object_index == gm.constants.oJellyG or actor.object_index == gm.constants.oJellyG2 then
+				actor.image_blend = Color.from_hsv(data.empy_color % 360, 65, 100)
+			end
+			
+			-- empyrean worms !!!
+			if actor.object_index == gm.constants.oWorm and actor.body then
+				for i, segment_unwrapped in ipairs(actor.body) do
+					local segment = Instance.wrap(segment_unwrapped)
+					
+					if Instance.exists(segment) then
+						segment.image_blend = Color.from_hsv((data.empy_color + i * 18) % 360, 65, 100)
+						
+						if i % 3 == 0 and data.empy_color % 5 == 0 and data.empy_quality >= 2 then
+							rainbowspark:create_color(segment.x, segment.y, Color.from_hsv((data.empy_color + i * 18) % 360, 100, 100), 1, Particle.System.BELOW)
+						end
+						
+						if i % 2 == 0 and actor.target and Instance.exists(actor.target) and Net.host then
+							if not Instance.get_data(segment).empyrean_orb_attack then
+								Instance.get_data(segment).empyrean_orb_attack = 150 + i * 2
+							end
+							
+							if Instance.get_data(segment).empyrean_orb_attack > 0 then
+								local no_timestop = 1
+								if Global.time_stop == 1 then
+									no_timestop = 0
+								end
+								
+								Instance.get_data(segment).empyrean_orb_attack = Instance.get_data(segment).empyrean_orb_attack - 1 * no_timestop
+							else
+								local star = oStarStorm:create(segment.x, segment.y)
+								star.parent = actor
+								star.direction = segment.image_angle + 90 * gm.choose(-1, 1) + math.random(-45, 45)
+								star.speed = math.random(4, 8)
+								star.image_blend = segment.image_blend
+								
+								local data = Instance.get_data(star)
+								data.team = actor.team
+								
+								data.targetX = actor.target.x
+								data.targetY = actor.target.y
+								
+								Instance.get_data(segment).empyrean_orb_attack = 500
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
+-- play the empyrean worm spawn sound
+Hook.add_pre("gml_Object_oWorm_Alarm_3", function(self, other)
+	if self.elite_type ~= empy.value then return end
 	
-	if self.image_blend == Color.from_hsv((Global._current_frame - 1) % 360, 65, 100) then -- check what color it was on the previous frame
-		self.image_blend = Color.from_hsv(Global._current_frame % 360, 65, 100)
+	if self.elite_type == empy.value then
+		GM.sound_play_global(sound_spawn_worm, 1, 1)
+	end
+end)
+
+RecalculateStats.add(Callback.Priority.AFTER, function(actor, api)
+    if actor.elite_type ~= empy.value then return end
+	
+	-- stat changes are multiplicative with normal elite stat changes
+	-- so max hp for example will be base * 9 * 2.8 = 25.2x total multiplier
+	
+	api.maxhp_mult(9)
+	api.damage_mult(4 / 1.9) -- totals to 4x
+	api.cooldown_mult(0.5 / 0.3) -- totals to 50%
+end)
+
+Callback.add(teleorb.on_acquired, function(actor, stack)
+	Instance.get_data(actor).empyrean_teleport = 480 + math.random(240)
+end)
+
+local tp_sounds = {
+	sound_teleport1,
+	sound_teleport2,
+	sound_teleport3,
+}
+
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(teleorb:get_holding_actors()) do
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			
+			if GM.actor_is_classic(actor) and not actor:is_climbing() then
+				if data.empyrean_teleport > 0 then
+					data.empyrean_teleport = data.empyrean_teleport - 1
+				else
+					local target = Instance.find(gm.constants.oP)
+					
+					-- teleport!
+					if target and Math.distance(actor.x, actor.y, target.x, target.y) > 250 and Instance.exists(target) then
+						if Net.host then
+							GM.teleport_nearby(actor, target.x - (150 + math.random(50)) * Math.sign(target.pHspeed), target.y) -- teleport to this fool
+							
+							if Net.online then
+								GM.net_send_instance_message(actor, 25)
+							end
+							
+							actor.ghost_x = actor.x
+							actor.ghost_y = actor.y
+							actor.pVspeed = 0
+							actor.pHspeed = 0
+							actor.ai_tick_rate = 1
+						end
+						
+						data.empyrean_teleport = 480 + math.random(240)
+						
+						-- create some effects so you know youre about to die
+						local circle = Object.find("EfCircle"):create(actor.x, actor.y)
+						circle.parent = actor
+						circle.radius = math.ceil((((actor.x - actor.bbox_left) + (actor.bbox_right - actor.x) + (actor.y - actor.bbox_top) + (actor.bbox_bottom - actor.y)) / 4) * 1.5 )
+						
+						local flash = Object.find("EfFlash"):create(actor.x, actor.y)
+						flash.parent = actor
+						flash.rate = 0.02
+						flash.image_alpha = 1
+						
+						-- disable skills for a second to prevent unfair deaths
+						if Net.host then
+							local frame = Global._current_frame
+							for i = 0, 3 do
+								local skill = actor:get_active_skill(i)
+								skill.use_next_frame = math.max(skill.use_next_frame, frame + 60)
+							end
+						end
+						
+						teleport:create(actor.x, actor.y, (data.empy_quality - 1) * 15, Particle.System.MIDDLE)
+						
+						-- play one of 3 sounds randomly
+						actor:sound_play(tp_sounds[math.random(1, 3)], 1, 0.8 + math.random() * 0.2)
+					else
+						data.empyrean_teleport = 60
+					end
+				end
+			end
+		end
 	end
 end)
 
@@ -640,28 +724,38 @@ local whitelist = {
 	["youngVagrant"] = true,
 }
 
-Callback.add(Callback.TYPE.onGameStart, "SSResetEmpyreanChance", function()
-	GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02 -- higher chance so you see your first empyrean sooner
+Callback.add(Callback.ON_STAGE_START, function()
+	if not GM._mod_game_getDirector().__ssr_empyrean_chance then
+		GM._mod_game_getDirector().__ssr_empyrean_chance = 0.02 -- higher chance so you see your first empyrean sooner
+	end
 end)
 
-Callback.add(Callback.TYPE.onEliteInit, "SSSpawnEmpyrean", function(actor)
+Callback.add(Callback.ON_ELITE_INIT, function(actor)
 	if GM._mod_game_getDirector().stages_passed <= 8 then return end -- only spawns if its stage 9+
-	if not GM._mod_net_isHost() then return end
+	if Global.__gamemode_current >= 2 then return end -- dont spawn empyreans in judgement
+	if not Net.host then return end
 	
 	if actor.elite_type ~= empy.value then -- if the actor is not already empyrean
-		local all_monster_cards = Monster_Card.find_all()
+		local all_monster_cards = MonsterCard.find_all()
 		local chance = GM._mod_game_getDirector().__ssr_empyrean_chance -- a value from 0 to 1
 		local diff = math.max(1, (GM._mod_game_getDirector().enemy_buff - 16) / 4)
 		for i, card in ipairs(all_monster_cards) do
 			if card.object_id == actor.object_index then -- if the actor has a monster card
 				if not blacklist[card.identifier] and (card.can_be_blighted == true or whitelist[card.identifier]) then -- if the actor is not blacklisted and can be blighted or is in the whitelist
-					local cost = math.min(4, math.max(1, card.spawn_cost / 40 * diff))
-					if Helper.chance(chance / cost) then
+					local penalty = 0
+					if card.is_boss then -- decrease the chance for an empyrean by 2-3 stages worth of scaling if the target is a boss
+						penalty = 1
+					end
+					
+					local cost = math.min(6, math.max(1, card.spawn_cost / 40 * (diff - penalty)))
+					
+					if Util.chance(math.max(0, chance / cost)) then
 						GM.elite_set(actor, empy.value) -- make it empyrean
 						GM._mod_game_getDirector().__ssr_empyrean_chance = 0.005 * diff -- reset the chance
 					else
 						GM._mod_game_getDirector().__ssr_empyrean_chance = GM._mod_game_getDirector().__ssr_empyrean_chance + 0.002 * diff -- increase the chance on fail
 					end
+					
 					break
 				end
 			end

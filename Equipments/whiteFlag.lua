@@ -1,39 +1,40 @@
-local sprite_item			= Resources.sprite_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
-local sprite_flag_spawn		= Resources.sprite_load(NAMESPACE, "EfWhiteFlagSpawn", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagSpawn.png"), 13, 32, 45)
-local sprite_flag_idle		= Resources.sprite_load(NAMESPACE, "EfWhiteFlagIdle", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagIdle.png"), 5, 15, 26)
-local sprite_buff			= Resources.sprite_load(NAMESPACE, "BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
-local sprite_skill			= Resources.sprite_load(NAMESPACE, "SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
-local sound = Resources.sfx_load(NAMESPACE, "WhiteFlag", path.combine(PATH, "Sounds/Items/whiteFlag.ogg"))
+local sprite_item			= Sprite.new("WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
+local sprite_flag_spawn		= Sprite.new("EfWhiteFlagSpawn", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagSpawn.png"), 13, 32, 45)
+local sprite_flag_idle		= Sprite.new("EfWhiteFlagIdle", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagIdle.png"), 5, 15, 26)
+local sprite_buff			= Sprite.new("BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
+local sprite_skill			= Sprite.new("SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
+local sound 				= Sound.new("WhiteFlag", path.combine(PATH, "Sounds/Items/whiteFlag.ogg"))
 
-local whiteFlag = Equipment.new(NAMESPACE, "whiteFlag")
+local whiteFlag = Equipment.new("whiteFlag")
 whiteFlag:set_sprite(sprite_item)
-whiteFlag:set_cooldown(45)
-whiteFlag:set_loot_tags(Item.LOOT_TAG.category_utility, Item.LOOT_TAG.equipment_blacklist_chaos)
+whiteFlag.cooldown = 45 * 60
+whiteFlag.loot_tags = Item.LootTag.CATEGORY_UTILITY + Item.LootTag.EQUIPMENT_BLACKLIST_CHAOS
 
-local buffPeace = Buff.new(NAMESPACE, "peace")
-buffPeace.icon_sprite = sprite_buff
+ItemLog.new_from_equipment(whiteFlag)
 
-local skillPeace = Skill.new(NAMESPACE, "peace")
-skillPeace.sprite = sprite_skill
-skillPeace.is_primary = true -- prevent icon from graying out
+local buff = Buff.new("peace")
+buff.icon_sprite = sprite_buff
+
+local skill = Skill.new("peace")
+skill.sprite = sprite_skill
+skill.is_primary = true -- prevent icon from graying out
+
 -- ensure this "skill" cannot be activated
-skillPeace.max_stock = -math.huge -- prevent backup mag and afterburner from giving it extra stocks
-skillPeace.auto_restock = false
-skillPeace.start_with_stock = false
+skill.max_stock = -math.huge -- prevent backup mag and afterburner from giving it extra stocks
+skill.auto_restock = false
+skill.start_with_stock = false
 
-local objFlag = Object.new(NAMESPACE, "EfWhiteFlag")
-objFlag.obj_sprite = sprite_flag_idle
+local efFlag = Object.new("EfWhiteFlag")
+efFlag:set_sprite(sprite_flag_idle)
 
-whiteFlag:clear_callbacks()
-whiteFlag:onUse(function(actor, embryo)
-	local flag = objFlag:create(actor.x, actor.y)
+Callback.add(whiteFlag.on_use, function(self, embryo)
+	local flag = efFlag:create(self.x, self.y)
 	if embryo then
 		self.life = self.life * 2
 	end
 end)
 
-objFlag:clear_callbacks()
-objFlag:onCreate(function(self)
+Callback.add(efFlag.on_create, function(self)
 	self:move_contact_solid(270, -1)
 	self.radius = 160
 	self.life = 8 * 60
@@ -43,16 +44,15 @@ objFlag:onCreate(function(self)
 
 	self:sound_play(sound, 1, 1)
 end)
-objFlag:onStep(function(self)
-	if self.life % 5 == 0 then
-		local to_peace = List.wrap(self:find_characters_circle(self.x, self.y, self.radius, false, 3))
 
-		for _, target in ipairs(to_peace) do
+Callback.add(efFlag.on_step, function(self)
+	if self.life % 5 == 0 then
+		for _, target in ipairs(self:get_collisions_circle(gm.constants.pActor, self.radius, self.x, self.y)) do
 			if gm.actor_is_classic(target.id) then
-				if target:buff_stack_count(buffPeace) == 0 then
-					target:buff_apply(buffPeace, 10)
+				if target:buff_count(buff) == 0 then
+					target:buff_apply(buff, 10)
 				else
-					GM.set_buff_time_nosync(target, buffPeace, 10)
+					GM.set_buff_time_nosync(target, buff, 10)
 				end
 			end
 		end
@@ -69,7 +69,8 @@ objFlag:onStep(function(self)
 		self:destroy()
 	end
 end)
-objFlag:onDraw(function(self)
+
+Callback.add(efFlag.on_draw, function(self)
 	local a = 0.1 + math.sin(Global._current_frame * 0.02) * 0.05
 	a = a * math.min(1, self.life / 15)
 
@@ -77,7 +78,7 @@ objFlag:onDraw(function(self)
 	local pulse = (self.life % 60) / 60
 	local r2 = r1 * (1 - pulse)
 
-	gm.draw_set_alpha(a*10)
+	gm.draw_set_alpha(a * 10)
 	gm.draw_set_colour(Color.WHITE)
 	gm.draw_circle(self.x, self.y, r1, true)
 
@@ -90,25 +91,14 @@ objFlag:onDraw(function(self)
 	gm.draw_set_alpha(1)
 end)
 
---[[
-enum SKILL_OVERRIDE_PRIORITY {
-	upgrade,
-	boosted,
-	reload,
-	cancel,
-	SIZE
-}
---]]
-buffPeace:clear_callbacks()
-buffPeace:onApply(function(actor)
-	for i=1, 4 do
-		local slot = actor.skills[i]
-		GM._mod_ActorSkillSlot_addOverride(slot, skillPeace, 4) -- SKILL_OVERRIDE_PRIORITY.SIZE
+Callback.add(buff.on_apply, function(actor)
+	for i = 0, 3 do
+		actor:add_skill_override(i, skill, math.huge)
 	end
 end)
-buffPeace:onRemove(function(actor)
-	for i=1, 4 do
-		local slot = actor.skills[i]
-		GM._mod_ActorSkillSlot_removeOverride(slot, skillPeace, 4) -- SKILL_OVERRIDE_PRIORITY.SIZE
+
+Callback.add(buff.on_remove, function(actor)
+	for i = 0, 3 do
+		actor:remove_skill_override(i, skill, math.huge)
 	end
 end)

@@ -1,21 +1,48 @@
 -- starstorm returns
 -- ssr team
-mods["RoRRModdingToolkit-RoRR_Modding_Toolkit"].auto(true)
+mods["ReturnsAPI-ReturnsAPI"].auto{mp = true, namespace = "ssr"}
 
+--- GLOBALS (Should be in ALL-CAPS for constants, Uppercase Initial for variables)
 PATH = _ENV["!plugins_mod_folder_path"]
-NAMESPACE = "ssr"
+-- mod options stuff
+
+Options = ModOptions.new("ssr")
+-- Settings with defaults
+-- (useful for setting the default settings when the toml file hasn't been generated
+-- or config options are missing due to a new update adding more)
+
+Settings = {
+	title_replacement = true,
+	chirrsmas = 0,
+}
+
+SettingsFile = TOML.new()
+
+ssr_chirrsmas_active = false -- gets set in the library file
 
 local init = function()
+	--- Initialize settings here before requiring anything, useful if some options require a restart to apply.
+	if SettingsFile:read() == nil then
+		SettingsFile:write(Settings)
+	else
+		Settings = SettingsFile:read()
+	end
+
 	local folders = {
 		"Misc", -- contains utility functions that other code depends on, so load first
+		"Language",
 		"Actors",
 		"Elites",
-		"Gameplay",
 		"Survivors",
 		"Items",
 		"Equipments",
-		"Artifacts"
+		"Interactables",
+		"Artifacts",
+		"Stages",
+		"Gameplay"
 	}
+
+	Stage.remove_all_rooms() -- reload stages
 
 	for _, folder in ipairs(folders) do
 		-- NOTE: this includes filepaths within subdirectories of the above folders
@@ -27,13 +54,13 @@ local init = function()
 			end
 		end
 	end
-	require("stageLoader") --temporaryoh 
 
 	-- once we have loaded everything, enable hot/live reloading.
 	-- this variable may be used by content code to make sure it behaves correctly when hotloading
 	HOTLOADING = true
 end
-Initialize(init)
+
+Initialize.add(init)
 
 if HOTLOADING then
 	init()

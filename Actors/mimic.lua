@@ -2,46 +2,32 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/Mimic")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Mimic")
 
 -- assets
-local sprite_mask		= Resources.sprite_load(NAMESPACE, "MimicMask",		path.combine(SPRITE_PATH, "mask.png"), 1, 21, 24)
-local sprite_palette	= Resources.sprite_load(NAMESPACE, "MimicPalette",	path.combine(SPRITE_PATH, "palette.png"))
-gm.elite_generate_palettes(sprite_palette)
-local sprite_idle		= Resources.sprite_load(NAMESPACE, "MimicIdle",		path.combine(SPRITE_PATH, "idle.png"), 2, 30, 35)
-local sprite_idle2		= Resources.sprite_load(NAMESPACE, "MimicIdle2",	path.combine(SPRITE_PATH, "idle2.png"), 2, 30, 45)
-local sprite_walk		= Resources.sprite_load(NAMESPACE, "MimicWalk",		path.combine(SPRITE_PATH, "walk.png"), 8, 30, 35)
-local sprite_walk2		= Resources.sprite_load(NAMESPACE, "MimicWalk2",	path.combine(SPRITE_PATH, "walk2.png"), 6, 30, 35)
-local sprite_jump		= Resources.sprite_load(NAMESPACE, "MimicJump",		path.combine(SPRITE_PATH, "jump.png"), 1, 19, 28)
-local sprite_jump_peak	= Resources.sprite_load(NAMESPACE, "MimicJumpPeak",	path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 19, 28)
-local sprite_fall		= Resources.sprite_load(NAMESPACE, "MimicFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 19, 28)
-local sprite_death		= Resources.sprite_load(NAMESPACE, "MimicDeath",	path.combine(SPRITE_PATH, "death.png"), 10, 55, 93)
-local sprite_shoot1a	= Resources.sprite_load(NAMESPACE, "MimicShoot1a",	path.combine(SPRITE_PATH, "shoot1a.png"), 10, 30, 45)
-local sprite_shoot1b	= Resources.sprite_load(NAMESPACE, "MimicShoot1b",	path.combine(SPRITE_PATH, "shoot1b.png"), 4, 30, 45)
-local sprite_shoot1c	= Resources.sprite_load(NAMESPACE, "MimicShoot1c",	path.combine(SPRITE_PATH, "shoot1c.png"), 6, 30, 45)
---local sprite_portrait	= Resources.sprite_load(NAMESPACE, "MimicPortrait",	path.combine(SPRITE_PATH, "portrait.png"))
+local sprite_mask			= Sprite.new("MimicMask",			path.combine(SPRITE_PATH, "mask.png"), 1, 21, 24)
+local sprite_palette		= Sprite.new("MimicPalette",		path.combine(SPRITE_PATH, "palette.png"))
 
-local sprite_inactive_idle = Resources.sprite_load(NAMESPACE, "MimicInactiveIdle",	path.combine(SPRITE_PATH, "inactiveIdle.png"), 14, 30, 38)
-local sprite_activate	= Resources.sprite_load(NAMESPACE, "MimicActivate",	path.combine(SPRITE_PATH, "spawn.png"), 18, 30, 60)
-local sprite_vacuum		= Resources.sprite_load(NAMESPACE, "MimicVacuumFX", path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
+local sprite_idle			= Sprite.new("MimicIdle",			path.combine(SPRITE_PATH, "idle.png"), 2, 30, 35)
+local sprite_idle2			= Sprite.new("MimicIdle2",			path.combine(SPRITE_PATH, "idle2.png"), 2, 30, 45)
+local sprite_walk			= Sprite.new("MimicWalk",			path.combine(SPRITE_PATH, "walk.png"), 8, 30, 35)
+local sprite_walk2			= Sprite.new("MimicWalk2",			path.combine(SPRITE_PATH, "walk2.png"), 6, 30, 35)
+local sprite_jump			= Sprite.new("MimicJump",			path.combine(SPRITE_PATH, "jump.png"), 1, 19, 28)
+local sprite_jump_peak		= Sprite.new("MimicJumpPeak",		path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 19, 28)
+local sprite_fall			= Sprite.new("MimicFall",			path.combine(SPRITE_PATH, "fall.png"), 1, 19, 28)
+local sprite_death			= Sprite.new("MimicDeath",			path.combine(SPRITE_PATH, "death.png"), 10, 55, 93)
+local sprite_shoot1a		= Sprite.new("MimicShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 10, 30, 45)
+local sprite_shoot1b		= Sprite.new("MimicShoot1b",		path.combine(SPRITE_PATH, "shoot1b.png"), 4, 30, 45)
+local sprite_shoot1c		= Sprite.new("MimicShoot1c",		path.combine(SPRITE_PATH, "shoot1c.png"), 6, 30, 45)
+local sprite_portrait		= Sprite.new("MimicPortrait",		path.combine(SPRITE_PATH, "portrait.png"))
 
-local sound_spawn		= Resources.sfx_load(NAMESPACE, "MimicSpawn",	path.combine(SOUND_PATH, "spawn.ogg"))
-local sound_hit			= Resources.sfx_load(NAMESPACE, "MimicHit",		path.combine(SOUND_PATH, "hit.ogg"))
-local sound_shoot		= Resources.sfx_load(NAMESPACE, "MimicShoot",	path.combine(SOUND_PATH, "shoot.ogg"))
-local sound_death		= Resources.sfx_load(NAMESPACE, "MimicDeath",	path.combine(SOUND_PATH, "death.ogg"))
+local sprite_inactive_idle	= Sprite.new("MimicInactiveIdle",	path.combine(SPRITE_PATH, "inactiveIdle.png"), 14, 30, 38)
+local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 18, 30, 60)
+local sprite_vacuum			= Sprite.new("MimicVacuumFX", 		path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
 
-local particleVacuum = Particle.new(NAMESPACE, "Vacuum")
-particleVacuum:set_sprite(sprite_vacuum, false, false, true)
-particleVacuum:set_life(15, 20)
-particleVacuum:set_speed(0, 0, 0.75, 0)
+local sound_spawn			= Sound.new("MimicSpawn",			path.combine(SOUND_PATH, "spawn.ogg"))
+local sound_hit				= Sound.new("MimicHit",				path.combine(SOUND_PATH, "hit.ogg"))
+local sound_shoot			= Sound.new("MimicShoot",			path.combine(SOUND_PATH, "shoot.ogg"))
+local sound_death			= Sound.new("MimicDeath",			path.combine(SOUND_PATH, "death.ogg"))
 
--- mimic
-local mimic = Object.new(NAMESPACE, "Mimic", Object.PARENT.enemyClassic)
-local mimic_id = mimic.value
-
-mimic.obj_sprite = sprite_idle
-mimic.obj_depth = 10
-
-local efGoldSteal = Object.new(NAMESPACE, "EfGoldSteal")
-efGoldSteal.obj_sprite = gm.constants.sEfGold1
-efGoldSteal.obj_depth = -279
+local SUCK_ANIMATION_SPEED = 0.3
 
 local gold_sprites = {
 	gm.constants.sEfGold1,
@@ -53,18 +39,133 @@ local gold_sprites = {
 	gm.constants.sEfGold7,
 }
 
-local mimicPrimary			= Skill.new(NAMESPACE, "mimicZ")
-local stateMimicSuckStart	= State.new(NAMESPACE, "mimicSuckStart")
-local stateMimicSuck		= State.new(NAMESPACE, "mimicSuck")
-local stateMimicSuckEnd		= State.new(NAMESPACE, "mimicSuckEnd")
+local efGoldSteal = Object.new("EfGoldSteal")
+efGoldSteal:set_sprite(gm.constants.sEfGold1)
+efGoldSteal:set_depth(-279)
 
-local packetMimicSteal = Packet.new()
-local packetMimicGoldSteal = Packet.new()
+local function select_item_to_steal(victim)
+	local inventory = victim.inventory_item_order
+	
+	if #inventory > 0 then
+		local chosen_id = inventory[math.random(#inventory)]
+		local chosen_item = Item.wrap(chosen_id)
+		return chosen_item
+	end
+	
+	return nil
+end
 
-mimic:clear_callbacks()
-mimic:onCreate(function(actor)
+local function do_gold_steal(actor, victim)
+	victim:sound_play(gm.constants.wGoldBomb, 0.5, 2.5)
+
+	local amount = math.ceil(victim.gold)
+	local dir = Math.direction(victim.x, victim.y, actor.x, actor.y)
+	local log = math.ceil(math.log(amount, 5))
+
+	-- kind of ugly but, whatever, good enough
+	-- do some stuff to produce gold effects that grow in quantity and scale with how much has been stolen
+	for i = 0, log do
+		local effect = efGoldSteal:create(victim.x, victim.y)
+		effect.target = actor
+		effect.direction = dir
+		effect.speed = math.random(7)
+		effect.vspeed = -math.random(7)
+		effect.sprite_index = gold_sprites[math.random(math.min(7, log))]
+	end
+
+	victim.gold = 0
+	actor.gold = amount
+	if victim.is_local then
+		gm._mod_game_getHUD().gold = 0
+	end
+
+	if Net.online and Net.host then
+		packetGoldSteal:send_to_all(actor, victim)
+	end
+end
+
+local particleVacuum = Particle.new("Vacuum")
+particleVacuum:set_sprite(sprite_vacuum, false, false, true)
+particleVacuum:set_life(15, 20)
+particleVacuum:set_speed(0, 0, 0.75, 0)
+
+-- mimic
+local mimic = Object.new("Mimic", Object.Parent.ENEMY_CLASSIC)
+mimic:set_sprite(sprite_idle)
+mimic:set_depth(10) 
+
+-- these are just used to sync the mimic's gold when a player manages to activate a dormant one via purchase
+-- i prefer this to adding yet another user packet lol
+local serializer = function(actor, buffer)
+	actor.gold = buffer:read_uint()
+end
+
+local deserializer = function(actor, buffer)
+	actor.gold = buffer:read_uint()
+end
+
+Object.add_serializers(mimic, serializer, deserializer)
+
+-- create the monster log
+local mlog = ssr_create_monster_log("mimic")
+mlog.sprite_id = sprite_walk
+mlog.portrait_id = sprite_portrait
+mlog.sprite_offset_x = 42
+mlog.sprite_offset_y = 45
+mlog.stat_hp = 200
+mlog.stat_damage = 10
+mlog.stat_speed = 2.6
+
+local primary			= Skill.new("mimicZ")
+local stateSuckStart	= ActorState.new("mimicSuckStart")
+local stateSuck			= ActorState.new("mimicSuck")
+local stateSuckEnd		= ActorState.new("mimicSuckEnd")
+
+local packetSteal = Packet.new("SyncMimicSteal")
+
+local item_serializer = function(buffer, actor, x, y, tier, item_count)
+	buffer:write_instance(actor)
+	buffer:write_short(x)
+	buffer:write_short(y)
+	buffer:write_byte(tier)
+	buffer:write_ushort(item_count)
+end
+
+local item_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local x, y = buffer:read_short(), buffer:read_short()
+	local tier = buffer:read_byte()
+	local item_count = buffer:read_ushort()
+
+	local steal = Object.find("EfRoboBuddySteal"):create(x, y)
+	steal.parent = actor
+	steal.count = item_count
+	steal.tier = tier
+end
+
+packetSteal:set_serializers(item_serializer, item_deserializer)
+
+local packetGoldSteal = Packet.new("SyncMimicGoldSteal")
+
+local gold_serializer = function(buffer, actor, victim)
+	buffer:write_instance(actor)
+	buffer:write_instance(victim)
+end
+
+local gold_deserializer = function(buffer)
+	local actor = buffer:read_instance()
+	local victim = buffer:read_instance()
+	
+	if not actor:exists() then return end
+	if not victim:exists() then return end
+	
+	do_gold_steal(actor, victim)
+end
+
+packetGoldSteal:set_serializers(gold_serializer, gold_deserializer)
+
+Callback.add(mimic.on_create, function(actor)
 	actor.sprite_palette = sprite_palette
-	--actor.sprite_spawn = sprite_spawn -- handled by MimicInactive object
 	actor.sprite_idle = sprite_idle
 	actor.sprite_walk = sprite_walk
 	actor.sprite_jump = sprite_jump
@@ -77,7 +178,6 @@ mimic:onCreate(function(actor)
 
 	actor.mask_index = sprite_mask
 
-	--actor.sound_spawn = sound_spawn
 	actor.sound_hit = sound_hit
 	actor.sound_death = sound_death
 
@@ -86,14 +186,14 @@ mimic:onCreate(function(actor)
 	actor.pHmax_base = 2.4 + math.min(0.2 * GM._mod_game_getDirector().enemy_buff, 3)
 
 	actor.z_range = 200
-	actor:set_default_skill(Skill.SLOT.primary, mimicPrimary)
+	actor:set_default_skill(Skill.Slot.PRIMARY, primary)
 
-	-- monster logs are really scuffed in RMT right now..
-	--actor.monster_log_drop_id = log.value
+	actor.monster_log_drop_id = mlog.value
 
 	actor:init_actor_late()
 end)
-mimic:onStep(function(actor)
+
+Callback.add(mimic.on_step, function(actor)
 	if actor.stolen_item or actor.gold > 0 and not actor.fleeing then
 		actor.fleeing = true
 		actor:alarm_set(0, -1) -- disable the classic enemy ai -- not perfect but it does the job
@@ -104,7 +204,7 @@ mimic:onStep(function(actor)
 	end
 
 	-- has to be here instead of at the start so the clients still get the unique getaway sprites
-	if gm._mod_net_isClient() then return end
+	if Net.client then return end
 
 	if actor.fleeing and actor.actor_state_current_id == -1 then
 		-- attempt to flee at all times
@@ -112,11 +212,11 @@ mimic:onStep(function(actor)
 			local sync = false
 
 			if actor.target.x > actor.x then
-				if not gm.bool(actor.moveLeft) then sync = true end
+				if not Util.bool(actor.moveLeft) then sync = true end
 				actor.moveLeft = true
 				actor.moveRight = false
 			else
-				if not gm.bool(actor.moveRight) then sync = true end
+				if not Util.bool(actor.moveRight) then sync = true end
 				actor.moveLeft = false
 				actor.moveRight = true
 			end
@@ -135,108 +235,26 @@ mimic:onStep(function(actor)
 		end
 	end
 end)
-mimic:onDestroy(function(actor)
-	Particle.find("ror", "Spark"):create(actor.x, actor.y, 7)
+
+Callback.add(mimic.on_destroy, function(actor)
+	Particle.find("Spark"):create(actor.x, actor.y, 7)
 	actor:screen_shake(4)
 
 	if actor.gold > 0 then
 		gm.drop_gold_and_exp(actor.x, actor.y, actor.gold, nil, true, false) -- last two args are 'drop gold', 'drop exp'
 	end
 end)
--- these are just used to sync the mimic's gold when a player manages to activate a dormant one via purchase
--- i prefer this to adding yet another user packet lol
-mimic:onSerialize(function(actor, buffer)
-	buffer:write_uint(actor.gold)
-end)
-mimic:onDeserialize(function(actor, buffer)
-	actor.gold = buffer:read_uint()
+
+Callback.add(primary.on_activate, function(actor, skill, slot)
+	actor:set_state(stateSuckStart)
 end)
 
-mimicPrimary:clear_callbacks()
-mimicPrimary:onActivate(function(actor)
-	actor:enter_state(stateMimicSuckStart)
-end)
-
-local SUCK_ANIMATION_SPEED = 0.3
-
-local function select_item_to_steal(victim)
-	local inventory = victim.inventory_item_order
-	if #inventory > 0 then
-		local chosen_id = inventory[math.random(#inventory)]
-		local chosen_item = Item.wrap(chosen_id)
-		return chosen_item
-	end
-	return nil
-end
-local function sync_steal_effects(actor, x, y, tier, item_count)
-	if gm._mod_net_isClient() then error("sync_steal_effects called on client!") end
-	local msg = packetMimicSteal:message_begin()
-	msg:write_instance(actor)
-	msg:write_short(x)
-	msg:write_short(y)
-	msg:write_byte(tier)
-	msg:write_ushort(item_count)
-	msg:send_to_all()
-end
-packetMimicSteal:onReceived(function(msg)
-	local actor = msg:read_instance()
-	local x, y = msg:read_short(), msg:read_short()
-	local tier = msg:read_byte()
-	local item_count = msg:read_ushort()
-
-	local steal = GM.instance_create(x, y, gm.constants.oEfRoboBuddySteal)
-	steal.parent = actor
-	steal.count = item_count
-	steal.tier = tier
-end)
-local function do_gold_steal(actor, victim)
-	victim:sound_play(gm.constants.wGoldBomb, 0.5, 2.5)
-
-	local amount = math.ceil(victim.gold)
-	local dir = gm.point_direction(victim.x, victim.y, actor.x, actor.y)
-	local log = math.ceil(math.log(amount, 5))
-
-	-- kind of ugly but, whatever, good enough
-	-- do some stuff to produce gold effects that grow in quantity and scale with how much has been stolen
-	for i=0, log do
-		local g = efGoldSteal:create(victim.x, victim.y)
-		g.target = actor
-		g.direction = dir
-		g.speed = math.random(7)
-		g.vspeed = -math.random(7)
-		g.sprite_index = gold_sprites[math.random(math.min(7, log))]
-	end
-
-	victim.gold = 0
-	actor.gold = amount
-	if victim.is_local then
-		gm._mod_game_getHUD().gold = 0
-	end
-
-	if gm._mod_net_isOnline() and gm._mod_net_isHost() then
-		local msg = packetMimicGoldSteal:message_begin()
-		msg:write_instance(actor)
-		msg:write_instance(victim)
-		msg:send_to_all()
-	end
-end
-packetMimicGoldSteal:onReceived(function(msg)
-	local actor = msg:read_instance()
-	local victim = msg:read_instance()
-	if not actor:exists() then return end
-	if not victim:exists() then return end
-	do_gold_steal(actor, victim)
-end)
-
-stateMimicSuckStart:clear_callbacks()
-stateMimicSuck:clear_callbacks()
-stateMimicSuckEnd:clear_callbacks()
-
-stateMimicSuckStart:onEnter(function(actor, data)
+Callback.add(stateSuckStart.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.noised = 0
 end)
-stateMimicSuckStart:onStep(function(actor, data)
+
+Callback.add(stateSuckStart.on_step, function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1a, SUCK_ANIMATION_SPEED)
 
@@ -246,11 +264,11 @@ stateMimicSuckStart:onStep(function(actor, data)
 	end
 
 	if actor.image_index + actor.image_speed >= 10 then
-		actor:enter_state(stateMimicSuck)
+		actor:set_state(stateSuck)
 	end
 end)
 
-stateMimicSuck:onEnter(function(actor, data)
+Callback.add(stateSuck.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
 	data.loops = 0
@@ -259,7 +277,8 @@ stateMimicSuck:onEnter(function(actor, data)
 
 	actor:screen_shake(3)
 end)
-stateMimicSuck:onStep(function(actor, data)
+
+Callback.add(stateSuck.on_step, function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1b, SUCK_ANIMATION_SPEED)
 
@@ -273,43 +292,41 @@ stateMimicSuck:onStep(function(actor, data)
 		end
 
 		-- attempt to steal stuff until something gives
-		if data.stealed == 0 and gm._mod_net_isHost() then
-			local x1, y1 = actor.x, actor.y - 72
-			local x2, y2 = actor.x + 248 * actor.image_xscale, actor.y + 72
+		if data.stealed == 0 and Net.host then
+			for _, victim in ipairs(actor:get_collisions_rectangle(gm.constants.pActor, actor.x, actor.y - 72, actor.x + 248 * actor.image_xscale, actor.y + 72)) do
+				if victim.team ~= actor.team then
+					local item = select_item_to_steal(victim)
+					if item then
+						data.stealed = 1
 
-			local victims = List.wrap(actor:find_characters_rectangle(x1, y1, x2, y2, actor.team, false))
+						local item_id = item.value
+						local item_count = victim:item_count(item, Item.StackKind.ANY)
 
-			for _, victim in ipairs(victims) do
-				local item = select_item_to_steal(victim)
-				if item then
-					data.stealed = 1
+						-- robomando enemy itemsteal effect -- gives the item to the mimic once it reaches it
+						local steal = Object.find("EfRoboBuddySteal"):create(victim.x, victim.y)
+						steal.parent = actor
+						steal.item_id = item_id
+						steal.count = item_count
+						steal.tier = item.tier
 
-					local item_id = item.value
-					local item_count = victim:item_stack_count(item, Item.STACK_KIND.any)
+						victim:item_take(item, item_count, Item.StackKind.ANY)
 
-					-- robomando enemy itemsteal effect -- gives the item to the mimic once it reaches it
-					local steal = GM.instance_create(victim.x, victim.y, gm.constants.oEfRoboBuddySteal)
-					steal.parent = actor
-					steal.item_id = item_id
-					steal.count = item_count
-					steal.tier = item.tier
+						-- store the item in variables for easy access when it dies
+						-- i'd use :get_data for this but that shit is hideously unreliable lol
+						actor.stolen_item = item_id
+						actor.stolen_item_count = item_count
 
-					victim:item_remove(item, item_count, Item.STACK_KIND.any)
+						if Net.online then
+							packetSteal:send_to_all(actor, steal.x, steal.y, item.tier, item_count)
+						end
+						
+						break
+					elseif victim.gold and victim.gold > 0 then
+						data.stealed = 1
 
-					-- store the item in variables for easy access when it dies
-					-- i'd use :get_data for this but that shit is hideously unreliable lol
-					actor.stolen_item = item_id
-					actor.stolen_item_count = item_count
-
-					if gm._mod_net_isOnline() then
-						sync_steal_effects(actor, steal.x, steal.y, item.tier, item_count)
+						do_gold_steal(actor, victim)
+						break
 					end
-					break
-				elseif victim.gold and victim.gold > 0 then
-					data.stealed = 1
-
-					do_gold_steal(actor, victim)
-					break
 				end
 			end
 		end
@@ -318,8 +335,8 @@ stateMimicSuck:onStep(function(actor, data)
 	if math.random() < 0.33 then
 		local px = actor.x + (100 + math.random() * 120) * actor.image_xscale
 		local py = actor.y - 60 + math.random() * 80
-		local pdir = gm.point_direction(px, py, actor.x, actor.y)
-		particleVacuum:set_direction(pdir-3, pdir+3, 0, 0)
+		local pdir = Math.direction(px, py, actor.x, actor.y)
+		particleVacuum:set_direction(pdir - 3, pdir + 3, 0, 0)
 		particleVacuum:create(px, py, 1)
 	end
 
@@ -330,18 +347,20 @@ stateMimicSuck:onStep(function(actor, data)
 
 		data.fired = 0
 	end
+	
 	if data.loops > 3 then
-		actor:enter_state(stateMimicSuckEnd)
+		actor:set_state(stateSuckEnd)
 	end
 end)
 
-stateMimicSuckEnd:onEnter(function(actor, data)
+Callback.add(stateSuckEnd.on_enter, function(actor, data)
 	actor.image_index = 0
 	actor:screen_shake(5)
 
 	data.fired = 0
 end)
-stateMimicSuckEnd:onStep(function(actor, data)
+
+Callback.add(stateSuckEnd.on_step, function(actor, data)
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(sprite_shoot1c, SUCK_ANIMATION_SPEED)
 
@@ -356,29 +375,29 @@ stateMimicSuckEnd:onStep(function(actor, data)
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-Callback.add(Callback.TYPE.onDeath, "SSMimicDropItem", function(actor, out_of_bounds)
-	if GM.get_object_index(actor) == mimic_id and not out_of_bounds then
-		if actor.stolen_item then
-			local item = Item.wrap(actor.stolen_item)
-			-- some items don't have corresponding objects, such as used dios or time keeper's secret
-			if item.object_id ~= -1 then
-				for i=1, actor.stolen_item_count do
-					item:create(actor.x, actor.y)
-				end
+Callback.add(Callback.ON_DEATH, function(actor, out_of_bounds)
+	if not actor:get_object_index() == mimic.value or out_of_bounds then return end
+	
+	if actor.stolen_item then
+		local item = Item.wrap(actor.stolen_item)
+		-- some items don't have corresponding objects, such as used dios or time keeper's secret
+		if item.object_id ~= -1 then
+			for i = 1, actor.stolen_item_count do
+				item:create(actor.x, actor.y)
 			end
 		end
 	end
 end)
 
 -- visual effect used for gold stealing. doesn't affect anything, just provides visual of coins similar to oEfGold
-efGoldSteal:clear_callbacks()
-efGoldSteal:onCreate(function(self)
+Callback.add(efGoldSteal.on_create, function(self)
 	self.image_speed = 0.25
 	self.target = -4
 	self.gravity = 0.4
 	self.go = 0
 end)
-efGoldSteal:onStep(function(self)
+
+Callback.add(efGoldSteal.on_step, function(self)
 	if not Instance.exists(self.target) then self:destroy() return end
 
 	local target = self.target
@@ -391,33 +410,31 @@ efGoldSteal:onStep(function(self)
 			self.gravity = 0
 		end
 	else
-		local dir = gm.point_direction(self.x, self.y, tx, ty)
+		local dir = Math.direction(self.x, self.y, tx, ty)
 
 		self.direction = dir
 		self.speed = math.min(self.speed + 0.5, 5)
 	end
 
-	if gm.point_distance(self.x, self.y, tx, ty) <= 20 + self.speed then
+	if Math.distance(self.x, self.y, tx, ty) <= 20 + self.speed then
 		self:sound_play(gm.constants.wCoin, 1, 1)
-		Particle.find("ror", "GoldSparkleBig"):create(self.x, self.y, 1)
+		Particle.find("GoldSparkleBig"):create(self.x, self.y, 1)
 		self:destroy()
 	end
 end)
 
 -- object for when mimic is idle in the world, waiting for a victim
 -- it's actually interactable, and can be purchased, which spawns the mimic with gold :3
-local mimicInactive = Object.new(NAMESPACE, "MimicInactive", Object.PARENT.interactable)
-local mimicInactive_id = mimicInactive.value
+local mimicInactive = Object.new("MimicInactive", Object.Parent.INTERACTABLE)
+mimicInactive:set_sprite(sprite_inactive_idle)
+mimicInactive:set_depth(90)
 
-mimicInactive.obj_sprite = sprite_inactive_idle
-mimicInactive.obj_depth = 90
-
-mimicInactive:clear_callbacks()
-mimicInactive:onCreate(function(self)
-	gm.interactable_init_cost(self.id, 0, 50)
+Callback.add(mimicInactive.on_create, function(self)
+	GM.interactable_init_cost(self, 0, 50)
+	self:interactable_init_name()
 end)
 
-mimicInactive:onStep(function(self)
+Callback.add(mimicInactive.on_step, function(self)
 	-- pInteractable automatically stops animation when it ends -- this code uses that to its advantage
 	if self.active == 0 then
 		-- occasional idle fidget
@@ -427,10 +444,10 @@ mimicInactive:onStep(function(self)
 		end
 
 		-- anyone nearby?
-		if gm._mod_net_isHost() and math.random() < 0.03 then
+		if Net.host and math.random() < 0.01 then
 			local target = self:collision_rectangle(self.x - 140, self.y - 90, self.x + 140, self.y + 32, gm.constants.oP, false, false)
 
-			if target ~= -4 and gm.bool(target.is_targettable) then
+			if target ~= -4 and Util.bool(target.is_targettable) then
 				self.active = 1
 
 				-- send a built-in set_active packet
@@ -453,8 +470,8 @@ mimicInactive:onStep(function(self)
 		end
 
 		if self.image_speed == 0 then
-			if gm._mod_net_isHost() then
-				local actor = mimic:create(self.x, self.y-25)
+			if Net.host then
+				local actor = mimic:create(self.x, self.y - 25)
 
 				-- if there's a valid activator, that means a player managed to activate it by purchase
 				if self.activator ~= -4 then
@@ -470,15 +487,15 @@ mimicInactive:onStep(function(self)
 	end
 end)
 
-Callback.add(Callback.TYPE.onStageStart, "SSMimicSpawn", function()
-	if gm._mod_net_isClient() then return end -- host handles spawning
+Callback.add(Callback.ON_STAGE_START, function()
+	if Net.client then return end -- host handles spawning
 	if Global.__gamemode_current >= 2 then return end -- don't spawn mimics in trials or tutorial..
 
 	-- try spawning up to 3 mimics, though more than 1 is extremely unlikely
-	for i=1, 3 do
-		if math.random() <= 0.05 then
+	for i = 0, 3 do
+		if math.random() <= 0.1 then
 			-- function used by the game's director when spawninginteractables.
-			gm._mod_game_getDirector():mapobject_spawn(mimicInactive_id, 1) -- second arg is required tile space
+			gm._mod_game_getDirector():mapobject_spawn(mimicInactive.value, 1) -- second arg is required tile space
 		else
 			break
 		end

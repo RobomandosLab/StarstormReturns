@@ -1,46 +1,55 @@
-local sprite = Resources.sprite_load(NAMESPACE, "CrypticSource", path.combine(PATH, "Sprites/Items/crypticSource.png"), 1, 18, 18)
+local sprite = Sprite.new("CrypticSource", path.combine(PATH, "Sprites/Items/crypticSource.png"), 1, 18, 18)
 
-local crypticSource = Item.new(NAMESPACE, "crypticSource")
+local crypticSource = Item.new("crypticSource")
 crypticSource:set_sprite(sprite)
-crypticSource:set_tier(Item.TIER.uncommon)
-crypticSource:set_loot_tags(Item.LOOT_TAG.category_utility)
+crypticSource:set_tier(ItemTier.UNCOMMON)
+crypticSource.loot_tags = Item.LootTag.CATEGORY_UTILITY
 
-crypticSource:clear_callbacks()
-crypticSource:onPostStep(function(actor, stack)
-	if gm._mod_net_isClient() then return end
+ItemLog.new_from_item(crypticSource)
 
-	local actor_data = actor:get_data()
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(crypticSource:get_holding_actors()) do
+		if Net.host then
+			if Instance.exists(actor) then
+				local stack = actor:item_count(crypticSource)
+				local data = Instance.get_data(actor)
+				
+				local true_direction = actor.image_xscale
+				
+				if true_direction then
+					if actor.object_index == gm.constants.oEngiTurret then
+						true_direction = actor.image_xscale2
+					end
 
-	local true_direction = actor.image_xscale
-	if actor.object_index == gm.constants.oEngiTurret then
-		true_direction = actor.image_xscale2
-	end
+					if actor.pHspeed ~= 0 then
+						true_direction = Math.sign(actor.pHspeed)
+					end
 
-	if actor.pHspeed ~= 0 then
-		true_direction = gm.sign(actor.pHspeed)
-	end
+					if not data.last_direction then data.last_direction = true_direction end
 
-	if not actor_data.last_direction then actor_data.last_direction = true_direction end
+					if not data.cryptic_source_cd then
+						if data.last_direction == true_direction * -1 then
+							data.cryptic_source_cd = 10
+							data.last_direction = true_direction
 
-	if not actor_data.cryptic_source_cd then
-		if actor_data.last_direction == true_direction * -1 then
-			actor_data.cryptic_source_cd = 10
-			actor_data.last_direction = true_direction
+							local lightning = Object.find("ChainLightning"):create(actor.x, actor.y)
+							lightning.parent = actor
+							lightning.team = actor.team
+							lightning.damage = math.ceil(actor.damage * (0.15 + (0.55 * stack)))
+							lightning.blend = Color.from_rgb(211, 242, 87)
+							lightning.bounce = 2
 
-			local t = gm.instance_create(actor.x, actor.y, gm.constants.oChainLightning)
-			t.parent = actor.value
-			t.team = actor.team
-			t.damage = math.ceil(actor.damage * (0.15 + (0.55 * stack)))
-			t.blend = Color.from_rgb(211, 242, 87)
-			t.bounce = 2
-
-			actor:sound_play_networked(gm.constants.wLightning, 0.25, 3.4 + math.random() * 0.3, actor.x, actor.y)
-		end
-	else
-		if actor_data.cryptic_source_cd > 0 then
-			actor_data.cryptic_source_cd = actor_data.cryptic_source_cd - 1
-		else
-			actor_data.cryptic_source_cd = nil
+							actor:sound_play_networked(gm.constants.wLightning, 0.25, 3.4 + math.random() * 0.3, actor.x, actor.y)
+						end
+					else
+						if data.cryptic_source_cd > 0 then
+							data.cryptic_source_cd = data.cryptic_source_cd - 1
+						else
+							data.cryptic_source_cd = nil
+						end
+					end
+				end
+			end
 		end
 	end
 end)

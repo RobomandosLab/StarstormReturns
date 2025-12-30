@@ -1,55 +1,54 @@
-local item_sprite = Resources.sprite_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 12, 16)
-local coin_sprite = Resources.sprite_load(NAMESPACE, "EfGoldMoltenCoin", path.combine(PATH, "Sprites/Items/Effects/moltenCoin.png"), 6, 5, 5)
-local sound = Resources.sfx_load(NAMESPACE, "MoltenCoin", path.combine(PATH, "Sounds/Items/moltenCoin.ogg"))
+local item_sprite = Sprite.new("MoltenCoin", path.combine(PATH, "Sprites/Items/moltenCoin.png"), 1, 12, 16)
+local coin_sprite = Sprite.new("EfGoldMoltenCoin", path.combine(PATH, "Sprites/Items/Effects/moltenCoin.png"), 6, 5, 5)
+local sound = Sound.new("MoltenCoin", path.combine(PATH, "Sounds/Items/moltenCoin.ogg"))
 
-local moltenCoin = Item.new(NAMESPACE, "moltenCoin")
+local moltenCoin = Item.new("moltenCoin")
 
-local packetMoltenCoinProc = Packet.new()
+local packet = Packet.new("SyncMoltenCoin")
+
+local serializer = function(buffer, x, y, stack)
+	buffer:write_int(x)
+	buffer:write_int(y)
+	buffer:write_uint(stack)
+end
+
+local deserializer = function(buffer, self)
+	local x = buffer:read_int()
+	local y = buffer:read_int()
+	local stack = buffer:read_uint()
+	
+	local inst = Object.find("EfGold"):create(x, y)
+	inst.hspeed = -4 + math.random() * 8
+	inst.vspeed = -4 + math.random() * 8
+	inst.sprite_index = coin_sprite
+	inst.value.value = stack
+end
+
+packet:set_serializers(serializer, deserializer)
 
 moltenCoin:set_sprite(item_sprite)
-moltenCoin:set_tier(Item.TIER.common)
-moltenCoin:set_loot_tags(Item.LOOT_TAG.category_damage)
+moltenCoin:set_tier(ItemTier.COMMON)
+moltenCoin.loot_tags = Item.LootTag.CATEGORY_DAMAGE
 
-moltenCoin:clear_callbacks()
-moltenCoin:onHitProc(function(actor, victim, stack, hit_info)
-	if math.random() <= 0.06 or hit_info.attack_info:get_attack_flag(Attack_Info.ATTACK_FLAG.force_proc) then
-		local dot = gm.instance_create(victim.x, victim.y, gm.constants.oDot)
-		dot.target = victim.value -- unwrap the Instance
-		dot.parent = actor.value
-		dot.damage = hit_info.damage * 0.2
-		dot.ticks = 2 + stack * 4
-		dot.team = actor.team
-		dot.textColor = 4235519
-		dot.sprite_index = gm.constants.sSparks9
+ItemLog.new_from_item(moltenCoin)
+
+Callback.add(Callback.ON_HIT_PROC, function(actor, victim, hit_info)
+	local stack = actor:item_count(moltenCoin)
+    if stack <= 0 then return end
+	
+	if math.random() <= 0.06 or hit_info.attack_info:get_flag(AttackFlag.FORCE_PROC) then
+		victim:apply_dot((hit_info.damage / actor.damage) * 0.2, 2 + stack * 4, 30, actor, 4235519)
 
 		victim:sound_play(sound, 1.0, 0.9 + math.random() * 0.2)
 
-		local g = gm.instance_create(victim.x, victim.y, gm.constants.oEfGold)
-		g.hspeed = -4 + math.random() * 8
-		g.vspeed = -4 + math.random() * 8
-		g.sprite_index = coin_sprite
-		g.value = stack
+		local inst = Object.find("EfGold"):create(victim.x, victim.y)
+		inst.hspeed = -4 + math.random() * 8
+		inst.vspeed = -4 + math.random() * 8
+		inst.sprite_index = coin_sprite
+		inst.value.value = stack
 
-		if gm._mod_net_isOnline() then
-			local msg = packetMoltenCoinProc:message_begin()
-			msg:write_int(victim.x)
-			msg:write_int(victim.y)
-			msg:write_uint(stack)
-			msg:send_to_all()
+		if Net.online and Net.host then
+			packet:send_to_all(victim.x, victim.y, stack)
 		end
 	end
-end)
-
-packetMoltenCoinProc:onReceived(function(msg)
-	local x = msg:read_int()
-	local y = msg:read_int()
-	local stack = msg:read_uint()
-
-	gm.sound_play_at(sound, 1.0, 0.9 + math.random() * 0.2, x, y)
-
-	local g = gm.instance_create(x, y, gm.constants.oEfGold)
-	g.hspeed = -4 + math.random() * 8
-	g.vspeed = -4 + math.random() * 8
-	g.sprite_index = coin_sprite
-	g.value = stack
 end)

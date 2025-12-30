@@ -1,65 +1,42 @@
-local sprite = Resources.sprite_load(NAMESPACE, "DormantFungus", path.combine(PATH, "Sprites/Items/dormantFungus.png"), 1, 18, 18)
-local sprite_footstep = Resources.sprite_load(NAMESPACE, "DormantFungusFootstep", path.combine(PATH, "Sprites/Items/Effects/dungus.png"), 24, 14, 24)
-local sound = Resources.sfx_load(NAMESPACE, "DormantFungus", path.combine(PATH, "Sounds/Items/dormantFungus.ogg"))
+local sprite = Sprite.new("DormantFungus", path.combine(PATH, "Sprites/Items/dormantFungus.png"), 1, 18, 18)
+local sprite_footstep = Sprite.new("DormantFungusFootstep", path.combine(PATH, "Sprites/Items/Effects/dungus.png"), 8, 14, 24)
+local sound = Sound.new("DormantFungus", path.combine(PATH, "Sounds/Items/dormantFungus.ogg"))
 
-local dormantFungus = Item.new(NAMESPACE, "dormantFungus")
-dormantFungus:set_sprite(sprite)
-dormantFungus:set_tier(Item.TIER.common)
-dormantFungus:set_loot_tags(Item.LOOT_TAG.category_healing)
-dormantFungus:clear_callbacks()
+local dungus = Item.new("dormantFungus")
+dungus:set_sprite(sprite)
+dungus:set_tier(ItemTier.COMMON)
+dungus.loot_tags = Item.LootTag.CATEGORY_HEALING
 
-local parDungus = Particle.new(NAMESPACE, "parDungus")
-parDungus:set_sprite(sprite_footstep, true, true, false)
-parDungus:set_life(96, 96)
-parDungus:set_alpha3(1, 1, 0)
+ItemLog.new_from_item(dungus)
 
-local dungusShroomSync = Packet.new()
-dungusShroomSync:onReceived(function(msg)
-	local actor = msg:read_instance()
-
-	if not actor:exists() then return end
-	
-	-- copied and pasted from uranium horseshoe basically
-	parDungus:create(actor.x, actor.bbox_bottom + 1, 1)
-end)
-
-local function sync_dungus(actor)
-	if not gm._mod_net_isHost() then
-		log.warning("sync_dungus called on client!")
-		return
-	end
-
-	local msg = dungusShroomSync:message_begin()
-	msg:write_instance(actor)
-	msg:send_to_all()
-end
-
-dormantFungus:onPostStep(function(actor, stack)
-	if gm._mod_net_isClient() then return end
-
-	if (math.abs(actor.pHspeed) >= actor.pHmax * 0.98) or actor.pVspeed ~= 0 then
-		local actor_data = actor:get_data()
-
-		if not actor_data.dungusTimer then
-			actor_data.dungusTimer = 120
-		end
-		if actor_data.dungusTimer <= 0 then
-			actor_data.dungusTimer = 120
-
-			local regen = math.ceil(actor.maxhp * (1 - 1 / (0.02 * stack + 1)))
-			actor:heal(regen)
-			gm.sound_play_networked(sound, 1, (0.9 + math.random() * 0.2), actor.x, actor.y)
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(dungus:get_holding_actors()) do
+		if Instance.exists(actor) then
+			local stack = actor:item_count(dungus)
 			
-			-- copied and pasted from uranium horseshoe basically
-			if Helper.is_false(actor.free) then
-				parDungus:create(actor.x, actor.bbox_bottom + 1, 1)
-				
-				if gm._mod_net_isOnline() then
-					sync_dungus(actor) -- particles arent synced by default so we have to use a packet for that
+			if (math.abs(actor.pHspeed) >= actor.pHmax * 0.98) or actor.pVspeed ~= 0 then
+				local data = Instance.get_data(actor)
+
+				if not data.dungusTimer then
+					data.dungusTimer = 120
+				end
+				if data.dungusTimer <= 0 then
+					data.dungusTimer = 120
+					
+					if Net.host then
+						actor:heal(math.ceil(actor.maxhp * (1 - 1 / (0.02 * stack + 1))))
+					end
+					
+					actor:sound_play(sound, 1, 0.9 + math.random() * 0.2)
+					
+					-- copied and pasted from uranium horseshoe basically
+					if actor:is_grounded() then
+						ssr_create_fadeout(actor.x, actor.bbox_bottom + 1, 1, sprite_footstep, 0.25, 0.05)
+					end
+				else
+					data.dungusTimer = data.dungusTimer - 1
 				end
 			end
-		else
-			actor_data.dungusTimer = actor_data.dungusTimer - 1
 		end
 	end
 end)

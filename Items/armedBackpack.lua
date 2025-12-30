@@ -1,15 +1,18 @@
-local sprite_item = Resources.sprite_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sprites/Items/armedBackpack.png"), 1, 16, 16)
-local sprite_sparks1 = Resources.sprite_load(NAMESPACE, "ArmedBackpackSpark1", path.combine(PATH, "Sprites/Items/Effects/armedBackpack1.png"), 3, 0, 10)
-local sprite_sparks2 = Resources.sprite_load(NAMESPACE, "ArmedBackpackSpark2", path.combine(PATH, "Sprites/Items/Effects/armedBackpack2.png"), 4, 16, 16)
+local sprite_item = Sprite.new("ArmedBackpack", path.combine(PATH, "Sprites/Items/armedBackpack.png"), 1, 16, 16)
+local sprite_sparks1 = Sprite.new("ArmedBackpackSpark1", path.combine(PATH, "Sprites/Items/Effects/armedBackpack1.png"), 3, 0, 10)
+local sprite_sparks2 = Sprite.new("ArmedBackpackSpark2", path.combine(PATH, "Sprites/Items/Effects/armedBackpack2.png"), 4, 16, 16)
 
-local sound = Resources.sfx_load(NAMESPACE, "ArmedBackpack", path.combine(PATH, "Sounds/Items/armedBackpack.ogg"))
+local sound = Sound.new("ArmedBackpack", path.combine(PATH, "Sounds/Items/armedBackpack.ogg"))
 
-local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
+local tracer = Tracer.new("ArmedBackpackTracer")
+tracer.sparks_offset_y = -5
+
+tracer:set_callback(function(x1, y1, x2, y2, color)
 	local offset = -7 + math.random() * 3
 	y1 = y1 + offset
 	y2 = y2 + offset
 
-	local tr = gm.instance_create(x1, y1, gm.constants.oEfLineTracer)
+	local tr = GM.instance_create(x1, y1, gm.constants.oEfLineTracer)
 	tr.xend = x2
 	tr.yend = y2
 	tr.sprite_index = gm.constants.sPilotShoo1BTracer
@@ -18,23 +21,31 @@ local tracer, tracer_info = CustomTracer.new(function(x1, y1, x2, y2)
 	tr.bm = 1 -- additive
 	tr.image_blend = Color.from_rgb(170, 78, 66)
 
-	local ef = gm.instance_create(x1, y1, gm.constants.oEfSparks)
+	local ef = GM.instance_create(x1, y1, gm.constants.oEfSparks)
 	ef.sprite_index = sprite_sparks1
 	ef.image_angle = gm.point_direction(x1, y1, x2, y2)
 	ef.image_speed = 0.4
 end)
-tracer_info.sparks_offset_y = -5
 
-local armedBackpack = Item.new(NAMESPACE, "armedBackpack")
+local armedBackpack = Item.new("armedBackpack")
 armedBackpack:set_sprite(sprite_item)
-armedBackpack:set_tier(Item.TIER.common)
-armedBackpack:set_loot_tags(Item.LOOT_TAG.category_damage)
+armedBackpack:set_tier(ItemTier.COMMON)
+armedBackpack.loot_tags = Item.LootTag.CATEGORY_DAMAGE
 
-armedBackpack:clear_callbacks()
-armedBackpack:onAttackCreateProc(function(actor, stack, attack_info)
+ItemLog.new_from_item(armedBackpack)
+
+Callback.add(Callback.ON_ATTACK_CREATE, function(attack_info)
+	if not attack_info.proc then return end
+	if not Instance.exists(attack_info.parent) then return end
+	
+	local actor = attack_info.parent
+	local stack = actor:item_count(armedBackpack)
+	
+	if stack <= 0 then return end
+		
 	if math.random() <= 0.12 + (0.065 * stack) then
 		local dir = actor:skill_util_facing_direction() + 180
-
+			
 		-- infer the direction from the attack direction if its horizontal enough
 		-- this improves many cases like huntress autoaim, suppressive fire, engi turrets, etc.
 		-- though it also has issues in other cases, hm.

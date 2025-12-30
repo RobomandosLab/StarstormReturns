@@ -2,23 +2,24 @@
 -- this one is kinda hard so ill try to explain literally everything lmao
 -- ill be refering to the stage number as its "tier" here. for example, without the artifact of displacement active dried lake is tier 1, magma barracks is tier 4, temple of the elders is 5, risk of rain is 6, etc
 -- ill be refering to the stage itself as "environment" or "env"
-local loadout = Resources.sprite_load(NAMESPACE, "ArtifactOfDisplacementLoadout", path.combine(PATH, "Sprites/Artifacts/Displacement/loadout.png"), 3, 19, 19)
-local pickup = Resources.sprite_load(NAMESPACE, "ArtifactOfDisplacementPickup", path.combine(PATH, "Sprites/Artifacts/Displacement/pickup.png"), 1, 20, 20)
+local loadout = Sprite.new("ArtifactOfDisplacementLoadout", path.combine(PATH, "Sprites/Artifacts/Displacement/loadout.png"), 3, 19, 19)
+local pickup = Sprite.new("ArtifactOfDisplacementPickup", path.combine(PATH, "Sprites/Artifacts/Displacement/pickup.png"), 1, 20, 20)
 
-local displacement = Artifact.new(NAMESPACE, "displacement")
-displacement:set_sprites(loadout, pickup)
+local displacement = Artifact.new("displacement")
+displacement.sprite_loadout_id = loadout
+displacement.sprite_pickup_id = pickup
 
 local potentialEnvs = List.new() -- this is where we will put environments that are available for random selection
 local validEnvs = List.new() -- this is where we will put all valid environments (no boar beach cuz its a secret and no risk of rain cuz its a final environment for example)
 	
-gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, args)
+local hook = Hook.add_post(gm.constants.stage_roll_next, function(self, other, result, args)
 	if not displacement.active then return end
 	
 	validEnvs:clear()
+	
 	for i = 1, 4 do -- go through 4 tiers of stages, we exclude tier 6 because we dont want to randomly go to risk of rain, and we exclude tier 5 stages because artifact of tempus can easily be cheesed if temple of the elders is chosen as one of the first stages (it also breaks the onstep code of the artifact's object for some reason? no clue why)
 		local envs = List.wrap(gm._mod_stage_get_pool_list(i)) -- get all environments in a tier
 		for _, env in ipairs(envs) do
-			print(Stage.wrap(env).identifier)
 			validEnvs:add(env) -- add each environment to validEnvs
 		end
 	end
@@ -48,5 +49,12 @@ gm.post_script_hook(gm.constants.stage_roll_next, function(self, other, result, 
 			potentialEnvs:delete(potentialEnvs:find(env))
 		end
 	end
+end)
+
+-- disable the artifact initially
+hook:toggle(false)
+
+Callback.add(displacement.on_set_active, function(active)
+	hook:toggle(active)
 end)
 

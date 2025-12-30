@@ -1,4 +1,23 @@
 # SSR Changelog *spoilers below!!*
+
+## 0.1.7
+- Mod ported to ReturnsAPI
+- Disabled skins (ReturnsAPI does not support them as of yet)
+- Added a new Nemesis: Nemesis Mercenary!
+- Added a new stage: Verdant Woodland!
+- Added a new spawn animation for Nemesis Commando
+- New item: Eclipse Gummies
+- Chirrsmas-exclusive content: Festive Golem sprite, snowy Contact Light, new present interactable.
+- Added option to enable/disable Chirrsmas in the settings
+- Revamped Empyrean Elite spawn beam visuals
+- Nerfed Empyrean Boss chance
+- Nerfed Empyrean Elite health and damage slightly
+- Nerfed chance for strong Empyrean Elites slightly
+- Added option to switch to vanilla game title in the settings
+- Updated README/Credits with cool new promo stuff!
+- Fixed many bugs (probably introduced even more)
+- Updated Russian translation
+
 ## 0.1.4 & 0.1.5 & 0.1.6
 - Optimized Artifact of Gathering to no longer tank performance as much. Which it did even while disabled. Huge thanks to Onyx (0n_x) for this one!
 

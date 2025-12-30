@@ -1,127 +1,147 @@
-local sprite_item = Resources.sprite_load(NAMESPACE, "IceTool", path.combine(PATH, "Sprites/Items/iceTool.png"), 1, 16, 16)
-local sprite_effect = Resources.sprite_load(NAMESPACE, "EfIceTool", path.combine(PATH, "Sprites/Items/Effects/iceTool.png"), 4, 13, 8)
-local sound = Resources.sfx_load(NAMESPACE, "IceTool", path.combine(PATH, "Sounds/Items/iceTool.ogg"))
+local sprite_item = Sprite.new("IceTool", path.combine(PATH, "Sprites/Items/iceTool.png"), 1, 16, 16)
+local sprite_effect = Sprite.new("EfIceTool", path.combine(PATH, "Sprites/Items/Effects/iceTool.png"), 4, 13, 8)
+local sound = Sound.new("IceTool", path.combine(PATH, "Sounds/Items/iceTool.ogg"))
 
-local particleSpark = Particle.find("ror", "Spark")
-
-local efIceTool = Object.new(NAMESPACE, "EfIceTool")
-efIceTool.obj_sprite = sprite_effect
+local particleSpark = Particle.find("Spark")
 
 -- this buff is used for the brief speed boost on walljump and while climbing
 -- all applications of it use _internal functions to bypass networking, because player movement is clientside
-local buffIceTool = Buff.new(NAMESPACE, "IceTool")
+local buffIceTool = Buff.new("IceTool")
 buffIceTool.client_handles_removal = true
 buffIceTool.show_icon = false
 buffIceTool.max_stack = math.huge
 
-local iceTool = Item.new(NAMESPACE, "iceTool")
+local iceTool = Item.new("iceTool")
 iceTool:set_sprite(sprite_item)
-iceTool:set_tier(Item.TIER.common)
-iceTool:set_loot_tags(Item.LOOT_TAG.category_utility)
+iceTool:set_tier(ItemTier.COMMON)
+iceTool.loot_tags = Item.LootTag.CATEGORY_UTILITY
 
-iceTool:clear_callbacks()
-iceTool:onAcquire(function(actor, stack)
-	local data = actor:get_data()
+ItemLog.new_from_item(iceTool)
+
+local packet = Packet.new("SyncIceTool")
+
+local serializer = function(buffer, self, dir)
+	buffer:write_instance(self)
+	buffer:write_short(dir)
+end
+
+local deserializer = function(buffer, self)
+	local actor = buffer:read_instance()
+	local collision_dir = buffer:read_short()
+	
+	local data = Instance.get_data(actor)
+	
+	actor.pVspeed = -actor.pVmax - 1.5
+	actor.free_jump_timer = 0
+	actor.jumping = true
+	actor.moveUp = false
+	actor.moveUp_buffered = false
+	
+	actor.pHspeed = -actor.pHmax * collision_dir
+	actor.image_xscale = -collision_dir
+
+	data.iceTool_jumps = data.iceTool_jumps - 1
+
+	if actor:buff_count(buffIceTool) > 0 then
+		GM.set_buff_time_nosync(actor, buffIceTool, 30)
+	else
+		GM.apply_buff_internal(actor, buffIceTool, 30, 3)
+	end
+
+	actor:sound_play(sound, 1, 1)
+	particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
+	ssr_create_fadeout(actor.x, actor.y, -collision_dir, sprite_effect, 0.25, 0.2)
+end
+
+packet:set_serializers(serializer, deserializer)
+
+Callback.add(iceTool.on_acquired, function(actor, stack)
+	local data = Instance.get_data(actor)
 	data.iceTool_jumps = stack
 
-	if gm.actor_state_is_climb_state(actor.actor_state_current_id) then
+	if actor:is_climbing() then
 		GM.apply_buff_internal(actor, buffIceTool, math.huge, 1)
 	end
 end)
 
-iceTool:onPostStep(function(actor, stack)
-	local data = actor:get_data()
+Callback.add(Callback.ON_STEP, function()
+	for _, actor in ipairs(iceTool:get_holding_actors()) do
+		if Instance.exists(actor) then
+			local data = Instance.get_data(actor)
+			local stack = actor:item_count(iceTool)
 
-	local is_climbing = gm.actor_state_is_climb_state(actor.actor_state_current_id)
-	local is_airborne = gm.bool(actor.free)
+			local collision_dir = 0
+			if actor:is_colliding(gm.constants.pBlock, actor.x - 1) then
+				collision_dir = -1
+			elseif actor:is_colliding(gm.constants.pBlock, actor.x + 1) then
+				collision_dir = 1
+			end
+			
+			local can_do_it = not actor:is_grounded() and collision_dir ~= 0 and data.iceTool_jumps > 0 and not actor:is_climbing()
 
-	local collision_dir = 0
-	if actor:is_colliding(gm.constants.pBlock, actor.x-1) then
-		collision_dir = -1
-	elseif actor:is_colliding(gm.constants.pBlock, actor.x+1) then
-		collision_dir = 1
-	end
+			-- do some dumb jank to make ice tool take precedence over hopoo feather
+			if can_do_it and not data.iceTool_feather_preserve then
+				data.iceTool_feather_preserve = actor.jump_count
+				actor.jump_count = math.huge
+			elseif not can_do_it and data.iceTool_feather_preserve then
+				actor.jump_count = data.iceTool_feather_preserve
+				data.iceTool_feather_preserve = nil
+			end
 
-	local can_do_it = is_airborne and collision_dir ~= 0 and data.iceTool_jumps > 0
+			-- just in-case something like a geyser or whatever changes the jump count ....
+			-- this is all very jank and terrible but it's good enough and the QoL is worth it ....
+			if actor.jump_count ~= math.huge and data.iceTool_feather_preserve then
+				actor.jump_count = math.huge
+			end
 
-	-- do some dumb jank to make ice tool take precedence over hopoo feather
-	if can_do_it and not data.iceTool_feather_preserve then
-		data.iceTool_feather_preserve = actor.jump_count
-		actor.jump_count = math.huge
-	elseif not can_do_it and data.iceTool_feather_preserve then
-		actor.jump_count = data.iceTool_feather_preserve
-		data.iceTool_feather_preserve = nil
-	end
+			if actor:is_grounded() or actor:is_climbing() then
+				data.iceTool_jumps = stack
+			end
 
-	-- just in-case something like a geyser or whatever changes the jump count ....
-	-- this is all very jank and terrible but it's good enough and the QoL is worth it ....
-	if actor.jump_count ~= math.huge and data.iceTool_feather_preserve then
-		actor.jump_count = math.huge
-	end
+			-- moveUp_buffered isnt synced so all of this only occurs for the guys who is currently walljumping
+			if Util.bool(actor.moveUp_buffered) and can_do_it then
+				actor.pVspeed = -actor.pVmax - 1.5
+				actor.free_jump_timer = 0
+				actor.jumping = true
+				actor.moveUp = false
+				actor.moveUp_buffered = false
 
-	if not is_airborne or is_climbing then
-		data.iceTool_jumps = stack
-		return
-	end
+				actor.pHspeed = -actor.pHmax * collision_dir
+				actor.image_xscale = -collision_dir
 
-	if gm.bool(actor.moveUp_buffered) and can_do_it then
-		actor.pVspeed = -actor.pVmax - 1.5
-		actor.free_jump_timer = 0
-		actor.jumping = true
-		actor.moveUp = false
-		actor.moveUp_buffered = false
+				data.iceTool_jumps = data.iceTool_jumps - 1
 
-		actor.pHspeed = -actor.pHmax * collision_dir
-		actor.image_xscale = -collision_dir
+				if actor:buff_count(buffIceTool) > 0 then
+					GM.set_buff_time_nosync(actor, buffIceTool, 30)
+				else
+					GM.apply_buff_internal(actor, buffIceTool, 30, 3)
+				end
 
-		data.iceTool_jumps = data.iceTool_jumps - 1
-
-		if actor:is_authority() then
-			-- send actor_position_info packet to sync the jumping velocity and stuff
-			actor:net_send_instance_message(0)
-		end
-
-		if actor:buff_stack_count(buffIceTool) > 0 then
-			GM.set_buff_time_nosync(actor, buffIceTool, 30)
-		else
-			GM.apply_buff_internal(actor, buffIceTool, 30, 3)
-		end
-
-		actor:sound_play(sound, 1, 1)
-		particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
-
-		efIceTool:create(actor.x, actor.y).image_xscale = collision_dir
-	end
-end)
-
-efIceTool:clear_callbacks()
-efIceTool:onCreate(function(self)
-	self.image_speed = 0.2
-end)
-efIceTool:onStep(function(self)
-	if self.image_index + self.image_speed >= 4 then
-		self.image_speed = 0
-	end
-	if self.image_speed == 0 then
-		self.image_alpha = self.image_alpha - 0.2
-		if self.image_alpha <= 0 then
-			self:destroy()
+				actor:sound_play(sound, 1, 1)
+				particleSpark:create(actor.x + 6 * collision_dir, actor.y, 2)
+				ssr_create_fadeout(actor.x, actor.y, -collision_dir, sprite_effect, 0.25, 0.2)
+				
+				if Net.online then
+					packet:send_to_all(actor, collision_dir)
+				end
+			end
 		end
 	end
 end)
 
-buffIceTool:clear_callbacks()
-buffIceTool:onStatRecalc(function(actor, stack)
-	actor.pHmax = actor.pHmax + stack * 0.5
+RecalculateStats.add(function(actor, api)
+	local stack = actor:buff_count(buffIceTool)
+    if stack <= 0 then return end
+	
+	api.pHmax_add(0.5 * stack)
 end)
 
-local stateClimb = State.find("ror", "climb")
+local stateClimb = ActorState.find("climb")
 
-stateClimb:clear_callbacks()
-stateClimb:onEnter(function(actor, data)
-	local stack = actor:item_stack_count(iceTool)
-	GM.apply_buff_internal(actor, buffIceTool, math.huge, stack)
+Callback.add(stateClimb.on_enter, function(actor, data)
+	GM.apply_buff_internal(actor, buffIceTool, math.huge, actor:item_count(iceTool))
 end)
-stateClimb:onExit(function(actor, data)
+
+Callback.add(stateClimb.on_exit, function(actor, data)
 	GM.remove_buff_internal(actor, buffIceTool)
 end)

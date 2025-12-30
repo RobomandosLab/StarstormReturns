@@ -1,0 +1,564 @@
+return {
+	difficulty = {
+		typhoon = {
+			name = "Typhoon",
+			description = "<r>The maximum challenge.</c>\nThe planet is a nightmare, survival is merely an illusion.\nNobody has what it takes."
+		}
+	},
+
+	survivor = {
+		executioner = {
+			name = "Executioner",
+			nameUpper = "EXECUTIONER",
+			description = "The <y>Executioner</c> is a mobile fighter who specializes in counting heads. Using Ion projectors, the Executioner fabricates illusions which cause foes to run away in fear, while also projecting an axe to take out the strongest enemies. Make sure to chain kills with <y>Ion Burst</c> and <y>Execution</c> to keep the damage pouring.",
+			endQuote = "..and so he left, bloodlust unfulfilled.",
+			story = "<ul>Passenger Details:</c>\n<y>[Military Class]</c>\n\n<ul>Luggage and Equipment:</c>\nOfficer boarded with EXN Acting Officer carbonweave uniform, civilian-grade plated oversuit and an issued service pistol. At military checkpoint, passenger's armament was noted to have an additional under-barrel \nmodification- and was cleared after an agreement was made to store it in a secure container. The passenger also cleared one ION 204X series battery customized with propulsion orifices. As a safety measure, passenger's \ntechnological goods were temporarily fitted with electrical auto-nullifiers and returned to them.\n\n<b>[SECURITY RECALL]</c>\n<ul>[Note E1a]</c> Several reports of Passenger making entire security checkpoint crew uneasy. Light surveillance will be required until further notice.\n<ul>[Note E1b]</c> Passenger would often reply in sounds rather than speech before opting to use Universal Sign Language.\n<ul>[Event E1]</c> Contracted commando performs security check in Passenger's quarters.\n<ul>[Event E1a]</c> Contracted commando requests 24 hour private surveillance in hall leading to Passenger's quarters.\n<ul>[Event E2]</c> Passenger asked to move tables during mealtime after another Passenger sent a formal complaint to onboard security.",
+			id = "Travel ID: 4383354378334FF3D34D",
+			departure = "<y>Departure:</c>\nOld Alcatraz,\nRustborough,\nMars",
+			arrival = "<y>Destination:</c>\nStillwater Bay,\nNewdredge,\nEuropa"
+		},
+		mule = {
+			name = "MULE",
+			nameUpper = "MULE",
+			description = "EVERY <y>MULE</c> UNIT IS ADEQUATELY EQUIPPED AND READY FOR DUTY. BUILT WITH HIGH QUALITY MATERIALS FOR MAXIMUM WORK PERFORMANCE. THIS MODEL INCLUDES THE <y>FORAGER SET OF TOOLS</c>, PERFECT FOR <y>HUNTING</c>, <y>EXPLORATION</c> AND OTHER DANGEROUS TASKS FOR THE COMMON USER. IN ORDER TO INITIALIZE PLEASE STATE A DIRECTIVE ON SYSTEM BOOT.",
+			endQuote = "..and so it left, pistons creaking, directive unstated.",
+			story = "<ul>Warrantee Expiration: \n8/16/2041 \n\nInputted Note: \n(ID: #1244C4F4F5D494)</c> \nNOTICE: MULE - MODEL F \nI'd rather not get into hot water for “tampering with ship property”, but I recently booted up this MULE unit and took 'em for repairs. It was just lying there, so I took it that no one would really mind if I touched it up a little. Heard talks of personnel wanting to throw 'em away before takeoff, but I just couldn't let it happen to such fine craftmanship.. it's a sight for sore eyes, sure, but you've gotta admit, it's novelty! Multi-purpose units haven't been considered in a long time since the first quadruped model was a hit. Besides, we all know what these sorts of bots can get up to! With a chassis like this, I wouldn't doubt that this big guy's roughed some pretty gnarly terrain. It's a bit of a walking time capsule, wouldn't you say? \nAll needed footage attached below yadda yadda— Look, I'll level with ya. Just.. consider keepin' it around. Even for just a bit. Whether those rumors are true or not.. I think his owner would be happy, y'know.. knowing it's up 'n runnin' still. \nJust give 'em something to do. Give it one more chance. \n\n<b>[MAINTENANCE REPORT]</c> \n<ul>[Report M1]</c> On boot-up, MULE unit remained completely motionless until around 20 minutes later when given a verbal command to deploy its support drone. MULE unit demonstrated idle processing and protocols only after the command. \n<ul>[Report M1a]</c> Support drone's power bank was found to be degraded. No compatible replacements could be found, leaving it to only be recharged. Battery longevity not guaranteed. \n<ul>[Report M2]</c> MULE unit was to be familiarized with Contact Light passengers and staff via facial recognition after suddenly attempting to constrain a mechanic it failed to recognize. Most UES personnel are now logged in its memory. \n<ul>[Report M2a]</c> Remotely accessing MULE unit's memory reveals previous entries in its database dating back to 2036. Initial entries in its memory were found to be corrupted or expunged."
+		},
+		nemesisCommando = {
+			name = "Nemesis Commando",
+			nameUpper = "NEMESIS COMMANDO",
+			description = "The <y>Nemesis Commando</c> is a flexible character with the firepower to deal with any situation. <y>Wound</c> enemies using <y>Blade of Cessation</c> to setup for devastating damage from your other abilities. Use <y>Tactical Roll</c> to weave in and out of melee range, and turn even the most dangerous situations in your favour.",
+			endQuote = "..and so he left, carrying new sense of humanity within.",
+			story = "<b>UNREGISTERED FIELD DATA LOG: DATA LAST MODIFIED ON [##090??!?]</c> \n<r>[ERROR 0x00000ce: Data Package Corrupted, viewing a restore point.]</c> \n\n<ul>[Entry 1] -</c> Patrol group just picked up a wounded straggler a few miles off from camp. Word going around is he “showed up out of nowhere,” (as if I'm buying that), what with nothing in the surrounding area to trace his origin. Regardless of the validity of their claims, a survivor's a survivor. As I'm writing this, we're carrying him back. He's certainly not making it easy on us, though, considering the sheer heft of his gear- he's lugging some unorthodox modifications to a standard Commando armor rig. It looks to be- or maybe was originally- the initial issue of the Mk. 1 model (even though I'm pretty sure they stopped producing those years ago?). \n\n<ul>[Entry 2] -</c> Update- buddy's got some scarily heavy artillery on hand for a Commando unit- a rocket launcher still warm to the touch and some almost certainly alien grenades- I sure as hell haven't seen anything like them. He’s out cold right now, and from what we can tell looking through his helmet he's well-battered. His left arm seems especially stiff- his hand's clamped shut around the handle of his vibroblade. Some of us tried to get a good look at it just now, but it's almost like his fist is fused to the damn thing. Amongst other things on his person, it's thoroughly coated in this crusted black.. substance. We don't know if it was the result of a fight between a few more survivors, or evidence for some kind of self defe??!0049### \n<r>[End of legible data.]</c> \n\n<ul>[Entry 2a] -</c> I dont know how much time I have left as im typing this it woke up and camp is DESTROYED people wont stop bleeding we dont even know if it was human with what it can do noone knows what to do now it went straight for Adrian \nwe dont even know what set it off??? what did WE do to deserve all of this??? why did that THING attack U!??!?##$0959090302???! \n<r>[End of legible data.]</c> \n\n<p>Th?e ga?dflies swarm thi?s nob?le beas?t as it gra?zes.\n\nYour plag??ue upon it?s surfa?ce wi?ll be undo?ne by the?se toiling hand?s.",
+		},
+		nemesisMercenary = {
+			name = "Nemesis Mercenary",
+			nameUpper = "NEMESIS MERCENARY",
+			description = "The <y>Nemesis Mercenary</c> uses dirty tactics and ruthless speed to dominate oncoming foes. Weaken opponents with his <y>Quick Trigger</c>, recuperate ammo with <y>Blinding Slide</c>, and chain-kill your remaining targets effortlessly with <y>Devitalize</c>.",
+			endQuote = "..and so he left, paid handsomely in blood and desolation.",
+			story = "<p>I DON'T NEED NO FRIENDS\nI DON'T NEED NO PHONE\nJUST A BAG OF SEVERED HEADS\nAND MY NUCLEAR THRONE</c>"
+		},
+		technician = {
+			name = "Technician",
+			nameUpper = "TECHNICIAN",
+			description = "The <y>Technician</c> is excellent at setting up and maintaining zones of enemy denial. <y>Forced Shutdown</c> can <y>forcibly lock down an area</c> when upgraded. <y>Upgrading</c> gadgets improves their effectiveness, but be careful when doing so in dangerous situations!",
+			endQuote = "..and so he left, beyond his own repair.",
+			story = "<ul>Passenger Details:\n<g>[Employee Class]\n\n<ul>Employee Details:</c>\nEmployee contracted to work on-site for the full duration of the scheduled voyage of the UES Contact Light, to perform maintenance on machinery should technical issues arise aboard the ship. Employee qualified with 6 years of hands-on experience in software and hardware engineering.\n\n<ul>Luggage & Equipment:</c>\nEmployee boarded with a Durarend welding spacesuit rated with strong vacuum resistance, and additionally leather and cloth attire made for planetary wear. Employee notified that clothes may tear in the case of a vacuum event. Security flagged the sizable wrench they held for appearing impractical for use while potentially dangerous. Upon questioning, the employee indicated that it was \"custom-built ... for the toughest jobs.\" Following procedure, the wrench was moved to an automated lockbox in loading bay 1a. Remaining inspection of carry-ons revealed several standard-issue wrenches, 3 color-coded USBs, a 2047 model GeForm Laptop, tool boxes, and a welding tool. USBs were inspected on company-owned QPuting Disposable Computer installed with ReoVirus Detector v1.6.2. No traces of malware were detected and stored files are UPG format containing blueprints of various devices. Employee permitted to pass with no further difficulties.\n\n<b>[SECURITY RECALL]</c>\n<ul>[Event T1]</c> Employee forcibly removed from cabin during liftoff preparations when refusing to leave after conversating with ship pilot for multiple hours.\n<ul>[Event T2]</c> Employee observed stealing sodas from a vending machine.\n<ul>[Event T3]</c> Automated lockdown originating in loading bay 4a resolved by employee.\n<ul>[Event T4]</c> Escape pod B-08 status shifted from ERROR to ALERT after the employee was requested by ship personnel to troubleshoot. Security personnel instructed to investigate.\n<ul>[Event T1a]</c> Employee additionally reported to have tampered with cabin control panel to make it \"easier to cruise.\" Scheduled launch delayed and employee instructed to revert any modifications made.",
+			id = "Travel ID: 54E4F4C434F59474E454",
+			departure = "<y>Departure:</c>\nUES Shipping Dock 5,\nRedview,\nMars",
+			arrival = "<y>Destination:</c>\nUES Shipping Dock 0,\nRedview,\nMars"
+		},
+		swapNemesis = {
+			name = "Nemesis Survivors",
+			nameUpper = "NEMESIS SURVIVORS",
+			description = "Swap to the familiar yet twisted <r>Nemesis survivors.</c>"
+		},
+		swapNormal = {
+			name = "Normal Survivors",
+			nameUpper = "NORMAL SURVIVORS",
+			description = "Swap to the regular set of survivors."
+		}
+	},
+
+	skill = {
+		executionerZ = {
+			name = "Service Pistol",
+			description = "Shoot for <y>100% damage.</c>"
+		},
+		executionerX = {
+			name = "Ion Burst",
+			description = "Rapidly shoot ionized bullets for <y>320% damage</c> each.\nGain bullets by slaying enemies."
+		},
+		executionerC =  {
+			name = "Crowd Dispersion",
+			description = "<y>Dash forward, fearing nearby enemies</c>.\nYou <b>cannot be hit</c> while dashing."
+		},
+		executionerV = {
+			name = "Execution",
+			description = "Launch into the air, and slam down with a projected axe for <y>1000% damage.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		executionerVBoosted = {
+			name = "Crowd Execution",
+			description = "Launch into the air, and slam down with a projected axe for <y>1500% damage,</c> <b>fearing enemies.</c>\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		executionerV2 = {
+			name = "Skullsplitter",
+			description = "Throw a projected axe in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		executionerV2Boosted = {
+			name = "Skullbuster",
+			description = "Throw two projected axes in a circular arc for <y>1500% damage</c> per second. <y>Critically strikes</c> against <y>feared</c> enemies.\nEach successful execution <y>reduces skill cooldowns by one second."
+		},
+		muleZ = {
+			name = "INTERFERENCE REMOVAL",
+			description = "PUNCH ENEMIES FOR <y>200% DAMAGE</c>. HOLD TO CHARGE AND SMASH THE GROUND FOR <y>1400% DAMAGE</c>."
+		},
+		muleX = {
+			name = "IMMOBILIZE",
+			description = "FIRE A TRAP FOR <y>125% DAMAGE</c>. THE TRAP <b>SNARES</c> UP TO <y>5 ENEMIES</c> IN THE TARGETS' PROXIMITY."
+		},
+		muleC = {
+			name = "TORQUE CALIBRATION",
+			description = "<y>SPIN FORWARD</c> FOR <y>4X100% DAMAGE</c>. THE LAST HIT <y>STUNS</c>."
+		},
+		muleV = {
+			name = "FAIL-SAFE ASSISTANCE",
+			description = "DEPLOY A PERSONAL REPAIR DRONE FOR 8 SECONDS. THE DRONE <g>HEALS 5X7% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		muleVBoosted = {
+			name = "FAIL-SAFE ASSISTANCE 2.0",
+			description = "LAUNCH A HEALING DRONE LASTING 8 SECONDS. THE DRONE <g>HEALS 5X10% OF YOUR TOTAL HEALTH</c>. AT FULL HEALTH, <g>GRANTS BARRIER INSTEAD</c>."
+		},
+		nemesisCommandoZ = {
+			name = "Blade of Cessation",
+			description = "Cut through nearby enemies for <y>120% damage</c>, <r>wounding</c> them for 6 seconds. <r>Cannot be stacked</c>.\n<r>Wounded</c> enemies take an extra <y>50% damage</c> from <b>all sources.</c>"
+		},
+		nemesisCommandoX = {
+			name = "Single Tap",
+			description = "Shoot an enemy for <y>200% damage</c>.\n<b>Hold up to 4.</c> Reload <b>2</c> charges when <b>rolling</c>."
+		},
+		nemesisCommandoX2 = {
+			name = "Distant Gash",
+			description = "Slash in a line forward for <y>90% damage</c>, <r>wounding</c> enemies for 6 seconds."
+		},
+		nemesisCommandoC = {
+			name = "Tactical Roll",
+			description = "Quickly <y>roll forward</c> a short distance.\nYou <b>cannot be hit</c> while rolling. <b>Hold up to 2.</c>"
+		},
+		nemesisCommandoV = {
+			name = "Flush Out",
+			description = "Throw a <y>grenade</c> for <y>700% damage</c>. Hold to <b>cook</c> the grenade.\nPress the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		nemesisCommandoVBoosted = {
+			name = "Cluster Bomb",
+			description = "Throw a <y>grenade</c> for <y>700% damage</c>, <y>stunning</c> enemies and <y>spitting into 3</c> grenades for <y>3x150% damage.</c>\nHold to <b>cook</c> the grenade. Press the <b>down</c> direction to <y>toss</c> at a low arc instead."
+		},
+		nemesisCommandoV2 = {
+			name = "Devastator",
+			description = "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>stunned</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle."
+		},
+		nemesisCommandoV2Boosted = {
+			name = "Spanker",
+			description = "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
+		},
+		nemesisMercenaryZ = {
+			name = "Lascerate",
+			description = "Quickly slash enemies in front of you for <y>100% damage</c>."
+		},
+		nemesisMercenaryX = {
+			name = "Quick Trigger",
+			description = "Fire your shotgun, <y>stunning</c> and damaging enemies for <y>400% damage</c>."
+		},
+		nemesisMercenaryC = {
+			name = "Blinding Slide",
+			description = "Hold to enter a defensive stance before quickly sliding forwards. \n<b>Getting hit whilst in this stance reloads your shotgun</c>. \n<b>You can attack whilst sliding</c>."
+		},
+		nemesisMercenaryV = {
+			name = "Devitalize",
+			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<r>Killing an enemy</c> with this skill <b>refreshes it</c>."
+		},
+		nemesisMercenaryVBoosted = {
+			name = "Absolute Devitalization",
+			description = "Target the weakest enemy near you, dealing <y>700% damage</c>. \n<b>Prioritizes</c> and <b>critically strikes</c> <y>stunned</c> enemies. \n<b>Instantly kills</c> enemies under <r>25%</c> health."
+		},
+		technicianZ = {
+			name = "Fine Tune",
+			description = "Strike forward with a wrench for <y>180% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 30 seconds."
+		},
+		technicianZ2 = {
+			name = "Troubleshoot",
+			description = "Throw a wrench forward, piercing up to 3 enemies for <y>180% damage.\n<y>Hitting gadgets</c> 3 times <b>temporarily upgrades them</c> for 20 seconds."
+		},
+		technicianX = {
+			name = "Forced Shutdown",
+			description = "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
+		},
+		technicianXD = {
+			name = "The Red Button",
+			description = "Detonate the dropped bomb for <y>500% damage.</c>\n<y>Stuns</c> enemies when <b>upgraded."
+		},
+		technicianC = {
+			name = "24/7 Energy",
+			description = "Deploy a <b>vending machine</c> that gives a <b>movement</c> and <y>attack speed bonus.</c>\nAdditionally increases <y>critical strike chance</c> when <b>upgraded."
+		},
+		technicianC2 = {
+			name = "Radial Amplifier",
+			description = "Deploy an <b>antenna</c> that deals <y>15% additional damage</c> to attacked enemies.\nHas <y>100% critical strike chance</c> when <b>upgraded."
+		},
+		technicianV = {
+			name = "Backup Firewall",
+			description = "Place a turret firing forward for <y>220% damage per second.</c>\nFires rapidly for <y>350% damage per second</c> when <b>upgraded."
+		},
+		technicianVBoosted = {
+			name = "Backup Firewall 2.0",
+			description = "Place a turret firing rapidly for <y>350% damage per second.</c>\nFires missiles for <y>4x100% damage</c> when <b>upgraded."
+		},
+		peace = {
+			name = "<#a4eae4>Peace!",
+			description = "Cannot use this skill."
+		}
+	},
+
+	item = {
+		armedBackpack = {
+			name = "Armed Backpack",
+			pickup = "Chance of firing a bullet behind you.",
+			description = "<y>18.5%</c> <c_stack>(+6.5% per stack)</c> chance on attack to <y>fire a bullet</c> behind you for <y>150% damage</c>.",
+			destination = "832B,\nHautenuit,\nEarth",
+			date = "11/7/2056",
+			story = "Being secure is always important. I don't want you to get in trouble, so please wear this whenever you go out. 'Specially in the canyons, there's a lot of thieves there!\nI'll send you some extra ammunition later this year, alright?",
+			priority = "Standard"
+		},
+		brassKnuckles = {
+			name = "Brass Knuckles",
+			pickup = "Deal extra damage at close range.",
+			description = "Deal <y>+35% damage</c> to enemies within <y>2.8m</c> <c_stack>(+1.4 per stack)</c>.",
+			destination = "UESPD,\nE42,\nUES Halberd B2",
+			date = "03/01/2056",
+			story = "We found this at the crime scene. We need to check for DNA against the rest of the evidence. I still cant believe they got away.\nThe back has some kind of symbol, maybe that could give us a clue. I'll be heading to the west of [REDACTED], I know someone who can help us solve the case.",
+			priority = "<y>Standard/Biological</c>"
+		},
+		detritiveTrematode = {
+			name = "Detritive Trematode",
+			pickup = "Low health enemies receive damage over time.",
+			description = "Enemies <y>below 15% <c_stack>(+5% per stack) <y>health</c> become permanently <y>infected</c>, receiving <y>100%</c> damage per second.",
+			destination = "112,\nNeaus 2,\nMars",
+			date = "03/11/2057",
+			story = "Eh, this is yours.\nDon't send one of those weird microscopic egg hatcheries EVER again, please.",
+			priority = "<g>Priority/Biological</c>"
+		},
+		dormantFungus = {
+			name = "Dormant Fungus",
+			pickup = "Regenerate health while moving.",
+			description = "Regenerates <g>2%</c> <c_stack>(+2% per stack)</c> of your health every two seconds while <g>moving</c>.",
+			destination = "Gate 1,\nModule 13,\nGea Station",
+			date = "11/01/2056",
+			story = "When you commanded me to explore the fungal caves all I expected to find was.. well, fungi, of course. Though I wasn't excited by any means, this specimen caught my eye.\nIt seems to only grow around flowing water, and ever since I collected and contained this sample, both the colouration and the smell faded out quickly.\n\nI hope you can study it further.",
+			priority = "Standard"
+		},
+		fork = {
+			name = "Fork",
+			pickup = "Deal more damage.",
+			description = "Increases <y>base damage<w> by <y>3 <c_stack>(+3 per stack)</c>.",
+			destination = "Antima Building - Rooftop,\nBlossom Hills,\nEarth",
+			date = "09/24/2056",
+			story = "Surprise! A fork! Hahaha!!!\nYou said any gift was a good gift, HERE YOU GO! Jokes aside, this fork is magical. Trust me Duncan, I once got to eat a salad with it and later that same day I found a cent!\nAlso uh please come play with us someday soon, we miss destroying your build in SS2 (please tell me you changed your main, lol).",
+			priority = "Standard"
+		},
+		watchMetronome = {
+			name = "Watch Metronome",
+			pickup = "Charge the watch by standing still. Move faster at full charge.",
+			description = "Standing still charges the watch over <b>3</c> seconds. At full charge, increase <b>movement speed</c> by <b>50%</c>, consuming charge over <b>3 <c_stack>(+1 per stack)</c> seconds.",
+			destination = "Cage 1,\nG-44 (Underground),\nEarth",
+			date = "09/05/2056",
+			story = "Grandpa gave me this as a relic of the past. He says it belonged to our great-great-great-great-great grandfather. I couldn't care less about antiques and family belongings so I think it's best if you have it instead.\nNot like it's of any use anyways..",
+			priority = "<g>Priority</c>"
+		},
+		wonderHerbs = {
+			name = "Wonder Herbs",
+			pickup = "Slightly increase all healing effects.",
+			description = "Increases <g>healing</c> from all sources by <g>12%</c> <c_stack>(+12% per stack)</c>.",
+			destination = "2342,\nPlot 3,\nEarth",
+			date = "11/07/2056",
+			story = "Rikka! I heard you're working with the EC on making a new recipe. Here at the farm we've been growing some special herbs which we think may come handy. They're known for being very, very useful for treating physical and emotional wounds.\nIf you need some more don't hesitate to call me! XOXO\n- Eden",
+			priority = "Standard"
+		},
+		coffeeBag = {
+			name = "Coffee Bag",
+			pickup = "Activating an interactable boosts movement and attack speed.",
+			description = "Activating an interactable <y>increases movement and attack speed</c> by <b>22%</c> for <b>10 <c_stack>(+5 per stack) <b>seconds</c>.",
+			destination = "n1,\nThe Capital,\nUES PRIME",
+			date = "05/22/2056",
+			story = "Sleeeeeeeeeeepyheaaaaaaaaaaaaaaad idk why u say u dont like coffee its so gooooood for staying up. ik ik theres other other ways to get hyped but oh boy i think u will dig this one, its my favorite!!! give it a try before yelling at me mmkay?",
+			priority = "Standard"
+		},
+		x4Stimulant = {
+			name = "X4 Stimulant",
+			pickup = "Decrease secondary skill cooldown, and heal slightly when using it.",
+			description = "Decrease your <b>secondary skill cooldown</c> by <b>10%</c> <c_stack>(+10% per stack)</c>. Using your secondary skill increases <g>health regeneration</c> by <g>2 <c_stack>(+1 per stack) <g>hp </c>per second for 3 seconds.",
+			destination = "Romeo 33,\nBatang Ai National Park,\nEarth",
+			date = "4/12/2057",
+			story = "Encased, including manual. Does the machine show symptoms of a 540? If so you may want to avoid using above 100ml of stimulant.\n\nCheers."
+		},
+		moltenCoin = {
+			name = "Molten Coin",
+			pickup = "Chance to ignite enemies on hit and gain gold",
+			description = "<y>6%</c> chance on hit to <y>incinerate enemies for 6 seconds, dropping $1 <c_stack>(+$1 per stack)<y> gold</c>.",
+			destination = "Toera 2,\nB44,\nMother Station",
+			date = "05/22/2056",
+			story = "Hey! Uh, I'm sorry, I'm really sorry.. I know you really wanted me to keep this coin but I can't take the responsibility any more..\nSee, I accidentally put the coin at the edge of a plasma furnace so.. well.. it's a bit burnt on the side, please don't get mad at me..",
+			priority = "Standard"
+		},
+		crypticSource = {
+			name = "Cryptic Source",
+			pickup = "Changing direction creates bursts of energy.",
+			description = "Changing movement direction fires <y>chain lightning</c> for <y>70% <c_stack>(+55% per stack)<y> damage</c> on up to <y>2</c> targets.",
+			destination = "O32,\nLow End,\nEarth",
+			date = "03/30/2058",
+			story = "From atoms to sentient beings, everything comes from energy. However, this rather cryptic object seems to emanate energy on its own. High amounts of friction seem to trigger a chain reaction which makes it highly unstable. However, it may also be a manipulable source of (infinite?) energy. Whether this will lead us to the utopian future we crave for is completely uncertain, but this completely changes our previous thoughts about the universe.",
+			priority = "<r>Volatile</c>"
+		},
+		huntersSigil = {
+			name = "Hunter's Sigil",
+			pickup = "Standing still creates a zone that increases armor and critical strike chance.",
+			description = "After standing still for 1 second, create a <y>small zone</c> that buffs you and allies for <b>15 <c_stack>(+10 per stack)<b> armor</c> and <y>25% <c_stack>(+20% per stack)<y> critical chance</c>.",
+			destination = "2East,\nBeckham Building,\nEarth",
+			date = "02/02/2056",
+			story = "Hey Sett, welcome to the club. We've been looking for candidates and now that you're with us, we can begin working next season. We're counting on you.\n\n-Irix out",
+			priority = "<g>Priority</c>"
+		},
+		roulette = {
+			name = "Roulette",
+			pickup = "Roll a random buff every minute.",
+			description = "Gain a <y>random buff</c>, which gets <b>rerolled every minute</c>. Possible buffs:\n\n<spr RouletteBuffs 1>: Increase <g>max health</c> by <g>60 <c_stack>(+24 per stack)</c>.\n<spr RouletteBuffs 2>: Increase <g>health regeneration</c> by <g>3.6 <c_stack>(+1.8 per stack) <g>hp</c> per second.\n<spr RouletteBuffs 3>: Increase <y>base damage</c> by <y>14 <c_stack>(+5 per stack)</c>.\n<spr RouletteBuffs 4>: Increase <y>attack speed</c> by <y>35% <c_stack>(+15.5% per stack)</c>.\n<spr RouletteBuffs 5>: Increase <y>critical chance</c> by <y>25% <c_stack>(+10% per stack)</c>.\n<spr RouletteBuffs 6>: Increase <b>movement speed</c> by <b>20% <c_stack>(+7% per stack)</c>.\n<spr RouletteBuffs 7>: Increase <b>armor</c> by <b>35 <c_stack>(+14 per stack)</c>.",
+			destination = "PRoom 3.1,\nSecva Casino,\nEarth",
+			date = "7/17/2057",
+			story = "Replacement Roulette model 144Bella-1 in follow-up to the recent events that unfolded in the casino. For further inquiries, please contact us at the E-direction given by our representatives.",
+			priority = "<g>Priority</c>"
+		},
+		judderingEgg = {
+			name = "Juddering Egg",
+			pickup = "Gain a little friend!",
+			description = "Hatch <b>1 <c_stack>(+1 per stack)</c> <b>young wurm</c> who fights with you, periodically <y>attacking surrounding enemies</c> for <y>18x80% damage</c>.",
+			destination = "Gate B,\nLee Compound,\nEarth",
+			date = "11/21/2056",
+			story = "Another one from the breeder, this time it's a very strange specimen.\nBe extremely cautious, I've heard juveniles can become highly aggressive (and lethal!) in a matter of seconds if you don't handle them correctly. Shouldn't be too long before it hatches, so you better have the structure ready for it.",
+			priority = "<r>Fragile</c>"
+		},
+		uraniumHorseshoe = {
+			name = "Uranium Horseshoe",
+			pickup = "Increase movement speed and jump height.",
+			description = "Increases <y>movement speed</c> and <y>jump height</c> by <b>10%</c> <c_stack>(+10% per stack)</c>",
+			destination = "6900,\nMartian's Face Horse Care and Farm Supplies,\nMars",
+			date = "04/20/2056",
+			story = "We found this weird green horse shoe on the hoof of one of our prized show horses after it mysteriously died late one night.\nOur horse doctor said you guys might know something about this strange horseshoe. Just holding it makes my hand burn. Handle it with care.",
+			priority = "<w>Standard</c>"
+		},
+		malice = {
+			name = "Malice",
+			pickup = "Damage spreads to nearby enemies.",
+			description = "Attacks <p>spread to nearby enemies</c> for <y>45% TOTAL damage</c> on up to <y>1 <c_stack>(+1 per stack)</c> target(s) within <y>4.2m <c_stack>(+1m per stack)</c>.",
+			destination = "P24,\nRomeo,\nPol-A Station",
+			date = "02/11/2056",
+			story = "Contain at all costs. This specimen can be a massive threat if not handled correctly. You don't know how much we lost already in order to keep this at bay.",
+			priority = "<p>Malicious</c>"
+		},
+		manOWar = {
+			name = "Man-o'-war",
+			pickup = "Create an electric discharge on kill.",
+			description = "Killing an enemy fires <y>chain lightning</c> for <y>100% <c_stack>(+40% per stack)<y> damage</c> on up to <y>2</c> targets.",
+			destination = "Hidden Cubby,\nMt. Creation,\nVenus",
+			date = "11/20/2056",
+			story = "Guys, remember the tiny guy I sent over some time ago? Well.. this one is a bit more aggressive.. although she is a funny little gal! She loves spinnin' around and watching me from inside the bottle. Man, if I hadn't rescued her, she would be in some alien stomach right now.\nI kinda want to name her Ann, thoughts?",
+			priority = "<g>Priority</c>"
+		},
+		guardingAmulet = {
+			name = "Guarding Amulet",
+			pickup = "Reduce damage from behind you.",
+			description = "Damage taken <b>from behind</c> you is reduced by <b>40% <c_stack>(+40% per stack)</c>.",
+			destination = "C8,\nAzure Garden,\nSanctuary",
+			date = "03/11/2056",
+			story = "I know he's somewhere out there, I know you can find him.. but you must be persistent. By the time my soul leaves this shell, the words will be spoken and you will take my place. He will be the one to show you the path to the answers you always wanted from me.\nEmbrace this amulet; you will depend on it, and it will keep you from ever looking back.",
+			priority = "<w>Standard</c>"
+		},
+		distinctiveStick = {
+			name = "Distinctive Stick",
+			pickup = "Heal near the teleporter.",
+			description = "Grows a tree near Teleporters, <g>healing</c> allies within <b>10m <c_stack>(+3.75m per stack)</c> for <g>2.2%</c> of their <g>health</c> every 2 seconds.",
+			destination = "Dreq Mineli,\nTesaft,\nEarth",
+			date = "01/15/2056",
+			story = "Darling, I have something special for you..\nThe other day on my mission, I came across this. It caught my eye because it's unlike any of the branches I've seen in my life! This branch excudes a peculiar energy. It made me feel connected to nature in a way I thought was only possible in stories! In honor of our anniversary, I'm giving it to you.\nI'll arrive home soon with an even greater present. Please, don't lose faith.",
+			priority = "<w>Standard</c>"
+		},
+		balloon = {
+			name = "Balloon",
+			pickup = "Lower gravity outside of danger.",
+			description = "Decrease <b>gravity</c> while holding the jump button by <b>35% <c_stack>(-15% per stack)</c>. Pops when damaged. Recovers when outside of danger for <b>7</c> seconds.",
+			destination = "55 Mo.,\nPaare Plaza,\nEarth",
+			date = "06/31/2056",
+			story = "When I was younger I used to love balloons. They're quite fun to watch in places with an atmosphere. However, this one is of special value to me, as it was of the first ones to be made out of reinforced rubber, back in the '22s. I hope you take care of it, it might cost a fortune in a few more years (if it's still floating, of course!).",
+			priority = "<g>Priority/Fragile</c>"
+		},
+		iceTool = {
+			name = "Ice Tool",
+			pickup = "Gain a wall jump. Climb faster.",
+			description = "Gain <b>1 <c_stack>(+1 per stack)<b> extra jump</c> while in contact with a wall. Increase <b>climbing speed</c> by <b>18% <c_stack>(+18% per stack)</c>.",
+			destination = "Mon's Tower #33,\nSolei Shore,\nEarth",
+			date = "03/12/2056",
+			story = "Good day fellow hiking friend, I found the ice tool you lost last time we went to Mt. [REDACTED]. Please keep an eye out for the snow next time!\nI wonder if the ice tool is still usable though, it's been through so much!",
+			priority = "<w>Standard</c>"
+		},
+		needles = {
+			name = "Needles",
+			pickup = "Chance to mark enemies for guaranteed critical strikes.",
+			description = "<y>3% <c_stack>(+2% per stack)</c> chance on hit to <y>mark</c> enemies for <y>100% critical chance</c> against them for 3 seconds.",
+			destination = "E2,\nOren's Loop,\nVenus",
+			date = "[REDACTED]",
+			story = "Uh.. madre dice que si puedes leer esto, es porque no eres tan torpe como pensaba, y pues eso. Esperamos que te sirvan estas agujas. Me temo que no son las que pediste, pero no hace mucha diferencia, pienso.\nNo recuerdo si los enviamos bien embalados. Ten cuidado.",
+			priority = "<y>Piercing</c>"
+		},
+
+		midas = {
+			name = "M.I.D.A.S",
+			pickup = "Convert half of your health into gold.",
+			description = "Lose <r>50% health</c>, gaining <y>$1 gold per health spent</c>, plus the cost of a <b>chest</c>.",
+			destination = "R A 5-5,\nPrime,\nTitan",
+			date = "05/04/2056",
+			story = "\"A miracle from the gods..\"\nYou keep saying it over and over again. Are you out of your mind? You keep treating us like we're ignorant when all we tried to do was to SAVE YOU.\n\nDo us a favour and keep it. Do whatever you want with it, we do NOT want to see you around here anymore. We do NOT want to be part of whatever is going on with you and this thing.\n\nIt's making you a greedy, souless person and I hope you know it.",
+			priority = "<r>Volatile</c>"
+		},
+		strangeCan = {
+			name = "Strange Can",
+			pickup = "Throw a can to mark an enemy. Killing it releases a toxic cloud.",
+			description = "Throw out a <g>peculiar can</c> that <y>intoxicates</c> the enemy with the <r>highest maximum health</c>. <y>Intoxicated</c> enemies release a <y>toxic cloud</c> on death for <y>50%</c> of the enemy's <y>maximum health as damage</c> over 5 seconds.",
+			destination = "1530,\n563,\nA-LC12",
+			date = "05/22/2056",
+			story = "These are as delicious as I told you. I just hope it doesn't crack open on the way there like the last one.\nI should get a job...",
+			priority = "<r>Volatile</c>"
+		},
+		whiteFlag = {
+			name = "White Flag",
+			pickup = "Place a white flag. Everyone around it is unable to attack.",
+			description = "Place down a white flag for <b>8</c> seconds. <b>Disables skills</c> for <r>everyone</c> within its radius.\n<r>Doesn't affect</c> drones and flying enemies.",
+			destination = "Room 2B,\nSomnus Hotel,\nEarth",
+			date = "10/5/2056",
+			story = "Save this for me until I get back home, I didn't need it. In fact, we became friends! I can't wait to tell you all about it soon. It's been a long trip and an unexpected series of events. I've told them about you and they want me to invite you over the next time. How's that, huh!? Love you.",
+			priority = "<r>Volatile</c>"
+		},
+		eclipseGummies = {
+			name = "Eclipse Gummies",
+			pickup = "Killing enemies drops buffing gummies.",
+			description = "Killing an enemy <b>drops a buffing gummy</c> that raises <y>attack</c> and <b>movement</c> speed by <y>2.5%</c> <c_stack>(+2.5% per stack)</c> up to <y>25%</c> <c_stack>(+25% per stack)</c> for <y>10 seconds</c>.",
+			destination = "199\nAbraham St.\nEarth",
+			date = "8/16/2056",
+			story = "Hey Dani! It's Vi, you won't believe what I just found. A box of old Eclipse Gummies! At work we were cleaning out this old ma' and pop convenience store and I found this box unopened in the back. My boss let me keep it since we'd just throw it out otherwise. It has to have been nearly 8 years since I last had one of these. Oh lil' Francesca Frog, Robot Reg and all of you other lil' fruity flavors. For a show that solely existed to sell merch, it sure did leave a mark on my childhood. I'm so glad these gummies taste the same as they did so long ago. Even giving me the same wiggly tingles as back then too. It really makes me think, why did they stop selling such popular gummies? Anyways I can't hog all of these to myself so I'm sending you a bunch to have too. Enjoy :heart:",
+			priority = "Standard"
+		}
+	},
+
+	artifact = {
+		multitude = {
+			pickupName = "Artifact of Multitude",
+			name = "Multitude",
+			description = "Enemies come in hordes.",
+			approaching = "A horde of enemies is approaching.",
+			arriving = "Prepare yourself...",
+		},
+		displacement = {
+			pickupName = "Artifact of Displacement",
+			name = "Displacement",
+			description = "Stages are shuffled.",
+		},
+		gathering = {
+			pickupName = "Artifact of Gathering",
+			name = "Gathering",
+			description = "Gold drops are doubled but they must be picked up.",
+		}
+	},
+
+	actor = {
+		Exploder = {
+			name = "Exploder"
+		},
+		Mimic = {
+			name = "Security Chest"
+		},
+		Gatekeeper = {
+			name = "Gatekeeper"
+		},
+		Admonitor = {
+			name = "Clay Admonitor"
+		},
+		Protector = {
+			name = "Protector",
+			text = "Keeper of the Artifact"
+		}
+	},
+
+	monster = {
+		admonitor = {
+			name = "Clay Admonitor",
+			story = "In the distance, a familiar clay 'person' trudged across the temple grounds. However, despite their similar appearances, this creature was not the same type I had seen before. For what it lacked in cunning, unlike its smaller brethren, this potted protector bore two skulking fists, clenched in a vice grip. The stride it assumed almost made it look... confident. I know I would be a fool to assume it couldn't produce intelligent emotions such as conviction. Nevertheless, out of concern for my general wellbeing, I chose not to test the mettle of this swaggering oil slick and hid inside an upturned ruin. \n\nIf I'm to make it off of this planet alive, I'd prefer my femur to be intact."
+		},
+		exploder = {
+			name = "Exploder",
+			story = "There's nothing I hate more than being chased down by these creatures. Although they can be easily dealt with alone, whenever they come in packs, I'm better off running away. It's as if their entire bloodstream is filled with this viscous, acidic material that managed to dissolve the circuits of one of my drones with a single drop.\n\nI.. really don't want to know what it would do to my skin."
+		},
+		mimic = {
+			name = "Security Chest",
+			story = "Who had the crazy idea of giving chests a failsafe? I know they want to make it harder for pirates, but they probably didn't think about emergencies.\nI'll never get used to chasing a mechanical box because it thinks I stole something.\n\n..Or maybe it's the berries I ate."
+		}
+	},
+
+	interactable = {
+		MimicInactive = {
+			text = "..?",
+			name = "Large Chest?"
+		},
+		ChirrsmasPresent = {
+			text = "Recieve a gift!",
+			name = "Gift Box"
+		}
+	},
+
+	elite = {
+		poison = {
+			name = "Poisoning %s",
+		},
+		empyrean = {
+			name = "<cycle 0 64 128 192>Empyrean %s</cycle>",
+			text = "Harbinger of Judgement"
+		}
+	},
+
+	stage = {
+		whistlingBasin = {
+			name = "Whistling Basin",
+			subname = "Dwindling Oasis",
+			story = "This planet continues to hold nothing but surprises for me. Considering the actions of its denizens prior to coming here, I would never have thought such sprawling and decadent architecture could be built by such creatures. Incredibly deep ebony pillars and arches constructed of beautiful stone that rise from the ground, all adorned with carvings placed by intentional hands. All along the walls are these amazingly intricate displays of deceptively simple shapes. The most peculiarly turquoise foliage attack the structures, climbing subtly along their bases. It seems the preconceived notion of savagery I held for this planet is waning. Even still, my guard is held high. It's too soon for me to rest, despite protests from my aching muscles.",
+		},
+		torridOutlands = {
+			name = "Torrid Outlands",
+			subname = "Silent Sunburn",
+			story = "Even with my suit, I can feel the pulsing solar rays flash down and bend the atmosphere of this god-forsaken planet. It's getting harder to keep my wits about me what with this heat, and the condensation beginning to cloud my helmet's walls won't help me either.  Although, without it, my lungs would be halfway full of all the dust and detritus I've kicked up in my wandering- 'find a silver lining' and whatnot. With the sun high in the sky, even just the idea of surveying my environment with a manner of ease is nothing more than a pipe dream. I'm finding it easy to stumble into cacti and boulders in my delirium, taking brief reprieve inside these sprawling tunnels and caves that litter the surface. With the unwieldly terrain slowing my progression, the sweat trickling along my brow towards my eyes is bound to be the least of my worries."
+		},
+		verdantWoodland = {
+			name = "Verdant Woodland",
+			subname = "Breathing Overgrowth",
+			story = "A maze of the largest trees I've ever seen unwinds in front of me, a constricting natural wonder with scales of bark and teeth like splinters. These pillars of wood rise endlessly, protecting this rich acropolis- their overbearing presence makes me reflect upon my actions as I tear through the overgrowth. I can hardly blame these sharp brambles that line my suit. With each piercing step, they remind me that I am just a guest within their fortress. Teeming bug's nests erupt with their knights, guiding me away from their young just as you or I would with our own. I can hear swarms of raging insects overhead, chirruping like birdsong. It reminds me of home. I want nothing more than to lie down in the lush grass that this incredible planet has provided, but I must keep moving. Melancholic pangs sting at my insides. This endeavouring venom that courses through my veins, giving me the will to keep fighting.. I can't help but to regret its presence.\n\nI fear that this planet is starting to get to my head."
+		}
+	},
+
+	ui = {
+		options = {
+			ssr = {
+				header = "STARSTORM RETURNS",
+				titleReplacement = "Replace Title",
+				["titleReplacement.desc"] = "Whether the game's title screen logo should be replaced with Starstorm's",
+				enableChars = "Enable Survivors",
+				["enableChars.desc"] = "Enables survivors added by Starstorm Returns.",
+				enableItems = "Enable Items",
+				["enableItems.desc"] = "Enables items added by Starstorm Returns.",
+				enableEnemies = "Enable Enemies",
+				["enableEnemies.desc"] = "Enables enemies added by Starstorm Returns.",
+				enableElites = "Enable Elites",
+				["enableElites.desc"] = "Enabless elites added by Starstorm Returns.",
+				enableTyphoon = "Enable Typhoon",
+				["enableTyphoon.desc"] = "Enables typhoon added by Starstorm Returns.",
+				enableInteractables = "Enable Interactables",
+				["enableInteractables.desc"] = "Enables interactables added by Starstorm Returns.",
+				enableArtifacts = "Enable Artifacts",
+				["enableArtifacts.desc"] = "Enables artifacts added by Starstorm Returns.",
+				enableStages = "Enable Stages",
+				["enableStages.desc"] = "Enables stages added by Starstorm Returns.",
+				enableBeta = "Enable Unfinished Content",
+				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>",
+				enableChirrsmas = "Enable Chirrsmas Content",
+				["enableChirrsmas.desc"] = "Whether Chirrsmas-exclusive content should be present. \nBy default active from December 15th to January 15th. \n<r>RESTART REQUIRED</c>",
+				["enableChirrsmas.default"] = "Default",
+				["enableChirrsmas.always"] = "Always",
+				["enableChirrsmas.never"] = "Never"
+			}
+		}
+	}
+}
