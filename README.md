@@ -1,6 +1,6 @@
 ![SSR Title](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Logo.png?raw=true)
 
-**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **four** survivors, **two** stages, **two** monsters, and over **20** new items to help reshape your runs. 
+**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **five** survivors, **three** stages, **three** monsters, and over **20** new items to help reshape your runs. 
 
 ![New_Environments_Header](https://github.com/WinslowRoR/testing_grounds1/blob/main/PromoFiles/SSR_Environments.gif?raw=true)
 
@@ -60,7 +60,6 @@ Should be! Please report any issues you find.
 - Hobart: Morale support
 - Bread: Github Detective
 - Buns: Project management
-- Kris: Programmer
 - [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
 - Battery: Programmer
 - [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
@@ -88,6 +87,7 @@ Should be! Please report any issues you find.
 - Swuff for helping kickstart the codebase
 - Starstorm 2 team for their design guidance and support
 - Starstorm fans everywhere
+- Kris for their previous work on SSR
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
 - SwedishFish75 for Spanish Translation
