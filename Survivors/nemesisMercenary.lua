@@ -521,13 +521,15 @@ Callback.add(stateSecondary.on_enter, function(actor, data)
 	actor.image_index = 0
 	data.fired = 0
 	data.reloaded = 0
-	data.dir = 90 - 90 * actor.hold_facing_direction_xscale
+	data.dir = 0
 	
 	data.sprite = nil
 	if get_data.nemmerc_slide > 0 then
 		data.sprite = actor.sprite_shoot2
+		data.dir = 90 - 90 * actor.hold_facing_direction_xscale
 	else
 		data.sprite = sprite_shoot2a.value
+		data.dir = actor:skill_util_facing_direction()
 	end
 end)
 
@@ -653,6 +655,7 @@ Callback.add(stateUtility.on_step, function(actor, data)
 		get_data.nemmerc_slide = 50
 		get_data.nemmerc_slide_dir = actor.image_xscale
 		get_data.nemmerc_slide_turned = 0
+		actor.hold_facing_direction_xscale = actor.image_xscale
 	end
 	
 	if data.counter > 0 and data.fired == 1 then
