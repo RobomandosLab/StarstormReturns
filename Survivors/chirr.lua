@@ -25,49 +25,49 @@ end
 
 -- assets
 -- icon sprites and stuff
-local sprite_loadout =        Resources.sprite_load(NAMESPACE, "ChirrSelect", path.combine(SPRITE_PATH, "select.png"), 15, 14, 0)
-local sprite_portrait =       Resources.sprite_load(NAMESPACE, "ChirrPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
-local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "ChirrPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills =         Resources.sprite_load(NAMESPACE, "ChirrSkills", path.combine(SPRITE_PATH, "skills.png"), 6)
+local sprite_loadout =        Sprite.new("ChirrSelect", path.combine(SPRITE_PATH, "select.png"), 15, 14, 0)
+local sprite_portrait =       Sprite.new("ChirrPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait_small = Sprite.new("ChirrPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills =         Sprite.new("ChirrSkills", path.combine(SPRITE_PATH, "skills.png"), 6)
 
 -- non-skill sprites
-local sprite_idle =           Resources.sprite_load(NAMESPACE, "ChirrIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 11)
-local sprite_idle_half =      Resources.sprite_load(NAMESPACE, "ChirrIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 12, 11)
-local sprite_walk =           Resources.sprite_load(NAMESPACE, "ChirrWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 13, 13)
-local sprite_walk_half =      Resources.sprite_load(NAMESPACE, "ChirrWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 13, 13)
-local sprite_jump =           Resources.sprite_load(NAMESPACE, "ChirrJump", path.combine(SPRITE_PATH, "jump.png"), 1, 11, 13)
-local sprite_jump_half =      Resources.sprite_load(NAMESPACE, "ChirrJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 11, 13)
-local sprite_flight =         Resources.sprite_load(NAMESPACE, "ChirrFlight", path.combine(SPRITE_PATH, "flight.png"), 1, 11, 15)
-local sprite_wings =          Resources.sprite_load(NAMESPACE, "ChirrWings", path.combine(SPRITE_PATH, "wings.png"), 3, 11, 15)
-local sprite_climb =          Resources.sprite_load(NAMESPACE, "ChirrClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 11, 10)
-local sprite_death =          Resources.sprite_load(NAMESPACE, "ChirrDeath", path.combine(SPRITE_PATH, "death.png"), 8, 16, 11)
-local sprite_decoy =          Resources.sprite_load(NAMESPACE, "ChirrDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
+local sprite_idle =           Sprite.new("ChirrIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 12, 11)
+local sprite_idle_half =      Sprite.new("ChirrIdleHalf", path.combine(SPRITE_PATH, "idleHalf.png"), 1, 12, 11)
+local sprite_walk =           Sprite.new("ChirrWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 13, 13)
+local sprite_walk_half =      Sprite.new("ChirrWalkHalf", path.combine(SPRITE_PATH, "walkHalf.png"), 8, 13, 13)
+local sprite_jump =           Sprite.new("ChirrJump", path.combine(SPRITE_PATH, "jump.png"), 1, 11, 13)
+local sprite_jump_half =      Sprite.new("ChirrJumpHalf", path.combine(SPRITE_PATH, "jumpHalf.png"), 1, 11, 13)
+local sprite_flight =         Sprite.new("ChirrFlight", path.combine(SPRITE_PATH, "flight.png"), 1, 11, 15)
+local sprite_wings =          Sprite.new("ChirrWings", path.combine(SPRITE_PATH, "wings.png"), 3, 11, 15)
+local sprite_climb =          Sprite.new("ChirrClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 11, 10)
+local sprite_death =          Sprite.new("ChirrDeath", path.combine(SPRITE_PATH, "death.png"), 8, 16, 11)
+local sprite_decoy =          Sprite.new("ChirrDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
 
 -- skill sprites
-local sprite_shoot1 =         Resources.sprite_load(NAMESPACE, "ChirrShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 17, 11)
-local sprite_shoot1_half =    Resources.sprite_load(NAMESPACE, "ChirrShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 17, 12)
-local sprite_shoot2 =         Resources.sprite_load(NAMESPACE, "ChirrShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 7, 23, 11)
-local sprite_shoot3 =         Resources.sprite_load(NAMESPACE, "ChirrShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 13, 19, 27)
-local sprite_shoot4 =         Resources.sprite_load(NAMESPACE, "ChirrShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 10, 3, 4)
+local sprite_shoot1 =         Sprite.new("ChirrShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 17, 11)
+local sprite_shoot1_half =    Sprite.new("ChirrShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 17, 12)
+local sprite_shoot2 =         Sprite.new("ChirrShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 7, 23, 11)
+local sprite_shoot3 =         Sprite.new("ChirrShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 13, 19, 27)
+local sprite_shoot4 =         Sprite.new("ChirrShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 10, 3, 4)
 
 -- effect sprites, entirely used for the primary because i was having fun and bc the rest of her kit didnt really use any
-local sprite_sparks =         Resources.sprite_load(NAMESPACE, "ChirrSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 11, 3)
-local sprite_tracer =         Resources.sprite_load(NAMESPACE, "ChirrTracer", path.combine(SPRITE_PATH, "tracer.png"), 5, 0, 2)
+local sprite_sparks =         Sprite.new("ChirrSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 11, 3)
+local sprite_tracer =         Sprite.new("ChirrTracer", path.combine(SPRITE_PATH, "tracer.png"), 5, 0, 2)
 
 -- sprites for the elite type given to tamed monsters
-local sprite_palette =        Resources.sprite_load(NAMESPACE, "ChirrPalette", path.combine(SPRITE_PATH, "palette.png"))
-local sprite_tamed_icon =     Resources.sprite_load(NAMESPACE, "ChirrTameIcon", path.combine(SPRITE_PATH, "tameIcon.png"))
+local sprite_palette =        Sprite.new("ChirrPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_tamed_icon =     Sprite.new("ChirrTameIcon", path.combine(SPRITE_PATH, "tameIcon.png"))
 
 -- sounds
-local sound_shoot1 =          Resources.sfx_load(NAMESPACE, "ChirrShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
-local sound_shoot2 =          Resources.sfx_load(NAMESPACE, "ChirrShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
-local sound_shoot3a =         Resources.sfx_load(NAMESPACE, "ChirrShoot3A", path.combine(SOUND_PATH, "skill3A.ogg"))
-local sound_shoot3b =         Resources.sfx_load(NAMESPACE, "ChirrShoot3B", path.combine(SOUND_PATH, "skill3B.ogg"))
-local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "ChirrShoot4", path.combine(SOUND_PATH, "skill4.ogg"))
+local sound_shoot1 =          Sound.new("ChirrShoot1", path.combine(SOUND_PATH, "skill1.ogg"))
+local sound_shoot2 =          Sound.new("ChirrShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot3a =         Sound.new("ChirrShoot3A", path.combine(SOUND_PATH, "skill3A.ogg"))
+local sound_shoot3b =         Sound.new("ChirrShoot3B", path.combine(SOUND_PATH, "skill3B.ogg"))
+local sound_shoot4 =          Sound.new("ChirrShoot4", path.combine(SOUND_PATH, "skill4.ogg"))
 
 
 -------- the creachirr
-local chirr = Survivor.new(NAMESPACE, "chirr")
+local chirr = Survivor.new("chirr")
 local chirr_id = chirr.value
 local player_actor
 
@@ -91,25 +91,8 @@ chirr:set_stats_level({ -- setting stats for leveling up
 	armor = 2
 })
 
-local base_physics = { -- chirrs default different physics
-	gravity1 = 0.4,
-	gravity2 = 0.16
-}
-chirr:set_physics_base(base_physics)
-
-chirr:set_animations({ -- setting the animations, a lot of this is modeled after executioner
-	idle = sprite_idle,
-	walk = sprite_walk,
-	jump = sprite_jump,
-	jump_peak = sprite_jump,
-	fall = sprite_fall,
-	climb = sprite_climb,
-	death = sprite_death,
-	decoy = sprite_decoy
-})
-
-chirr:set_cape_offset(0,0,0,0)
-chirr:set_primary_color(Color.from_rgb(129,167,98))
+chirr.cape_offset = Array.new({0,0,0,0})
+chirr.primary_color = Color.from_rgb(129,167,98)
 
 -- setting some misc sprites
 chirr.sprite_loadout = sprite_loadout
@@ -117,9 +100,19 @@ chirr.sprite_portrait = sprite_portrait
 chirr.sprite_portrait_small = sprite_portrait_small
 chirr.sprite_title = sprite_walk
 
-chirr:clear_callbacks()
-chirr:onInit(function(actor) -- setting up the beasts half sprite stuff
-	-- shoutouts to kris for the awesome code i can entirely copy!!
+Callback.add(chirr.on_init, function(actor)
+	actor.pGravity1_base = 0.4
+	actor.pGravity2_base = 0.16
+
+	actor.sprite_idle = sprite_idle
+	actor.sprite_walk = sprite_walk
+	actor.sprite_jump = sprite_jump
+	actor.sprite_jump_peak = sprite_jump
+	actor.sprite_fall = sprite_fall
+	actor.sprite_climb = sprite_climb
+	actor.sprite_death = sprite_death
+	actor.sprite_decoy = sprite_decoy
+
 	local idle_half = Array.new()
 	local walk_half = Array.new()
 	local jump_half = Array.new()
@@ -134,54 +127,45 @@ chirr:onInit(function(actor) -- setting up the beasts half sprite stuff
 	actor.sprite_fall_half = jump_half
 
 	actor:survivor_util_init_half_sprites()
-	
 end)
 
 -- her wing sprites
-local obj_wings = Object.new(NAMESPACE, "chirrWings")
+local obj_wings = Object.new("chirrWings")
 obj_wings.obj_sprite = sprite_wings
 obj_wings.obj_depth = 1
 
 -- setting up the default skills
-local chirrPrimary =   chirr:get_primary()
-local chirrSecondary = chirr:get_secondary()
-local chirrUtility =   chirr:get_utility()
-local chirrSpecial =   chirr:get_special()
-local chirrSpecialScepter = Skill.new(NAMESPACE, "chirrSpecialBoosted")
-chirrSpecial:set_skill_upgrade(chirrSpecialScepter)
+local chirrPrimary =   chirr:get_skills(Skill.Slot.PRIMARY)[1]
+local chirrSecondary = chirr:get_skills(Skill.Slot.SECONDARY)[1]
+local chirrUtility =   chirr:get_skills(Skill.Slot.UTILITY)[1]
+local chirrSpecial =   chirr:get_skills(Skill.Slot.SPECIAL)[1]
+local chirrSpecialS = Skill.new("chirrSpecialBoosted")
 
 -- alt skills
-local chirrUtilityAlt = Skill.new(NAMESPACE, "channelingPulse")
-chirr:add_utility(chirrUtilityAlt)
+local chirrUtilityAlt = Skill.new("channelingPulse")
+chirr:add_skill(Skill.Slot.UTILITY, chirrUtilityAlt)
 
-local chirrSpecialAlt = Skill.new(NAMESPACE, "siphonsnare")
-local chirrSpecialAltScepter = Skill.new(NAMESPACE, "siphonsnareBoosted")
-chirr:add_special(chirrSpecialAlt)
-chirrSpecialAlt:set_skill_upgrade(chirrSpecialAltScepter)
+local chirrSpecialAlt = Skill.new("siphonsnare")
+local chirrSpecialAltS = Skill.new("siphonsnareBoosted")
+chirr:add_skill(Skill.Slot.SPECIAL, chirrSpecialAlt)
 
 -- her movement control stuff and other on step stuff
-local tameHealthbarBuff = Buff.new(NAMESPACE, "chirrShowAllyHPBuff") -- draws the health bars for your friends!
+local tameHealthbarBuff = Buff.new("chirrShowAllyHPBuff") -- draws the health bars for your friends!
 tameHealthbarBuff.show_icon = false
 tameHealthbarBuff.is_timed = false
 
-tameHealthbarBuff:clear_callbacks()
-tameHealthbarBuff:onPreDraw(function( actor )
+Callback.add(tameHealthbarBuff.on_step, function( actor )
 	actor:draw_hp_bar_ally()
 end)
 
-local tameMark = Buff.new(NAMESPACE, "chirrTameMark") -- this is her weird little tame indicator
+local tameMark = Buff.new("chirrTameMark") -- this is her weird little tame indicator
 tameMark.show_icon = true
 tameMark.icon_sprite = sprite_portrait_small
-tameMark.is_debuff = true
-
-tameMark:onStatRecalc(function( actor )
-	actor.armor = actor.armor - 30
-end)
 
 local flying = false -- hover stuff
 local diving = false -- for chirrs moves where she dives downwards
 local wings
-chirr:onStep(function( actor )
+Callback.add(chirr.on_step, function( actor )
 	if actor.moveUpHold == 1.0 and actor.pVspeed > 0.35 and not diving then -- her hover
 		flying = true
 		actor.pVspeed = 0.35
@@ -192,7 +176,7 @@ chirr:onStep(function( actor )
 		
 		if not wings then -- displaying her wings
 			wings = obj_wings:create(actor.ghost_x, actor.ghost_y)
-			wingsData = wings:get_data()
+			wingsData = Instance.get_data(wings)
 			wingsData.parent = actor
 			wings.image_xscale = actor.image_xscale
 		else
@@ -245,12 +229,16 @@ chirrPrimary.require_key_press = false
 chirrPrimary.is_primary = true
 chirrPrimary.does_change_activity_state = true
 chirrPrimary.hold_facing_direction = true
-chirrPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+chirrPrimary.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
 -- tracer for her projectiles
 local tracer_color = Color.from_rgb(129,167,98)
 local tracer_color2= Color.from_rgb(204,232,111)
-local thorn_tracer, thorn_tracer_info = CustomTracer.new(function(x1, y1, x2, y2) -- i just kinda copied this tracer code and tweaked it for some fun visuals
+
+local tracer = Tracer.new("chirrThornsTracer")
+tracer.sparks_offset_y = -8
+
+tracer:set_callback(function( x1, y1, x2, y2 )
 	local offset = -7 + math.random() * 3
 	y1 = y1 + offset
 	y2 = y2 + offset
@@ -267,10 +255,9 @@ local thorn_tracer, thorn_tracer_info = CustomTracer.new(function(x1, y1, x2, y2
 	local dist = gm.point_distance(x1, y1, x2, y2)
 	local dir = gm.point_direction(x1, y1, x2, y2)
 end)
-thorn_tracer_info.sparks_offset_y = -8
 
 -- debuff that her primary inflicts
-local healingBuildup = Buff.new(NAMESPACE, "healingBuildupDebuff") -- this is her weird little tame indicator
+local healingBuildup = Buff.new("healingBuildupDebuff") -- this is her weird little tame indicator
 healingBuildup.show_icon = true
 healingBuildup.icon_sprite = sprite_portrait_small
 healingBuildup.is_debuff = true
@@ -279,7 +266,7 @@ healingBuildup.draw_stack_number = true
 healingBuildup.stack_number_col = Array.new(1, tracer_color2)
 healingBuildup.max_stack = 9
 
-healingBuildup:onApply(function( actor, stack )
+Callback.add(healingBuildup.on_apply, function( actor, stack )
 	if stack == 5 then
 		actor:buff_remove(healingBuildup)
 
@@ -308,14 +295,13 @@ healingBuildup:onApply(function( actor, stack )
 end)
 
 -- actual primary skill
-local stateChirrPrimary = State.new(NAMESPACE, "chirrPrimary") -- making a primary state
+local stateChirrPrimary = ActorState.new("chirrPrimary") -- making a primary state
 
-chirrPrimary:clear_callbacks()
 chirrPrimary:onActivate(function( actor ) 
 	actor:enter_state(stateChirrPrimary)
 end)
 
-stateChirrPrimary:clear_callbacks() -- using the skill, setting up the important data and stuff
+-- using the skill, setting up the important data and stuff
 stateChirrPrimary:onEnter(function( actor, data )
 	actor.image_index2 = 0
 	data.fired = 0
@@ -371,12 +357,11 @@ chirrSecondary.subimage = 1
 chirrSecondary.damage = 3.5
 chirrSecondary.cooldown = 3 * 60
 chirrSecondary.require_key_press = false
-chirrSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSecondary.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateChirrSecondary = State.new(NAMESPACE, "chirrSecondary")
-local stateChirrLaunch = State.new(NAMESPACE, "chirrLaunch")
+local stateChirrSecondary = ActorState.new("chirrSecondary")
+local stateChirrLaunch = ActorState.new("chirrLaunch")
 
-stateChirrLaunch:clear_callbacks()
 stateChirrLaunch:onEnter(function( actor, data )
 	actor.pVspeed = -12
 	data.time = 0
@@ -392,12 +377,10 @@ stateChirrLaunch:onStep(function( actor, data )
 end)
 
 
-chirrSecondary:clear_callbacks()
 chirrSecondary:onActivate(function(actor)
 	actor:enter_state(stateChirrSecondary)
 end)
 
-stateChirrSecondary:clear_callbacks()
 stateChirrSecondary:onEnter(function( actor, data )
 	actor.image_index = 0
 
@@ -511,19 +494,17 @@ chirrUtility.subimage = 2
 chirrUtility.cooldown = 15 * 60
 chirrUtility.is_utility = true
 chirrUtility.require_key_press = true
-chirrUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrUtility.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateChirrUtility = State.new(NAMESPACE, "chirrUtility") -- guess what this is, you get three tries
+local stateChirrUtility = ActorState.new("chirrUtility") -- guess what this is, you get three tries
 
 local charging_heal = 0
 local charging_heal_step = 0
 
-chirrUtility:clear_callbacks()
 chirrUtility:onActivate(function(actor)
 	actor:enter_state(stateChirrUtility)
 end)
 
-stateChirrUtility:clear_callbacks()
 stateChirrUtility:onEnter(function(actor, data)
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
@@ -531,10 +512,9 @@ stateChirrUtility:onEnter(function(actor, data)
 	actor:sound_play(sound_shoot3a, .8, 1.4)
 end)
 
-local utilRegenBuff = Buff.new(NAMESPACE, "chirrRegenBuff")
+local utilRegenBuff = Buff.new("chirrRegenBuff")
 utilRegenBuff.show_icon = false
 
-utilRegenBuff:clear_callbacks()
 utilRegenBuff:onStatRecalc(function( actor )
 	actor.hp_regen = actor.hp_regen + actor.maxhp * .002
 end)
@@ -601,19 +581,17 @@ chirrUtilityAlt.subimage = 2
 chirrUtilityAlt.cooldown = 15 * 60
 chirrUtilityAlt.is_utility = true
 chirrUtilityAlt.require_key_press = true
-chirrUtilityAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrUtilityAlt.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateChirrUtilityAlt = State.new(NAMESPACE, "chirrUtilityAlt") -- guess what this is, you get three tries
+local stateChirrUtilityAlt = ActorState.new("chirrUtilityAlt") -- guess what this is, you get three tries
 
 local charging_blast = 0
 local charging_blast_step = 0
 
-chirrUtilityAlt:clear_callbacks()
 chirrUtilityAlt:onActivate(function(actor)
 	actor:enter_state(stateChirrUtilityAlt)
 end)
 
-stateChirrUtilityAlt:clear_callbacks()
 stateChirrUtilityAlt:onEnter(function(actor, data)
 	actor.image_index = 0
 	actor:sound_play(sound_shoot3a, .6, 1.4)
@@ -669,17 +647,18 @@ end)
 chirrSpecial.sprite = sprite_skills
 chirrSpecial.subimage = 3
 chirrSpecial.cooldown = 1.5 * 60
-chirrSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecial.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecial.upgrade_skill = chirrSpecialS
 
 -- getting a SUUUUUPPPERRR tame
-chirrSpecialScepter.sprite = sprite_skills
-chirrSpecialScepter.subimage = 5
-chirrSpecialScepter.cooldown = 1.5 * 60
-chirrSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialS.sprite = sprite_skills
+chirrSpecialS.subimage = 5
+chirrSpecialS.cooldown = 1.5 * 60
+chirrSpecialS.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
 
 -- making the little heart object
-local obj_tame_heart = Object.new(NAMESPACE, "chirrTameHeart")
+local obj_tame_heart = Object.new("chirrTameHeart")
 obj_tame_heart.obj_sprite = sprite_shoot4
 obj_tame_heart.obj_depth = 1
 
@@ -694,21 +673,20 @@ obj_tame_heart:onStep(tameHeartStep)
 
 
  -- elite type for tamed enemies
-local elite = Elite.new(NAMESPACE, "tamed")
+local elite = Elite.new("tamed")
 local elite_id = gm.elite_type_find("tamed")
 elite:set_healthbar_icon(sprite_tamed_icon)
 elite.palette = sprite_palette
 gm._mod_elite_generate_palette_all()
 
 -- stat changes and behaviors for tames
-local tamedEliteItem = Item.new(NAMESPACE, "tamedEliteItem", true) -- item for your fellas 
+local tamedEliteItem = Item.new("tamedEliteItem", true) -- item for your fellas 
 tamedEliteItem.is_hidden = true
 
 tamedEliteItem:onPostStep(function( actor, data )
 	actor.hp = actor.hp - actor.maxhp * 0.00075
 end)
 
-elite:clear_callbacks()
 elite:onApply(function( actor )
 	actor:item_give(tamedEliteItem)
 end)
@@ -776,18 +754,15 @@ end)
 
 
 -- taming skill code
-local stateChirrSpecial = State.new(NAMESPACE, "chirrSpecial")
+local stateChirrSpecial = ActorState.new("chirrSpecial")
 
-chirrSpecial:clear_callbacks()
 chirrSpecial:onActivate(function( actor, data )
 	actor:enter_state(stateChirrSpecial)
 end)
-chirrSpecialScepter:clear_callbacks()
 chirrSpecialScepter:onActivate(function( actor, data )
 	actor:enter_state(stateChirrSpecial)
 end)
 
-stateChirrSpecial:clear_callbacks()
 stateChirrSpecial:onEnter(function( actor, data )
 	data.step = 0
 end)
@@ -854,10 +829,11 @@ end)
 chirrSpecialAlt.sprite = sprite_skills
 chirrSpecialAlt.subimage = 3
 chirrSpecialAlt.cooldown = 1.5 * 60
-chirrSpecialAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialAlt.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialAlt.upgrade_skill = chirrSpecialAltS
 
 -- getting a SUUUUUPPPERRR tame
-chirrSpecialAltScepter.sprite = sprite_skills
-chirrSpecialAltScepter.subimage = 5
-chirrSpecialAltScepter.cooldown = 1.5 * 60
-chirrSpecialAltScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialAltS.sprite = sprite_skills
+chirrSpecialAltS.subimage = 5
+chirrSpecialAltS.cooldown = 1.5 * 60
+chirrSpecialAltS.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
