@@ -4,55 +4,54 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Knight")
 
 -- assets as per usual
 -- icons
-local sprite_loadout =        Resources.sprite_load(NAMESPACE, "KnightSelect", path.combine(SPRITE_PATH, "Select.png"), 19, 2, 0)
-local sprite_portrait =       Resources.sprite_load(NAMESPACE, "KnightPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
-local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "KnightPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills =         Resources.sprite_load(NAMESPACE, "KnightSkills", path.combine(SPRITE_PATH, "skills.png"), 6)
+local sprite_loadout =        Sprite.new("KnightSelect", path.combine(SPRITE_PATH, "Select.png"), 19, 2, 0)
+local sprite_portrait =       Sprite.new("KnightPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait_small = Sprite.new("KnightPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills =         Sprite.new("KnightSkills", path.combine(SPRITE_PATH, "skills.png"), 6)
 
 -- non-skill sprites
-local sprite_idle =           Resources.sprite_load(NAMESPACE, "KnightIdle", path.combine(SPRITE_PATH, "Idle.png"), 1, 8, 12)
-local sprite_idle_half =      Resources.sprite_load(NAMESPACE, "KnightIdleHalf", path.combine(SPRITE_PATH, "IdleHalf.png"), 1, 8, 12)
-local sprite_walk =           Resources.sprite_load(NAMESPACE, "KnightWalk", path.combine(SPRITE_PATH, "Walk.png"), 8, 8, 12)
-local sprite_walk_half =      Resources.sprite_load(NAMESPACE, "KnightWalkHalf", path.combine(SPRITE_PATH, "WalkHalf.png"), 8, 8, 12)
-local sprite_jump =           Resources.sprite_load(NAMESPACE, "KnightJump", path.combine(SPRITE_PATH, "Jump.png"), 1, 8, 12)
-local sprite_jump_half =      Resources.sprite_load(NAMESPACE, "KnightJumpHalf", path.combine(SPRITE_PATH, "JumpHalf.png"), 1, 8, 12)
-local sprite_climb =          Resources.sprite_load(NAMESPACE, "KnightClimb", path.combine(SPRITE_PATH, "Climb.png"), 2, 4, 8)
-local sprite_death =          Resources.sprite_load(NAMESPACE, "KnightDeath", path.combine(SPRITE_PATH, "Death.png"), 9, 9, 11)
-local sprite_decoy =          Resources.sprite_load(NAMESPACE, "KnightDecoy", path.combine(SPRITE_PATH, "Decoy.png"), 1, 9, 18)
+local sprite_idle =           Sprite.new("KnightIdle", path.combine(SPRITE_PATH, "Idle.png"), 1, 8, 12)
+local sprite_idle_half =      Sprite.new("KnightIdleHalf", path.combine(SPRITE_PATH, "IdleHalf.png"), 1, 8, 12)
+local sprite_walk =           Sprite.new("KnightWalk", path.combine(SPRITE_PATH, "Walk.png"), 8, 8, 12)
+local sprite_walk_half =      Sprite.new("KnightWalkHalf", path.combine(SPRITE_PATH, "WalkHalf.png"), 8, 8, 12)
+local sprite_jump =           Sprite.new("KnightJump", path.combine(SPRITE_PATH, "Jump.png"), 1, 8, 12)
+local sprite_jump_half =      Sprite.new("KnightJumpHalf", path.combine(SPRITE_PATH, "JumpHalf.png"), 1, 8, 12)
+local sprite_climb =          Sprite.new("KnightClimb", path.combine(SPRITE_PATH, "Climb.png"), 2, 4, 8)
+local sprite_death =          Sprite.new("KnightDeath", path.combine(SPRITE_PATH, "Death.png"), 9, 9, 11)
+local sprite_decoy =          Sprite.new("KnightDecoy", path.combine(SPRITE_PATH, "Decoy.png"), 1, 9, 18)
 
 -- skill sprites
-local sprite_shoot1_1 =       Resources.sprite_load(NAMESPACE, "KnightShoot1_1", path.combine(SPRITE_PATH, "Shoot1_1.png"), 4, 8, 14)
-local sprite_shoot1_1_half =  Resources.sprite_load(NAMESPACE, "KnightShoot1_1Half", path.combine(SPRITE_PATH, "Shoot1_1Half.png"), 4, 8, 14)
-local sprite_shoot1_2 =       Resources.sprite_load(NAMESPACE, "KnightShoot1_2", path.combine(SPRITE_PATH, "Shoot1_2.png"),4, 8 ,16)
-local sprite_shoot1_2_half =  Resources.sprite_load(NAMESPACE, "KnightShoot1_2Half", path.combine(SPRITE_PATH, "Shoot1_2Half.png"), 4, 8, 16)
-local sprite_shoot1_3 =       Resources.sprite_load(NAMESPACE, "KnightShoot1_3", path.combine(SPRITE_PATH, "Shoot1_3.png"), 6, 8, 12)
-local sprite_shoot2 =         Resources.sprite_load(NAMESPACE, "KnightShoot2", path.combine(SPRITE_PATH, "Shoot2.png"), 5, 8, 12)
-local sprite_shoot2_half =    Resources.sprite_load(NAMESPACE, "KnightShoot2_Half", path.combine(SPRITE_PATH, "Shoot2_Half.png"), 5, 8, 12)
-local sprite_shoot3 =         Resources.sprite_load(NAMESPACE, "KnightShoot3", path.combine(SPRITE_PATH, "Shoot3.png"), 7, 10, 22)
-local sprite_shoot4 =         Resources.sprite_load(NAMESPACE, "KnightShoot4", path.combine(SPRITE_PATH, "Shoot4.png"), 18, 17, 19)
+local sprite_shoot1_1 =       Sprite.new("KnightShoot1_1", path.combine(SPRITE_PATH, "Shoot1_1.png"), 4, 8, 14)
+local sprite_shoot1_1_half =  Sprite.new("KnightShoot1_1Half", path.combine(SPRITE_PATH, "Shoot1_1Half.png"), 4, 8, 14)
+local sprite_shoot1_2 =       Sprite.new("KnightShoot1_2", path.combine(SPRITE_PATH, "Shoot1_2.png"),4, 8 ,16)
+local sprite_shoot1_2_half =  Sprite.new("KnightShoot1_2Half", path.combine(SPRITE_PATH, "Shoot1_2Half.png"), 4, 8, 16)
+local sprite_shoot1_3 =       Sprite.new("KnightShoot1_3", path.combine(SPRITE_PATH, "Shoot1_3.png"), 6, 8, 12)
+local sprite_shoot2 =         Sprite.new("KnightShoot2", path.combine(SPRITE_PATH, "Shoot2.png"), 5, 8, 12)
+local sprite_shoot2_half =    Sprite.new("KnightShoot2_Half", path.combine(SPRITE_PATH, "Shoot2_Half.png"), 5, 8, 12)
+local sprite_shoot3 =         Sprite.new("KnightShoot3", path.combine(SPRITE_PATH, "Shoot3.png"), 7, 10, 22)
+local sprite_shoot4 =         Sprite.new("KnightShoot4", path.combine(SPRITE_PATH, "Shoot4.png"), 18, 17, 19)
 
 -- effect sprites
-local sprite_sparks1 =        Resources.sprite_load(NAMESPACE, "KnightSparks1", path.combine(SPRITE_PATH, "Sparks1.png"), 4, 7, 7)
-local sprite_sparks2 =		  Resources.sprite_load(NAMESPACE, "KnightSparks2", path.combine(SPRITE_PATH, "Sparks2.png"), 4, 10, 10)
-local sprite_sparks3 =        Resources.sprite_load(NAMESPACE, "KnightSparks3", path.combine(SPRITE_PATH, "Shoot4Ef.png"), 5, 76, 19)
-local sprite_invigorate =     Resources.sprite_load(NAMESPACE, "KnightInvigorateBuff", path.combine(SPRITE_PATH, "buff.png"), 1, 9, 9)
+local sprite_sparks1 =        Sprite.new("KnightSparks1", path.combine(SPRITE_PATH, "Sparks1.png"), 4, 7, 7)
+local sprite_sparks2 =		  Sprite.new("KnightSparks2", path.combine(SPRITE_PATH, "Sparks2.png"), 4, 10, 10)
+local sprite_sparks3 =        Sprite.new("KnightSparks3", path.combine(SPRITE_PATH, "Shoot4Ef.png"), 5, 76, 19)
+local sprite_invigorate =     Sprite.new("KnightInvigorateBuff", path.combine(SPRITE_PATH, "buff.png"), 1, 9, 9)
 
 -- sounds
-local sound_shoot1a =         Resources.sfx_load(NAMESPACE, "KnightShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
-local sound_shoot1b =         Resources.sfx_load(NAMESPACE, "KnightShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
-local sound_shoot1c =         Resources.sfx_load(NAMESPACE, "KnightShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
-local sound_shoot1d =         Resources.sfx_load(NAMESPACE, "KnightShoot1d", path.combine(SOUND_PATH, "skill1d.ogg"))
-local sound_shoot2 =          Resources.sfx_load(NAMESPACE, "KnightShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
-local sound_shoot2_impact =   Resources.sfx_load(NAMESPACE, "Knightshoot2Impact", path.combine(SOUND_PATH, "skill2impact.ogg"))
-local sound_shoot2_deflect =    Resources.sfx_load(NAMESPACE, "KnightShoot2Block", path.combine(SOUND_PATH, "skill2deflect.ogg"))
-local sound_shoot3a =         Resources.sfx_load(NAMESPACE, "KnightShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
-local sound_shoot3b =         Resources.sfx_load(NAMESPACE, "KnightShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
-local sound_shoot4 =          Resources.sfx_load(NAMESPACE, "KnightShoot4", path.combine(SOUND_PATH, "skill4.ogg"))
+local sound_shoot1a =         Sound.new("KnightShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
+local sound_shoot1b =         Sound.new("KnightShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
+local sound_shoot1c =         Sound.new("KnightShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
+local sound_shoot1d =         Sound.new("KnightShoot1d", path.combine(SOUND_PATH, "skill1d.ogg"))
+local sound_shoot2 =          Sound.new("KnightShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot2_impact =   Sound.new("Knightshoot2Impact", path.combine(SOUND_PATH, "skill2impact.ogg"))
+local sound_shoot2_deflect =  Sound.new("KnightShoot2Block", path.combine(SOUND_PATH, "skill2deflect.ogg"))
+local sound_shoot3a =         Sound.new("KnightShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
+local sound_shoot3b =         Sound.new("KnightShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
+local sound_shoot4 =          Sound.new("KnightShoot4", path.combine(SOUND_PATH, "skill4.ogg"))
 
 
 -------- knight
-local knight = Survivor.new(NAMESPACE, "knight")
-local knight_id = knight.value
+local knight = Survivor.new("knight")
 local __quality = 3
 
 -- stats setup
@@ -90,7 +89,6 @@ knight.sprite_portrait = sprite_portrait
 knight.sprite_portrait_small = sprite_portrait_small
 knight.sprite_title = sprite_walk
 
-knight:clear_callbacks()
 knight:onInit(function(actor) -- setting up the beasts half sprite stuff
 	-- shoutouts to kris for the awesome code i can entirely copy!!
 	local idle_half = Array.new()
@@ -161,12 +159,10 @@ knightPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY
 local stateKnightPrimary = State.new(NAMESPACE, "knightPrimary")
 
 -- actual skill
-knightPrimary:clear_callbacks()
 knightPrimary:onActivate(function( actor )
 	actor:enter_state(stateKnightPrimary)
 end)
 
-stateKnightPrimary:clear_callbacks()
 stateKnightPrimary:onEnter(function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
@@ -231,12 +227,10 @@ knightShieldBash.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIOR
 local stateKnightShieldBash = State.new(NAMESPACE, "knightShieldBash")
 
 -- actual skill
-knightShieldBash:clear_callbacks()
 knightShieldBash:onActivate(function( actor )
 	actor:enter_state(stateKnightShieldBash)
 end)
 
-stateKnightShieldBash:clear_callbacks()
 stateKnightShieldBash:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_3
@@ -321,12 +315,10 @@ knightPrimaryAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIOR
 
 local stateKnightGreatsword = State.new(NAMESPACE, "knightGreatsword")
 
-knightPrimaryAlt:clear_callbacks()
 knightPrimaryAlt:onActivate(function( actor )
 	actor:enter_state(stateKnightGreatsword)
 end)
 
-stateKnightGreatsword:clear_callbacks()
 stateKnightGreatsword:onEnter(function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
@@ -408,7 +400,6 @@ end)
 -------- ERADICATE!
 objShockwaveSpawner = Object.new(NAMESPACE, "knightShockwaveSpawner")
 
-objShockwaveSpawner:clear_callbacks()
 objShockwaveSpawner:onCreate(function( inst )
 	inst.parent = -4
 	inst.dir = 1
@@ -442,12 +433,10 @@ knightShockwave.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORI
 
 local stateKnightShockwave = State.new(NAMESPACE, "knightShockwave")
 
-knightShockwave:clear_callbacks()
 knightShockwave:onActivate(function( actor )
 	actor:enter_state(stateKnightShockwave)
 end)
 
-stateKnightShockwave:clear_callbacks()
 stateKnightShockwave:onEnter(function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
@@ -507,18 +496,15 @@ local knightArmorBuff = Buff.new(NAMESPACE, "knightArmorBuff")
 knightArmorBuff.show_icon = false
 knightArmorBuff.is_timed = false
 
-knightArmorBuff:clear_callbacks()
 knightArmorBuff:onStatRecalc(function( actor )
 	actor.armor = actor.armor + 100
 end)
 
 -- actual skill
-knightSecondary:clear_callbacks()
 knightSecondary:onActivate(function( actor )
 	actor:enter_state(stateKnightSecondary)
 end)
 
-stateKnightSecondary:clear_callbacks()
 stateKnightSecondary:onEnter(function( actor, data )
 	actor.image_index2 = 0
 	actor.deflect = 1
@@ -600,7 +586,6 @@ stateKnightSecondary:onExit(function( actor, data )
 	actor.deflect = 0
 end)
 
-stateKnightParry:clear_callbacks()
 stateKnightParry:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_decoy
@@ -681,13 +666,11 @@ knightSecondaryAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRI
 
 local stateKnightSecondaryAlt = State.new(NAMESPACE, "knightSecondaryAlt")
 
-knightSecondaryAlt:clear_callbacks()
 knightSecondaryAlt:onActivate(function( actor )
 	actor:enter_state(stateKnightSecondaryAlt)
 	actor:add_skill_override(Skill.SLOT.secondary, knightRetaliate, 1)
 end)
 
-stateKnightSecondaryAlt:clear_callbacks()
 stateKnightSecondaryAlt:onEnter(function( actor, data )
 	actor.image_index2 = 0
 	actor.deflect = 1
@@ -768,13 +751,11 @@ knightRetaliate.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORI
 
 local stateKnightRetaliate = State.new(NAMESPACE, "knightRetaliate")
 
-knightRetaliate:clear_callbacks()
 knightRetaliate:onActivate(function( actor )
 	actor:enter_state(stateKnightRetaliate)
 	actor:remove_skill_override(Skill.SLOT.secondary, knightRetaliate, 1)
 end)
 
-stateKnightRetaliate:clear_callbacks()
 stateKnightRetaliate:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_3
@@ -828,12 +809,10 @@ local stateKnightUtility = State.new(NAMESPACE, "knightUtility")
 local shoot3_sounds = {sound_shoot3a, sound_shoot3b}
 
 -- actual skill
-knightUtility:clear_callbacks()
 knightUtility:onActivate(function( actor )
 	actor:enter_state(stateKnightUtility)
 end)
 
-stateKnightUtility:clear_callbacks()
 stateKnightUtility:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
@@ -912,12 +891,10 @@ knightBeyblade.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORIT
 local stateKnightBeyblade = State.new(NAMESPACE, "knightBeyblade")
 
 -- actual skill
-knightBeyblade:clear_callbacks()
 knightBeyblade:onActivate(function( actor )
 	actor:enter_state(stateKnightBeyblade)
 end)
 
-stateKnightBeyblade:clear_callbacks()
 stateKnightBeyblade:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
@@ -975,25 +952,21 @@ knightSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_P
 local knightInvigorateBuff = Buff.new(NAMESPACE, "knightInvigorateBuff")
 knightInvigorateBuff.icon_sprite = sprite_invigorate
 
-knightInvigorateBuff:clear_callbacks()
 knightInvigorateBuff:onStatRecalc(function( actor )
 	actor.attack_speed = actor.attack_speed * 1.4
 end)
 
 local stateKnightSpecial = State.new(NAMESPACE, "knightSpecial")
 
-knightSpecial:clear_callbacks()
 knightSpecial:onActivate(function( actor )
 	actor:enter_state(stateKnightSpecial)
 end)
 
-knightSpecialScepter:clear_callbacks()
 knightSpecialScepter:onActivate(function( actor )
 	actor:enter_state(stateKnightSpecial)
 end)
 
 -- actual skill
-stateKnightSpecial:clear_callbacks()
 stateKnightSpecial:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot4
@@ -1068,7 +1041,6 @@ end)
 objFloatingShield = Object.new(NAMESPACE, "knightFloatingShield")
 objFloatingShield:set_sprite(sprite_invigorate)
 
-objFloatingShield:clear_callbacks()
 objFloatingShield:onCreate(function( inst )
 	inst.parent = -4
 	inst.speed = 2
@@ -1149,18 +1121,15 @@ knightShieldOrbitScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRU
 
 local stateKnightShieldOrbit = State.new(NAMESPACE, "knightShieldOrbit")
 
-knightShieldOrbit:clear_callbacks()
 knightShieldOrbit:onActivate(function( actor )
 	actor:enter_state(stateKnightShieldOrbit)
 end)
 
-knightShieldOrbitScepter:clear_callbacks()
 knightShieldOrbitScepter:onActivate(function( actor )
 	actor:enter_state(stateKnightShieldOrbit)
 end)
 
 -- actual skill
-stateKnightShieldOrbit:clear_callbacks()
 stateKnightShieldOrbit:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot4
@@ -1266,7 +1235,6 @@ knightBannerBuff:onStatRecalc(function( actor )
 	actor.vHmax = actor.pHmax + 1.2
 end)
 
-objBanner:clear_callbacks()
 objBanner:onCreate(function( inst )
 	inst:move_contact_solid(270, -1)
 
@@ -1342,17 +1310,14 @@ knightSpecialAltScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUP
 
 local stateKnightBanner = State.new(NAMESPACE, "knightBanner")
 
-knightSpecialAlt:clear_callbacks()
 knightSpecialAlt:onActivate(function( actor )
 	actor:enter_state(stateKnightBanner)
 end)
 
-knightSpecialAltScepter:clear_callbacks()
 knightSpecialAltScepter:onActivate(function( actor )
 	actor:enter_state(stateKnightBanner)
 end)
 
-stateKnightBanner:clear_callbacks()
 stateKnightBanner:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
@@ -1396,7 +1361,6 @@ partConsecrate:set_shape(Particle.SHAPE.star)
 partConsecrate:set_life(15, 25)
 partConsecrate:set_size(0.08, 0.12, -0.005, 0)
 
-objConsecratedBanner:clear_callbacks()
 objConsecratedBanner:onCreate(function( inst )
 	inst:move_contact_solid(270, -1)
 
@@ -1563,17 +1527,14 @@ knightConsecrateScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUP
 
 local stateKnightConsecrate = State.new(NAMESPACE, "knightConsecratedBanner")
 
-knightConsecrate:clear_callbacks()
 knightConsecrate:onActivate(function( actor )
 	actor:enter_state(stateKnightConsecrate)
 end)
 
-knightConsecrateScepter:clear_callbacks()
 knightConsecrateScepter:onActivate(function( actor )
 	actor:enter_state(stateKnightConsecrate)
 end)
 
-stateKnightConsecrate:clear_callbacks()
 stateKnightConsecrate:onEnter(function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
