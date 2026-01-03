@@ -149,15 +149,6 @@ local chirrSpecialAlt = Skill.new("siphonsnare")
 local chirrSpecialAltS = Skill.new("siphonsnareBoosted")
 chirr:add_skill(Skill.Slot.SPECIAL, chirrSpecialAlt)
 
--- her movement control stuff and other on step stuff
-local tameHealthbarBuff = Buff.new("chirrShowAllyHPBuff") -- draws the health bars for your friends!
-tameHealthbarBuff.show_icon = false
-tameHealthbarBuff.is_timed = false
-
-Callback.add(tameHealthbarBuff.on_step, function( actor )
-	actor:draw_hp_bar_ally()
-end)
-
 local tameMark = Buff.new("chirrTameMark") -- this is her weird little tame indicator
 tameMark.show_icon = true
 tameMark.icon_sprite = sprite_portrait_small
@@ -198,9 +189,9 @@ Callback.add(chirr.on_step, function( actor )
 	end
 
 	if player_actor then -- party size tracker
-		if #tamed < 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 1 then -- if your party has newly been made empty
+		if #tamed < 1 + player_actor:item_count(Item.find("ancientScepter")) and has_full_party == 1 then -- if your party has newly been made empty
 			has_full_party = 0
-		elseif #tamed >= 1 + player_actor:item_stack_count(Item.find("ror", "ancientScepter")) and has_full_party == 0 then -- if your party has newly been made full
+		elseif #tamed >= 1 + player_actor:item_count(Item.find("ancientScepter")) and has_full_party == 0 then -- if your party has newly been made full
 			has_full_party = 1
 		end
 	end
@@ -264,11 +255,11 @@ healingBuildup.is_debuff = true
 healingBuildup.icon_stack_subimage = false
 healingBuildup.draw_stack_number = true
 healingBuildup.stack_number_col = Array.new(1, tracer_color2)
-healingBuildup.max_stack = 9
+healingBuildup.max_stack = 5
 
-Callback.add(healingBuildup.on_apply, function( actor, stack )
-	if stack == 5 then
-		actor:buff_remove(healingBuildup)
+Callback.add(healingBuildup.on_apply, function( actor )
+	if actor:buff_count(healingBuildup) == healingBuildup.max_stack then
+		actor:buff_remove(healingBuildup, healingBuildup.max_stack)
 
 		local heal_pulse = GM.instance_create(actor.x, actor.y, gm.constants.oEfCircle)
 		heal_pulse.radius = 0
@@ -276,8 +267,8 @@ Callback.add(healingBuildup.on_apply, function( actor, stack )
 		heal_pulse.image_blend = Color.from_rgb(179,217,148)
 
 		if actor:is_authority() then
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i = 0, actor:buff_count(buff_shadow_clone) do
 				local friends = List.new() -- list to hold our friends
 
 				actor:collision_circle_list(actor.x, actor.y, 180, gm.constants.pActor, false, false, friends, false) -- this grabs all the actors in a radius
@@ -297,12 +288,12 @@ end)
 -- actual primary skill
 local stateChirrPrimary = ActorState.new("chirrPrimary") -- making a primary state
 
-chirrPrimary:onActivate(function( actor ) 
-	actor:enter_state(stateChirrPrimary)
+Callback.add(chirrPrimary.on_activate, function( actor, skill, slot )
+	actor:set_state(stateChirrPrimary)
 end)
 
 -- using the skill, setting up the important data and stuff
-stateChirrPrimary:onEnter(function( actor, data )
+Callback.add(stateChirrPrimary.on_enter, function( actor, data )
 	actor.image_index2 = 0
 	data.fired = 0
 	data.count = 3
@@ -311,7 +302,7 @@ stateChirrPrimary:onEnter(function( actor, data )
 	actor:skill_util_strafe_turn_init()
 end)
 
-stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
+Callback.add(stateChirrPrimary.on_step, function( actor, data )
 	actor.sprite_index2 = sprite_shoot1_half
 	
 	actor:skill_util_strafe_update(.12 * actor.attack_speed, 0.5)
@@ -332,9 +323,9 @@ stateChirrPrimary:onStep(function( actor, data ) -- actually using the skill
 			end
 			
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then -- if not using heaven cracker
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
-					local attack_info = actor:fire_bullet(actor.x + math.random(-8.00,8.00), actor.y + math.random(-8.00,8.00), 400, dir, damage, nil, sprite_sparks, thorn_tracer, true).attack_info
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do -- stuff for shattered mirror
+					local attack_info = actor:fire_bullet(actor.x + math.random(-8.00,8.00), actor.y + math.random(-8.00,8.00), 400, dir, damage, nil, sprite_sparks, tracer, true).attack_info
 					attack_info.climb = i * 8
 					attack_info.__ssr_chirr_mist_buildup_tag = apply_mist_buildup
 				end
@@ -357,17 +348,17 @@ chirrSecondary.subimage = 1
 chirrSecondary.damage = 3.5
 chirrSecondary.cooldown = 3 * 60
 chirrSecondary.require_key_press = false
-chirrSecondary.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSecondary.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
 local stateChirrSecondary = ActorState.new("chirrSecondary")
 local stateChirrLaunch = ActorState.new("chirrLaunch")
 
-stateChirrLaunch:onEnter(function( actor, data )
+Callback.add(stateChirrLaunch.on_enter, function( actor, data )
 	actor.pVspeed = -12
 	data.time = 0
 end)
 
-stateChirrLaunch:onStep(function( actor, data )
+Callback.add(stateChirrLaunch.on_step, function( actor, data )
 	actor.pHspeed = (6  * actor.image_xscale) - ((data.time/10) * actor.image_xscale)
 	data.time = data.time + 1
 
@@ -377,11 +368,11 @@ stateChirrLaunch:onStep(function( actor, data )
 end)
 
 
-chirrSecondary:onActivate(function(actor)
-	actor:enter_state(stateChirrSecondary)
+Callback.add(chirrSecondary.on_activate, function( actor )
+	actor:set_state(stateChirrSecondary)
 end)
 
-stateChirrSecondary:onEnter(function( actor, data )
+Callback.add(stateChirrSecondary.on_enter, function( actor, data )
 	actor.image_index = 0
 
 	if gm.bool(actor.free) then -- select air variant
@@ -395,7 +386,7 @@ stateChirrSecondary:onEnter(function( actor, data )
 	end
 end)
 
-stateChirrSecondary:onStep(function( actor, data )
+Callback.add(stateChirrSecondary.on_step, function( actor, data )
 	if data.variant == 1 then -- grounded headbutt
 
 		actor.pHspeed = (3.5 * actor.pHmax * actor.image_xscale) - (1 * actor.image_index * actor.image_xscale)
@@ -412,17 +403,16 @@ stateChirrSecondary:onStep(function( actor, data )
 
 			for _, target in ipairs(targets) do
 				if target.team ~= actor.team then
-					local buff_shadow_clone = Buff.find("ror", "shadowClone")
+					local buff_shadow_clone = Buff.find("shadowClone")
 
-					for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					for i=0, actor:buff_count(buff_shadow_clone) do
 						attack_info = actor:fire_explosion(actor.x + (dir * 50), actor.y, 100, 50, damage).attack_info
-						attack_info:set_stun(2.5)
+						attack_info.stun = 2.5
 						attack_info.knockback_direction = dir
 						attack_info.knockback = 3
 					end
 
-					targets:destroy()
-					actor:enter_state(stateChirrLaunch)
+					actor:set_state(stateChirrLaunch)
 					break
 				end
 			end
@@ -453,14 +443,14 @@ stateChirrSecondary:onStep(function( actor, data )
 
 				for _, target in ipairs(targets) do
 					if target.team ~= actor.team then
-						local buff_shadow_clone = Buff.find("ror", "shadowClone")
+						local buff_shadow_clone = Buff.find("shadowClone")
 
-						for i=0, actor:buff_stack_count(buff_shadow_clone) do
+						for i=0, actor:buff_count(buff_shadow_clone) do
 							attack_info = actor:fire_explosion(actor.x, actor.y + 20, 100, 100, damage).attack_info
-							attack_info:set_stun(2.5)
+							attack_info.stun = 2.5
 						end
 
-						actor:enter_state(stateChirrLaunch)
+						actor:set_state(stateChirrLaunch)
 					end
 				end
 
@@ -468,12 +458,12 @@ stateChirrSecondary:onStep(function( actor, data )
 			end
 		else
 			if actor:is_authority() then
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
+				local buff_shadow_clone = Buff.find("shadowClone")
 				local damage = actor:skill_get_damage(chirrSecondary)
 
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack_info = actor:fire_explosion(actor.x, actor.y, 150, 100, damage).attack_info
-					attack_info:set_stun(2.5)
+					attack_info.stun = 2.5
 				end
 
 				GM.actor_set_state_networked(actor, -1)
@@ -482,7 +472,7 @@ stateChirrSecondary:onStep(function( actor, data )
 	end
 end)
 
-stateChirrSecondary:onExit(function( actor, data )
+Callback.add(stateChirrSecondary.on_exit, function( actor, data )
 	diving = false
 end)
 
@@ -494,18 +484,18 @@ chirrUtility.subimage = 2
 chirrUtility.cooldown = 15 * 60
 chirrUtility.is_utility = true
 chirrUtility.require_key_press = true
-chirrUtility.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrUtility.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
 local stateChirrUtility = ActorState.new("chirrUtility") -- guess what this is, you get three tries
 
 local charging_heal = 0
 local charging_heal_step = 0
 
-chirrUtility:onActivate(function(actor)
-	actor:enter_state(stateChirrUtility)
+Callback.add(chirrUtility.on_activate, function( actor )
+	actor:set_state(stateChirrUtility)
 end)
 
-stateChirrUtility:onEnter(function(actor, data)
+Callback.add(stateChirrUtility.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = .25
@@ -515,11 +505,14 @@ end)
 local utilRegenBuff = Buff.new("chirrRegenBuff")
 utilRegenBuff.show_icon = false
 
-utilRegenBuff:onStatRecalc(function( actor )
-	actor.hp_regen = actor.hp_regen + actor.maxhp * .002
+RecalculateStats.add(function( actor, api )
+	local stack = actor:buff_count(utilRegenBuff)
+	if stack <= 0 then return end
+
+	api.hp_regen_add(actor.maxhp * .002)
 end)
 
-stateChirrUtility:onStep(function( actor, data )
+Callback.add(stateChirrUtility.on_step, function( actor, data )
 	charging_heal = 1
 	charging_heal_step = charging_heal_step + 1
 
@@ -534,8 +527,8 @@ stateChirrUtility:onStep(function( actor, data )
 		healArea.image_blend = Color.from_rgb(179,217,148)
 
 		if actor:is_authority() then
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i = 0, actor:buff_count(buff_shadow_clone) do
 				local friends = List.new() -- list to hold our friends
 
 				actor:collision_circle_list(actor.x, actor.y, 320, gm.constants.pActor, false, false, friends, false) -- this grabs all the actors in a radius
@@ -555,18 +548,18 @@ stateChirrUtility:onStep(function( actor, data )
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateChirrUtility:onExit(function( ... )
+Callback.add(stateChirrUtility.on_exit, function( ... )
 	charging_heal = 0
 	charging_heal_step = 0
 end)
 
 
-Callback.add(Callback.TYPE.onDraw, "SSChirrDrawPulseZone", function() -- just a fun visual to help you aim the heal pulse
+Callback.add(Callback.ON_DRAW, function() -- just a fun visual to help you aim the heal pulse
 	if charging_heal == 1 then
 		if player_actor then
 			gm.draw_set_alpha(charging_heal_step * .0025)
 
-			gm.draw_set_colour(Color.TEXT_GREEN)
+			gm.draw_set_colour(chirr.primary_color)
 			gm.draw_circle(player_actor.x, player_actor.y, 200 + (math.log(charging_heal_step) * 35), false)
 	
 			gm.draw_set_alpha(1)
@@ -581,23 +574,23 @@ chirrUtilityAlt.subimage = 2
 chirrUtilityAlt.cooldown = 15 * 60
 chirrUtilityAlt.is_utility = true
 chirrUtilityAlt.require_key_press = true
-chirrUtilityAlt.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrUtilityAlt.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
 local stateChirrUtilityAlt = ActorState.new("chirrUtilityAlt") -- guess what this is, you get three tries
 
 local charging_blast = 0
 local charging_blast_step = 0
 
-chirrUtilityAlt:onActivate(function(actor)
-	actor:enter_state(stateChirrUtilityAlt)
+Callback.add(chirrUtilityAlt.on_activate, function( actor )
+	actor:set_state(stateChirrUtilityAlt)
 end)
 
-stateChirrUtilityAlt:onEnter(function(actor, data)
+Callback.add(stateChirrUtilityAlt.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor:sound_play(sound_shoot3a, .6, 1.4)
 end)
 
-stateChirrUtilityAlt:onStep(function( actor, data )
+Callback.add(stateChirrUtilityAlt.on_step, function( actor, data )
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = .2
 
@@ -615,12 +608,12 @@ stateChirrUtilityAlt:onStep(function( actor, data )
 		trigger_pulse.image_blend = Color.from_rgb(179,217,148)
 
 		if actor:is_authority() then
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i = 0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i = 0, actor:buff_count(buff_shadow_clone) do
 				for _, friend in ipairs(tamed) do
 					local damage = friend.maxhp/40 -- your tames max hp, adjusted to work as a % value
 					local attack_info = actor:fire_explosion(friend.x, friend.y, 600, 600, damage).attack_info
-					attack_info:set_stun(1, dir, standard)
+					attack_info.stun = 1
 					GM.damage_inflict(friend, friend.maxhp)
 
 					local detonate_pulse = GM.instance_create(friend.x, friend.y, gm.constants.oEfCircle)
@@ -635,7 +628,7 @@ stateChirrUtilityAlt:onStep(function( actor, data )
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateChirrUtilityAlt:onExit(function( ... )
+Callback.add(stateChirrUtilityAlt.on_exit, function( ... )
 	charging_blast = 0
 	charging_blast_step = 0
 end)
@@ -647,14 +640,14 @@ end)
 chirrSpecial.sprite = sprite_skills
 chirrSpecial.subimage = 3
 chirrSpecial.cooldown = 1.5 * 60
-chirrSpecial.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecial.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 chirrSpecial.upgrade_skill = chirrSpecialS
 
 -- getting a SUUUUUPPPERRR tame
 chirrSpecialS.sprite = sprite_skills
 chirrSpecialS.subimage = 5
 chirrSpecialS.cooldown = 1.5 * 60
-chirrSpecialS.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
 
 -- making the little heart object
@@ -662,43 +655,52 @@ local obj_tame_heart = Object.new("chirrTameHeart")
 obj_tame_heart.obj_sprite = sprite_shoot4
 obj_tame_heart.obj_depth = 1
 
-local function tameHeartStep( inst ) -- heart animation and lifetime stuff
+Callback.add(obj_tame_heart.on_step, function( inst ) -- animate it, then destroy it 
 	inst.image_speed = 0.25
 	if inst.image_index == 9 then
 		inst:destroy()
 	end
-end
-
-obj_tame_heart:onStep(tameHeartStep)
+end)
 
 
  -- elite type for tamed enemies
-local elite = Elite.new("tamed")
-local elite_id = gm.elite_type_find("tamed")
-elite:set_healthbar_icon(sprite_tamed_icon)
+local elite = ssr_create_elite("tamed")
+elite.healthbar_icon = sprite_tamed_icon
 elite.palette = sprite_palette
-gm._mod_elite_generate_palette_all()
+elite.blend_col = chirr.primary_color
 
 -- stat changes and behaviors for tames
-local tamedEliteItem = Item.new("tamedEliteItem", true) -- item for your fellas 
+local tamedEliteItem = Item.new("tamedEliteItem") -- item for your fellas 
 tamedEliteItem.is_hidden = true
 
-tamedEliteItem:onPostStep(function( actor, data )
-	actor.hp = actor.hp - actor.maxhp * 0.00075
+Callback.add(Callback.ON_STEP, function( )
+	for _, actor in ipairs(tamedEliteItem:get_holding_actors()) do
+		if Instance.exists(actor) then
+			actor.hp = actor.hp - actor.maxhp * 0.00075
+		end
+	end
 end)
 
-elite:onApply(function( actor )
+Callback.add(Callback.ON_DRAW, function( )
+		for _, actor in ipairs(tamedEliteItem:get_holding_actors()) do
+		if Instance.exists(actor) then
+			actor:draw_hp_bar_ally()
+		end
+	end
+end)
+
+Callback.add(elite.on_apply, function( actor )
 	actor:item_give(tamedEliteItem)
 end)
 
 
 -- callbacks that keep this character from fucking shitting itself
-Callback.add(Callback.TYPE.onGameStart, "SSChirrResetTameTable", function(  ) -- resets the friend list each game
+Callback.add(Callback.ON_GAME_START, function() -- resets the friend list each game
 	tamed = {}
 	taming_target = nil
 end)
 
-Callback.add(Callback.TYPE.onDeath, "SSChirrTameUpdate", function( victim, fell_out_of_bounds ) -- removes friends from the list once they die
+Callback.add(Callback.ON_DEATH, function( victim, fell_out_of_bounds ) -- removes friends from the list once they die
 	for index, friend in ipairs(tamed) do
 		if friend.value == victim.value then
 			table.remove(tamed, index)
@@ -707,13 +709,13 @@ Callback.add(Callback.TYPE.onDeath, "SSChirrTameUpdate", function( victim, fell_
 
 	if taming_target then
 		if victim.value == taming_target.value then
-			taming_target:remove_buff(tameMark)
+			taming_target:buff_remove(tameMark)
 			taming_target = nil
 		end
 	end
 end)
 
-Callback.add(Callback.TYPE.onPickupCollected, "SSChirrFriendItemSync", function( pickup, player ) -- copies your new items over to your friend
+Callback.add(Callback.ON_PICKUP_COLLECTED, function( pickup, player ) -- copies your new items over to your friend
 	if pickup.equipment_id == -1 then
 		for _, friend in ipairs(tamed) do
 			friend:item_give(pickup.item_id, 1, pickup.item_stack_kind)	 
@@ -721,17 +723,17 @@ Callback.add(Callback.TYPE.onPickupCollected, "SSChirrFriendItemSync", function(
 	end
 end)
 
-Callback.add(Callback.TYPE.onStageStart, "SSChirrFriendGroupup", function(  ) -- brings your friends to you on each stage
+Callback.add(Callback.ON_STAGE_START, function() -- brings your friends to you on each stage
 	tamed = {}
 end)
 
-Callback.add(Callback.TYPE.onAttackHit, "SSChirrApplyDebuffs", function( hit_info ) -- applies chirrs debuffs where necessary
+Callback.add(Callback.ON_ATTACK_HIT, function( hit_info ) -- applies chirrs debuffs where necessary
 	-- taming mark
 	local tame_tag = hit_info.attack_info.__ssr_chirr_set_tame_target
 
 	if tame_tag then
 		if taming_target and Instance.exists(taming_target) then
-			if taming_target:buff_stack_count(tameMark) > 0 then
+			if taming_target:buff_count(tameMark) > 0 then
 				taming_target:buff_remove(tameMark)
 			end
 		end
@@ -756,18 +758,18 @@ end)
 -- taming skill code
 local stateChirrSpecial = ActorState.new("chirrSpecial")
 
-chirrSpecial:onActivate(function( actor, data )
-	actor:enter_state(stateChirrSpecial)
+Callback.add(chirrSpecial.on_activate, function( actor, data )
+	actor:set_state(stateChirrSpecial)
 end)
-chirrSpecialScepter:onActivate(function( actor, data )
-	actor:enter_state(stateChirrSpecial)
+Callback.add(chirrSpecialS.on_activate, function( actor, data )
+	actor:set_state(stateChirrSpecial)
 end)
 
-stateChirrSpecial:onEnter(function( actor, data )
+Callback.add(stateChirrSpecial.on_enter, function( actor, data )
 	data.step = 0
 end)
 
-stateChirrSpecial:onStep(function( actor, data )
+Callback.add(stateChirrSpecial.on_step, function( actor, data )
 	data.step = data.step + 1
 
 	local holding = gm.bool(actor.v_skill)
@@ -776,7 +778,7 @@ stateChirrSpecial:onStep(function( actor, data )
 	end
 end)
 
-stateChirrSpecial:onExit(function( actor, data )
+Callback.add(stateChirrSpecial.on_exit, function( actor, data )
 	if data.step >= tame_charge_time then
 		actor:sound_play(sound_shoot4, 1, 1)
 		obj_tame_heart:create(actor.x + 14 * actor.image_xscale, actor.y - 10) -- make the little heart
@@ -788,7 +790,7 @@ stateChirrSpecial:onExit(function( actor, data )
 		else
 			if taming_target then
 				if taming_target.team ~= actor.team and not taming_target.enemy_party and taming_target.hp <= taming_target.maxhp * 0.5 then -- makes sure they arent on our team, arent a boss, and have half health or less
-					if #tamed < 1 + actor:item_stack_count(Item.find("ror", "ancientScepter")) then -- sets the limit based off our scepter count
+					if #tamed < 1 + actor:item_count(Item.find("ancientScepter")) then -- sets the limit based off our scepter count
 
 						table.insert(tamed, taming_target) -- adds them to our list of total friends
 						taming_target.is_character_enemy_targettable = true -- lets enemies actually target the poor fella
@@ -796,7 +798,6 @@ stateChirrSpecial:onExit(function( actor, data )
 
 						taming_target:buff_remove(tameMark) -- removes the little tame indicator
 						taming_target:buff_remove(healingBuildup) -- theres no reason for this to be there now
-						taming_target:buff_apply(tameHealthbarBuff, 1)
 						GM.elite_set(taming_target, elite) -- sets the elite type of your friend
 						actor:inventory_items_copy(actor, taming_target, 0) -- gives our friend our items
 						taming_target.y_range = taming_target.y_range + 100 -- lets our friend attack from a bit higher
@@ -812,8 +813,8 @@ stateChirrSpecial:onExit(function( actor, data )
 			local damage = actor:skill_get_damage(chirrPrimary)
 			local dir = actor:skill_util_facing_direction()
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do -- stuff for shattered mirror
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do -- stuff for shattered mirror
 				local attack_info
 				attack_info = actor:fire_bullet(actor.x, actor.y, 400, dir, damage, nil, sprite_sparks, thorn_tracer, true).attack_info
 				attack_info.climb = i * 8
@@ -824,16 +825,17 @@ stateChirrSpecial:onExit(function( actor, data )
 end)
 
 
+
 -------- snare
 -- getting a tame
 chirrSpecialAlt.sprite = sprite_skills
 chirrSpecialAlt.subimage = 3
 chirrSpecialAlt.cooldown = 1.5 * 60
-chirrSpecialAlt.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialAlt.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 chirrSpecialAlt.upgrade_skill = chirrSpecialAltS
 
 -- getting a SUUUUUPPPERRR tame
 chirrSpecialAltS.sprite = sprite_skills
 chirrSpecialAltS.subimage = 5
 chirrSpecialAltS.cooldown = 1.5 * 60
-chirrSpecialAltS.required_interrupt_priority = ActorState.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+chirrSpecialAltS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
