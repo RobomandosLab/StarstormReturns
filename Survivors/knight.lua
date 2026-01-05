@@ -68,20 +68,8 @@ knight:set_stats_level({
 	armor = 3
 })
 
--- animations setup
-knight:set_animations({
-	idle = sprite_idle,
-	walk = sprite_walk,
-	jump = sprite_jump,
-	jump_peak = sprite_jump,
-	fall = sprite_fall,
-	climb = sprite_climb,
-	death = sprite_death,
-	decoy = sprite_decoy
-})
-
-knight:set_cape_offset(0,0,0,0)
-knight:set_primary_color(Color.from_rgb(234,183,121))
+knight.cape_offset = Array.new({0,0,0,0})
+knight.primary_color = Color.from_rgb(234,183,121)
 
 -- ui sprites setup
 knight.sprite_loadout = sprite_loadout
@@ -89,8 +77,16 @@ knight.sprite_portrait = sprite_portrait
 knight.sprite_portrait_small = sprite_portrait_small
 knight.sprite_title = sprite_walk
 
-knight:onInit(function(actor) -- setting up the beasts half sprite stuff
-	-- shoutouts to kris for the awesome code i can entirely copy!!
+Callback.add(knight.on_init, function( actor )
+	actor.idle = sprite_idle
+	actor.walk = sprite_walk
+	actor.jump = sprite_jump
+	actor.jump_peak = sprite_jump
+	actor.fall = sprite_fall
+	actor.climb = sprite_climb
+	actor.death = sprite_death
+	actor.decoy = sprite_decoy
+
 	local idle_half = Array.new()
 	local walk_half = Array.new()
 	local jump_half = Array.new()
@@ -105,39 +101,36 @@ knight:onInit(function(actor) -- setting up the beasts half sprite stuff
 	actor.sprite_fall_half = jump_half
 
 	actor:survivor_util_init_half_sprites()
-	
 end)
 
 -- skills setup
-local knightPrimary =   knight:get_primary()
-local knightSecondary = knight:get_secondary()
-local knightUtility =   knight:get_utility()
-local knightSpecial =   knight:get_special()
-local knightSpecialScepter = Skill.new(NAMESPACE, "knightSpecialBoosted")
-knightSpecial:set_skill_upgrade(knightSpecialScepter)
+local knightPrimary =   knight:get_skills(Skill.Slot.PRIMARY)[1]
+local knightSecondary = knight:get_skills(Skill.Slot.SECONDARY)[1]
+local knightUtility =   knight:get_skills(Skill.Slot.UTILITY)[1]
+local knightSpecial =   knight:get_skills(Skill.Slot.SPECIAL)[1]
+local knightSpecialS = Skill.new("knightSpecialBoosted")
 
-local knightPrimaryAlt = Skill.new(NAMESPACE, "knightGreatsword")
-knight:add_primary(knightPrimaryAlt)
+local knightPrimaryAlt = Skill.new("knightGreatsword")
+knight:add_skill(Skill.Slot.PRIMARY, knightPrimaryAlt)
 
-local knightSecondaryAlt = Skill.new(NAMESPACE, "knightGuard")
-knight:add_secondary(knightSecondaryAlt)
+local knightSecondaryAlt = Skill.new("knightGuard")
+knight:add_skill(Skill.Slot.SECONDARY, knightSecondaryAlt)
 
-local knightSpecialAlt = Skill.new(NAMESPACE, "knightBanner")
-knight:add_special(knightSpecialAlt)
-local knightSpecialAltScepter = Skill.new(NAMESPACE, "knightBannerScepter")
-knightSpecialAlt:set_skill_upgrade(knightSpecialAltScepter)
+local knightSpecialAlt = Skill.new("knightBanner")
+local knightSpecialAltS = Skill.new("knightBannerScepter")
+knight:add_skill(Skill.Slot.SPECIAL, knightSpecialAlt)
 
 
 -- parry enhanced skills
-local knightShieldBash = Skill.new(NAMESPACE, "knightShieldBash")
-local knightShockwave = Skill.new(NAMESPACE, "knightShockwave")
-local knightBeyblade = Skill.new(NAMESPACE, "knightBeyblade")
-local knightShieldOrbit = Skill.new(NAMESPACE, "knightShieldOrbit")
-local knightShieldOrbitScepter = Skill.new(NAMESPACE, "knightShieldOrbitScepter")
-local knightConsecrate = Skill.new(NAMESPACE, "knightConsecrate")
-local knightConsecrateScepter = Skill.new(NAMESPACE, "knightConsecrateScepter")
+local knightShieldBash = Skill.new("knightShieldBash")
+local knightShockwave = Skill.new("knightShockwave")
+local knightBeyblade = Skill.new("knightBeyblade")
+local knightShieldOrbit = Skill.new("knightShieldOrbit")
+local knightShieldOrbitS = Skill.new("knightShieldOrbitScepter")
+local knightConsecrate = Skill.new("knightConsecrate")
+local knightConsecrateS = Skill.new("knightConsecrateScepter")
 
-local knightRetaliate = Skill.new(NAMESPACE, "knightRetaliate")
+local knightRetaliate = Skill.new("knightRetaliate")
 
 
 -------- DUEL!
@@ -154,21 +147,21 @@ knightPrimary.require_key_press = false
 knightPrimary.is_primary = true
 knightPrimary.does_change_activity_state = true
 knightPrimary.hold_facing_direction = true
-knightPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+knightPrimary.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
-local stateKnightPrimary = State.new(NAMESPACE, "knightPrimary")
+local stateKnightPrimary = ActorState.new("knightPrimary")
 
 -- actual skill
-knightPrimary:onActivate(function( actor )
-	actor:enter_state(stateKnightPrimary)
+Callback.add(knightPrimary.on_activate, function( actor )
+	actor:set_state(stateKnightPrimary)
 end)
 
-stateKnightPrimary:onEnter(function( actor, data )
+Callback.add(stateKnightPrimary.on_enter, function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
 end)
 
-stateKnightPrimary:onStep(function( actor, data )
+Callback.add(stateKnightPrimary.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:actor_animation_set(actor.sprite_index, 0.15)
 
@@ -195,8 +188,8 @@ stateKnightPrimary:onStep(function( actor, data )
 			local sparks = combo == 0 and sprite_sparks1 or sprite_sparks2
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage, nil, sparks)
 				end
 			end
@@ -222,16 +215,16 @@ knightShieldBash.subimage = 5
 knightShieldBash.damage = 3
 knightShieldBash.cooldown = 0
 knightShieldBash.require_key_press = true
-knightShieldBash.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightShieldBash.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightShieldBash = State.new(NAMESPACE, "knightShieldBash")
+local stateKnightShieldBash = ActorState.new("knightShieldBash")
 
 -- actual skill
-knightShieldBash:onActivate(function( actor )
-	actor:enter_state(stateKnightShieldBash)
+Callback.add(knightShieldBash.on_activate, function( actor )
+	actor:set_state(stateKnightShieldBash)
 end)
 
-stateKnightShieldBash:onEnter(function( actor, data )
+Callback.add(stateKnightShieldBash.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_3
 	actor.image_speed = .25
@@ -242,9 +235,9 @@ stateKnightShieldBash:onEnter(function( actor, data )
 	hit_enemies_shieldbash = List.new()
 end)
 
-stateKnightShieldBash:onStep(function( actor, data )
+Callback.add(stateKnightShieldBash.on_step, function( actor, data )
 	actor.pHspeed = (2 * actor.pHmax * actor.image_xscale) - (0.75 * actor.image_index * actor.image_xscale)
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -275,11 +268,10 @@ stateKnightShieldBash:onStep(function( actor, data )
 					end
 
 					if cannot_be_hit == 0 then
-						local buff_shadow_clone = Buff.find("ror", "shadowClone")
-						for i=0, actor:buff_stack_count(buff_shadow_clone) do
+						local buff_shadow_clone = Buff.find("shadowClone")
+						for i=0, actor:buff_count(buff_shadow_clone) do
 							attack = actor:fire_direct(target, damage, dir, actor.x, actor.y, sprite_sparks2, true)
-							attack.attack_info:allow_stun()
-							attack.attack_info:set_stun(3, dir, standard)
+							attack.attack_info.stun = 3
 						end
 
 						table.insert(hit_enemies_shieldbash, target)
@@ -294,7 +286,7 @@ stateKnightShieldBash:onStep(function( actor, data )
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateKnightShieldBash:onExit(function( actor, data )
+Callback.add(stateKnightShieldBash.on_exit, function( actor, data )
 	hit_enemies_shieldbash:destroy()
 end)
 
@@ -311,20 +303,20 @@ knightPrimaryAlt.require_key_press = false
 knightPrimaryAlt.is_primary = true
 knightPrimaryAlt.does_change_activity_state = true
 knightPrimaryAlt.hold_facing_direction = true
-knightPrimaryAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+knightPrimaryAlt.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
-local stateKnightGreatsword = State.new(NAMESPACE, "knightGreatsword")
+local stateKnightGreatsword = ActorState.new("knightGreatsword")
 
-knightPrimaryAlt:onActivate(function( actor )
-	actor:enter_state(stateKnightGreatsword)
+Callback.add(knightPrimaryAlt.on_activate, function( actor )
+	actor:set_state(stateKnightGreatsword)
 end)
 
-stateKnightGreatsword:onEnter(function( actor, data )
+Callback.add(stateKnightGreatsword.on_enter, function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
 end)
 
-stateKnightGreatsword:onStep(function( actor, data )
+Callback.add(stateKnightGreatsword.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	
 	if Global._current_frame - alt_combo_time > alt_combo_window then
@@ -355,13 +347,12 @@ stateKnightGreatsword:onStep(function( actor, data )
 				local dir = actor.image_xscale
 
 				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-					local buff_shadow_clone = Buff.find("ror", "shadowClone")
-					for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local buff_shadow_clone = Buff.find("shadowClone")
+					for i=0, actor:buff_count(buff_shadow_clone) do
 						attack = actor:fire_explosion(actor.x + dir * 80, actor.y + 10, 180, 150, damage * 2, gm.constants.sEnforcerGrenadeExplosion, sprite_sparks1)
 						attack.attack_info.knockback = 8
 						attack.attack_info.knockback_direction = dir
-						attack.attack_info:allow_stun()
-						attack.attack_info:set_stun(1, dir, standard)
+						attack.attack_info.stun = 1
 					end
 				end
 			end
@@ -375,8 +366,8 @@ stateKnightGreatsword:onStep(function( actor, data )
 				local dir = actor.image_xscale
 
 				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-					local buff_shadow_clone = Buff.find("ror", "shadowClone")
-					for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local buff_shadow_clone = Buff.find("shadowClone")
+					for i=0, actor:buff_count(buff_shadow_clone) do
 						attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 60, damage, nil, sprite_sparks1)
 						attack.attack_info.knockback = 4
 						attack.attack_info.knockback_direction = dir
@@ -398,9 +389,9 @@ end)
 
 
 -------- ERADICATE!
-objShockwaveSpawner = Object.new(NAMESPACE, "knightShockwaveSpawner")
+objShockwaveSpawner = Object.new("knightShockwaveSpawner")
 
-objShockwaveSpawner:onCreate(function( inst )
+Callback.add(objShockwaveSpawner.on_create, function( inst )
 	inst.parent = -4
 	inst.dir = 1
 	inst.offset = 60
@@ -409,7 +400,7 @@ objShockwaveSpawner:onCreate(function( inst )
 	inst.length = 10
 end)
 
-objShockwaveSpawner:onStep(function( inst )
+Callback.add(objShockwaveSpawner.on_step, function( inst )
 	if Global._current_frame - inst.start >= 5 then
 		inst.start = Global._current_frame
 
@@ -429,20 +420,20 @@ knightShockwave.subimage = 4
 knightShockwave.damage = 3
 knightShockwave.cooldown = 0 
 knightShockwave.require_key_press = true
-knightShockwave.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightShockwave.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightShockwave = State.new(NAMESPACE, "knightShockwave")
+local stateKnightShockwave = ActorState.new("knightShockwave")
 
-knightShockwave:onActivate(function( actor )
-	actor:enter_state(stateKnightShockwave)
+Callback.add(knightShockwave.on_activate, function( actor )
+	actor:set_state(stateKnightShockwave)
 end)
 
-stateKnightShockwave:onEnter(function( actor, data )
+Callback.add(stateKnightShockwave.on_enter, function( actor, data )
 	actor.image_index = 0
 	data.fired = 0
 end)
 
-stateKnightShockwave:onStep(function( actor, data )
+Callback.add(stateKnightShockwave.on_step, function( actor, data )
 	actor.sprite_index = sprite_shoot1_2
 	actor:actor_animation_set(actor.sprite_index, 0.06)
 
@@ -455,8 +446,8 @@ stateKnightShockwave:onStep(function( actor, data )
 			local damage = actor:skill_get_damage(knightShockwave)
 			local dir = actor.image_xscale
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x + dir * 60, actor.y + 10, 120, 100, damage * 1.5, gm.constants.sEnforcerGrenadeExplosion, sprite_sparks1)
 				attack.attack_info.knockback = 6
 				attack.attack_info.knockback_direction = dir
@@ -486,26 +477,28 @@ knightSecondary.cooldown = 3 * 60
 knightSecondary.require_key_press = false
 knightSecondary.does_change_activity_state = true
 knightSecondary.hold_facing_direction = true
-knightSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+knightSecondary.required_interrupt_priority = ActorState.InterruptPriority.PRIORITY_SKILL
 
-local stateKnightSecondary = State.new(NAMESPACE, "knightSecondary")
-local stateKnightParry = State.new(NAMESPACE, "knightParry")
+local stateKnightSecondary = ActorState.new("knightSecondary")
+local stateKnightParry = ActorState.new("knightParry")
 
 -- extra armor when guarding
-local knightArmorBuff = Buff.new(NAMESPACE, "knightArmorBuff")
+local knightArmorBuff = Buff.new("knightArmorBuff")
 knightArmorBuff.show_icon = false
 knightArmorBuff.is_timed = false
 
-knightArmorBuff:onStatRecalc(function( actor )
-	actor.armor = actor.armor + 100
+RecalculateStats.add(function( actor, api )
+	if actor:buff_count(knightArmorBuff) > 0 then
+		api.armor_add(100)
+	end
 end)
 
 -- actual skill
-knightSecondary:onActivate(function( actor )
-	actor:enter_state(stateKnightSecondary)
+Callback.add(knightSecondary.on_activate, function( actor )
+	actor:set_state(stateKnightSecondary)
 end)
 
-stateKnightSecondary:onEnter(function( actor, data )
+Callback.add(stateKnightSecondary.on_enter, function( actor, data )
 	actor.image_index2 = 0
 	actor.deflect = 1
 
@@ -518,11 +511,10 @@ stateKnightSecondary:onEnter(function( actor, data )
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
 	actor:buff_apply(knightArmorBuff, 1, 1)
-	actor:freeze_active_skill(Skill.SLOT.secondary)
+	actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 end)
 
-
-stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state down because its a bunch of stuff
+Callback.add(stateKnightSecondary.on_step, function( actor, data )
 	-- set up strafing
 	actor.sprite_index2 = sprite_shoot2_half
 	actor:skill_util_strafe_update(.25, 0.5)
@@ -554,15 +546,14 @@ stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state d
 		if actor:is_authority() then -- just a fun little parry blast yayyyy
 			local damage = actor:skill_get_damage(knightSecondary)
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y, 150, 150, damage, sprite_sparks3, nil, true)
-				attack.attack_info:allow_stun()
-				attack.attack_info:set_stun(1, actor.image_xscale, standard)
+				attack.attack_info.stun = 1
 			end
 		end
 
-		actor:enter_state(stateKnightParry) -- this is your decision state where you can pick an empowered skill
+		actor:set_state(stateKnightParry) -- this is your decision state where you can pick an empowered skill
 	end
 
 	-- turns off the parry window once its been a set amount of time
@@ -570,7 +561,7 @@ stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state d
 		actor.deflect = 0
 	end
 
-	actor:freeze_active_skill(Skill.SLOT.secondary)
+	actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 
 	-- turns off the skill once you let go of the key
 	if actor:is_authority() and not actor:control("skill2", 0) then
@@ -578,7 +569,7 @@ stateKnightSecondary:onStep(function( actor, data ) -- ok ill break this state d
 	end
 end)
 
-stateKnightSecondary:onExit(function( actor, data )
+Callback.add(stateKnightSecondary.on_exit, function( actor, data )
 	actor:sound_play(sound_shoot2, .5, 0.8)
 	actor:buff_remove(knightArmorBuff, 1)
 
@@ -586,65 +577,65 @@ stateKnightSecondary:onExit(function( actor, data )
 	actor.deflect = 0
 end)
 
-stateKnightParry:onEnter(function( actor, data )
+Callback.add(stateKnightParry.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_decoy
 
 	react_start = Global._current_frame
 
 	
-	if actor:get_default_skill(Skill.SLOT.primary).skill_id == knightPrimary.value then
-		actor:add_skill_override(Skill.SLOT.primary, knightShieldBash, 1)
-	elseif actor:get_default_skill(Skill.SLOT.primary).skill_id == knightPrimaryAlt.value then
-		actor:add_skill_override(Skill.SLOT.primary, knightShockwave, 1)
+	if actor:get_default_skill(Skill.Slot.PRIMARY).skill_id == knightPrimary.value then
+		actor:add_skill_override(Skill.Slot.PRIMARY, knightShieldBash, 1)
+	elseif actor:get_default_skill(Skill.Slot.PRIMARY).skill_id == knightPrimaryAlt.value then
+		actor:add_skill_override(Skill.Slot.PRIMARY, knightShockwave, 1)
 	end
 
-	actor:add_skill_override(Skill.SLOT.utility, knightBeyblade, 1)
+	actor:add_skill_override(Skill.Slot.UTILITY, knightBeyblade, 1)
 
-	if actor:get_default_skill(Skill.SLOT.special).skill_id == knightSpecial.value then
-		if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
-			actor:add_skill_override(Skill.SLOT.special, knightShieldOrbitScepter, 1)
+	if actor:get_default_skill(Skill.Slot.SPECIAL).skill_id == knightSpecial.value then
+		if actor:item_count(Item.find("ancientScepter")) > 0 then
+			actor:add_skill_override(Skill.Slot.SPECIAL, knightShieldOrbitS, 1)
 		else
-			actor:add_skill_override(Skill.SLOT.special, knightShieldOrbit, 1)
+			actor:add_skill_override(Skill.Slot.SPECIAL, knightShieldOrbit, 1)
 		end
-	elseif actor:get_default_skill(Skill.SLOT.special).skill_id == knightSpecialAlt.value then
-		if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
-			actor:add_skill_override(Skill.SLOT.special, knightConsecrateScepter, 1)
+	elseif actor:get_default_skill(Skill.Slot.SPECIAL).skill_id == knightSpecialAlt.value then
+		if actor:item_count(Item.find("ancientScepter")) > 0 then
+			actor:add_skill_override(Skill.Slot.SPECIAL, knightConsecrateS, 1)
 		else
-			actor:add_skill_override(Skill.SLOT.special, knightConsecrate, 1)
+			actor:add_skill_override(Skill.Slot.SPECIAL, knightConsecrate, 1)
 		end
 	end
 end)
 
-stateKnightParry:onStep(function( actor, data )
+Callback.add(stateKnightParry.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 
 	if Global._current_frame - react_start >= react_window then
 		actor:skill_util_reset_activity_state()
 	end
 end)
 
-stateKnightParry:onExit(function( actor, data )
-	if actor:get_default_skill(Skill.SLOT.primary).skill_id == knightPrimary.value then
-		actor:remove_skill_override(Skill.SLOT.primary, knightShieldBash, 1)
-	elseif actor:get_default_skill(Skill.SLOT.primary).skill_id == knightPrimaryAlt.value then
-		actor:remove_skill_override(Skill.SLOT.primary, knightShockwave, 1)
+Callback.add(stateKnightParry.on_exit, function( actor, data )
+	if actor:get_default_skill(Skill.Slot.PRIMARY).skill_id == knightPrimary.value then
+		actor:remove_skill_override(Skill.Slot.PRIMARY, knightShieldBash, 1)
+	elseif actor:get_default_skill(Skill.Slot.PRIMARY).skill_id == knightPrimaryAlt.value then
+		actor:remove_skill_override(Skill.Slot.PRIMARY, knightShockwave, 1)
 	end
 
-	actor:remove_skill_override(Skill.SLOT.utility, knightBeyblade, 1)
+	actor:remove_skill_override(Skill.Slot.UTILITY, knightBeyblade, 1)
 
-	if actor:get_default_skill(Skill.SLOT.special).skill_id == knightSpecial.value then
-		if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
-			actor:remove_skill_override(Skill.SLOT.special, knightShieldOrbitScepter, 1)
+	if actor:get_default_skill(Skill.Slot.SPECIAL).skill_id == knightSpecial.value then
+		if actor:item_count(Item.find("ancientScepter")) > 0 then
+			actor:remove_skill_override(Skill.Slot.SPECIAL, knightShieldOrbitS, 1)
 		else
-			actor:remove_skill_override(Skill.SLOT.special, knightShieldOrbit, 1)
+			actor:remove_skill_override(Skill.Slot.SPECIAL, knightShieldOrbit, 1)
 		end
-	elseif actor:get_default_skill(Skill.SLOT.special).skill_id == knightSpecialAlt.value then
-		if actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 then
-			actor:remove_skill_override(Skill.SLOT.special, knightConsecrateScepter, 1)
+	elseif actor:get_default_skill(Skill.Slot.SPECIAL).skill_id == knightSpecialAlt.value then
+		if actor:item_count(Item.find("ancientScepter")) > 0 then
+			actor:remove_skill_override(Skill.Slot.SPECIAL, knightConsecrateS, 1)
 		else
-			actor:remove_skill_override(Skill.SLOT.special, knightConsecrate, 1)
+			actor:remove_skill_override(Skill.Slot.SPECIAL, knightConsecrate, 1)
 		end
 	end
 end)
@@ -662,16 +653,16 @@ knightSecondaryAlt.cooldown = 5 * 60
 knightSecondaryAlt.require_key_press = false
 knightSecondaryAlt.does_change_activity_state = true
 knightSecondaryAlt.hold_facing_direction = true
-knightSecondaryAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.priority_skill
+knightSecondaryAlt.required_interrupt_priority = ActorState.InterruptPriority.PRIORITY_SKILL
 
-local stateKnightSecondaryAlt = State.new(NAMESPACE, "knightSecondaryAlt")
+local stateKnightSecondaryAlt = ActorState.new("knightSecondaryAlt")
 
-knightSecondaryAlt:onActivate(function( actor )
-	actor:enter_state(stateKnightSecondaryAlt)
-	actor:add_skill_override(Skill.SLOT.secondary, knightRetaliate, 1)
+Callback.add(knightSecondaryAlt.on_activate, function( actor )
+	actor:set_state(stateKnightSecondaryAlt)
+	actor:add_skill_override(Skill.Slot.SECONDARY, knightRetaliate, 1)
 end)
 
-stateKnightSecondaryAlt:onEnter(function( actor, data )
+Callback.add(stateKnightSecondaryAlt.on_enter, function( actor, data )
 	actor.image_index2 = 0
 	actor.deflect = 1
 
@@ -684,10 +675,10 @@ stateKnightSecondaryAlt:onEnter(function( actor, data )
 	actor:skill_util_strafe_init()
 	actor:skill_util_strafe_turn_init()
 	actor:buff_apply(knightArmorBuff, 1, 1)
-	actor:freeze_active_skill(Skill.SLOT.secondary)
+	actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 end)
 
-stateKnightSecondaryAlt:onStep(function( actor, data )
+Callback.add(stateKnightSecondaryAlt.on_step, function( actor, data )
 	actor.sprite_index2 = sprite_shoot2_half
 	actor:skill_util_strafe_update(.75, 0.5)
 	actor:skill_util_step_strafe_sprites()
@@ -712,14 +703,14 @@ stateKnightSecondaryAlt:onStep(function( actor, data )
 		actor.deflect = 0
 	end
 
-	actor:freeze_active_skill(Skill.SLOT.secondary)
+	actor:get_active_skill(Skill.Slot.SECONDARY):freeze_cooldown()
 
 	if actor:is_authority() and not actor:control("skill2", 0) then
 		GM.actor_set_state_networked(actor, -1)
 	end
 end)
 
-stateKnightSecondaryAlt:onExit(function( actor, data )
+Callback.add(stateKnightSecondaryAlt.on_exit, function( actor, data )
 	actor:sound_play(sound_shoot2, .5, 0.8)
 	actor:buff_remove(knightArmorBuff, 1)
 
@@ -729,7 +720,7 @@ end)
 
 
 -- handling what to do when hit while guarding
-Callback.add(Callback.TYPE.onDamagedProc, "SSKnightHandleBlocking", function( actor, hit_info )
+Callback.add(Callback.ON_DAMAGED_PROC, function( actor, hit_info )
 	if actor.object_index == gm.constants.oP and actor.class == knight.value then
 		if blocking == 1 then
 			actor:sound_play(sound_shoot2_impact, .5, 0.9 + math.random() * 0.8)
@@ -747,16 +738,16 @@ knightRetaliate.subimage = 5
 knightRetaliate.damage = 1
 knightRetaliate.cooldown = 0
 knightRetaliate.require_key_press = true
-knightRetaliate.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightRetaliate.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightRetaliate = State.new(NAMESPACE, "knightRetaliate")
+local stateKnightRetaliate = ActorState.new("knightRetaliate")
 
-knightRetaliate:onActivate(function( actor )
-	actor:enter_state(stateKnightRetaliate)
-	actor:remove_skill_override(Skill.SLOT.secondary, knightRetaliate, 1)
+Callback.add(knightRetaliate.on_activate, function( actor )
+	actor:set_state(stateKnightRetaliate)
+	actor:remove_skill_override(Skill.Slot.SECONDARY, knightRetaliate, 1)
 end)
 
-stateKnightRetaliate:onEnter(function( actor, data )
+Callback.add(stateKnightRetaliate.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_3
 	actor.image_speed = 0.35
@@ -764,10 +755,10 @@ stateKnightRetaliate:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateKnightRetaliate:onStep(function( actor, data )
+Callback.add(stateKnightRetaliate.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
-	actor:refresh_skill(Skill.SLOT.secondary)
+	actor:get_active_skill(Skill.Slot.SECONDARY):cancel_cooldown()
 
 	if data.fired == 0 then
 		data.fired = 1
@@ -776,19 +767,17 @@ stateKnightRetaliate:onStep(function( actor, data )
 		local tank_factor = tanked_damage/10
 		local damage = (base_damage + tank_factor) * parry_factor 
 
-		local buff_shadow_clone = Buff.find("ror", "shadowClone")
-		for i=0, actor:buff_stack_count(buff_shadow_clone) do
+		local buff_shadow_clone = Buff.find("shadowClone")
+		for i=0, actor:buff_count(buff_shadow_clone) do
 			attack = actor:fire_explosion(actor.x, actor.y, 150, 150, base_damage, sprite_sparks3, nil, true)
-			attack.attack_info:allow_stun()
-			attack.attack_info:set_stun(1, actor.image_xscale, standard)
+			attack.attack_info.stun = 1
 		end
 	end
 
-	local skill = actor:get_default_skill(Skill.SLOT.secondary)
-	skill.remove_stock(skill, skill, 1)
+	actor:get_default_skill(Skill.Slot.SECONDARY):remove_stock()
 end)
 
-stateKnightRetaliate:onExit(function( actor, data )
+Callback.add(stateKnightRetaliate.on_exit, function( actor, data )
 	parried_hits = 0
 	tanked_damage = 0
 end)
@@ -802,18 +791,18 @@ knightUtility.subimage = 2
 knightUtility.cooldown = 5 * 60
 knightUtility.damage = 3
 knightUtility.require_key_press = true
-knightUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightUtility.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightUtility = State.new(NAMESPACE, "knightUtility")
+local stateKnightUtility = ActorState.new("knightUtility")
 
 local shoot3_sounds = {sound_shoot3a, sound_shoot3b}
 
 -- actual skill
-knightUtility:onActivate(function( actor )
-	actor:enter_state(stateKnightUtility)
+Callback.add(knightUtility.on_activate, function( actor )
+	actor:set_state(stateKnightUtility)
 end)
 
-stateKnightUtility:onEnter(function( actor, data )
+Callback.add(stateKnightUtility.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = 0.5
@@ -824,7 +813,7 @@ stateKnightUtility:onEnter(function( actor, data )
 	hit_enemies_strike = List.new()
 end)
 
-stateKnightUtility:onStep(function( actor, data )
+Callback.add(stateKnightUtility.on_step, function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor.pHspeed = 3.5 * actor.pHmax * actor.image_xscale
@@ -854,8 +843,8 @@ stateKnightUtility:onStep(function( actor, data )
 					end
 
 					if cannot_be_hit == 0 then
-						local buff_shadow_clone = Buff.find("ror", "shadowClone")
-						for i=0, actor:buff_stack_count(buff_shadow_clone) do
+						local buff_shadow_clone = Buff.find("shadowClone")
+						for i=0, actor:buff_count(buff_shadow_clone) do
 							attack = actor:fire_direct(target, damage, dir, actor.x, actor.y, sprite_sparks2, true)
 							attack.attack_info.knockback = 2
 							attack.attack_info.knockback_direction = actor.image_xscale
@@ -870,12 +859,12 @@ stateKnightUtility:onStep(function( actor, data )
 		end
 	end
 
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateKnightUtility:onExit(function( actor, data )
+Callback.add(stateKnightUtility.on_exit, function( actor, data )
 	hit_enemies_strike:destroy()
 end)
 
@@ -886,16 +875,16 @@ knightBeyblade.subimage = 5
 knightBeyblade.cooldown = 5 * 60
 knightBeyblade.damage = 0.8
 knightBeyblade.require_key_press = true
-knightBeyblade.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightBeyblade.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightBeyblade = State.new(NAMESPACE, "knightBeyblade")
+local stateKnightBeyblade = ActorState.new("knightBeyblade")
 
 -- actual skill
-knightBeyblade:onActivate(function( actor )
-	actor:enter_state(stateKnightBeyblade)
+Callback.add(knightBeyblade.on_activate, function( actor )
+	actor:set_state(stateKnightBeyblade)
 end)
 
-stateKnightBeyblade:onEnter(function( actor, data )
+Callback.add(stateKnightBeyblade.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = 0.25
@@ -905,9 +894,9 @@ stateKnightBeyblade:onEnter(function( actor, data )
 	hit_enemies_strike = List.new()
 end)
 
-stateKnightBeyblade:onStep(function( actor, data )
+Callback.add(stateKnightBeyblade.on_step, function( actor, data )
 	actor.pHspeed = 2 * actor.pHmax * actor.image_xscale
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 
 	if data.previous_index < math.floor(actor.image_index) then
 		data.previous_index = data.previous_index + 1
@@ -916,8 +905,8 @@ stateKnightBeyblade:onStep(function( actor, data )
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightBeyblade)
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y, 100, 50, damage, sprite_sparks2, sprite_sparks1, true)
 				attack.attack_info.knockback = 4
 				attack.attack_info.knockback_direction = actor.image_xscale
@@ -928,9 +917,8 @@ stateKnightBeyblade:onStep(function( actor, data )
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateKnightBeyblade:onExit(function( actor, data )
-	local skill = actor:get_default_skill(Skill.SLOT.utility)
-	skill.remove_stock(skill, skill, 1)
+Callback.add(stateKnightBeyblade.on_exit, function( actor ,data )
+	actor:get_default_skill(Skill.Slot.UTILITY):remove_stock()
 end)
 
 
@@ -940,34 +928,37 @@ knightSpecial.subimage = 3
 knightSpecial.cooldown = 12 * 60
 knightSpecial.damage = 3
 knightSpecial.require_key_press = true
-knightSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightSpecial.required_interrupt_priority = ActorState.InterruptPriority.SKILL
+knightSpecial.upgrade_skill = knightSpecialS
 
-knightSpecialScepter.sprite = sprite_skills
-knightSpecialScepter.subimage = 4
-knightSpecialScepter.cooldown = 12 * 60
-knightSpecialScepter.damage = 3
-knightSpecialScepter.require_key_press = true
-knightSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightSpecialS.sprite = sprite_skills
+knightSpecialS.subimage = 4
+knightSpecialS.cooldown = 12 * 60
+knightSpecialS.damage = 3
+knightSpecialS.require_key_press = true
+knightSpecialS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local knightInvigorateBuff = Buff.new(NAMESPACE, "knightInvigorateBuff")
+local knightInvigorateBuff = Buff.new("knightInvigorateBuff")
 knightInvigorateBuff.icon_sprite = sprite_invigorate
 
-knightInvigorateBuff:onStatRecalc(function( actor )
-	actor.attack_speed = actor.attack_speed * 1.4
+RecalculateStats.add(function( actor, api )
+	if actor:buff_count(knightInvigorateBuff) > 0 then
+		api.attack_speed_mult(1.4)
+	end
 end)
 
-local stateKnightSpecial = State.new(NAMESPACE, "knightSpecial")
+local stateKnightSpecial = ActorState.new("knightSpecial")
 
-knightSpecial:onActivate(function( actor )
-	actor:enter_state(stateKnightSpecial)
+Callback.add(knightSpecial.on_activate, function( actor )
+	actor:set_state(stateKnightSpecial)
 end)
 
-knightSpecialScepter:onActivate(function( actor )
-	actor:enter_state(stateKnightSpecial)
+Callback.add(knightSpecialS.on_activate, function( actor )
+	actor:set_state(stateKnightSpecial)
 end)
 
 -- actual skill
-stateKnightSpecial:onEnter(function( actor, data )
+Callback.add(stateKnightSpecial.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot4
 	actor.image_speed = 0.2
@@ -975,7 +966,7 @@ stateKnightSpecial:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateKnightSpecial:onStep(function( actor, data )
+Callback.add(stateKnightSpecial.on_step, function( actor, data )
 	if (data.fired == 0 and math.floor(actor.image_index) == 2) or (data.fired == 1 and math.floor(actor.image_index) == 5) then
 		data.fired = data.fired + 1
 
@@ -986,8 +977,8 @@ stateKnightSpecial:onStep(function( actor, data )
 			local dir = actor.image_xscale
 			local sparks = data.fired == 1 and sprite_sparks1 or sprite_sparks2
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage, nil, sparks)
 			end
 		end
@@ -1007,8 +998,8 @@ stateKnightSpecial:onStep(function( actor, data )
 			local damage = actor:skill_get_damage(knightSpecial)
 			local sparks = data.fired == 1 and sprite_sparks1 or sprite_sparks2
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y, 300, 300, damage, sprite_sparks3, sparks, true)
 			end
 		end
@@ -1019,7 +1010,7 @@ stateKnightSpecial:onStep(function( actor, data )
 
 		for _, ally in ipairs(allies) do
 			if ally.team == actor.team then -- checking to see who is actually our friend
-				if actor:item_stack_count(Item.find("ror", "ancientScepter")) >= 1 then 
+				if actor:item_count(Item.find("ancientScepter")) >= 1 then 
 					ally:buff_apply(knightInvigorateBuff, 8 * 60, 1)
 				else
 					ally:buff_apply(knightInvigorateBuff, 4 * 60, 1)
@@ -1030,18 +1021,33 @@ stateKnightSpecial:onStep(function( actor, data )
 		allies:destroy()
 	end
 
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 	actor:skill_util_fix_hspeed()
 
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
 
+
 -------- WARD!
-objFloatingShield = Object.new(NAMESPACE, "knightFloatingShield")
+local ProjectilesList = {
+    gm.constants.oJellyMissile,
+    gm.constants.oWurmMissile,
+    gm.constants.oShamBMissile,
+    gm.constants.oTurtleMissile,
+    gm.constants.oBrambleBullet,
+    gm.constants.oLizardRSpear,
+    gm.constants.oEfMissileEnemy,
+    gm.constants.oSpiderBulletNoSync, gm.constants.oSpiderBullet,
+    gm.constants.oGuardBulletNoSync, gm.constants.oGuardBullet,
+    gm.constants.oBugBulletNoSync, gm.constants.oBugBullet,
+    gm.constants.oScavengerBulletNoSync, gm.constants.oScavengerBullet
+}
+
+objFloatingShield = Object.new("knightFloatingShield")
 objFloatingShield:set_sprite(sprite_invigorate)
 
-objFloatingShield:onCreate(function( inst )
+Callback.add(objFloatingShield.on_create, function( inst )
 	inst.parent = -4
 	inst.speed = 2
 	inst.lifetime = 6 * 60
@@ -1049,12 +1055,12 @@ objFloatingShield:onCreate(function( inst )
 	inst.initial_radians = 0
 	inst.hit_delay = 15
 
-	local data = inst:get_data()
+	local data = Instance.get_data(inst)
 	data.hit_list = {}
 end)
 
-objFloatingShield:onStep(function( inst )
-	local data = inst:get_data()
+Callback.add(objFloatingShield.on_step, function( inst )
+	local data = Instance.get_data(inst)
 
 	if not Instance.exists(inst.parent) then
 		inst:destroy()
@@ -1095,7 +1101,7 @@ objFloatingShield:onStep(function( inst )
 		end
 	end
 
-	local projectiles = Instance.find_all(Instance.projectiles)
+	local projectiles = Instance.find_all(ProjectilesList)
     for _, proj in ipairs(projectiles) do
 	local dist = gm.point_distance(inst.x, inst.y, proj.x, proj.y)
 		if dist <= 20 then
@@ -1105,32 +1111,34 @@ objFloatingShield:onStep(function( inst )
 end)
 
 
+
 knightShieldOrbit.sprite = sprite_skills
 knightShieldOrbit.subimage = 5
 knightShieldOrbit.cooldown = 12 * 60
 knightShieldOrbit.damage = 3
 knightShieldOrbit.require_key_press = true
-knightShieldOrbit.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightShieldOrbit.required_interrupt_priority = ActorState.InterruptPriority.SKILL
+knightShieldOrbit.upgrade_skill = knightShieldOrbitS
 
-knightShieldOrbitScepter.sprite = sprite_skills
-knightShieldOrbitScepter.subimage = 4
-knightShieldOrbitScepter.cooldown = 12 * 60
-knightShieldOrbitScepter.damage = 3
-knightShieldOrbitScepter.require_key_press = true
-knightShieldOrbitScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightShieldOrbitS.sprite = sprite_skills
+knightShieldOrbitS.subimage = 4
+knightShieldOrbitS.cooldown = 12 * 60
+knightShieldOrbitS.damage = 3
+knightShieldOrbitS.require_key_press = true
+knightShieldOrbitS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightShieldOrbit = State.new(NAMESPACE, "knightShieldOrbit")
+local stateKnightShieldOrbit = ActorState.new("knightShieldOrbit")
 
-knightShieldOrbit:onActivate(function( actor )
-	actor:enter_state(stateKnightShieldOrbit)
+Callback.add(knightShieldOrbit.on_activate, function( actor )
+	actor:set_state(stateKnightShieldOrbit)
 end)
 
-knightShieldOrbitScepter:onActivate(function( actor )
-	actor:enter_state(stateKnightShieldOrbit)
+Callback.add(knightShieldOrbitS.on_activate, function( actor )
+	actor:set_state(stateKnightShieldOrbit)
 end)
 
 -- actual skill
-stateKnightShieldOrbit:onEnter(function( actor, data )
+Callback.add(stateKnightShieldOrbit.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot4
 	actor.image_speed = 0.2
@@ -1138,7 +1146,7 @@ stateKnightShieldOrbit:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateKnightShieldOrbit:onStep(function( actor, data )
+Callback.add(stateKnightShieldOrbit.on_step, function( actor, data )
 	if (data.fired == 0 and math.floor(actor.image_index) == 2) or (data.fired == 1 and math.floor(actor.image_index) == 5) then
 		data.fired = data.fired + 1
 
@@ -1149,8 +1157,8 @@ stateKnightShieldOrbit:onStep(function( actor, data )
 			local dir = actor.image_xscale
 			local sparks = data.fired == 1 and sprite_sparks1 or sprite_sparks2
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage, nil, sparks)
 			end
 		end
@@ -1166,7 +1174,7 @@ stateKnightShieldOrbit:onStep(function( actor, data )
 		invigorateArea.rate = 60
 		invigorateArea.image_blend = Color.from_rgb(220,228,164)
 
-		local shield_count = 2 + actor:item_stack_count(Item.find("ror", "ancientScepter"))
+		local shield_count = 2 + actor:item_count(Item.find("ancientScepter"))
 		for i = 1, shield_count do 
 			local shield = objFloatingShield:create(actor.x, actor.y)
 			shield.parent = actor
@@ -1178,8 +1186,8 @@ stateKnightShieldOrbit:onStep(function( actor, data )
 			local damage = actor:skill_get_damage(knightSpecial)
 			local sparks = data.fired == 1 and sprite_sparks1 or sprite_sparks2
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y, 300, 300, damage, sprite_sparks3, sparks, true)
 			end
 		end
@@ -1190,7 +1198,7 @@ stateKnightShieldOrbit:onStep(function( actor, data )
 
 		for _, ally in ipairs(allies) do
 			if ally.team == actor.team then -- checking to see who is actually our friend
-				if actor:item_stack_count(Item.find("ror", "ancientScepter")) >= 1 then 
+				if actor:item_count(Item.find("ancientScepter")) >= 1 then 
 					ally:buff_apply(knightInvigorateBuff, 8 * 60, 1)
 				else
 					ally:buff_apply(knightInvigorateBuff, 4 * 60, 1)
@@ -1201,41 +1209,35 @@ stateKnightShieldOrbit:onStep(function( actor, data )
 		allies:destroy()
 	end
 
-	actor:set_immune(3)
+	actor.invincible = math.max(actor.invincible, 3)
 	actor:skill_util_fix_hspeed()
 
 	actor:skill_util_exit_state_on_anim_end()
 end) 
 
-stateKnightShieldOrbit:onExit(function( actor, data )
-	local skill = actor:get_default_skill(Skill.SLOT.special)
-	skill.remove_stock(skill, skill, 1)
+Callback.add(stateKnightShieldOrbit.on_exit, function( actor, data )
+	actor:get_default_skill(Skill.Slot.SPECIAL):remove_stock()
 end)
 
 
 -------- RALLY!
-local objBanner = Object.new(NAMESPACE, "knightBanner")
+local objBanner = Object.new("knightBanner")
 objBanner:set_sprite(gm.constants.sEfWarbanner)
 
-local knightBannerBuff = Buff.new(NAMESPACE, "knightBannerBuff")
+local knightBannerBuff = Buff.new("knightBannerBuff")
 knightBannerBuff.icon_sprite = sprite_invigorate
 
-knightBannerBuff:onStatRecalc(function( actor )
-	local secondary = actor:get_active_skill(Skill.SLOT.secondary)
-	local utility = actor:get_active_skill(Skill.SLOT.utility)
-	local special = actor:get_active_skill(Skill.SLOT.special)
-
-	secondary.cooldown = math.ceil(secondary.cooldown * 0.6)
-	utility.cooldown = math.ceil(utility.cooldown * 0.6)
-	special.cooldown = math.ceil(special.cooldown * 0.6)
-
-	actor.armor = actor.armor + 20
-	actor.hp_regen = actor.hp_regen + actor.maxhp * .0005
-	actor.pHmax = actor.pHmax + 0.8
-	actor.vHmax = actor.pHmax + 1.2
+RecalculateStats.add(function( actor, api )
+	if actor:buff_count(knightBannerBuff) > 0 then
+		api.cooldown_mult(0.6)
+		api.armor_add(20)
+		api.hp_regen_add(actor.maxhp * .0005)
+		api.pHmax_add(0.8)
+		api.pVmax_add(1.2)
+	end
 end)
 
-objBanner:onCreate(function( inst )
+Callback.add(objBanner.on_create, function( inst )
 	inst:move_contact_solid(270, -1)
 
 	inst.life = 12 * 60
@@ -1247,7 +1249,7 @@ objBanner:onCreate(function( inst )
 	inst.image_speed = 0.2
 end)
 
-objBanner:onStep(function( inst )
+Callback.add(objBanner.on_step, function( inst )
 	if inst.image_index >= 5 then
 		inst.image_index = 5
 	end
@@ -1275,7 +1277,7 @@ objBanner:onStep(function( inst )
 	end
 end)
 
-objBanner:onDraw(function( inst )
+Callback.add(objBanner.on_draw, function( inst )
 	local a = 0.1 + math.sin(Global._current_frame * 0.02) * 0.05
 	a = a * math.min(1, inst.life / 15)
 
@@ -1299,33 +1301,34 @@ knightSpecialAlt.subimage = 3
 knightSpecialAlt.cooldown = 12 * 60
 knightSpecialAlt.damage = 2
 knightSpecialAlt.require_key_press = true
-knightSpecialAlt.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightSpecialAlt.required_interrupt_priority = ActorState.InterruptPriority.SKILL
+knightSpecialAlt.upgrade_skill = knightSpecialAltS
 
-knightSpecialAltScepter.sprite = sprite_skills
-knightSpecialAltScepter.subimage = 4
-knightSpecialAltScepter.cooldown = 12 * 60
-knightSpecialAltScepter.damage = 2
-knightSpecialAltScepter.require_key_press = true
-knightSpecialAltScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightSpecialAltS.sprite = sprite_skills
+knightSpecialAltS.subimage = 4
+knightSpecialAltS.cooldown = 12 * 60
+knightSpecialAltS.damage = 2
+knightSpecialAltS.require_key_press = true
+knightSpecialAltS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateKnightBanner = State.new(NAMESPACE, "knightBanner")
+local stateKnightBanner = ActorState.new("knightBanner")
 
-knightSpecialAlt:onActivate(function( actor )
-	actor:enter_state(stateKnightBanner)
+Callback.add(knightSpecialAlt.on_activate, function( actor )
+	actor:set_state(stateKnightBanner)
 end)
 
-knightSpecialAltScepter:onActivate(function( actor )
-	actor:enter_state(stateKnightBanner)
+Callback.add(knightSpecialAltS.on_activate, function( actor )
+	actor:set_state(stateKnightBanner)
 end)
 
-stateKnightBanner:onEnter(function( actor, data )
+Callback.add(stateKnightBanner.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = 0.5
 	data.fired = 0
 end)
 
-stateKnightBanner:onStep(function( actor, data )
+Callback.add(stateKnightBanner.on_step, function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(sound_shoot4, .7, 0.9 + math.random() * 0.8)
@@ -1333,15 +1336,15 @@ stateKnightBanner:onStep(function( actor, data )
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightSpecialAlt)
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y + 10, 50, 150, damage, gm.constants.sBanditShoot2Explosion, nil, true)
 			end
 		end
 
 		local banner = objBanner:create(actor.x, actor.y)
 		banner.parent = actor
-		banner.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+		banner.scepter = actor:item_count(Item.find("ancientScepter"))
 	end
 
 	actor:skill_util_fix_hspeed()
@@ -1350,33 +1353,34 @@ end)
 
 
 -------- CONSECRATE!
-local objConsecratedBanner = Object.new(NAMESPACE, "knightConsecratedBanner")
+local objConsecratedBanner = Object.new("knightConsecratedBanner")
 objConsecratedBanner:set_sprite(gm.constants.sEfWarbanner)
 
-local objEfConsecrate = Object.new(NAMESPACE, "knightEfConsecrate")
+local objEfConsecrate = Object.new("knightEfConsecrate")
 objEfConsecrate:set_sprite(gm.constants.sEfArtiStarIdle)
 
-local partConsecrate = Particle.new(NAMESPACE, "knightConsecrate")
-partConsecrate:set_shape(Particle.SHAPE.star)
+local partConsecrate = Particle.new("knightConsecrate")
+partConsecrate:set_shape(Particle.Shape.STAR)
 partConsecrate:set_life(15, 25)
 partConsecrate:set_size(0.08, 0.12, -0.005, 0)
 
-objConsecratedBanner:onCreate(function( inst )
+Callback.add(objConsecratedBanner.on_create, function( inst )
 	inst:move_contact_solid(270, -1)
 
 	inst.life = 12 * 60
 	inst.radius = 360
-	inst.update_rate = 5
+	inst.update_rate = 30
 	inst.consecrate_rate = 90
 	inst.parent = -4
 	inst.scepter = 0
 
 	inst.image_speed = 0.2
 
-	inst:get_data().stars = {}
+	local data = Instance.get_data(inst)
+	data.stars = {}
 end)
 
-objConsecratedBanner:onStep(function( inst )
+Callback.add(objConsecratedBanner.on_step, function( inst )
 	if inst.image_index >= 5 then
 		inst.image_index = 5
 	end
@@ -1390,25 +1394,20 @@ objConsecratedBanner:onStep(function( inst )
 			elseif target.team == inst.parent.team then
 				if gm.actor_is_classic(target.id) then
 					target:buff_apply(knightBannerBuff, inst.update_rate + 1)
+
+					local stars = Instance.get_data(inst).stars
+					if #stars > 0 then
+						stars[1].target = target
+					end
 				else
 					GM.set_buff_time_nosync(target, knightBannerBuff, inst.update_rate + 1)
 				end
 			end
 		end
-
-		local allies = List.wrap(gm.find_characters_circle(inst.x, inst.y, inst.radius, true, inst.parent.team, true))
-		local stars = inst:get_data().stars
-		if #allies > 0 then
-			for i, star in ipairs(stars) do 
-				star.target = allies[math.random(1, #allies)]
-				table.remove(stars, i)
-			end
-		end
-
 	end
 
 	if inst.life % inst.consecrate_rate == 0 then
-		local stars = inst:get_data().stars
+		local stars = Instance.get_data(inst).stars
 		local star = objEfConsecrate:create(inst.x, inst.y - 50)
 		table.insert(stars, star)
 		star.parent = inst.parent
@@ -1426,7 +1425,7 @@ objConsecratedBanner:onStep(function( inst )
 			end
 		end
 
-		local stars = inst:get_data().stars
+		local stars = Instance.get_data(inst).stars
 		print(#stars)
 		for i, star in ipairs(stars) do 
 			star.target = allies[math.random(1, #allies)]
@@ -1437,7 +1436,7 @@ objConsecratedBanner:onStep(function( inst )
 	end
 end)
 
-objConsecratedBanner:onDraw(function( inst )
+Callback.add(objConsecratedBanner.on_draw, function( inst )
 	local a = 0.1 + math.sin(Global._current_frame * 0.02) * 0.025
 	a = a * math.min(1, inst.life / 15)
 
@@ -1458,7 +1457,7 @@ objConsecratedBanner:onDraw(function( inst )
 	gm.draw_set_alpha(1)
 end)
 
-objEfConsecrate:onCreate(function( inst ) -- stolen from the malice formula i am NOT remaking all that man
+Callback.add(objEfConsecrate.on_create, function( inst ) -- stolen from the malice formula i am NOT remaking all that man
 	inst.parent = -4
 	inst.target = -4
 
@@ -1472,7 +1471,7 @@ objEfConsecrate:onCreate(function( inst ) -- stolen from the malice formula i am
 	__quality = Global.__pref_graphics_quality
 end)
 
-objEfConsecrate:onStep(function( inst )
+Callback.add(objEfConsecrate.on_step, function( inst )
 	if not Instance.exists(inst.parent) then self:destroy() return end
 
 	if not Instance.exists(inst.target) then 
@@ -1497,7 +1496,7 @@ objEfConsecrate:onStep(function( inst )
 		
 		if inst.fract + 0.05 > 1 then
 			inst.target:heal(inst.target.maxhp * .05)
-			inst.target:add_barrier(inst.target.maxhp * .1)
+			inst.target:heal_barrier(inst.target.maxhp * .1)
 			inst:destroy()
 		end
 	end
@@ -1506,7 +1505,7 @@ objEfConsecrate:onStep(function( inst )
 
 	for i = 0, __quality - 1 do 
 		local f = (i - 1) / (__quality * 1.5) 
-		partConsecrate:create(inst.x - dx * f * math.cos(Global._current_frame/5), inst.y - dx * f * math.sin(Global._current_frame/5), 1, Particle.SYSTEM.above)
+		partConsecrate:create(inst.x - dx * f * math.cos(Global._current_frame/5), inst.y - dx * f * math.sin(Global._current_frame/5), 1, Particle.System.ABOVE)
 	end
 end)
 
@@ -1516,33 +1515,35 @@ knightConsecrate.subimage = 5
 knightConsecrate.cooldown = 12 * 60
 knightConsecrate.damage = 2
 knightConsecrate.require_key_press = true
-knightConsecrate.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+knightConsecrate.required_interrupt_priority = ActorState.InterruptPriority.SKILL
+knightConsecrate.upgrade_skill = knightConsecrateS
 
-knightConsecrateScepter.sprite = sprite_skills
-knightConsecrateScepter.subimage = 5
-knightConsecrateScepter.cooldown = 12 * 60
-knightConsecrateScepter.damage = 2
-knightConsecrateScepter.require_key_press = true
-knightConsecrateScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
 
-local stateKnightConsecrate = State.new(NAMESPACE, "knightConsecratedBanner")
+knightConsecrateS.sprite = sprite_skills
+knightConsecrateS.subimage = 5
+knightConsecrateS.cooldown = 12 * 60
+knightConsecrateS.damage = 2
+knightConsecrateS.require_key_press = true
+knightConsecrateS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-knightConsecrate:onActivate(function( actor )
-	actor:enter_state(stateKnightConsecrate)
+local stateKnightConsecrate = ActorState.new("knightConsecratedBanner")
+
+Callback.add(knightConsecrate.on_activate, function( actor )
+	actor:set_state(stateKnightConsecrate)
 end)
 
-knightConsecrateScepter:onActivate(function( actor )
-	actor:enter_state(stateKnightConsecrate)
+Callback.add(knightConsecrateS.on_activate, function( actor )
+	actor:set_state(stateKnightConsecrate)
 end)
 
-stateKnightConsecrate:onEnter(function( actor, data )
+Callback.add(stateKnightConsecrate.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3
 	actor.image_speed = 0.5
 	data.fired = 0
 end)
 
-stateKnightConsecrate:onStep(function( actor, data )
+Callback.add(stateKnightConsecrate.on_step, function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor:sound_play(sound_shoot4, .7, 0.9 + math.random() * 0.8)
@@ -1550,22 +1551,21 @@ stateKnightConsecrate:onStep(function( actor, data )
 		if actor:is_authority() then
 			local damage = actor:skill_get_damage(knightConsecrate)
 
-			local buff_shadow_clone = Buff.find("ror", "shadowClone")
-			for i=0, actor:buff_stack_count(buff_shadow_clone) do
+			local buff_shadow_clone = Buff.find("shadowClone")
+			for i=0, actor:buff_count(buff_shadow_clone) do
 				attack = actor:fire_explosion(actor.x, actor.y + 10, 50, 150, damage, gm.constants.sBanditShoot2Explosion, nil, true)
 			end
 		end
 
 		local consecrated_banner = objConsecratedBanner:create(actor.x, actor.y)
 		consecrated_banner.parent = actor
-		consecrated_banner.scepter = actor:item_stack_count(Item.find("ror", "ancientScepter"))
+		consecrated_banner.scepter = actor:item_count(Item.find("ancientScepter"))
 	end
 
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 end) 
 
-stateKnightConsecrate:onExit(function( actor, data )
-	local skill = actor:get_default_skill(Skill.SLOT.special)
-	skill.remove_stock(skill, skill, 1)
+Callback.add(stateKnightConsecrate.on_exit, function( actor, data )
+	actor:get_default_skill(Skill.Slot.SPECIAL):remove_stock()
 end)
