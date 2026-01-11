@@ -5,24 +5,24 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/DuplicatorDrone")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/DuplicatorDrone")
 
-local sprite_idle            = Resources.sprite_load(NAMESPACE, "DupeDroneIdle", path.combine(SPRITE_PATH, "Idle.png"), 4, 7, 10)
-local sprite_idle_broken     = Resources.sprite_load(NAMESPACE, "DupeDroneBrokenIdle", path.combine(SPRITE_PATH, "Idle_broken.png"), 4, 7, 10)
-local sprite_idle_cd         = Resources.sprite_load(NAMESPACE, "DupeDroneIdleCD", path.combine(SPRITE_PATH, "Idle_cd.png"), 4, 7, 10)
-local sprite_idle_broken_cd  = Resources.sprite_load(NAMESPACE, "DupeDroneBrokenIdleCD", path.combine(SPRITE_PATH, "Idle_broken_cd.png"), 4, 7, 10)
-local sprite_activate        = Resources.sprite_load(NAMESPACE, "DupeDroneActivate", path.combine(SPRITE_PATH, "Shoot.png"), 25, 11, 13)
-local sprite_interact        = Resources.sprite_load(NAMESPACE, "DupeDronePurchase", path.combine(SPRITE_PATH, "Object.png"), 1, 11, 20)
+local sprite_idle            = Sprite.new("DupeDroneIdle", path.combine(SPRITE_PATH, "Idle.png"), 4, 7, 10)
+local sprite_idle_broken     = Sprite.new("DupeDroneBrokenIdle", path.combine(SPRITE_PATH, "Idle_broken.png"), 4, 7, 10)
+local sprite_idle_cd         = Sprite.new("DupeDroneIdleCD", path.combine(SPRITE_PATH, "Idle_cd.png"), 4, 7, 10)
+local sprite_idle_broken_cd  = Sprite.new("DupeDroneBrokenIdleCD", path.combine(SPRITE_PATH, "Idle_broken_cd.png"), 4, 7, 10)
+local sprite_activate        = Sprite.new("DupeDroneActivate", path.combine(SPRITE_PATH, "Shoot.png"), 25, 11, 13)
+local sprite_interact        = Sprite.new("DupeDronePurchase", path.combine(SPRITE_PATH, "Object.png"), 1, 11, 20)
 
 
-local fabricatorDrone = Object.new(NAMESPACE, "FabricatorDrone", Object.PARENT.drone)
+local fabricatorDrone = Object.new("FabricatorDrone", Object.Parent.DRONE)
 fabricatorDrone.obj_depth = -202
 fabricatorDrone.obj_sprite = sprite_idle
 
-local fabricatorDronePickup = Object.new(NAMESPACE, "FabricatorDronePickup", Object.PARENT.interactableDrone)
+local fabricatorDronePickup = Object.new("FabricatorDronePickup", Object.Parent.INTERACTABLE_DRONE    )
 fabricatorDronePickup.obj_depth = 90
 fabricatorDronePickup.obj_sprite = sprite_interact
 
 
-fabricatorDrone:onCreate(function( inst )
+Callback.add(fabricatorDrone.on_create, function( inst )
     inst.sprite_idle = sprite_idle
     inst.sprite_idle_broken = sprite_idle_broken
     inst.sprite_shoot1 = sprite_activate
@@ -47,7 +47,7 @@ fabricatorDrone:onCreate(function( inst )
     inst.persistent = 1
 end)
 
-fabricatorDrone:onStep(function( inst )
+Callback.add(fabricatorDrone.on_step, function( inst )
 	local master = inst.master
     
     if not Instance.exists(master) then return end
@@ -76,7 +76,7 @@ fabricatorDrone:onStep(function( inst )
         for _, pickup in ipairs(pickups) do
             local dist = gm.point_distance(master.x, master.y, pickup.x, pickup.y)
 
-            if dist <= 150 and pickup.item_stack_kind == Item.STACK_KIND.normal then -- if an item is sufficiently close by
+            if dist <= 150 and pickup.item_stack_kind == Item.StackKind.NORMAL then -- if an item is sufficiently close by
                 if nearest then
                     if dist < sdist then -- this looks for specifically the closest nearby item
                         nearest = pickup
@@ -114,7 +114,7 @@ fabricatorDrone:onStep(function( inst )
     if inst.sprite_index == inst.sprite_shoot1 or inst.sprite_index == inst.sprite_shoot1_broken then
         if inst.image_index >= 18 and inst.duplicating == 3 then
             local item = Item.wrap(inst.item_id) -- get item
-            item:create(inst.x, inst.y, inst.master).item_stack_kind = Item.STACK_KIND.temporary_blue -- spawn item
+            item:create(inst.x, inst.y, inst.master).item_stack_kind = Item.StackKind.TEMPORARY_BLUE -- spawn item
 
             inst.duplicating = 0
             inst.item = nil
@@ -124,7 +124,7 @@ fabricatorDrone:onStep(function( inst )
     end
 end)
 
-fabricatorDrone:onDraw(function( inst )
+Callback.add(fabricatorDrone.on_draw, function( inst )
 	if inst.duplicating == 1 then
         if not Instance.exists(inst.item) then -- exit if the pickup disappears
             inst.duplicating = 2
@@ -147,7 +147,7 @@ fabricatorDrone:onDraw(function( inst )
         gm.draw_set_alpha(0.5)
         gm.gpu_set_blendmode(1)
 
-        gm.draw_set_colour(Color.TEXT_YELLOW)
+        gm.draw_set_colour(Color.Text.YELLOW)
 		gm.draw_line_width(inst.x, inst.y, inst.item.x, inst.item.y, 5 + math.random() * 2)
 		gm.draw_circle(inst.item.x, inst.item.y, 4 + math.random() * 8, false)
 		gm.draw_circle(inst.x, inst.y, 2 + math.random() * 4, false)
@@ -165,25 +165,25 @@ fabricatorDrone:onDraw(function( inst )
 end)
 
 
-fabricatorDronePickup:onCreate(function( inst )
+Callback.add(fabricatorDronePickup.on_create, function( inst )
     inst:interactable_init(true)
     inst.active = 0
     inst.value.value = 60
     inst.interact_scroll_index = 3
     inst.child = fabricatorDrone.value -- what the interactable spawns
-    inst:interactable_init_cost(inst.value, 0, 50) -- cost setup
+    inst:interactable_init_cost(inst.value, 0, 0) -- cost setup
     inst:interactable_init_name()
 end)
 
-local drone_card = Interactable_Card.new(NAMESPACE, "fabricatorDronePickup")
+local drone_card = InteractableCard.new("fabricatorDronePickup")
 drone_card.object_id = fabricatorDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 75
-drone_card.spawn_weight = 5
+drone_card.spawn_cost = 1
+drone_card.spawn_weight = 500
 drone_card.default_spawn_rarity_override = 1
 
 local stages_loaded = 0
-Callback.add(Callback.TYPE.onGameStart, "SSRFabricatorDroneAddStages", function( )
+Callback.add(Callback.ON_GAME_START, function( )
 	if stages_loaded == 0 then
         stages_loaded = 1
 
