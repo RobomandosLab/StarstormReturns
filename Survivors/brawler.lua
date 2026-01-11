@@ -1,39 +1,38 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Brawler")
 
 
-local sprite_loadout =        Resources.sprite_load(NAMESPACE, "BrawlerSelect", path.combine(SPRITE_PATH, "Select.png"), 13, 2, 0)
-local sprite_portrait =       Resources.sprite_load(NAMESPACE, "BrawlerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
-local sprite_portrait_small = Resources.sprite_load(NAMESPACE, "BrawlerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills =         Resources.sprite_load(NAMESPACE, "BrawlerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
+local sprite_loadout =        Sprite.new("BrawlerSelect", path.combine(SPRITE_PATH, "Select.png"), 13, 2, 0)
+local sprite_portrait =       Sprite.new("BrawlerPortrait", path.combine(SPRITE_PATH, "portrait.png"), 2)
+local sprite_portrait_small = Sprite.new("BrawlerPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills =         Sprite.new("BrawlerSkills", path.combine(SPRITE_PATH, "skills.png"), 9)
 
-local sprite_idle =           Resources.sprite_load(NAMESPACE, "BrawlerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 9, 10)
-local sprite_idle2 =           Resources.sprite_load(NAMESPACE, "BrawlerIdle2", path.combine(SPRITE_PATH, "idle_2.png"), 1, 9, 15)
-local sprite_walk =           Resources.sprite_load(NAMESPACE, "BrawlerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 11, 13)
-local sprite_walk2 =           Resources.sprite_load(NAMESPACE, "BrawlerWalk2", path.combine(SPRITE_PATH, "walk_2.png"), 8, 11, 20)
-local sprite_jump =           Resources.sprite_load(NAMESPACE, "BrawlerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 9, 12)
-local sprite_jump2 =           Resources.sprite_load(NAMESPACE, "BrawlerJump2", path.combine(SPRITE_PATH, "jump_2.png"), 1, 9, 15)
-local sprite_climb =          Resources.sprite_load(NAMESPACE, "BrawlerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 6, 10)
-local sprite_death =          Resources.sprite_load(NAMESPACE, "BrawlerDeath", path.combine(SPRITE_PATH, "death.png"), 9, 12, 12)
-local sprite_decoy =          Resources.sprite_load(NAMESPACE, "BrawlerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 8, 10)
+local sprite_idle =           Sprite.new("BrawlerIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 9, 10)
+local sprite_idle2 =          Sprite.new("BrawlerIdle2", path.combine(SPRITE_PATH, "idle_2.png"), 1, 9, 15)
+local sprite_walk =           Sprite.new("BrawlerWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 11, 13)
+local sprite_walk2 =          Sprite.new("BrawlerWalk2", path.combine(SPRITE_PATH, "walk_2.png"), 8, 11, 20)
+local sprite_jump =           Sprite.new("BrawlerJump", path.combine(SPRITE_PATH, "jump.png"), 1, 9, 12)
+local sprite_jump2 =          Sprite.new("BrawlerJump2", path.combine(SPRITE_PATH, "jump_2.png"), 1, 9, 15)
+local sprite_climb =          Sprite.new("BrawlerClimb", path.combine(SPRITE_PATH, "climb.png"), 2, 6, 10)
+local sprite_death =          Sprite.new("BrawlerDeath", path.combine(SPRITE_PATH, "death.png"), 9, 12, 12)
+local sprite_decoy =          Sprite.new("BrawlerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 8, 10)
 
-local sprite_shoot1_1 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 13, 20)
-local sprite_shoot1_2 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 13, 20)
-local sprite_shoot1_3 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot1_3", path.combine(SPRITE_PATH, "shoot1_3.png"), 9, 13, 20)
-local sprite_shoot1_4 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot1_4", path.combine(SPRITE_PATH, "shoot1_4.png"), 6, 11, 27)
-local sprite_shoot2_1 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot2_1", path.combine(SPRITE_PATH, "shoot2_1.png"), 6, 12, 24)
-local sprite_shoot2_2 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot2_2", path.combine(SPRITE_PATH, "shoot2_2.png"), 4, 14, 22)
-local sprite_shoot3_1 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot3_1", path.combine(SPRITE_PATH, "shoot3_1.png"), 7, 33, 19)
-local sprite_shoot3_2 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot3_2", path.combine(SPRITE_PATH, "shoot3_2.png"), 7, 11, 24)
-local sprite_shoot4_1 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 11, 29, 12)
-local sprite_shoot4_2 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot4_2", path.combine(SPRITE_PATH, "shoot4_2.png"), 10, 15, 21)
-local sprite_shoot4_3 =       Resources.sprite_load(NAMESPACE, "BrawlerShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 10, 10)
+local sprite_shoot1_1 =       Sprite.new("BrawlerShoot1_1", path.combine(SPRITE_PATH, "shoot1_1.png"), 6, 13, 20)
+local sprite_shoot1_2 =       Sprite.new("BrawlerShoot1_2", path.combine(SPRITE_PATH, "shoot1_2.png"), 6, 13, 20)
+local sprite_shoot1_3 =       Sprite.new("BrawlerShoot1_3", path.combine(SPRITE_PATH, "shoot1_3.png"), 9, 13, 20)
+local sprite_shoot1_4 =       Sprite.new("BrawlerShoot1_4", path.combine(SPRITE_PATH, "shoot1_4.png"), 6, 11, 27)
+local sprite_shoot2_1 =       Sprite.new("BrawlerShoot2_1", path.combine(SPRITE_PATH, "shoot2_1.png"), 6, 12, 24)
+local sprite_shoot2_2 =       Sprite.new("BrawlerShoot2_2", path.combine(SPRITE_PATH, "shoot2_2.png"), 4, 14, 22)
+local sprite_shoot3_1 =       Sprite.new("BrawlerShoot3_1", path.combine(SPRITE_PATH, "shoot3_1.png"), 7, 33, 19)
+local sprite_shoot3_2 =       Sprite.new("BrawlerShoot3_2", path.combine(SPRITE_PATH, "shoot3_2.png"), 7, 11, 24)
+local sprite_shoot4_1 =       Sprite.new("BrawlerShoot4_1", path.combine(SPRITE_PATH, "shoot4_1.png"), 11, 29, 12)
+local sprite_shoot4_2 =       Sprite.new("BrawlerShoot4_2", path.combine(SPRITE_PATH, "shoot4_2.png"), 10, 15, 21)
+local sprite_shoot4_3 =       Sprite.new("BrawlerShoot4_3", path.combine(SPRITE_PATH, "shoot4_3.png"), 5, 10, 10)
 
-local sprite_slam =       Resources.sprite_load(NAMESPACE, "BrawlerSlam", path.combine(SPRITE_PATH, "sBrawlerSlam.png"), 6, 61, 37)
+local sprite_slam =           Sprite.new("BrawlerSlam", path.combine(SPRITE_PATH, "sBrawlerSlam.png"), 6, 61, 37)
 
 
 -------- the brawlah
-local brawler = Survivor.new(NAMESPACE, "brawler")
-local brawler_id = brawler.value
+local brawler = Survivor.new("brawler")
 local player_actor = nil
 local grabbed = nil
 
@@ -50,42 +49,44 @@ brawler:set_stats_level({
 	armor = 3
 })
 
-brawler:set_animations({
-	idle = sprite_idle,
-	walk = sprite_walk,
-	jump = sprite_jump,
-	jump_peak = sprite_jump,
-	climb = sprite_climb,
-	death = sprite_death,
-	decoy = sprite_decoy
-})
-
-brawler:set_cape_offset(0,0,0,0)
-brawler:set_primary_color(Color.from_rgb(236,180,124))
+brawler.cape_offset = {0,0,0,0}
+brawler.primary_color = Color.from_rgb(236,180,124)
 
 brawler.sprite_loadout = sprite_loadout
 brawler.sprite_portrait = sprite_portrait
 brawler.sprite_portrait_small = sprite_portrait_small
 brawler.sprite_title = sprite_walk
 
+Callback.add(brawler.on_init, function( actor )
+	actor.sprite_idle = sprite_idle
+	actor.sprite_walk = sprite_walk
+	actor.sprite_jump = sprite_jump
+	actor.sprite_jump_peak = sprite_jump
+	actor.sprite_climb = sprite_climb
+	actor.sprite_death = sprite_death
+	actor.sprite_decoy = sprite_decoy
+end)
 
-local brawlerSelfGrabBuff = Buff.new(NAMESPACE, "brawlerSelfGrabBuff")
+
+local brawlerSelfGrabBuff = Buff.new("brawlerSelfGrabBuff")
 brawlerSelfGrabBuff.show_icon = false
 brawlerSelfGrabBuff.is_timed = false
 
-brawlerSelfGrabBuff:clear_callbacks()
-brawlerSelfGrabBuff:onStatRecalc(function( actor )
-	actor.armor = actor.armor + 100
+RecalculateStats.add(function( actor, api )
+	if actor:buff_count(brawlerSelfGrabBuff) > 0 then
+		api.armor_add(100)
+	end
 end)
 
-local brawlerVictimGrabBuff = Buff.new(NAMESPACE, "brawlerVictimGrabBuff")
+local brawlerVictimGrabBuff = Buff.new("brawlerVictimGrabBuff")
 brawlerVictimGrabBuff.show_icon = false
 brawlerVictimGrabBuff.is_timed = false
 
-brawlerVictimGrabBuff:clear_callbacks()
-brawlerVictimGrabBuff:onPostStatRecalc(function( actor )
-	actor.armor = actor.armor - 100
-	actor.pGravity1 = 0
+RecalculateStats.add(-1, function( actor, api )
+	if actor:buff_count(brawlerVictimGrabBuff) > 0 then
+		api.armor_add(-100)
+		api.pGravity1_add(actor.pGravity1 * -1)
+	end
 end)
 
 local function setGrab( actor, state, victim )
@@ -128,7 +129,7 @@ local function setGrab( actor, state, victim )
 	end
 end
 
-Callback.add(Callback.TYPE.onDeath, "SSBrawlerGrabSync", function(victim, fell_out_of_bounds)
+Callback.add(Callback.ON_DEATH, function(victim, fell_out_of_bounds)
 	if Instance.exists(grabbed) then
 		if grabbed.value == victim.value then
 			setGrab(player_actor, 0)
@@ -136,8 +137,7 @@ Callback.add(Callback.TYPE.onDeath, "SSBrawlerGrabSync", function(victim, fell_o
 	end
 end)
 
-brawler:clear_callbacks()
-brawler:onStep(function( actor )
+Callback.add(brawler.on_step, function( actor )
 	if Instance.exists(grabbed) then
 		grabbed.x = actor.x + 10 * actor.image_xscale
 		grabbed.y = actor.y - 20
@@ -148,10 +148,10 @@ brawler:onStep(function( actor )
 	end
 end)
 
-local brawlerPrimary =   brawler:get_primary()
-local brawlerSecondary = brawler:get_secondary()
-local brawlerUtility =   brawler:get_utility()
-local brawlerSpecial =   brawler:get_special()
+local brawlerPrimary =   brawler:get_skills(Skill.Slot.PRIMARY)[1]
+local brawlerSecondary = brawler:get_skills(Skill.Slot.SECONDARY)[1]
+local brawlerUtility =   brawler:get_skills(Skill.Slot.UTILITY)[1]
+local brawlerSpecial =   brawler:get_skills(Skill.Slot.SPECIAL)[1]
 
 
 -------- WAVE PUMMEL!
@@ -167,14 +167,13 @@ brawlerPrimary.require_key_press = false
 brawlerPrimary.is_primary = true
 brawlerPrimary.does_change_activity_state = true
 brawlerPrimary.hold_facing_direction = true
-brawlerPrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+brawlerPrimary.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
-local stateBrawlerPrimary1 = State.new(NAMESPACE, "brawlerPrimary1")
-local stateBrawlerPrimary2 = State.new(NAMESPACE, "brawlerPrimary2")
-local stateBrawlerPrimary3 = State.new(NAMESPACE, "brawlerPrimary3")
+local stateBrawlerPrimary1 = ActorState.new("brawlerPrimary1")
+local stateBrawlerPrimary2 = ActorState.new("brawlerPrimary2")
+local stateBrawlerPrimary3 = ActorState.new("brawlerPrimary3")
 
-brawlerPrimary:clear_callbacks()
-brawlerPrimary:onActivate(function( actor )
+Callback.add(brawlerPrimary.on_activate, function( actor )
 	if Global._current_frame - combo_time <= combo_window then
 		combo = combo + 1
 	else
@@ -182,24 +181,23 @@ brawlerPrimary:onActivate(function( actor )
 	end
 
 	if combo == 0 then
-		actor:enter_state(stateBrawlerPrimary1)
+		actor:set_state(stateBrawlerPrimary1)
 	elseif combo == 1 then
-		actor:enter_state(stateBrawlerPrimary2)
+		actor:set_state(stateBrawlerPrimary2)
 	else
-		actor:enter_state(stateBrawlerPrimary3)
+		actor:set_state(stateBrawlerPrimary3)
 	end
 
 	combo_time = Global._current_frame
 end)
 
-stateBrawlerPrimary1:clear_callbacks()
-stateBrawlerPrimary1:onEnter(function( actor, data )
+Callback.add(stateBrawlerPrimary1.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_1
 	data.fired = 0
 end)
 
-stateBrawlerPrimary1:onStep(function( actor, data )
+Callback.add(stateBrawlerPrimary1.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 	actor:actor_animation_set(actor.sprite_index, 0.2)
@@ -213,8 +211,8 @@ stateBrawlerPrimary1:onStep(function( actor, data )
 			local dir = actor.image_xscale
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage)
 				end
 			end
@@ -226,14 +224,13 @@ stateBrawlerPrimary1:onStep(function( actor, data )
 	end
 end)
 
-stateBrawlerPrimary2:clear_callbacks()
-stateBrawlerPrimary2:onEnter(function( actor, data )
+Callback.add(stateBrawlerPrimary2.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_2
 	data.fired = 0
 end)
 
-stateBrawlerPrimary2:onStep(function( actor, data )
+Callback.add(stateBrawlerPrimary2.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 	actor:actor_animation_set(actor.sprite_index, 0.2)
@@ -247,8 +244,8 @@ stateBrawlerPrimary2:onStep(function( actor, data )
 			local dir = actor.image_xscale
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage)
 				end
 			end
@@ -260,14 +257,13 @@ stateBrawlerPrimary2:onStep(function( actor, data )
 	end
 end)
 
-stateBrawlerPrimary3:clear_callbacks()
-stateBrawlerPrimary3:onEnter(function( actor, data )
+Callback.add(stateBrawlerPrimary3.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot1_3
 	data.fired = 0
 end)
 
-stateBrawlerPrimary3:onStep(function( actor, data )
+Callback.add(stateBrawlerPrimary3.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 	actor:actor_animation_set(actor.sprite_index, 0.25)
@@ -281,8 +277,8 @@ stateBrawlerPrimary3:onStep(function( actor, data )
 			local dir = actor.image_xscale
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack = actor:fire_explosion(actor.x + dir * 30, actor.y, 100, 50, damage * 1.25)
 					attack.attack_info.knockup = 4
 				end
@@ -299,17 +295,15 @@ brawlerSecondary.subimage = 1
 brawlerSecondary.cooldown = 3 * 60
 brawlerSecondary.damage = 2.5
 brawlerSecondary.require_key_press = true
-brawlerSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+brawlerSecondary.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateBrawlerSecondary = State.new(NAMESPACE, "brawlerSecondary")
+local stateBrawlerSecondary = ActorState.new("brawlerSecondary")
 
-brawlerSecondary:clear_callbacks()
-brawlerSecondary:onActivate(function( actor )
-	actor:enter_state(stateBrawlerSecondary)
+Callback.add(brawlerSecondary.on_activate, function( actor )
+	actor:set_state(stateBrawlerSecondary)
 end)
 
-stateBrawlerSecondary:clear_callbacks()
-stateBrawlerSecondary:onEnter(function( actor, data )
+Callback.add(stateBrawlerSecondary.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot2_1
 	actor.image_speed = 0.25
@@ -317,7 +311,7 @@ stateBrawlerSecondary:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateBrawlerSecondary:onStep(function( actor, data )
+Callback.add(stateBrawlerSecondary.on_step, function( actor, data )
 	if data.fired == 0 then
 		data.fired = 1
 		actor.pVspeed = -1.5 * actor.pVmax
@@ -328,8 +322,8 @@ stateBrawlerSecondary:onStep(function( actor, data )
 
 
 			if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					attack = actor:fire_explosion(actor.x + 20 * dir, actor.y - 20, 60, 100, damage)
 					attack.attack_info.knockup = 8
 				end
@@ -342,23 +336,22 @@ stateBrawlerSecondary:onStep(function( actor, data )
 end)
 
 
+
 -------- EARTHSHATTER DIVE!
 brawlerUtility.sprite = sprite_skills
 brawlerUtility.subimage = 2
 brawlerUtility.cooldown = 5 * 60
 brawlerUtility.damage = 15
 brawlerUtility.require_key_press = true
-brawlerUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+brawlerUtility.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateBrawlerUtility = State.new(NAMESPACE, "brawlerUtility")
+local stateBrawlerUtility = ActorState.new("brawlerUtility")
 
-brawlerUtility:clear_callbacks()
-brawlerUtility:onActivate(function( actor )
-	actor:enter_state(stateBrawlerUtility)
+Callback.add(brawlerUtility.on_activate, function( actor )
+	actor:set_state(stateBrawlerUtility)
 end)
 
-stateBrawlerUtility:clear_callbacks()
-stateBrawlerUtility:onEnter(function( actor, data )
+Callback.add(stateBrawlerUtility.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot3_1
 	actor.image_speed = 0.25
@@ -368,7 +361,7 @@ stateBrawlerUtility:onEnter(function( actor, data )
 	data.final_speed = 0
 end)
 
-stateBrawlerUtility:onStep(function( actor, data )
+Callback.add(stateBrawlerUtility.on_step, function( actor, data )
 	if data.substate == 0 then
 		actor.pVspeed = -1/(1 + data.step/3) * actor.pVmax
 
@@ -382,7 +375,7 @@ stateBrawlerUtility:onStep(function( actor, data )
 		end
 		
 		actor.pVspeed = actor.pVspeed + actor.pVmax * 0.075
-		actor:set_immune(3)
+		actor.invincible = math.max(8, actor.invincible)
 
 		if not gm.bool(actor.free) then
 			data.substate = 2
@@ -398,11 +391,10 @@ stateBrawlerUtility:onStep(function( actor, data )
 				print(damage)
 
 				if not GM.skill_util_update_heaven_cracker(actor, damage, actor.image_xscale) then 
-					local buff_shadow_clone = Buff.find("ror", "shadowClone")
-					for i=0, actor:buff_stack_count(buff_shadow_clone) do
+					local buff_shadow_clone = Buff.find("shadowClone")
+					for i=0, actor:buff_count(buff_shadow_clone) do
 						attack = actor:fire_explosion(actor.x, actor.y, 120, 100, damage, sprite_slam)
-						attack.attack_info:allow_stun()
-						attack.attack_info:set_stun(1.5, dir, standard)
+						attack.attack_info.stun = 1.5
 						attack.attack_info.knockback = 3
 						attack.attack_info.knockup = 5
 					end
@@ -419,29 +411,28 @@ stateBrawlerUtility:onStep(function( actor, data )
 end)
 
 
+
 -------- GRAB!
 brawlerSpecial.sprite = sprite_skills
 brawlerSpecial.subimage = 3
 brawlerSpecial.cooldown = 5 * 60
 brawlerSpecial.damage = 0
 brawlerSpecial.require_key_press = true
-brawlerSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+brawlerSpecial.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateBrawlerSpecial = State.new(NAMESPACE, "brawlerSpecial")
+local stateBrawlerSpecial = ActorState.new("brawlerSpecial")
 
-brawlerSpecial:clear_callbacks()
-brawlerSpecial:onActivate(function( actor )
-	actor:enter_state(stateBrawlerSpecial)
+Callback.add(brawlerSpecial.on_activate, function( actor )
+	actor:set_state(stateBrawlerSpecial)
 end)
 
-stateBrawlerSpecial:clear_callbacks()
-stateBrawlerSpecial:onEnter(function( actor, data )
+Callback.add(stateBrawlerSpecial.on_enter, function( actor, data )
 	actor.image_index = 0
 	actor.sprite_index = sprite_shoot4_1
 	actor.image_speed = 0.35
 end)
 
-stateBrawlerSpecial:onStep(function( actor, data )
+Callback.add(stateBrawlerSpecial.on_step, function( actor, data )
 	actor.pHspeed = actor.pHmax * 3 * actor.image_xscale
 
 		local targets = List.new()
