@@ -2,59 +2,57 @@ local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Nucleator")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Nucleator")
 
 -- sprites
-local sprite_loadout			= Resources.sprite_load(NAMESPACE, "NukeSelect", path.combine(SPRITE_PATH, "select.png"), 16, 2, 0)
-local sprite_portrait			= Resources.sprite_load(NAMESPACE, "NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
-local sprite_portrait_small		= Resources.sprite_load(NAMESPACE, "NukePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_skills				= Resources.sprite_load(NAMESPACE, "NukeSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
+local sprite_loadout			= Sprite.new("NukeSelect", path.combine(SPRITE_PATH, "select.png"), 16, 2, 0)
+local sprite_portrait			= Sprite.new("NukePortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
+local sprite_portrait_small		= Sprite.new("NukePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
+local sprite_skills				= Sprite.new("NukeSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 
-local sprite_idle				= Resources.sprite_load(NAMESPACE, "NukeIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 17, 18)
-local sprite_idle_half			= Resources.sprite_load(NAMESPACE, "NukeIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 8, 9)
-local sprite_walk				= Resources.sprite_load(NAMESPACE, "NukeWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 18, 19)
-local sprite_walk_half			= Resources.sprite_load(NAMESPACE, "NukeWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 18, 19)
-local sprite_jump_start			= Resources.sprite_load(NAMESPACE, "NukeJumpStart", path.combine(SPRITE_PATH, "jump_start.png"), 1, 19, 17)
-local sprite_jump_start_half	= Resources.sprite_load(NAMESPACE, "NukeJumpStartHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 19, 17)
-local sprite_jump_peak			= Resources.sprite_load(NAMESPACE, "NukeJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 19, 17)
-local sprite_jump_peak_half		= Resources.sprite_load(NAMESPACE, "NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 19, 17)
-local sprite_jump_fall			= Resources.sprite_load(NAMESPACE, "NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 19, 17)
-local sprite_jump_fall_half		= Resources.sprite_load(NAMESPACE, "NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 19, 17)
-local sprite_climb				= Resources.sprite_load(NAMESPACE, "NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 16, 25)
-local sprite_death				= Resources.sprite_load(NAMESPACE, "NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
-local sprite_decoy				= Resources.sprite_load(NAMESPACE, "NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
+local sprite_idle				= Sprite.new("NukeIdle", path.combine(SPRITE_PATH, "idle.png"), 1, 17, 18)
+local sprite_idle_half			= Sprite.new("NukeIdleHalf", path.combine(SPRITE_PATH, "idle_half.png"), 1, 8, 9)
+local sprite_walk				= Sprite.new("NukeWalk", path.combine(SPRITE_PATH, "walk.png"), 8, 18, 19)
+local sprite_walk_half			= Sprite.new("NukeWalkHalf", path.combine(SPRITE_PATH, "walk_half.png"), 8, 18, 19)
+local sprite_jump_start			= Sprite.new("NukeJumpStart", path.combine(SPRITE_PATH, "jump_start.png"), 1, 19, 17)
+local sprite_jump_start_half	= Sprite.new("NukeJumpStartHalf", path.combine(SPRITE_PATH, "jump_start_half.png"), 1, 19, 17)
+local sprite_jump_peak			= Sprite.new("NukeJumpPeak", path.combine(SPRITE_PATH, "jump_peak.png"), 1, 19, 17)
+local sprite_jump_peak_half		= Sprite.new("NukeJumpPeakHalf", path.combine(SPRITE_PATH, "jump_peak_half.png"), 1, 19, 17)
+local sprite_jump_fall			= Sprite.new("NukeJumpFall", path.combine(SPRITE_PATH, "jump_fall.png"), 1, 19, 17)
+local sprite_jump_fall_half		= Sprite.new("NukeJumpFallHalf", path.combine(SPRITE_PATH, "jump_fall_half.png"), 1, 19, 17)
+local sprite_climb				= Sprite.new("NukeClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 16, 25)
+local sprite_death				= Sprite.new("NukeDeath", path.combine(SPRITE_PATH, "death.png"), 5, 5, 9)
+local sprite_decoy				= Sprite.new("NukeDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 9, 10)
 
-local sprite_shoot1				= Resources.sprite_load(NAMESPACE, "NukeShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 19, 10, 26)
-local sprite_shoot1_half		= Resources.sprite_load(NAMESPACE, "NukeShoot1Half", path.combine(SPRITE_PATH, "shoot1_half.png"), 19, 10, 26)
-local sprite_shoot2				= Resources.sprite_load(NAMESPACE, "NukeShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 23, 10, 12)
-local sprite_shoot2_half		= Resources.sprite_load(NAMESPACE, "NukeShoot2Half", path.combine(SPRITE_PATH, "shoot2_half.png"), 23, 10, 12)
-local sprite_shoot3				= Resources.sprite_load(NAMESPACE, "NukeShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 16, 15, 24)
-local sprite_shoot4				= Resources.sprite_load(NAMESPACE, "NukeShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 6, 11, 12)
-local sprite_shoot4S			= Resources.sprite_load(NAMESPACE, "NukeShoot4S", path.combine(SPRITE_PATH, "shoot4S.png"), 6, 11, 12)
+local sprite_shoot1				= Sprite.new("NukeShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 19, 10, 26)
+local sprite_shoot1_half		= Sprite.new("NukeShoot1Half", path.combine(SPRITE_PATH, "shoot1_half.png"), 19, 10, 26)
+local sprite_shoot2				= Sprite.new("NukeShoot2", path.combine(SPRITE_PATH, "shoot2.png"), 23, 10, 12)
+local sprite_shoot2_half		= Sprite.new("NukeShoot2Half", path.combine(SPRITE_PATH, "shoot2_half.png"), 23, 10, 12)
+local sprite_shoot3				= Sprite.new("NukeShoot3", path.combine(SPRITE_PATH, "shoot3.png"), 16, 15, 24)
+local sprite_shoot4				= Sprite.new("NukeShoot4", path.combine(SPRITE_PATH, "shoot4.png"), 6, 11, 12)
+local sprite_shoot4S			= Sprite.new("NukeShoot4S", path.combine(SPRITE_PATH, "shoot4S.png"), 6, 11, 12)
 
-local sprite_bar				= Resources.sprite_load(NAMESPACE, "NukeBar", path.combine(SPRITE_PATH, "bar.png"), 1, 19, 9)
-local sprite_sparks				= Resources.sprite_load(NAMESPACE, "NukeSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 13, 8)
-local sprite_bullet				= Resources.sprite_load(NAMESPACE, "NukeBullet", path.combine(SPRITE_PATH, "bullet.png"), 4, 10, 5)
-local sprite_explosion			= Resources.sprite_load(NAMESPACE, "NukeBulletExplosion", path.combine(SPRITE_PATH, "bulletExplosion.png"), 6, 11, 10)
-local sprite_push				= Resources.sprite_load(NAMESPACE, "NukePush", path.combine(SPRITE_PATH, "push.png"), 4, 22, 15)
-local sprite_push_blast			= Resources.sprite_load(NAMESPACE, "NukePushBlast", path.combine(SPRITE_PATH, "push_blast.png"), 6, 10, 12)
+local sprite_bar				= Sprite.new("NukeBar", path.combine(SPRITE_PATH, "bar.png"), 1, 19, 9)
+local sprite_sparks				= Sprite.new("NukeSparks", path.combine(SPRITE_PATH, "sparks.png"), 3, 13, 8)
+local sprite_bullet				= Sprite.new("NukeBullet", path.combine(SPRITE_PATH, "bullet.png"), 4, 10, 5)
+local sprite_explosion			= Sprite.new("NukeBulletExplosion", path.combine(SPRITE_PATH, "bulletExplosion.png"), 6, 11, 10)
+local sprite_push				= Sprite.new("NukePush", path.combine(SPRITE_PATH, "push.png"), 4, 22, 15)
+local sprite_push_blast			= Sprite.new("NukePushBlast", path.combine(SPRITE_PATH, "push_blast.png"), 6, 10, 12)
 
 
 -- sounds
-local sound_alarm				= Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "alarm.ogg"))
-local sound_shoot1a				= Resources.sfx_load(NAMESPACE, "NukeShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
-local sound_shoot1b				= Resources.sfx_load(NAMESPACE, "NukeShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
-local sound_shoot1c				= Resources.sfx_load(NAMESPACE, "NukeShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
-local sound_shoot2				= Resources.sfx_load(NAMESPACE, "NukeShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
-local sound_shoot3a				= Resources.sfx_load(NAMESPACE, "NukeShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
-local sound_shoot3b				= Resources.sfx_load(NAMESPACE, "NukeShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
-local sound_shoot3c				= Resources.sfx_load(NAMESPACE, "NukeShoot3c", path.combine(SOUND_PATH, "skill3c.ogg"))
-local sound_shoot4a				= Resources.sfx_load(NAMESPACE, "NukeShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
-local sound_shoot4b				= Resources.sfx_load(NAMESPACE, "NukeShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
-local sound_shoot4c				= Resources.sfx_load(NAMESPACE, "NukeShoot4c", path.combine(SOUND_PATH, "skill4c.ogg"))
+local sound_alarm				= Sound.new("NukeShoot1a", path.combine(SOUND_PATH, "alarm.ogg"))
+local sound_shoot1a				= Sound.new("NukeShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
+local sound_shoot1b				= Sound.new("NukeShoot1b", path.combine(SOUND_PATH, "skill1b.ogg"))
+local sound_shoot1c				= Sound.new("NukeShoot1c", path.combine(SOUND_PATH, "skill1c.ogg"))
+local sound_shoot2				= Sound.new("NukeShoot2", path.combine(SOUND_PATH, "skill2.ogg"))
+local sound_shoot3a				= Sound.new("NukeShoot3a", path.combine(SOUND_PATH, "skill3a.ogg"))
+local sound_shoot3b				= Sound.new("NukeShoot3b", path.combine(SOUND_PATH, "skill3b.ogg"))
+local sound_shoot3c				= Sound.new("NukeShoot3c", path.combine(SOUND_PATH, "skill3c.ogg"))
+local sound_shoot4a				= Sound.new("NukeShoot4a", path.combine(SOUND_PATH, "skill4a.ogg"))
+local sound_shoot4b				= Sound.new("NukeShoot4b", path.combine(SOUND_PATH, "skill4b.ogg"))
+local sound_shoot4c				= Sound.new("NukeShoot4c", path.combine(SOUND_PATH, "skill4c.ogg"))
 
 
 -------- THE NUCLEATORRRRRR!!!!
-local nuke = Survivor.new(NAMESPACE, "nucleator")
-local nuke_id = nuke.value
-
+local nuke = Survivor.new("nucleator")
 
 local APPLY_RADIATION_TAG = 1
 local RADIATION_TICK_SPEED = 2 * 60
@@ -65,7 +63,6 @@ local UTIL_HSPEED_MIN = 1.5
 local UTIL_HSPEED_FACTOR = 6
 local UTIL_VSPEED_MIN = 1
 local UTIL_VSPEED_FACTOR = 4
-
 
 nuke:set_stats_base({
 	maxhp = 115,
@@ -80,27 +77,24 @@ nuke:set_stats_level({
 	armor = 2
 })
 
-nuke:set_animations({
-	idle = sprite_idle,
-	walk = sprite_walk,
-	jump = sprite_jump_start,
-	jump_peak = sprite_jump_peak,
-	jump_fall = sprite_jump_fall,
-	climb = sprite_climb,
-	death = sprite_death,
-	decoy = sprite_decoy
-})
-
-nuke:set_cape_offset(0,0,0,0)
-nuke:set_primary_color(Color.from_rgb(255,250,0)) -- god hes so gross
+nuke.cape_offset = {0,0,0,0}
+nuke.primary_color = Color.from_rgb(255,250,0) -- god hes so gross
 
 nuke.sprite_loadout = sprite_loadout
 nuke.sprite_portrait = sprite_portrait
 nuke.sprite_portrait_small = sprite_portrait_small
 nuke.sprite_title = sprite_walk
 
-nuke:clear_callbacks()
-nuke:onInit(function(actor)
+Callback.add(nuke.on_init, function( actor )
+	actor.sprite_idle = sprite_idle
+	actor.sprite_walk = sprite_walk
+	actor.sprite_jump = sprite_jump_start
+	actor.sprite_jump_peak = sprite_jump_peak
+	actor.sprite_jump_fall = sprite_jump_fall
+	actor.sprite_climb = sprite_climb
+	actor.sprite_death = sprite_death
+	actor.sprite_decoy = sprite_decoy
+
 	local idle_half = Array.new({sprite_idle, sprite_idle_half, 0})
 	local walk_half = Array.new({sprite_walk, sprite_walk_half, 0, sprite_walk})
 	local jump_half = Array.new({sprite_jump_start, sprite_jump_start_half, 0})
@@ -115,34 +109,29 @@ nuke:onInit(function(actor)
 end)
 
 
-local nukePrimary    = nuke:get_primary()
-local nukeSecondary  = nuke:get_secondary()
-local nukeUtility    = nuke:get_utility()
-local nukeSpecial    = nuke:get_special()
-local nukeSpecialScepter = Skill.new(NAMESPACE, "nukeSpecialBoosted")
-nukeSpecial:set_skill_upgrade(nukeSpecialScepter)
+local nukePrimary    = nuke:get_skills(Skill.Slot.PRIMARY)[1]
+local nukeSecondary  = nuke:get_skills(Skill.Slot.SECONDARY)[1]
+local nukeUtility    = nuke:get_skills(Skill.Slot.UTILITY)[1]
+local nukeSpecial    = nuke:get_skills(Skill.Slot.SPECIAL)[1]
+local nukeSpecialS = Skill.new("nukeSpecialBoosted")
 
 
 -- buffs
-local selfRadiation = Buff.new(NAMESPACE, "NukeSelfRad")
+local selfRadiation = Buff.new("NukeSelfRad")
 selfRadiation.icon_sprite = gm.constants.sBuffs
 selfRadiation.icon_subimage = 9
 selfRadiation.max_stack = 3
 selfRadiation.draw_stack_number = true
 selfRadiation.is_timed = false
 
-selfRadiation:clear_callbacks()
-
-local enemyRadiation = Buff.new(NAMESPACE, "NukeEnemyRad")
+local enemyRadiation = Buff.new("NukeEnemyRad")
 enemyRadiation.is_debuff = true
 enemyRadiation.icon_sprite = gm.constants.sBuffs
 enemyRadiation.icon_subimage = 9
 enemyRadiation.max_stack = 1
 
-enemyRadiation:clear_callbacks()
-
-enemyRadiation:onPostStep(function( actor, stacks )
-	local data = actor:get_data("ssr_radiation")
+Callback.add(enemyRadiation.on_step, function( actor )
+	local data = Instance.get_data(actor, "ssr_radiation")
 	local tick = data.radiation_tick
 	local attacker = data.attacker
 
@@ -160,13 +149,13 @@ enemyRadiation:onPostStep(function( actor, stacks )
 	end
 end)
 
-Callback.add(Callback.TYPE.onAttackHit, "SSRNukeOnHit", function( hit_info )
+Callback.add(Callback.ON_ATTACK_HIT, function( hit_info )
 	local radiation_tag = hit_info.attack_info.__ssr_nuke_radiation
 
 	if radiation_tag == APPLY_RADIATION_TAG then
 		local victim = hit_info.target
 
-		local data = victim:get_data("ssr_radiation")
+		local data = Instance.get_data(victim, "ssr_radiation")
 		data.attacker = hit_info.inflictor
 
 		victim:buff_apply(enemyRadiation, ENEMY_RADIATION_DURATION, 1)
@@ -180,9 +169,9 @@ local charge_limit = 60
 local overcharge_limit = charge_limit * 1.5
 
 local function NukeChargeStart( actor )
-	local data = actor:get_data()
+	local data = Instance.get_data(actor)
 
-	if actor:buff_stack_count(selfRadiation) > 0 then
+	if actor:buff_count(selfRadiation) > 0 then
 		data.charge = charge_limit
 	else
 		data.charge = 0
@@ -190,7 +179,7 @@ local function NukeChargeStart( actor )
 end
 
 local function NukeChargeStep(actor)
-	local data = actor:get_data()
+	local data = Instance.get_data(actor)
 	if not Instance.exists(data.charge_bar) then return end
 
 	data.charge_tick = data.charge_tick + 1
@@ -199,7 +188,7 @@ local function NukeChargeStep(actor)
 		data.charge = data.charge + charge_rate
 		data.charge_tick = 0
 
-		if data.charge > charge_limit and actor:buff_stack_count(selfRadiation) == 0 then
+		if data.charge > charge_limit and actor:buff_count(selfRadiation) == 0 then
 			local dmg = actor.hp * 0.1
 			gm.damage_inflict(actor.id, dmg, 10, -25, actor.x, actor.y, dmg, 1, nuke.primary_color)
 		end
@@ -209,7 +198,7 @@ local function NukeChargeStep(actor)
 end
 
 local function NukeChargeRelease(actor)
-	local data = actor:get_data()
+	local data = Instance.get_data(actor)
 	if not Instance.exists(data.charge_bar) then return end
 
 	local ratio = data.charge/overcharge_limit
@@ -218,18 +207,18 @@ local function NukeChargeRelease(actor)
 
 	data.charge = 0
 	data.charge_tick = 0
-	if actor:buff_stack_count(selfRadiation) > 0 then
+	if actor:buff_count(selfRadiation) > 0 then
 		actor:buff_remove(selfRadiation, 1)
 	end
 
 	return ratio, undercharge, overcharge
 end
 
-local objChargeBar = Object.new(NAMESPACE, "NukeChargeBar")
+local objChargeBar = Object.new("NukeChargeBar")
 objChargeBar.obj_depth = -1000
 
-nuke:onStep(function( actor )
-	data = actor:get_data()
+Callback.add(nuke.on_step, function( actor )
+	local data = Instance.get_data(actor)
 
 	if not Instance.exists(data.charge_bar) then
 		data.charge_bar = objChargeBar:create()
@@ -239,23 +228,23 @@ nuke:onStep(function( actor )
 	end
 end)
 
-objChargeBar:clear_callbacks()
-objChargeBar:onCreate(function( inst )
+Callback.add(objChargeBar.on_create, function( inst )
 	inst.parent = -4
 	inst.persistent = true
 end)
-objChargeBar:onStep(function( inst )
+
+Callback.add(objChargeBar.on_step, function( inst )
 	if not GM.actor_is_alive(inst.parent) then
 		inst:destroy()
 	end
 end)
 
-objChargeBar:onDraw(function( inst )
+Callback.add(objChargeBar.on_draw, function( inst )
 	if not Instance.exists(inst.parent) then return end
-	if inst.parent:get_data().charge <= 0 and inst.parent:get_data().charge_tick == 0 then return end
+	if Instance.get_data(inst.parent).charge <= 0 and Instance.get_data(inst.parent).charge_tick == 0 then return end
 
 	local actor = inst.parent
-	local data = actor:get_data()
+	local data = Instance.get_data(actor)
 
 	local x, y = math.floor(actor.ghost_x+0.5), math.floor(actor.ghost_y+0.5)
 	local x = x + 1
@@ -276,16 +265,15 @@ objChargeBar:onDraw(function( inst )
 	end
 	gm.draw_rectangle(bar_left, bar_top, bar_left + bar_width * ratio, bar_bottom, false)
 
-	gm.draw_sprite(sprite_bar, 0, x, y)
+	GM.draw_sprite(sprite_bar, 0, x, y)
 end)
 
 
 -------- IRRADIATE
-local objNukeBullet = Object.new(NAMESPACE, "NucleatorBullet")
+local objNukeBullet = Object.new("NucleatorBullet")
 objNukeBullet:set_sprite(sprite_bullet)
 
-objNukeBullet:clear_callbacks()
-objNukeBullet:onCreate(function( inst )
+Callback.add(objNukeBullet.on_create, function( inst )
 	inst.parent = -4
 	inst.initial_speed = 5
 	inst.speed = inst.initial_speed
@@ -296,7 +284,7 @@ objNukeBullet:onCreate(function( inst )
 	inst.overcharge = 0
 end)
 
-objNukeBullet:onStep(function( inst )
+Callback.add(objNukeBullet.on_step, function( inst )
 	if not Instance.exists(inst.parent) then
 		inst:destroy()
 		return
@@ -323,14 +311,14 @@ objNukeBullet:onStep(function( inst )
 	end
 end)
 
-objNukeBullet:onDestroy(function( inst )
+Callback.add(objNukeBullet.on_destroy, function( inst )
 	if not Instance.exists(inst.parent) then return end
 
 	local damage = inst.ratio <= charge_limit/overcharge_limit and math.max(1.0, inst.parent:skill_get_damage(nukePrimary) * (inst.ratio/(charge_limit/overcharge_limit))) or 10.0 * inst.ratio
 
 	if inst.parent:is_authority() then
-		local buff_shadow_clone = Buff.find("ror", "shadowClone")
-		for i=0, inst.parent:buff_stack_count(buff_shadow_clone) do
+		local buff_shadow_clone = Buff.find("shadowClone")
+		for i=0, inst.parent:buff_count(buff_shadow_clone) do
 			local attack = inst.parent:fire_explosion(inst.x, inst.y, 50, 50, damage, sprite_explosion).attack_info
 			attack.climb = i * 8
 
@@ -359,17 +347,16 @@ nukePrimary.require_key_press = false
 nukePrimary.is_primary = true
 nukePrimary.does_change_activity_state = true
 nukePrimary.hold_facing_direction = true
-nukePrimary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.any
+nukePrimary.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
-local stateNukePrimary = State.new(NAMESPACE, "nukePrimary")
-local stateNukePrimaryFire = State.new(NAMESPACE, "nukeFirePrimary")
+local stateNukePrimary = ActorState.new("nukePrimary")
+local stateNukePrimaryFire = ActorState.new("nukeFirePrimary")
 
-nukePrimary:clear_callbacks()
-nukePrimary:onActivate(function( actor )
-	actor:enter_state(stateNukePrimary)
+Callback.add(nukePrimary.on_activate, function( actor )
+	actor:set_state(stateNukePrimary)
 end)
 
-stateNukePrimary:onEnter(function( actor, data )
+Callback.add(stateNukePrimary.on_enter, function( actor, data )
 	actor.image_index2 = 0
 
 	data.exit_index = 15
@@ -380,19 +367,19 @@ stateNukePrimary:onEnter(function( actor, data )
 	NukeChargeStart(actor)
 end)
 
-stateNukePrimary:onStep(function( actor, data )
+Callback.add(stateNukePrimary.on_step, function( actor, data )
 	actor.sprite_index2 = sprite_shoot1_half
 	actor:skill_util_strafe_update(data.exit_index/overcharge_limit, 0.2)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
-	if actor:is_authority() and ((not actor:control("skill1", 0) and actor:get_data().charge > 0) or NukeChargeStep(actor) == 1) then
-		GM.actor_set_state_networked(actor, stateNukePrimaryFire)
+	if actor:is_authority() and ((not actor:control("skill1", 0) and Instance.get_data(actor).charge > 0) or NukeChargeStep(actor) == 1) then
+		actor:set_state(stateNukePrimaryFire)
 	end
 end)
 
 
-stateNukePrimaryFire:onEnter(function( actor, data )
+Callback.add(stateNukePrimaryFire.on_enter, function( actor, data )
 	actor.image_index = 15
 	actor.sprite_index = sprite_shoot1
 
@@ -402,7 +389,7 @@ stateNukePrimaryFire:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateNukePrimaryFire:onStep(function( actor, data )
+Callback.add(stateNukePrimaryFire.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 	actor:actor_animation_set(actor.sprite_index, 0.2)
@@ -421,12 +408,12 @@ stateNukePrimaryFire:onStep(function( actor, data )
 end)
 
 
+
 -------- QUARANTINE
-local objNukePush = Object.new(NAMESPACE, "NucleatorPush")
+local objNukePush = Object.new("NucleatorPush")
 objNukePush:set_sprite(sprite_push)
 
-objNukePush:clear_callbacks()
-objNukePush:onCreate(function( inst )
+Callback.add(objNukePush.on_create, function( inst )
 	inst.parent = -4
 	inst.ratio = 0
 	inst.overcharge = 0
@@ -437,11 +424,11 @@ objNukePush:onCreate(function( inst )
 	inst.life = 0
 
 	inst.hit_delay = 15
-	data = inst:get_data()
+	data = Instance.get_data(inst)
 	data.hit_list = {}
 end)
 
-objNukePush:onStep(function( inst )
+Callback.add(objNukePush.on_step, function( inst )
 	if not Instance.exists(inst.parent) then
 		inst:destroy()
 		return
@@ -458,7 +445,7 @@ objNukePush:onStep(function( inst )
 		inst:destroy()
 	end
 
-	local data = inst:get_data()
+	local data = Instance.get_data(inst)
 	local collisions = inst:get_collisions(gm.constants.pActorCollisionBase)
 
 	for _, actor in ipairs(collisions) do
@@ -486,17 +473,16 @@ nukeSecondary.damage = 3.0
 nukeSecondary.require_key_press = false
 nukeSecondary.does_change_activity_state = true
 nukeSecondary.hold_facing_direction = true
-nukeSecondary.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+nukeSecondary.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateNukeSecondary = State.new(NAMESPACE, "nukeSecondary")
-local stateNukeSecondaryFire = State.new(NAMESPACE, "nukeFireSecondary")
+local stateNukeSecondary = ActorState.new("nukeSecondary")
+local stateNukeSecondaryFire = ActorState.new("nukeFireSecondary")
 
-nukeSecondary:clear_callbacks()
-nukeSecondary:onActivate(function( actor )
-	actor:enter_state(stateNukeSecondary)
+Callback.add(nukeSecondary.on_activate, function( actor )
+	actor:set_state(stateNukeSecondary)
 end)
 
-stateNukeSecondary:onEnter(function( actor, data )
+Callback.add(stateNukeSecondary.on_enter, function( actor, data )
 	actor.image_index2 = 0
 
 	data.exit_index = 16
@@ -507,19 +493,19 @@ stateNukeSecondary:onEnter(function( actor, data )
 	NukeChargeStart(actor)
 end)
 
-stateNukeSecondary:onStep(function( actor, data )
+Callback.add(stateNukeSecondary.on_step, function( actor, data )
 	actor.sprite_index2 = sprite_shoot2_half
 	actor:skill_util_strafe_update(data.exit_index/overcharge_limit, 0.2)
 	actor:skill_util_step_strafe_sprites()
 	actor:skill_util_strafe_turn_update()
 
-	if actor:is_authority() and ((not actor:control("skill2", 0) and actor:get_data().charge > 0) or NukeChargeStep(actor) == 1) then
+	if actor:is_authority() and ((not actor:control("skill2", 0) and Instance.get_data(actor).charge > 0) or NukeChargeStep(actor) == 1) then
 		GM.actor_set_state_networked(actor, stateNukeSecondaryFire)
 	end
 end)
 
 
-stateNukeSecondaryFire:onEnter(function( actor, data )
+Callback.add(stateNukeSecondaryFire.on_enter, function( actor, data )
 	actor.image_index = 16
 	actor.sprite_index = sprite_shoot2
 
@@ -529,7 +515,7 @@ stateNukeSecondaryFire:onEnter(function( actor, data )
 	data.fired = 0
 end)
 
-stateNukeSecondaryFire:onStep(function( actor, data )
+Callback.add(stateNukeSecondaryFire.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 	actor:actor_animation_set(actor.sprite_index, 0.2)
@@ -544,8 +530,8 @@ stateNukeSecondaryFire:onStep(function( actor, data )
 				local damage = actor:skill_get_damage(nukeSecondary) * undercharge
 				local dir = actor.image_xscale
 
-				local buff_shadow_clone = Buff.find("ror", "shadowClone")
-				for i=0, actor:buff_stack_count(buff_shadow_clone) do
+				local buff_shadow_clone = Buff.find("shadowClone")
+				for i=0, actor:buff_count(buff_shadow_clone) do
 					local info = actor:fire_explosion(actor.x + 50 * dir, actor.y, 100, 50, damage, sprite_push_blast).attack_info
 					info.knockback = math.max(5, 12 * undercharge)
 					info.knockup = math.max(1, 4 * undercharge)
@@ -568,6 +554,7 @@ stateNukeSecondaryFire:onStep(function( actor, data )
 end)
 
 
+
 -------- FISSION IMPULSE
 nukeUtility.sprite = sprite_skills
 nukeUtility.subimage = 2
@@ -576,17 +563,16 @@ nukeUtility.damage = 5.5
 nukeUtility.require_key_press = false
 nukeUtility.does_change_activity_state = true
 nukeUtility.hold_facing_direction = true
-nukeUtility.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+nukeUtility.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateNukeUtility = State.new(NAMESPACE, "nukeUtility")
-local stateNukeUtilityFire = State.new(NAMESPACE, "nukeFireUtility")
+local stateNukeUtility = ActorState.new("nukeUtility")
+local stateNukeUtilityFire = ActorState.new("nukeFireUtility")
 
-nukeUtility:clear_callbacks()
-nukeUtility:onActivate(function( actor )
-	actor:enter_state(stateNukeUtility)
+Callback.add(nukeUtility.on_activate, function( actor )
+	actor:set_state(stateNukeUtility)
 end)
 
-stateNukeUtility:onEnter(function( actor, data )
+Callback.add(stateNukeUtility.on_enter, function( actor, data )
 	data.exit_index = 14
 
 	actor.image_index = 0
@@ -598,16 +584,16 @@ stateNukeUtility:onEnter(function( actor, data )
 	NukeChargeStart(actor)
 end)
 
-stateNukeUtility:onStep(function( actor, data )
+Callback.add(stateNukeUtility.on_step, function( actor, data )
 	actor:skill_util_fix_hspeed()
 
-	if actor:is_authority() and ((not actor:control("skill3", 0) and actor:get_data().charge > 0) or NukeChargeStep(actor) == 1) then
+	if actor:is_authority() and ((not actor:control("skill3", 0) and Instance.get_data(actor).charge > 0) or NukeChargeStep(actor) == 1) then
 		GM.actor_set_state_networked(actor, stateNukeUtilityFire)
 	end
 end)
 
 
-stateNukeUtilityFire:onEnter(function( actor, data )
+Callback.add(stateNukeUtilityFire.on_enter, function( actor, data )
 	actor.image_index = 14
 	actor.sprite_index = sprite_shoot3
 
@@ -637,8 +623,8 @@ stateNukeUtilityFire:onEnter(function( actor, data )
 	end
 end)
 
-stateNukeUtilityFire:onStep(function( actor, data )
-	actor:set_immune(3)
+Callback.add(stateNukeUtilityFire.on_step, function( actor, data )
+	actor.invincible = math.max(8, actor.invincible)
 	actor.moveLeft = false
 	actor.moveRight = false
 
@@ -663,9 +649,9 @@ stateNukeUtilityFire:onStep(function( actor, data )
 		actor.sprite_index = sprite_jump_peak
 	end
 
-	if is_colliding_stage(actor, actor.x + 1, actor.y + 1) or is_colliding_stage(actor, actor.x - 1) then
+	if ssr_is_colliding_stage(actor, actor.x + 1, actor.y + 1) or ssr_is_colliding_stage(actor, actor.x - 1) then
 		local attack = actor:fire_explosion(actor.x, actor.y, 150, 150, 90.0, sprite_explosion).attack_info
-		attack:set_stun(1, actor.image_xscale, standard)
+		attack.stun = 1
 		attack.knockback = 2
 		attack.knockup = 1
 
@@ -675,36 +661,36 @@ stateNukeUtilityFire:onStep(function( actor, data )
 end)
 
 
+
 -------- RADIONUCLIDE SURGE
 nukeSpecial.sprite = sprite_skills
 nukeSpecial.subimage = 3
 nukeSpecial.cooldown = 20 * 60
 nukeSpecial.damage = 3.0
 nukeSpecial.require_key_press = true
-nukeSpecial.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+nukeSpecial.required_interrupt_priority = ActorState.InterruptPriority.SKILL
+nukeSpecial.upgrade_skill = nukeSpecialS
 
-nukeSpecialScepter.sprite = sprite_skills
-nukeSpecialScepter.subimage = 4
-nukeSpecialScepter.cooldown = 20 * 60
-nukeSpecialScepter.damage = 3.0
-nukeSpecialScepter.require_key_press = true
-nukeSpecialScepter.required_interrupt_priority = State.ACTOR_STATE_INTERRUPT_PRIORITY.skill
+nukeSpecialS.sprite = sprite_skills
+nukeSpecialS.subimage = 4
+nukeSpecialS.cooldown = 20 * 60
+nukeSpecialS.damage = 3.0
+nukeSpecialS.require_key_press = true
+nukeSpecialS.required_interrupt_priority = ActorState.InterruptPriority.SKILL
 
-local stateNukeSpecial = State.new(NAMESPACE, "nukeSpecial")
+local stateNukeSpecial = ActorState.new("nukeSpecial")
 
-nukeSpecial:clear_callbacks()
-nukeSpecial:onActivate(function( actor )
-	actor:enter_state(stateNukeSpecial)
+Callback.add(nukeSpecial.on_activate, function( actor )
+	actor:set_state(stateNukeSpecial)
 end)
 
-nukeSpecialScepter:clear_callbacks()
-nukeSpecialScepter:onActivate(function( actor )
-	actor:enter_state(stateNukeSpecial)
+Callback.add(nukeSpecialS.on_activate, function( actor )
+	actor:set_state(stateNukeSpecial)
 end)
 
-stateNukeSpecial:onEnter(function( actor, data )
+Callback.add(stateNukeSpecial.on_enter, function( actor, data )
 	actor.image_index = 0
-	actor.sprite_index = actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 and sprite_shoot4S or sprite_shoot4
+	actor.sprite_index = actor:item_count(Item.find("ancientScepter")) > 0 and sprite_shoot4S or sprite_shoot4
 	actor.image_speed = 0.2
 
 	data.fired = 0
@@ -712,12 +698,12 @@ stateNukeSpecial:onEnter(function( actor, data )
 	NukeChargeRelease(actor)
 end)
 
-stateNukeSpecial:onStep(function( actor, data )
-	actor:set_immune(3)
+Callback.add(stateNukeSpecial.on_step, function( actor, data )
+	actor.invincible = math.max(8, actor.invincible)
 	actor:skill_util_fix_hspeed()
 	actor:skill_util_exit_state_on_anim_end()
 end)
 
-stateNukeSpecial:onExit(function( actor, data )
-	actor:buff_apply(selfRadiation, SELF_RADIATION_DURATION, actor:item_stack_count(Item.find("ror", "ancientScepter")) > 0 and 5 or 3)
+Callback.add(stateNukeSpecial.on_exit, function( actor, data )
+	actor:buff_apply(selfRadiation, SELF_RADIATION_DURATION, actor:item_count(Item.find("ancientScepter")) > 0 and 5 or 3)
 end)
