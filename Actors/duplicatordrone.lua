@@ -5,30 +5,30 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Actors/DuplicatorDrone")
 local SOUND_PATH = path.combine(PATH, "Sounds/Actors/DuplicatorDrone")
 
-local sprite_idle            = Resources.sprite_load(NAMESPACE, "DupeDroneIdle", path.combine(SPRITE_PATH, "Idle.png"), 4, 7, 10)
-local sprite_idle_broken     = Resources.sprite_load(NAMESPACE, "DupeDroneBrokenIdle", path.combine(SPRITE_PATH, "Idle_broken.png"), 4, 7, 10)
-local sprite_idle_cd         = Resources.sprite_load(NAMESPACE, "DupeDroneIdleCD", path.combine(SPRITE_PATH, "Idle_cd.png"), 4, 7, 10)
-local sprite_idle_broken_cd  = Resources.sprite_load(NAMESPACE, "DupeDroneBrokenIdleCD", path.combine(SPRITE_PATH, "Idle_broken_cd.png"), 4, 7, 10)
-local sprite_activate        = Resources.sprite_load(NAMESPACE, "DupeDroneActivate", path.combine(SPRITE_PATH, "Shoot.png"), 25, 11, 13)
-local sprite_interact        = Resources.sprite_load(NAMESPACE, "DupeDronePurchase", path.combine(SPRITE_PATH, "Object.png"), 1, 11, 20)
+local sprite_idle            = Sprite.new("DupeDroneIdle", path.combine(SPRITE_PATH, "Idle.png"), 4, 7, 10)
+local sprite_idle_broken     = Sprite.new("DupeDroneBrokenIdle", path.combine(SPRITE_PATH, "Idle_broken.png"), 4, 7, 10)
+local sprite_idle_cd         = Sprite.new("DupeDroneIdleCD", path.combine(SPRITE_PATH, "Idle_cd.png"), 4, 7, 10)
+local sprite_idle_broken_cd  = Sprite.new("DupeDroneBrokenIdleCD", path.combine(SPRITE_PATH, "Idle_broken_cd.png"), 4, 7, 10)
+local sprite_activate        = Sprite.new("DupeDroneActivate", path.combine(SPRITE_PATH, "Shoot.png"), 25, 11, 13)
+local sprite_interact        = Sprite.new("DupeDronePurchase", path.combine(SPRITE_PATH, "Object.png"), 1, 11, 20)
 
 
-local duplicatorDrone = Object.new(NAMESPACE, "DuplicatorDrone", Object.PARENT.drone)
+local duplicatorDrone = Object.new("DuplicatorDrone", Object.Parent.DRONE)
 duplicatorDrone.obj_depth = -202
-duplicatorDrone.obj_sprite = sprite_idle
+duplicatorDrone:set_sprite(sprite_idle)
 
-local duplicatorDronePickup = Object.new(NAMESPACE, "DuplicatorDronePickup", Object.PARENT.interactableDrone)
+local duplicatorDronePickup = Object.new("DuplicatorDronePickup", Object.Parent.INTERACTABLE_DRONE)
 duplicatorDronePickup.obj_depth = 90
-duplicatorDronePickup.obj_sprite = sprite_interact
+duplicatorDronePickup:set_sprite(sprite_interact)
 
 
-duplicatorDrone:onCreate(function( inst )
+Callback.add(duplicatorDrone.on_create, function( inst )
+    inst:init_drone(0)
     inst.sprite_idle = sprite_idle
     inst.sprite_idle_broken = sprite_idle_broken
     inst.sprite_shoot1 = sprite_activate
     inst.sprite_shoot1_broken = sprite_activate
     inst:drone_stats_init(500)
-    inst:init_actor_late()
 
     inst.x_range = 0
     inst.fire_frame = -3600 -- this ensures the drone will start ready to go
@@ -41,13 +41,14 @@ duplicatorDrone:onCreate(function( inst )
     inst.cooldown = 60 * 60 -- cooldown between dupes
 
     inst.recycle_tier = 1.0
-    inst.drone_upgrade_type_id = Object.find(NAMESPACE, "GildedDuplicatorDrone").value
+    inst.drone_upgrade_type_id = Object.find("GildedDuplicatorDrone").value
     inst.interactable_child = duplicatorDronePickup.value 
 
     inst.persistent = 1
+    inst:init_actor_late(true)
 end)
 
-duplicatorDrone:onStep(function( inst )
+Callback.add(duplicatorDrone.on_step, function( inst )
 	local master = inst.master
     
     if not Instance.exists(master) then return end
@@ -76,7 +77,7 @@ duplicatorDrone:onStep(function( inst )
         for _, pickup in ipairs(pickups) do
             local dist = gm.point_distance(master.x, master.y, pickup.x, pickup.y)
 
-            if dist <= 150 and pickup.item_stack_kind == Item.STACK_KIND.normal then -- if an item is sufficiently close by
+            if dist <= 150 and pickup.item_stack_kind == Item.StackKind.NORMAL then -- if an item is sufficiently close by
                 if nearest then
                     if dist < sdist then -- this looks for specifically the closest nearby item
                         nearest = pickup
@@ -124,7 +125,7 @@ duplicatorDrone:onStep(function( inst )
     end
 end)
 
-duplicatorDrone:onDraw(function( inst )
+Callback.add(duplicatorDrone.on_draw, function( inst )
 	if inst.duplicating == 1 then
         if not Instance.exists(inst.item) then -- exit if the pickup disappears
             inst.duplicating = 2
@@ -147,7 +148,7 @@ duplicatorDrone:onDraw(function( inst )
         gm.draw_set_alpha(0.5)
         gm.gpu_set_blendmode(1)
 
-        gm.draw_set_colour(Color.TEXT_YELLOW)
+        gm.draw_set_colour(Color.Text.YELLOW)
 		gm.draw_line_width(inst.x, inst.y, inst.item.x, inst.item.y, 5 + math.random() * 2)
 		gm.draw_circle(inst.item.x, inst.item.y, 4 + math.random() * 8, false)
 		gm.draw_circle(inst.x, inst.y, 2 + math.random() * 4, false)
@@ -165,7 +166,7 @@ duplicatorDrone:onDraw(function( inst )
 end)
 
 
-duplicatorDronePickup:onCreate(function( inst )
+Callback.add(duplicatorDronePickup.on_create, function( inst )
     inst:interactable_init(true)
     inst.active = 0
     inst.value.value = 60
@@ -175,25 +176,25 @@ duplicatorDronePickup:onCreate(function( inst )
     inst:interactable_init_name()
 end)
 
-local drone_card = Interactable_Card.new(NAMESPACE, "duplicatorDronePickup")
+local drone_card = InteractableCard.new("duplicatorDronePickup")
 drone_card.object_id = duplicatorDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 120
+drone_card.spawn_cost = 12
 drone_card.spawn_weight = 4
 drone_card.default_spawn_rarity_override = 1
 
 local stages_loaded = 0
-Callback.add(Callback.TYPE.onGameStart, "SSRDuplicatorDroneAddStages", function( )
+Callback.add(Callback.ON_GAME_START, function( )
 	if stages_loaded == 0 then
         stages_loaded = 1
 
         local stages = {
-            "ror-templeOfTheElders"
+            "templeOfTheElders"
         }
 
         local loop_stages = {
-            "ror-hiveCluster",
-            "ror-dampCaverns"
+            "hiveCluster",
+            "dampCaverns"
         }
 
 

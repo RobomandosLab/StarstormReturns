@@ -384,5 +384,35 @@ function ssr_table_shuffle(tabl)
 	return tabl
 end
 
+function ssr_table_has( table, value )
+    for i, v in pairs(table) do
+        if v == value then return true end
+    end
+    return false
+end
+
+
+function ssr_get_random_item(...) -- ported over from RMT since RAPI got rid of the little extra bits it had in some categories
+	local tiers = {}
+    if ... then
+        tiers = {...}
+        if type(tiers[1]) == "table" then tiers = tiers[1] end
+    end
+
+    local items = {}
+
+    -- Add valid items to table
+    local array = Class.Item
+    for i, _ in ipairs(array) do
+        local item = Item.wrap(i - 1)
+        if (#tiers <= 0 and item.tier < ItemTier.NOTIER and item.identifier ~= "dummyItem") or ssr_table_has(tiers, item.tier) then
+            table.insert(items, item)
+        end
+    end
+
+    -- Pick random item from table
+    return items[gm.irandom_range(1, #items)]
+end
+
 -- easy shortcut for checking if chirrsmas is active
 ssr_chirrsmas_active = ((tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 15) or (tonumber(os.date("%m")) == 1 and tonumber(os.date("%d")) <= 15) or Settings.chirrsmas == 1)

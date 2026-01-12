@@ -15,20 +15,20 @@ local sprite_interact        = Sprite.new("DupeDronePurchase", path.combine(SPRI
 
 local fabricatorDrone = Object.new("FabricatorDrone", Object.Parent.DRONE)
 fabricatorDrone.obj_depth = -202
-fabricatorDrone.obj_sprite = sprite_idle
+fabricatorDrone:set_sprite(sprite_idle)
 
 local fabricatorDronePickup = Object.new("FabricatorDronePickup", Object.Parent.INTERACTABLE_DRONE    )
 fabricatorDronePickup.obj_depth = 90
-fabricatorDronePickup.obj_sprite = sprite_interact
+fabricatorDronePickup:set_sprite(sprite_interact)
 
 
 Callback.add(fabricatorDrone.on_create, function( inst )
+    inst:init_drone(0)
     inst.sprite_idle = sprite_idle
     inst.sprite_idle_broken = sprite_idle_broken
     inst.sprite_shoot1 = sprite_activate
     inst.sprite_shoot1_broken = sprite_activate
     inst:drone_stats_init(300)
-    inst:init_actor_late()
 
     inst.x_range = 0
     inst.fire_frame = -1800 -- this ensures the drone will start ready to go
@@ -41,10 +41,11 @@ Callback.add(fabricatorDrone.on_create, function( inst )
     inst.cooldown = 30 * 60 -- cooldown between dupes
 
     inst.recycle_tier = 0.0
-    inst.drone_upgrade_type_id = Object.find(NAMESPACE, "DuplicatorDrone").value
+    inst.drone_upgrade_type_id = Object.find("DuplicatorDrone").value
     inst.interactable_child = fabricatorDronePickup.value 
 
     inst.persistent = 1
+    inst:init_actor_late(true)
 end)
 
 Callback.add(fabricatorDrone.on_step, function( inst )
@@ -171,15 +172,15 @@ Callback.add(fabricatorDronePickup.on_create, function( inst )
     inst.value.value = 60
     inst.interact_scroll_index = 3
     inst.child = fabricatorDrone.value -- what the interactable spawns
-    inst:interactable_init_cost(inst.value, 0, 0) -- cost setup
+    inst:interactable_init_cost(inst.value, 0, 40) -- cost setup
     inst:interactable_init_name()
 end)
 
 local drone_card = InteractableCard.new("fabricatorDronePickup")
 drone_card.object_id = fabricatorDronePickup.value
 drone_card.spawn_with_sacrifice = true
-drone_card.spawn_cost = 1
-drone_card.spawn_weight = 500
+drone_card.spawn_cost = 75
+drone_card.spawn_weight = 50
 drone_card.default_spawn_rarity_override = 1
 
 local stages_loaded = 0
