@@ -142,7 +142,7 @@ return {
 			description = "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 		nemesisMercenaryZ = {
-			name = "Lascerate",
+			name = "Lacerate",
 			description = "Quickly slash enemies in front of you for <y>100% damage</c>."
 		},
 		nemesisMercenaryX = {
@@ -171,7 +171,7 @@ return {
 		},
 		technicianX = {
 			name = "Forced Shutdown",
-			description = "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
+			description = "Toss out a bomb dealing <y>500% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
 		},
 		technicianXD = {
 			name = "The Red Button",

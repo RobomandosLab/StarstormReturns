@@ -1,7 +1,7 @@
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/NemesisMercenary")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/NemesisMercenary")
 
-local sprite_loadout		= Sprite.new("NemesisMercenarySelect", path.combine(SPRITE_PATH, "select.png"), 4, 28, 0)
+local sprite_loadout		= Sprite.new("NemesisMercenarySelect", path.combine(SPRITE_PATH, "select.png"), 20, 28, 0)
 local sprite_portrait		= Sprite.new("NemesisMercenaryPortrait", path.combine(SPRITE_PATH, "portrait.png"), 3)
 local sprite_portrait_small	= Sprite.new("NemesisMercenaryPortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
 local sprite_skills			= Sprite.new("NemesisMercenarySkills", path.combine(SPRITE_PATH, "skills.png"), 5)
@@ -20,7 +20,12 @@ local sprite_death			= Sprite.new("NemesisMercenaryDeath", path.combine(SPRITE_P
 local sprite_decoy			= Sprite.new("NemesisMercenaryDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 22, 18)
 local sprite_drone_idle		= Sprite.new("DronePlayerNemesisMercenaryIdle", path.combine(SPRITE_PATH, "drone_idle.png"), 5, 22, 13)
 local sprite_drone_shoot	= Sprite.new("DronePlayerNemesisMercenaryShoot", path.combine(SPRITE_PATH, "drone_shoot.png"), 5, 30, 12)
+
 local sprite_palette		= Sprite.new("NemesisMercenaryPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette1		= Sprite.new("NemesisMercenaryPalette1", path.combine(SPRITE_PATH, "palette1.png"))
+local sprite_palette2		= Sprite.new("NemesisMercenaryPalette2", path.combine(SPRITE_PATH, "palette2.png"))
+local sprite_palette3		= Sprite.new("NemesisMercenaryPalette3", path.combine(SPRITE_PATH, "palette3.png"))
+local sprite_palette4		= Sprite.new("NemesisMercenaryPalette4", path.combine(SPRITE_PATH, "palette4.png"))
 
 local sprite_shoot1_1a		= Sprite.new("NemesisMercenaryShoot1_1a", path.combine(SPRITE_PATH, "shoot1_1a.png"), 5, 17, 37)
 local sprite_shoot1_2a		= Sprite.new("NemesisMercenaryShoot1_2a", path.combine(SPRITE_PATH, "shoot1_2a.png"), 5, 21, 16)
@@ -104,9 +109,11 @@ nemmerc.sprite_idle = sprite_idle -- used by skin systen for idle sprite
 nemmerc.sprite_title = sprite_walk -- also used by skin system for walk sprite
 nemmerc.sprite_credits = sprite_credits
 
-nemmerc.sprite_palette = sprite_palette
-nemmerc.sprite_portrait_palette = sprite_palette
-nemmerc.sprite_loadout_palette = sprite_palette
+nemmerc:add_skin("0", sprite_palette, sprite_palette, sprite_palette)
+nemmerc:add_skin("1", sprite_palette1, sprite_palette1, sprite_palette1)
+nemmerc:add_skin("2", sprite_palette2, sprite_palette2, sprite_palette2)
+nemmerc:add_skin("3", sprite_palette3, sprite_palette3, sprite_palette3)
+nemmerc:add_skin("4", sprite_palette4, sprite_palette4, sprite_palette4)
 
 --nemmerc.select_sound_id = sound_select
 nemmerc.cape_offset = Array.new({-3, -8, 0, -5})
@@ -304,7 +311,7 @@ local utility = nemmerc:get_skills(Skill.Slot.UTILITY)[1]
 local special = nemmerc:get_skills(Skill.Slot.SPECIAL)[1]
 local specialS = Skill.new("nemesisMercenaryVBoosted")
 
--- Lascerate
+-- Lacerate
 primary.sprite = sprite_skills
 primary.subimage = 0
 primary.damage = 0.8

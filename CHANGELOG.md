@@ -1,5 +1,15 @@
 # SSR Changelog *spoilers below!!*
 
+## 0.1.8
+- Added skins back!
+- Updated Nemesis Mercenary's CSS sprite
+- Added a Korean translation (pixelvoxel)
+- Added a Chinese translation (Eskevor)
+- Resprited Executioner's CSS sprite
+- Updated to the last ReturnsAPI version
+- 
+- 
+
 ## 0.1.7
 - Mod ported to ReturnsAPI
 - Disabled skins (ReturnsAPI does not support them as of yet)

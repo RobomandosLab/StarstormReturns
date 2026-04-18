@@ -63,7 +63,7 @@ end)
 Callback.add(Callback.ON_STAGE_START, function()
 	if GM._mod_game_getDirector().stages_passed > 0 then return end
 	if Global.__gamemode_current >= 2 then return end
-	if Net.online then return end
+	if Global.coop > 0 then return end
 	
 	if Instance.find(gm.constants.oP).is_nemesis then
 		local pod = Instance.find(gm.constants.oBase)

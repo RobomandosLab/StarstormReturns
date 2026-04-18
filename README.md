@@ -55,12 +55,11 @@ Should be! Please report any issues you find.
 
 **Credits**
 
-
 - Neik: Creator of Starstorm 1
 - Hobart: Morale support
 - Bread: Github Detective
 - Buns: Project management
-- [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
+- [Azuline](https://boosty.to/azulineskye/donate): Programmer
 - Battery: Programmer
 - [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
 - EarthZebra: Programmer
@@ -69,7 +68,7 @@ Should be! Please report any issues you find.
 - Altzeus: Music & Programmer
 - Redacted: Writer & Lead Pixel Artist
 - DigBug: Writer & Pixel Artist
-- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist
+- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist & Sound Designer
 - isDahMaster: Pixel Artist
 - [Beebo](https://bsky.app/profile/beebogreebo.bsky.social): Pixel Artist
 - [TangoKnight](https://bsky.app/profile/tangoknight.bsky.social): Writer & Pixel Artist
@@ -91,3 +90,5 @@ Should be! Please report any issues you find.
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
 - SwedishFish75 for Spanish Translation
+- pixelvoxel for Korean Translation
+- Eskevor for Chinese Translation
