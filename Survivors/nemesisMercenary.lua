@@ -994,6 +994,8 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 			if Net.online then
 				devitalize_packet:send_to_all(actor, data.slash)
 			end
+		else 
+			data.slash = 1 -- set this as a backup to prevent crashes in high ping multiplayer
 		end
 	end
 	
