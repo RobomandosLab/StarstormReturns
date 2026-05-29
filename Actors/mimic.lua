@@ -431,6 +431,7 @@ mimicInactive:set_depth(90)
 
 Callback.add(mimicInactive.on_create, function(self)
 	GM.interactable_init_cost(self, 0, 50)
+	self.sprite_ping = gm.constants.sPing_Chest2
 	self:interactable_init_name()
 end)
 

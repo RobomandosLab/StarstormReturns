@@ -2,6 +2,11 @@
 -- this one is kinda hard so ill try to explain literally everything lmao
 -- ill be refering to the stage number as its "tier" here. for example, without the artifact of displacement active dried lake is tier 1, magma barracks is tier 4, temple of the elders is 5, risk of rain is 6, etc
 -- ill be refering to the stage itself as "environment" or "env"
+
+-- die
+if HOTLOADING then return end
+if Settings.enable_beta == false then return end -- only enable if beta is enabled
+
 local loadout = Sprite.new("ArtifactOfDisplacementLoadout", path.combine(PATH, "Sprites/Artifacts/Displacement/loadout.png"), 3, 19, 19)
 local pickup = Sprite.new("ArtifactOfDisplacementPickup", path.combine(PATH, "Sprites/Artifacts/Displacement/pickup.png"), 1, 20, 20)
 

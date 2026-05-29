@@ -1,3 +1,7 @@
+-- die
+if HOTLOADING then return end
+if Settings.enable_beta == false then return end -- only enable if beta is enabled
+
 local SPRITE_PATH = path.combine(PATH, "Sprites/Survivors/Technician")
 local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/Technician")
 

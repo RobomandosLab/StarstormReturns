@@ -552,7 +552,7 @@ return {
 				enableStages = "Enable Stages",
 				["enableStages.desc"] = "Enables stages added by Starstorm Returns.",
 				enableBeta = "Enable Unfinished Content",
-				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>",
+				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. <r>Unstable! Restart required.</c>",
 				enableChirrsmas = "Enable Chirrsmas Content",
 				["enableChirrsmas.desc"] = "Whether Chirrsmas-exclusive content should be present. \nBy default active from December 15th to January 15th. \n<r>RESTART REQUIRED</c>",
 				["enableChirrsmas.default"] = "Default",

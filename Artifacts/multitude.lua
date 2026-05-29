@@ -2,6 +2,12 @@
 -- artifact!!!! makes many enemy but weak enemy!!!
 -- i tried commenting about everything you could get confused about
 
+-- this is azuline from a year later
+
+-- die
+if HOTLOADING then return end
+if Settings.enable_beta == false then return end -- only enable if beta is enabled
+
 local loadout = Sprite.new("ArtifactOfMultitudeLoadout", path.combine(PATH, "Sprites/Artifacts/Multitude/loadout.png"), 3, 19, 19)
 local pickup = Sprite.new("ArtifactOfMultitudePickup", path.combine(PATH, "Sprites/Artifacts/Multitude/pickup.png"), 1, 20, 20)
 

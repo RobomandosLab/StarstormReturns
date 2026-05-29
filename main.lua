@@ -12,6 +12,7 @@ Options = ModOptions.new("ssr")
 -- or config options are missing due to a new update adding more)
 
 Settings = {
+	enable_beta = false,
 	title_replacement = true,
 	chirrsmas = 0,
 }

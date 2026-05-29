@@ -102,18 +102,17 @@
     -- saved_settings:write(settings)
 -- end)
 
--- -- beta content
--- settings.enable_beta = false
--- local enable_beta_checkbox = options:add_checkbox("enableBeta")
+-- beta content
+local enable_beta_checkbox = Options:add_checkbox("enableBeta")
 
--- enable_beta_checkbox:add_getter(function()
-    -- return settings.beta_stages
--- end)
+enable_beta_checkbox:add_getter(function()
+	return Settings.enable_beta
+end)
 
--- enable_beta_checkbox:add_setter(function(value)
-    -- settings.enable_beta = value
-    -- saved_settings:write(settings)
--- end)
+enable_beta_checkbox:add_setter(function(value)
+    Settings.enable_beta = value
+    SettingsFile:write(Settings)
+end)
 
 -- chirrsmas
 local enable_chirrsmas_checkbox = Options:add_dropdown("enableChirrsmas")

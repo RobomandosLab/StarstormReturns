@@ -42,6 +42,12 @@ local sprite_decoy			= Sprite.new("NemCommandoDecoy", path.combine(SPRITE_PATH, 
 local sprite_drone_idle		= Sprite.new("DronePlayerNemCommandoIdle", path.combine(SPRITE_PATH, "drone_idle.png"), 5, 15, 13)
 local sprite_drone_shoot	= Sprite.new("DronePlayerNemCommandoShoot", path.combine(SPRITE_PATH, "drone_shoot.png"), 5, 33, 13)
 
+local sprite_palette		= Sprite.new("NemCommandoPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette1		= Sprite.new("NemCommandoPalette1", path.combine(SPRITE_PATH, "palette1.png"))
+local sprite_palette2		= Sprite.new("NemCommandoPalette2", path.combine(SPRITE_PATH, "palette2.png"))
+local sprite_palette3		= Sprite.new("NemCommandoPalette3", path.combine(SPRITE_PATH, "palette3.png"))
+local sprite_palette4		= Sprite.new("NemCommandoPalette4", path.combine(SPRITE_PATH, "palette4.png"))
+
 local sprite_skills			= Sprite.new("NemCommandoSkills", path.combine(SPRITE_PATH, "skills.png"), 8, 0, 0)
 local sprite_gash			= Sprite.new("NemCommandoGash", path.combine(SPRITE_PATH, "gash.png"), 4, 25, 25)
 local sprite_dust			= Sprite.new("NemCommandoDust", path.combine(SPRITE_PATH, "dust.png"), 3, 21, 12)
@@ -141,24 +147,11 @@ nemmando.sprite_loadout_palette = sprite_palette
 nemmando.select_sound_id = sound_select
 nemmando.cape_offset = Array.new({0, -8, 0, -5})
 
---[[
---skins
-nemmando:add_skin("Mk. II", 1, Sprite.new("NemCommandoSelect2", path.combine(SPRITE_PATH, "select2.png"), 34, 28, 0),
-Sprite.new("NemCommandoPortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 3),
-Sprite.new("NemCommandoPortraitSmall2", path.combine(SPRITE_PATH, "portraitTiny2.png")))
-
-nemmando:add_skin("Ice Blade", 2, Sprite.new("NemCommandoSelect3", path.combine(SPRITE_PATH, "select3.png"), 34, 28, 0),
-Sprite.new("NemCommandoPortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 3),
-Sprite.new("NemCommandoPortraitSmall3", path.combine(SPRITE_PATH, "portraitTiny3.png")))
-
-nemmando:add_skin("Nature's Gift", 3, Sprite.new("NemCommandoSelect4", path.combine(SPRITE_PATH, "select4.png"), 34, 28, 0),
-Sprite.new("NemCommandoPortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 3),
-Sprite.new("NemCommandoPortraitSmall4", path.combine(SPRITE_PATH, "portraitTiny4.png")))
-
-nemmando:add_skin("Callback", 4, Sprite.new("NemCommandoSelect5", path.combine(SPRITE_PATH, "select5.png"), 34, 28, 0),
-Sprite.new("NemCommandoPortrait5", path.combine(SPRITE_PATH, "portrait5.png"), 3),
-Sprite.new("NemCommandoPortraitSmall5", path.combine(SPRITE_PATH, "portraitTiny5.png")))
-]]--
+nemmando:add_skin("0", sprite_palette, sprite_palette, sprite_palette)
+nemmando:add_skin("1", sprite_palette1, sprite_palette1, sprite_palette1)
+nemmando:add_skin("2", sprite_palette2, sprite_palette2, sprite_palette2)
+nemmando:add_skin("3", sprite_palette3, sprite_palette3, sprite_palette3)
+nemmando:add_skin("4", sprite_palette4, sprite_palette4, sprite_palette4)
 
 -- utility function for updating his basic sprites depending on if his last skill was the gun
 local function nemmando_update_sprites(actor, has_gun)

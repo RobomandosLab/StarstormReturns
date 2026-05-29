@@ -3,6 +3,10 @@
 -- btw this should prolly be redone a bit to account for nucleus gems when that gets added
 -- also also also thanks to onyx (0n_x) for optimizing this mess of an artifact! ! ! ! should be way less laggier now
 
+-- die
+if HOTLOADING then return end
+if Settings.enable_beta == false then return end -- only enable if beta is enabled
+
 local loadout = Sprite.new("ArtifactOfGatheringLoadout", path.combine(PATH, "Sprites/Artifacts/Gathering/loadout.png"), 3, 19, 19)
 local pickup = Sprite.new("ArtifactOfGatheringPickup", path.combine(PATH, "Sprites/Artifacts/Gathering/pickup.png"), 1, 20, 20)
 
