@@ -88,7 +88,7 @@ Callback.add(rouletteObject.on_step, function(self)
 			self.image_index = self.buff_index
 			self.vspeed = -0.1
 
-			if Net.host and self.parent:item_count(roulette) > 0 then
+			if Net.host and Instance.exists(self.parent) and self.parent:item_count(roulette) > 0 then
 				roulette_clear_buffs(self.parent)
 
 				local new_buff = roulette_buffs[self.buff_index]

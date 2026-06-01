@@ -82,6 +82,13 @@ Callback.add(Callback.ON_STEP, function()
 			local stack = actor:item_count(watchMetronome)
 			local data = Instance.get_data(actor)
 			local motion_frac = math.abs(actor.pHspeed) / actor.pHmax
+			
+			if not data.chrono_charge then
+				data.chrono_charge = 0
+			end
+			if not data.chrono_tick then
+				data.chrono_tick = 0
+			end
 
 			if actor:is_climbing() then
 				motion_frac = 0

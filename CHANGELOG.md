@@ -1,5 +1,17 @@
 # SSR Changelog *spoilers below!!*
 
+## 0.1.8
+- Put Technician and all Artifacts behind "Unfinished Content" toggle in the settings due to their instability.
+- Added skins back!
+- Added ping functionality to all enemies.
+- Updated Nemesis Mercenary's CSS sprite
+- Added a Korean translation (pixelvoxel)
+- Added a Chinese translation (Eskevor)
+- Resprited Executioner's CSS sprite
+- Updated to the last ReturnsAPI version
+- Fixed many bugs.
+- Crowned Denizu.
+
 ## 0.1.7
 - Mod ported to ReturnsAPI
 - Disabled skins (ReturnsAPI does not support them as of yet)

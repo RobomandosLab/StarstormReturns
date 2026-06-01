@@ -12,6 +12,7 @@ local sprite_jump_peak	= Sprite.new("ExploderJumpPeak",	path.combine(SPRITE_PATH
 local sprite_fall		= Sprite.new("ExploderFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 24, 16)
 local sprite_death		= Sprite.new("ExploderDeath",		path.combine(SPRITE_PATH, "death.png"), 7, 24, 33)
 local sprite_shoot1		= Sprite.new("ExploderShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 20, 32, 55)
+local sprite_ping 		= Sprite.new("ExploderPing", 		path.combine(SPRITE_PATH, "ping.png"), 1, 12, 10)
 
 GM.elite_generate_palettes(sprite_palette)
 
@@ -47,6 +48,7 @@ Callback.add(exploder.on_create, function(actor)
 	actor.sprite_jump_peak = sprite_jump_peak
 	actor.sprite_fall = sprite_fall
 	actor.sprite_death = sprite_death
+	actor.sprite_ping = sprite_ping
 
 	actor.can_jump = true
 

@@ -7,7 +7,7 @@ local sprite_palette = Sprite.new("ElitePalettePoison", path.combine(SPRITE_PATH
 local sound_poison_cloud = Sound.new("PoisonCloud", path.combine(SOUND_PATH, "poisonCloud.ogg"))
 local sound_poison_inflict = Sound.new("PoisonInflict", path.combine(SOUND_PATH, "poisonInflict.ogg"))
 
-local elitePoison = ssr_create_elite("poison")
+local elitePoison = Elite.new("poison")
 elitePoison.healthbar_icon = sprite_icon
 elitePoison.palette = sprite_palette
 elitePoison.blend_col = Color.PURPLE

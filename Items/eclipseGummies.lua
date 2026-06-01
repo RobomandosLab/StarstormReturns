@@ -19,14 +19,6 @@ buff.icon_sprite = sprite_buff
 buff.icon_stack_subimage = true
 buff.max_stack = 10
 buff.is_timed = true
-				
-Callback.add(buff.on_apply, function(actor)
-	if actor:buff_count(buff) < 9 then
-		actor:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
-	else
-		actor:sound_play(sound_buff_max.value, 3, 1)
-	end
-end)
 
 RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(buff)
@@ -154,6 +146,13 @@ Callback.add(obj_gummy.on_step, function(self)
 				
 				Instance.get_data(actor).gummy_stack_strength = data.stack
 				actor:buff_apply(buff, 10 * 60)
+				
+				if actor:buff_count(buff) < 9 then
+					actor:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
+				else
+					actor:sound_play(sound_buff_max.value, 3, 1)
+				end
+	
 				self:destroy()
 				self:instance_destroy_sync()
 			end
@@ -169,6 +168,13 @@ Callback.add(obj_gummy.on_step, function(self)
 				
 				Instance.get_data(actor).gummy_stack_strength = data.stack
 				actor:buff_apply(buff, 10 * 60)
+				
+				if actor:buff_count(buff) < 9 then
+					actor:sound_play(sound_buff.value, 3, 1 + 0.05 * actor:buff_count(buff))
+				else
+					actor:sound_play(sound_buff_max.value, 3, 1)
+				end
+				
 				self:destroy()
 				self:instance_destroy_sync()
 			end

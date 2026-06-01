@@ -19,7 +19,7 @@ RecalculateStats.add(function(actor, api)
 	local stack = actor:buff_count(x4Buff)
     if stack <= 0 then return end
 	
-	api.hp_regen_mult(REGEN + REGEN_STACK * (actor:item_count(x4Stimulant) - 1))
+	api.hp_regen_add(REGEN + REGEN_STACK * (actor:item_count(x4Stimulant) - 1))
 end)
 
 RecalculateStats.add(function(actor)
@@ -28,9 +28,8 @@ RecalculateStats.add(function(actor)
 	
 	local secondary = actor:get_active_skill(Skill.Slot.SECONDARY)
 
-	-- counts in frames. has to be rounded otherwise the cooldown stopwatch breaks !
 	local mult = 0.9 ^ stack
-	secondary.cooldown = math.ceil(secondary.cooldown * mult)
+	api.skill_secondary.cooldown_mult(mult)
 end)
 
 Callback.add(Callback.ON_SKILL_ACTIVATE, function(actor, slot)

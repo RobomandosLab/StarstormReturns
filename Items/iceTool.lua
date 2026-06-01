@@ -39,8 +39,12 @@ local deserializer = function(buffer, self)
 	
 	actor.pHspeed = -actor.pHmax * collision_dir
 	actor.image_xscale = -collision_dir
-
-	data.iceTool_jumps = data.iceTool_jumps - 1
+	
+	if not data.iceTool_jumps then
+		data.iceTool_jumps = 0
+	else
+		data.iceTool_jumps = data.iceTool_jumps - 1
+	end
 
 	if actor:buff_count(buffIceTool) > 0 then
 		GM.set_buff_time_nosync(actor, buffIceTool, 30)
@@ -75,6 +79,10 @@ Callback.add(Callback.ON_STEP, function()
 				collision_dir = -1
 			elseif actor:is_colliding(gm.constants.pBlock, actor.x + 1) then
 				collision_dir = 1
+			end
+			
+			if not data.iceTool_jumps then
+				data.iceTool_jumps = 0
 			end
 			
 			local can_do_it = not actor:is_grounded() and collision_dir ~= 0 and data.iceTool_jumps > 0 and not actor:is_climbing()

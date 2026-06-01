@@ -1,6 +1,6 @@
 ![SSR Title](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Logo.png?raw=true)
 
-**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **five** survivors, **three** stages, **three** monsters, and over **20** new items to help reshape your runs. 
+**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **four** survivors, **three** stages, **three** monsters, and over **20** new items to help reshape your runs. 
 
 ![New_Environments_Header](https://github.com/WinslowRoR/testing_grounds1/blob/main/PromoFiles/SSR_Environments.gif?raw=true)
 
@@ -27,7 +27,7 @@ Descend to Petrichor V with reworked, polished and incredibly unique characters.
 
 * **MULE**:  The MULE is adequately equipped and ready for duty, packing a rueful piston punch (despite its weathered appearance).
 
-* **Technician**: With his complex gadgets and steel wrench in tow, the Technician is the man for the industrial job. 
+* **Technician**: With his complex gadgets and steel wrench in tow, the Technician is the man for the industrial job. (BETA ONLY!)
 
 * **???**: Old and eroded, twisted and deceptive- familiar faces all the same. 
 
@@ -55,12 +55,11 @@ Should be! Please report any issues you find.
 
 **Credits**
 
-
 - Neik: Creator of Starstorm 1
 - Hobart: Morale support
 - Bread: Github Detective
 - Buns: Project management
-- [Azuline](https://bsky.app/profile/azulineskye.bsky.social): Programmer
+- [Azuline](https://boosty.to/azulineskye/donate): Programmer
 - Battery: Programmer
 - [TRYAGAIN211](https://rainfusion.net/mod/ccf124a5-a412-4106-86bb-9b89645d6b31/): Writer, Programmer & Pixel Artist
 - EarthZebra: Programmer
@@ -69,7 +68,7 @@ Should be! Please report any issues you find.
 - Altzeus: Music & Programmer
 - Redacted: Writer & Lead Pixel Artist
 - DigBug: Writer & Pixel Artist
-- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist
+- [Winslow](https://bsky.app/profile/winslowror.bsky.social): Pixel Artist & Sound Designer
 - isDahMaster: Pixel Artist
 - [Beebo](https://bsky.app/profile/beebogreebo.bsky.social): Pixel Artist
 - [TangoKnight](https://bsky.app/profile/tangoknight.bsky.social): Writer & Pixel Artist
@@ -91,3 +90,5 @@ Should be! Please report any issues you find.
 - Khlerik, iDeathHD, and other RoRR Modding Toolkit contributors for their work on making modding possible
 - Risk of Rain Discord, and RoRRModcord for playtesting and feedback
 - SwedishFish75 for Spanish Translation
+- pixelvoxel for Korean Translation
+- Eskevor for Chinese Translation

@@ -142,7 +142,7 @@ return {
 			description = "Fire a rocket for <y>1000% damage</c> to a single enemy. Surrounding enemies take <y>50% damage</c> and are <y>scattered</c>.\nIf used <b>airborne</c>, fire <y>downward</c> at an angle.\n<b>Hold up to 2.</c>"
 		},
 		nemesisMercenaryZ = {
-			name = "Lascerate",
+			name = "Lacerate",
 			description = "Quickly slash enemies in front of you for <y>100% damage</c>."
 		},
 		nemesisMercenaryX = {
@@ -171,7 +171,7 @@ return {
 		},
 		technicianX = {
 			name = "Forced Shutdown",
-			description = "Toss out a bomb dealing <y>400% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
+			description = "Toss out a bomb dealing <y>500% damage</c> on reactivation.\n<y>Stuns</c> and passively pulls in enemies when <b>upgraded."
 		},
 		technicianXD = {
 			name = "The Red Button",
@@ -433,6 +433,14 @@ return {
 			date = "8/16/2056",
 			story = "Hey Dani! It's Vi, you won't believe what I just found. A box of old Eclipse Gummies! At work we were cleaning out this old ma' and pop convenience store and I found this box unopened in the back. My boss let me keep it since we'd just throw it out otherwise. It has to have been nearly 8 years since I last had one of these. Oh lil' Francesca Frog, Robot Reg and all of you other lil' fruity flavors. For a show that solely existed to sell merch, it sure did leave a mark on my childhood. I'm so glad these gummies taste the same as they did so long ago. Even giving me the same wiggly tingles as back then too. It really makes me think, why did they stop selling such popular gummies? Anyways I can't hog all of these to myself so I'm sending you a bunch to have too. Enjoy :heart:",
 			priority = "Standard"
+		},
+		denizuCrown = {
+			name = "Crown of Denizu",
+			pickup = "Fit for a mad king.",
+			description = "Fit for a mad king.",
+			destination = "-",
+			date = "-",
+			story = "-"
 		}
 	},
 
@@ -552,7 +560,7 @@ return {
 				enableStages = "Enable Stages",
 				["enableStages.desc"] = "Enables stages added by Starstorm Returns.",
 				enableBeta = "Enable Unfinished Content",
-				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. \n<r>VERY UNFINISHED</c>",
+				["enableBeta.desc"] = "Enables work in progress Starstorm Returns content. <r>Unstable! Restart required.</c>",
 				enableChirrsmas = "Enable Chirrsmas Content",
 				["enableChirrsmas.desc"] = "Whether Chirrsmas-exclusive content should be present. \nBy default active from December 15th to January 15th. \n<r>RESTART REQUIRED</c>",
 				["enableChirrsmas.default"] = "Default",

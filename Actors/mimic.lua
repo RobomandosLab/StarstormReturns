@@ -21,6 +21,7 @@ local sprite_portrait		= Sprite.new("MimicPortrait",		path.combine(SPRITE_PATH, 
 local sprite_inactive_idle	= Sprite.new("MimicInactiveIdle",	path.combine(SPRITE_PATH, "inactiveIdle.png"), 14, 30, 38)
 local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 18, 30, 60)
 local sprite_vacuum			= Sprite.new("MimicVacuumFX", 		path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
+local sprite_ping 			= Sprite.new("MimicPing", 			path.combine(SPRITE_PATH, "ping.png"), 1, 14, 19)
 
 local sound_spawn			= Sound.new("MimicSpawn",			path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit				= Sound.new("MimicHit",				path.combine(SOUND_PATH, "hit.ogg"))
@@ -172,6 +173,7 @@ Callback.add(mimic.on_create, function(actor)
 	actor.sprite_jump_peak = sprite_jump_peak
 	actor.sprite_fall = sprite_fall
 	actor.sprite_death = sprite_death
+	actor.sprite_ping = sprite_ping
 
 	actor.can_jump = true
 	actor.leap_max_distance = 3
@@ -431,6 +433,7 @@ mimicInactive:set_depth(90)
 
 Callback.add(mimicInactive.on_create, function(self)
 	GM.interactable_init_cost(self, 0, 50)
+	self.sprite_ping = gm.constants.sPing_Chest2
 	self:interactable_init_name()
 end)
 

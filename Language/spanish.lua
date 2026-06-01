@@ -188,7 +188,7 @@ return {
 		},
 		technicianX2 = {
 			name = "El Botón Rojo",
-			description = "Detona la bomba lanzada inflingiendo <y>700% de daño y aturde a los enemigos.",
+			description = "Detona la bomba lanzada inflingiendo <y>500% de daño y aturde a los enemigos.",
 		},
 		technicianC = {
 			name = "Energia Refrescante",

@@ -84,7 +84,10 @@ Callback.add(Callback.ON_STEP, function()
 				local b = data.balloons[i]
 
 				local tx = actor.ghost_x
-				local ty = actor.ghost_y-50
+				local ty = actor.y - 50
+				if actor.ghost_y then
+					ty = actor.ghost_y - 50
+				end
 
 				local ang = math.floor(i * 0.5) * GOLDEN_RATIO
 				local mag = math.sqrt(ang) * 1.8

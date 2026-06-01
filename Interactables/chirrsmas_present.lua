@@ -1,4 +1,5 @@
 local sprite = Sprite.new("ChirrsmasPresent", path.combine(PATH, "Sprites/Interactables/ChirrsmasPresent/present.png"), 13, 41, 112)
+local sprite_ping = Sprite.new("ChirrsmasPresentPing", path.combine(PATH, "Sprites/Interactables/ChirrsmasPresent/ping.png"), 1, 17, 17)
 
 local firework = Object.new("ChirrsmasPresentFirework")
 firework:set_sprite(gm.constants.sEFFirework)
@@ -45,6 +46,7 @@ present:set_depth(90)
 Callback.add(present.on_create, function(self)
 	self:interactable_init()
 	self.mask_index = gm.constants.sChest1
+	self.sprite_ping = sprite_ping
 	self:interactable_init_name()
 end)
 
