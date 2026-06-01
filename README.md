@@ -1,6 +1,6 @@
 ![SSR Title](https://github.com/WinslowRoR/SSR-PromoStuff/blob/main/README%20Stuff/SSR_Logo.png?raw=true)
 
-**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **five** survivors, **three** stages, **three** monsters, and over **20** new items to help reshape your runs. 
+**Starstorm Returns** is a **work-in-progress** mod for Risk of Rain Returns that re-imagines the original Risk of Rain mod "Starstorm". It currently features **four** survivors, **three** stages, **three** monsters, and over **20** new items to help reshape your runs. 
 
 ![New_Environments_Header](https://github.com/WinslowRoR/testing_grounds1/blob/main/PromoFiles/SSR_Environments.gif?raw=true)
 
@@ -27,7 +27,7 @@ Descend to Petrichor V with reworked, polished and incredibly unique characters.
 
 * **MULE**:  The MULE is adequately equipped and ready for duty, packing a rueful piston punch (despite its weathered appearance).
 
-* **Technician**: With his complex gadgets and steel wrench in tow, the Technician is the man for the industrial job. 
+* **Technician**: With his complex gadgets and steel wrench in tow, the Technician is the man for the industrial job. (BETA ONLY!)
 
 * **???**: Old and eroded, twisted and deceptive- familiar faces all the same. 
 

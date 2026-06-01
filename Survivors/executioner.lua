@@ -22,7 +22,6 @@ local sprite_fall_half		= Sprite.new("ExecutionerFallHalf", path.combine(SPRITE_
 local sprite_climb			= Sprite.new("ExecutionerClimb", path.combine(SPRITE_PATH, "climb.png"), 6, 12, 18)
 local sprite_death			= Sprite.new("ExecutionerDeath", path.combine(SPRITE_PATH, "death.png"), 11, 38, 17)
 local sprite_decoy			= Sprite.new("ExecutionerDecoy", path.combine(SPRITE_PATH, "decoy.png"), 1, 16, 18)
-local sprite_palette		= Sprite.new("ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
 
 local sprite_shoot1			= Sprite.new("ExecutionerShoot1", path.combine(SPRITE_PATH, "shoot1.png"), 5, 10, 17)
 local sprite_shoot1_half	= Sprite.new("ExecutionerShoot1Half", path.combine(SPRITE_PATH, "shoot1Half.png"), 5, 10, 17)
@@ -47,6 +46,11 @@ local sprite_axe_projectileS= Sprite.new("ExecutionerAxeProjectileS", path.combi
 
 local sprite_drone_idle		= Sprite.new("DronePlayerExecutionerIdle", path.combine(SPRITE_PATH, "droneIdle.png"), 5, 11, 14)
 local sprite_drone_shoot	= Sprite.new("DronePlayerExecutionerShoot", path.combine(SPRITE_PATH, "droneShoot.png"), 5, 33, 13)
+
+local sprite_palette		= Sprite.new("ExecutionerPalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette1		= Sprite.new("ExecutionerPalette1", path.combine(SPRITE_PATH, "palette1.png"))
+local sprite_palette2		= Sprite.new("ExecutionerPalette2", path.combine(SPRITE_PATH, "palette2.png"))
+local sprite_palette3		= Sprite.new("ExecutionerPalette3", path.combine(SPRITE_PATH, "palette3.png"))
 
 local sprite_ion_sparks		= Sprite.new("ExecutionerIonSparks", path.combine(SPRITE_PATH, "ionSparks.png"), 4, 24, 14)
 local sprite_ion_sparks2	= Sprite.new("ExecutionerIonSparks2s", path.combine(SPRITE_PATH, "ionSparks2.png"), 4, 21, 21)
@@ -123,27 +127,13 @@ executioner.sprite_idle = sprite_idle -- used by skin systen for idle sprite
 executioner.sprite_title = sprite_walk -- also used by skin system for walk sprite
 executioner.sprite_credits = sprite_credits
 
-executioner.sprite_palette = sprite_palette
-executioner.sprite_portrait_palette = sprite_palette
-executioner.sprite_loadout_palette = sprite_palette
-
 executioner.select_sound_id = sound_select
 executioner.cape_offset = Array.new({0, -8, 0, -5})
 
---[[
---skins
-executioner:add_skin("Grass Green", 1, Sprite.new("ExecutionerSelect2", path.combine(SPRITE_PATH, "select2.png"), 23, 28, 0),
-Sprite.new("ExecutionerPortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 3),
-Sprite.new("ExecutionerPortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall2.png")))
-
-executioner:add_skin("Blood Red", 2, Sprite.new("ExecutionerSelect3", path.combine(SPRITE_PATH, "select3.png"), 23, 28, 0),
-Sprite.new("ExecutionerPortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 3),
-Sprite.new("ExecutionerPortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall3.png")))
-
-executioner:add_skin("Royal Purple", 3, Sprite.new("ExecutionerSelect4", path.combine(SPRITE_PATH, "select4.png"), 23, 28, 0),
-Sprite.new("ExecutionerPortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 3),
-Sprite.new("ExecutionerPortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall4.png")))
-]]--
+executioner:add_skin("0", sprite_palette, sprite_palette, sprite_palette)
+executioner:add_skin("1", sprite_palette1, sprite_palette1, sprite_palette1)
+executioner:add_skin("2", sprite_palette2, sprite_palette2, sprite_palette2)
+executioner:add_skin("3", sprite_palette3, sprite_palette3, sprite_palette3)
 
 Callback.add(executioner.on_init, function(actor)
 	-- setup half-sprite nonsense

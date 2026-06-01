@@ -688,6 +688,7 @@ Callback.add(stateUtility.on_get_interrupt_priority, function(actor, data)
 end)
 
 DamageDodge.add(function(api, current_dodge)
+	if not api.hit then return end
 	if not Instance.exists(api.hit) then return end
 	
 	local data = Instance.get_data(api.hit)

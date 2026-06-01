@@ -26,7 +26,7 @@ local sound_teleport1 = Sound.new("EmpyreanTeleport1", path.combine(SOUND_PATH, 
 local sound_teleport2 = Sound.new("EmpyreanTeleport2", path.combine(SOUND_PATH, "teleport2.ogg"))
 local sound_teleport3 = Sound.new("EmpyreanTeleport3", path.combine(SOUND_PATH, "teleport3.ogg"))
 
-local empy = ssr_create_elite("empyrean")
+local empy = Elite.new("empyrean")
 empy.healthbar_icon = sprite_icon
 empy.palette = gm.constants.sElitePaletteDummy
 empy.blend_col = Color.WHITE

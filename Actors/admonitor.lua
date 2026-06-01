@@ -15,6 +15,7 @@ local sprite_jump_peak	= Sprite.new("AdmonitorJumpPeak",	path.combine(SPRITE_PAT
 local sprite_fall		= Sprite.new("AdmonitorFall",		path.combine(SPRITE_PATH, "fall.png"), 1, 26, 33)
 local sprite_death		= Sprite.new("AdmonitorDeath",		path.combine(SPRITE_PATH, "death.png"), 14, 33, 53)
 local sprite_shoot1		= Sprite.new("AdmonitorShoot1",		path.combine(SPRITE_PATH, "shoot1.png"), 30, 53, 86)
+local sprite_ping 		= Sprite.new("AdmonitorPing", 		path.combine(SPRITE_PATH, "ping.png"), 1, 16, 18)
 
 GM.elite_generate_palettes(sprite_palette)
 
@@ -70,6 +71,7 @@ Callback.add(puncher.on_create, function(actor)
 	actor.sprite_jump_peak = sprite_jump_peak
 	actor.sprite_fall = sprite_fall
 	actor.sprite_death = sprite_death
+	actor.sprite_ping = sprite_ping
 
 	actor.can_jump = true
 

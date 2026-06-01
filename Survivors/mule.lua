@@ -4,7 +4,6 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Survivors/MULE")
 local sprite_loadout			= Sprite.new("MuleSelect", path.combine(SPRITE_PATH, "select.png"), 15, 56, 0)
 local sprite_portrait 			= Sprite.new("MulePortrait", path.combine(SPRITE_PATH, "portrait.png"), 4)
 local sprite_portrait_small 	= Sprite.new("MulePortraitSmall", path.combine(SPRITE_PATH, "portraitSmall.png"))
-local sprite_palette 			= Sprite.new("MulePalette", path.combine(SPRITE_PATH, "palette.png"))
 local sprite_skills				= Sprite.new("MuleSkills", path.combine(SPRITE_PATH, "skills.png"), 5)
 local sprite_credits 			= Sprite.new("MuleCredits", path.combine(SPRITE_PATH, "credits.png"), 1, 12, 22)
 local sprite_log				= Sprite.new("MuleLog", path.combine(SPRITE_PATH, "log.png"), 1)
@@ -44,6 +43,12 @@ local sprite_snare_debuff		= Sprite.new("MuleSnareDebuff", path.combine(SPRITE_P
 local sprite_sparks1			= Sprite.new("MuleSparks1", path.combine(SPRITE_PATH, "sparks1.png"), 3, 13, 25)
 local sprite_sparks2			= Sprite.new("MuleSparks2", path.combine(SPRITE_PATH, "sparks2.png"), 4, 27, 24)
 local sprite_sparks3			= Sprite.new("MuleSparks3", path.combine(SPRITE_PATH, "sparks3.png"), 4, 22, 16)
+
+local sprite_palette		= Sprite.new("MulePalette", path.combine(SPRITE_PATH, "palette.png"))
+local sprite_palette1		= Sprite.new("MulePalette1", path.combine(SPRITE_PATH, "palette1.png"))
+local sprite_palette2		= Sprite.new("MulePalette2", path.combine(SPRITE_PATH, "palette2.png"))
+local sprite_palette3		= Sprite.new("MulePalette3", path.combine(SPRITE_PATH, "palette3.png"))
+local sprite_palette4		= Sprite.new("MulePalette4", path.combine(SPRITE_PATH, "palette4.png"))
 
 local sound_select				= Sound.new("MuleSelect", path.combine(SOUND_PATH, "select.ogg"))
 local sound_shoot1a				= Sound.new("MuleShoot1a", path.combine(SOUND_PATH, "skill1a.ogg"))
@@ -109,24 +114,11 @@ mule.sprite_loadout_palette = sprite_palette
 mule.select_sound_id = sound_select
 mule.cape_offset = Array.new({0, -14, 0, -18})
 
---[[
---skins
-mule:add_skin("Yellow Rose", 1, Sprite.new("MuleSelect2", path.combine(SPRITE_PATH, "select2.png"), 15, 56, 0),
-Sprite.new("MulePortrait2", path.combine(SPRITE_PATH, "portrait2.png"), 4),
-Sprite.new("MulePortraitSmall2", path.combine(SPRITE_PATH, "portraitSmall2.png")))
-
-mule:add_skin("Steel Soul", 2, Sprite.new("MuleSelect3", path.combine(SPRITE_PATH, "select3.png"), 15, 56, 0),
-Sprite.new("MulePortrait3", path.combine(SPRITE_PATH, "portrait3.png"), 4),
-Sprite.new("MulePortraitSmall3", path.combine(SPRITE_PATH, "portraitSmall3.png")))
-
-mule:add_skin("Automated Hunter", 3, Sprite.new("MuleSelect4", path.combine(SPRITE_PATH, "select4.png"), 15, 56, 0),
-Sprite.new("MulePortrait4", path.combine(SPRITE_PATH, "portrait4.png"), 4),
-Sprite.new("MulePortraitSmall4", path.combine(SPRITE_PATH, "portraitSmall4.png")))
-
-mule:add_skin("Military Grade", 4, Sprite.new("MuleSelect5", path.combine(SPRITE_PATH, "select5.png"), 15, 56, 0),
-Sprite.new("MulePortrait5", path.combine(SPRITE_PATH, "portrait5.png"), 4),
-Sprite.new("MulePortraitSmall5", path.combine(SPRITE_PATH, "portraitSmall5.png")))
-]]
+mule:add_skin("0", sprite_palette, sprite_palette, sprite_palette)
+mule:add_skin("1", sprite_palette1, sprite_palette1, sprite_palette1)
+mule:add_skin("2", sprite_palette2, sprite_palette2, sprite_palette2)
+mule:add_skin("3", sprite_palette3, sprite_palette3, sprite_palette3)
+mule:add_skin("4", sprite_palette4, sprite_palette4, sprite_palette4)
 
 Callback.add(mule.on_init, function(actor)
 	actor.sprite_idle_half		= Array.new({sprite_idle,		sprite_idle_half, 0})

@@ -433,6 +433,14 @@ return {
 			date = "8/16/2056",
 			story = "Hey Dani! It's Vi, you won't believe what I just found. A box of old Eclipse Gummies! At work we were cleaning out this old ma' and pop convenience store and I found this box unopened in the back. My boss let me keep it since we'd just throw it out otherwise. It has to have been nearly 8 years since I last had one of these. Oh lil' Francesca Frog, Robot Reg and all of you other lil' fruity flavors. For a show that solely existed to sell merch, it sure did leave a mark on my childhood. I'm so glad these gummies taste the same as they did so long ago. Even giving me the same wiggly tingles as back then too. It really makes me think, why did they stop selling such popular gummies? Anyways I can't hog all of these to myself so I'm sending you a bunch to have too. Enjoy :heart:",
 			priority = "Standard"
+		},
+		denizuCrown = {
+			name = "Crown of Denizu",
+			pickup = "Fit for a mad king.",
+			description = "Fit for a mad king.",
+			destination = "-",
+			date = "-",
+			story = "-"
 		}
 	},
 
