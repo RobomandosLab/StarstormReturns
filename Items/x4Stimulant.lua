@@ -22,7 +22,7 @@ RecalculateStats.add(function(actor, api)
 	api.hp_regen_add(REGEN + REGEN_STACK * (actor:item_count(x4Stimulant) - 1))
 end)
 
-RecalculateStats.add(function(actor)
+RecalculateStats.add(function(actor, api)
 	local stack = actor:item_count(x4Stimulant)
     if stack <= 0 then return end
 	
