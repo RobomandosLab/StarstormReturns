@@ -879,8 +879,6 @@ Callback.add(efFollow.on_step, function(self)
 	end
 end)
 
-local crit_on_stunned = AttackFlag.new("NemmercCritOnStunned")
-
 Callback.add(stateSpecial.on_step, function(actor, data)
 	actor:get_default_skill(Skill.Slot.SPECIAL):freeze_cooldown()
 	actor.invincible = math.max(actor.invincible, 5)
@@ -985,7 +983,7 @@ Callback.add(stateSpecial.on_step, function(actor, data)
 				for i=0, actor:buff_count(buff_shadow_clone) do
 					local attack = actor:fire_direct(target, damage, actor:skill_util_facing_direction(), target.x, target.y).attack_info
 					attack.climb = i * 8 * 1.35
-					attack:set_flag(crit_on_stunned, true)
+					attack.damage_color = 5350773 -- well use this specific color to signify that this is nemmerc's special attack
 				end
 			end
 		else
@@ -1067,10 +1065,13 @@ Callback.add(stateSpecialEnd.on_get_interrupt_priority, function(actor, data)
 end)
 
 DamageCalculate.add(function(api)
-	if not api.attack_flags then return end
-	if not api.attack_flags & (1 << crit_on_stunned) then return end
+	-- this is incredibly jank but it works so im not gonna complain
+	if not api.damage_col then return end
+	if api.damage_col ~= 5350773 then return end
 	if not Instance.exists(api.parent) then return end
-	if not Instance.exists(api.hit) then return end
+	if not api.parent.class == nemmerc.value then return end
+
+	api.damage_col = Color.WHITE
 	
 	if api.hit.stunned == true then
 		particleBlood:set_direction(0, 360, 0, 0)
