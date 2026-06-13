@@ -67,7 +67,7 @@ local sound_disappear		= Sound.new("NemesisMercenaryDisappear", path.combine(SOU
 local sound_teleport		= Sound.new("NemesisMercenaryTeleport", path.combine(SOUND_PATH, "teleport.ogg"))
 local sound_shoot4			= Sound.new("NemesisMercenaryShoot4", path.combine(SOUND_PATH, "shoot4.ogg"))
 local sound_slide			= Sound.new("NemesisMercenarySlide", path.combine(SOUND_PATH, "slide.ogg"))
---local sound_select			= Sound.new("UISurvivorsNemesisMercenary", path.combine(SOUND_PATH, "select.ogg"))
+local sound_select			= Sound.new("UISurvivorsNemesisMercenary", path.combine(SOUND_PATH, "select.ogg"))
 
 local particleWispGTracer 	= Particle.find("WispGTracer")
 local particleBlood 		= Particle.find("Blood1")
@@ -115,7 +115,7 @@ nemmerc:add_skin("2", sprite_palette2, sprite_palette2, sprite_palette2)
 nemmerc:add_skin("3", sprite_palette3, sprite_palette3, sprite_palette3)
 nemmerc:add_skin("4", sprite_palette4, sprite_palette4, sprite_palette4)
 
---nemmerc.select_sound_id = sound_select
+nemmerc.select_sound_id = sound_select
 nemmerc.cape_offset = Array.new({-3, -8, 0, -5})
 
 Callback.add(nemmerc.on_init, function(actor)
