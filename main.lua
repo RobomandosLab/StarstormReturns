@@ -37,6 +37,7 @@ local init = function()
 		"Survivors",
 		"Items",
 		"Equipments",
+		"Mementos",
 		"Interactables",
 		"Artifacts",
 		"Stages",
