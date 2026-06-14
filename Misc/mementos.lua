@@ -17,6 +17,12 @@ Callback.add(Callback.ON_STEP, function()
 		thingy.sprite_index = gm.constants.sHoof
 		thingy.memento_id = 1
 	end
+	
+	if gm.input_check_pressed("aim_right") then
+		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
+		thingy.sprite_index = gm.constants.sBlade
+		thingy.memento_id = 2
+	end
 end)
 
 Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, result, args)     
@@ -53,7 +59,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 	if actor.inventory_memento ~= nil and pickup:alarm_get(0) == -1 and actor.swap_item == 0 and actor.is_local then
 		actor.swap_item = 1
 		pickup.item_switch = 1
-		pickup.item_switch_player = tplayer
+		pickup.item_switch_player = actor
 	end
             
 	if (Net.online and not Net.host) and pickup.item_switch == 1 then
@@ -75,7 +81,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 					--Instance.create(pickup.x, pickup.y - 16, Global.class_memento[actor.inventory_memento].object_id)
 					local thingy = Instance.create(pickup.x, pickup.y - 16, gm.constants.pPickup) -- right now just create whatever since we dont have any mementos yet
 					thingy.sprite_index = gm.constants.sHoof
-					thingy.memento_id = 1
+					thingy.memento_id = actor.inventory_memento
 				end
 				
 				GM.callback_execute(33, pickup, actor)
