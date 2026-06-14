@@ -1,4 +1,12 @@
-Global.class_memento = {} -- struct with all the memento items
+Global.class_memento = Array.new() -- array with all the memento items
+
+Global.class_memento:push(Struct.new({ -- add memento 1
+	sprite_id = gm.constants.sHoof -- right now only has sprite data
+}))
+
+Global.class_memento:push(Struct.new({ -- add memento 2
+	sprite_id = gm.constants.sBlade -- right now also only has sprite data
+}))
 
 -- THIS NEEDS A PROPER CLASS ASAP
 -- I am not familiar with building out a proper class, and that is just not what im trying to look at rn
@@ -12,15 +20,17 @@ Global.class_memento = {} -- struct with all the memento items
 Callback.add(Callback.ON_STEP, function()
 	local actor = Instance.find(Object.find("P"))
 	
+	print(Global.class_memento[1].sprite_id)
+	
 	if gm.input_check_pressed("aim_left") then
 		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
-		thingy.sprite_index = gm.constants.sHoof
+		thingy.sprite_index = Global.class_memento[1].sprite_id
 		thingy.memento_id = 1
 	end
 	
 	if gm.input_check_pressed("aim_right") then
 		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
-		thingy.sprite_index = gm.constants.sBlade
+		thingy.sprite_index = Global.class_memento[2].sprite_id
 		thingy.memento_id = 2
 	end
 end)
@@ -80,7 +90,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 				if (not Net.online or Net.host) and actor.inventory_memento ~= nil then --and Global.class_memento[actor.inventory_memento].object_id ~= nil then
 					--Instance.create(pickup.x, pickup.y - 16, Global.class_memento[actor.inventory_memento].object_id)
 					local thingy = Instance.create(pickup.x, pickup.y - 16, gm.constants.pPickup) -- right now just create whatever since we dont have any mementos yet
-					thingy.sprite_index = gm.constants.sHoof
+					thingy.sprite_index = Global.class_memento[actor.inventory_memento].sprite_id
 					thingy.memento_id = actor.inventory_memento
 				end
 				
