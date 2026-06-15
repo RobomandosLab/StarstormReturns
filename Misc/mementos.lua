@@ -20,7 +20,7 @@ Global.class_memento:push(Struct.new({ -- add memento 2
 Callback.add(Callback.ON_STEP, function()
 	local actor = Instance.find(Object.find("P"))
 	
-	print(Global.class_memento[1].sprite_id)
+	--print(Global.class_memento[1].sprite_id)
 	
 	if gm.input_check_pressed("aim_left") then
 		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
@@ -113,6 +113,24 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 	end
             
 	return false
+end)
+
+Hook.add_pre("gml_Object_pPickup_Draw_0", function(self, other) 
+	if not self.memento_id then return end
+
+	if self.item_switch == 1 then
+		local string
+
+		if GM.player_util_get_hold_swap(self.item_switch_player) then
+			string = "Hold F to swap memento" -- placeholder strings obvs
+		else
+			string = "Press F to swap memento"
+		end
+
+		print(self.dx, Math.round(self.y) + 80, string)
+		GM.scribble_set_starting_format("fntNormal", 16777215, 1)
+		GM.scribble_draw(Math.round(self.x), Math.round(self.y) + 80, string)
+	end
 end)
 
 Memento = {} -- api class
