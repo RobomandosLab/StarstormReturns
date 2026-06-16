@@ -1,13 +1,5 @@
 Global.class_memento = Array.new() -- array with all the memento items
 
-Global.class_memento:push(Struct.new({ -- add memento 1
-	sprite_id = gm.constants.sHoof -- right now only has sprite data
-}))
-
-Global.class_memento:push(Struct.new({ -- add memento 2
-	sprite_id = gm.constants.sBlade -- right now also only has sprite data
-}))
-
 -- THIS NEEDS A PROPER CLASS ASAP
 -- I am not familiar with building out a proper class, and that is just not what im trying to look at rn
 -- I'm mainly messing with mechanics rn to see what's possible
@@ -55,6 +47,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
                 if not Net.online or Net.host then
 					--equipment_set(tplayer, tequipment);
 					actor.inventory_memento = pickup.memento_id
+					Callback.wrap_type(Global.class_memento[pickup.memento_id].on_acquired):call(actor)
 					
 					if Net.online then
 						GM.chat_add_system_message(1, "chat.pickup", actor.user_name_string_escaped, pickup.text1_key, pickup.text1_key_sub, 2, 1)
@@ -92,6 +85,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 					local thingy = Instance.create(pickup.x, pickup.y - 16, gm.constants.pPickup) -- right now just create whatever since we dont have any mementos yet
 					thingy.sprite_index = Global.class_memento[actor.inventory_memento].sprite_id
 					thingy.memento_id = actor.inventory_memento
+					Callback.wrap_type(Global.class_memento[actor.inventory_memento].on_removed):call(actor)
 				end
 				
 				GM.callback_execute(33, pickup, actor)
@@ -101,6 +95,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 				if not Net.online or Net.host then
 					--equipment_set(tplayer, tequipment);
 					actor.inventory_memento = pickup.memento_id
+					Callback.wrap_type(Global.class_memento[pickup.memento_id].on_acquired):call(actor)
 				
 					if Net.online then
 						GM.chat_add_system_message(1, "chat.pickup", actor.user_name_string_escaped, pickup.text1_key, pickup.text1_key_sub, 2, 1)
@@ -122,12 +117,11 @@ Hook.add_pre("gml_Object_pPickup_Draw_0", function(self, other)
 		local string
 
 		if GM.player_util_get_hold_swap(self.item_switch_player) then
-			string = "Hold F to swap memento" -- placeholder strings obvs
+			string = GM.translate("ui.memento.mementoHoldSwap", GM.control_string(self.item_switch_player.input_player_index, "interact"))
 		else
-			string = "Press F to swap memento"
+			string = GM.translate("ui.memento.mementoSwap", GM.control_string(self.item_switch_player.input_player_index, "swap"))
 		end
 
-		print(self.dx, Math.round(self.y) + 80, string)
 		GM.scribble_set_starting_format("fntNormal", 16777215, 1)
 		GM.scribble_draw(Math.round(self.x), Math.round(self.y) + 80, string)
 	end
@@ -135,8 +129,24 @@ end)
 
 Memento = {} -- api class
 
-function Memento.new(identifier)
-    --Memento[identifier] = {}
-    -- theres functions here that the game uses to register objects and stuff
-    -- ideally we get to a point where we can call gm.item_drop_object() and it spawns a pickup parented to pPickupMemento
+function Memento.new(identifier) -- rn just using this as a reference for all the data mementos would need to have
+	local size = Global.class_memento:size()
+
+	Global.class_memento:push(Struct.new({
+		identifier = identifier,
+		index = size + 1,
+		sprite_id = 0,
+		on_acquired = Callback.new(identifier.."OnAcquired"),
+		on_removed = Callback.new(identifier.."OnRemoved"),
+	}))
+
+	return Global.class_memento[size + 1]
 end
+
+
+-- test mementos
+local mem1 = Memento.new("test1")
+mem1.sprite_id = gm.constants.sHoof 
+
+local mem2 = Memento.new("test2")
+mem2.sprite_id = gm.constants.sBlade

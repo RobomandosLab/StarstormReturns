@@ -567,6 +567,10 @@ return {
 				["enableChirrsmas.always"] = "Always",
 				["enableChirrsmas.never"] = "Never"
 			}
+		},
+		memento = {
+			mementoSwap = "Press %s to switch memento",
+			mementoHoldSwap = "Hold %s to switch memento"
 		}
 	}
 }
