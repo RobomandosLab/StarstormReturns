@@ -1,13 +1,10 @@
 Global.class_memento = Array.new() -- array with all the memento items
 
--- THIS NEEDS A PROPER CLASS ASAP
--- I am not familiar with building out a proper class, and that is just not what im trying to look at rn
--- I'm mainly messing with mechanics rn to see what's possible
+local MementoTier = ItemTier.new("Memento")
+MementoTier.text_color = Color.Item.PURPLE
+MementoTier.pickup_color = Color.Item.PURPLE
+MementoTier.pickup_color_bright = Color.Item.PURPLE
 
--- WHAT THIS PROBABLY NEEDS TO WORK
--- GENERAL: if we use anything normal items do like pickups, wed need to make sure to alter behaviors related to items
--- Having .find() and whatnot like the RAPI classes is probably a good idea, generally making this work like RAPI is good
--- Giving actors some kind of :memento_set() and :memento_get() like equipments would be cool obvs -- this should just edit/retrieve the variable actor.memento_id variable
 
 Callback.add(Callback.ON_STEP, function()
 	local actor = Instance.find(Object.find("P"))
@@ -15,15 +12,11 @@ Callback.add(Callback.ON_STEP, function()
 	--print(Global.class_memento[1].sprite_id)
 	
 	if gm.input_check_pressed("aim_left") then
-		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
-		thingy.sprite_index = Global.class_memento[1].sprite_id
-		thingy.memento_id = 1
+		Memento.create(1, actor.x + actor.image_xscale * 20, actor.y - 10)
 	end
 	
 	if gm.input_check_pressed("aim_right") then
-		local thingy = Instance.create(actor.x + actor.image_xscale * 20, actor.y - 10, gm.constants.pPickup)
-		thingy.sprite_index = Global.class_memento[2].sprite_id
-		thingy.memento_id = 2
+		Memento.create(2, actor.x + actor.image_xscale * 20, actor.y - 10)
 	end
 end)
 
@@ -81,10 +74,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 				pickup.item_switch = 2
 				
 				if (not Net.online or Net.host) and actor.inventory_memento ~= nil then --and Global.class_memento[actor.inventory_memento].object_id ~= nil then
-					--Instance.create(pickup.x, pickup.y - 16, Global.class_memento[actor.inventory_memento].object_id)
-					local thingy = Instance.create(pickup.x, pickup.y - 16, gm.constants.pPickup) -- right now just create whatever since we dont have any mementos yet
-					thingy.sprite_index = Global.class_memento[actor.inventory_memento].sprite_id
-					thingy.memento_id = actor.inventory_memento
+					Memento.create(actor.inventory_memento, pickup.x, pickup.y - 16)
 					Callback.wrap_type(Global.class_memento[actor.inventory_memento].on_removed):call(actor)
 				end
 				
@@ -110,6 +100,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 	return false
 end)
 
+-- shows the switch prompt when you are able to switch mementos
 Hook.add_pre("gml_Object_pPickup_Draw_0", function(self, other) 
 	if not self.memento_id then return end
 
@@ -143,10 +134,11 @@ function Memento.new(identifier) -- rn just using this as a reference for all th
 	return Global.class_memento[size + 1]
 end
 
+function Memento.create(index, x, y) -- this should probably be an instance method (also it should do more than just take the index)
+	if not Global.class_memento[index] then return end
 
--- test mementos
-local mem1 = Memento.new("test1")
-mem1.sprite_id = gm.constants.sHoof 
-
-local mem2 = Memento.new("test2")
-mem2.sprite_id = gm.constants.sBlade
+	local pickup = Instance.create(x, y, gm.constants.pPickup)
+	pickup.sprite_index = Global.class_memento[index].sprite_id
+	pickup.memento_id = index
+	pickup.tier = MementoTier
+end
