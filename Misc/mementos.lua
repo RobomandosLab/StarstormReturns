@@ -6,6 +6,11 @@ MementoTier.pickup_color = Color.Item.PURPLE
 MementoTier.pickup_color_bright = Color.Item.PURPLE
 
 
+Callback.add(Callback.ON_PLAYER_INIT, function(actor)
+	actor.memento_inventory = Array.new()
+	actor.memento_slots = 1
+end)
+
 Callback.add(Callback.ON_STEP, function()
 	local actor = Instance.find(Object.find("P"))
 	
@@ -28,7 +33,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 	
 	if not Net.online or Net.host or pickup.force_pickup == actor.m_id then
 		if pickup:alarm_get(0) == -1 then
-			if actor.inventory_memento == nil then
+			if actor.memento_inventory:size() < actor.memento_slots then
 				if (Net.online and Net.host) then
 					gm.net_send_instance_message(17, actor.m_id)
 				end
@@ -38,9 +43,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 				GM.instance_callback_call(pickup.on_collect, Array.new({"Instance", "Instance"}), pickup.id, actor)
                         
                 if not Net.online or Net.host then
-					--equipment_set(tplayer, tequipment);
-					actor.inventory_memento = pickup.memento_id
-					Callback.wrap_type(Global.class_memento[pickup.memento_id].on_acquired):call(actor)
+					Memento.add(actor, pickup.memento_id)
 					
 					if Net.online then
 						GM.chat_add_system_message(1, "chat.pickup", actor.user_name_string_escaped, pickup.text1_key, pickup.text1_key_sub, 2, 1)
@@ -52,7 +55,7 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 		end
 	end
 	
-	if actor.inventory_memento ~= nil and pickup:alarm_get(0) == -1 and actor.swap_item == 0 and actor.is_local then
+	if actor.memento_inventory:size() >= actor.memento_slots  and pickup:alarm_get(0) == -1 and actor.swap_item == 0 and actor.is_local then
 		actor.swap_item = 1
 		pickup.item_switch = 1
 		pickup.item_switch_player = actor
@@ -72,20 +75,13 @@ Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, 
 				end
 						
 				pickup.item_switch = 2
-				
-				if (not Net.online or Net.host) and actor.inventory_memento ~= nil then --and Global.class_memento[actor.inventory_memento].object_id ~= nil then
-					Memento.create(actor.inventory_memento, pickup.x, pickup.y - 16)
-					Callback.wrap_type(Global.class_memento[actor.inventory_memento].on_removed):call(actor)
-				end
-				
 				GM.callback_execute(33, pickup, actor)
 				--__lf_pPickup_step_collect_item(id, tplayer, -1, tequipment);
 				GM.instance_callback_call(pickup.on_collect, Array.new({"Instance", "Instance"}), pickup.id, actor)
 				
 				if not Net.online or Net.host then
 					--equipment_set(tplayer, tequipment);
-					actor.inventory_memento = pickup.memento_id
-					Callback.wrap_type(Global.class_memento[pickup.memento_id].on_acquired):call(actor)
+					Memento.add(actor, pickup.memento_id)
 				
 					if Net.online then
 						GM.chat_add_system_message(1, "chat.pickup", actor.user_name_string_escaped, pickup.text1_key, pickup.text1_key_sub, 2, 1)
@@ -134,6 +130,7 @@ function Memento.new(identifier) -- rn just using this as a reference for all th
 	return Global.class_memento[size + 1]
 end
 
+-- really all of these functions probably ought to be reorganized and 
 function Memento.create(index, x, y) -- this should probably be an instance method (also it should do more than just take the index)
 	if not Global.class_memento[index] then return end
 
@@ -141,4 +138,18 @@ function Memento.create(index, x, y) -- this should probably be an instance meth
 	pickup.sprite_index = Global.class_memento[index].sprite_id
 	pickup.memento_id = index
 	pickup.tier = MementoTier
+end
+
+function Memento.add(actor, index)
+	if (not Net.online or Net.host) then
+		actor.memento_inventory:push(index)
+		Callback.wrap_type(Global.class_memento[index].on_acquired):call(actor)
+
+		if actor.memento_slots < actor.memento_inventory:size() then
+			local dropped = actor.memento_inventory:get(0)
+			Memento.create(dropped, actor.x, actor.y - 20)
+			Callback.wrap_type(Global.class_memento[dropped].on_removed):call(actor)
+			actor.memento_inventory:delete(0)
+		end
+	end
 end
