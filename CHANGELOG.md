@@ -1,5 +1,10 @@
 # SSR Changelog *spoilers below!!*
 
+## 0.1.9
+- Fixed a bug that caused White Flag to not load on Linux
+- Fixed X4 Stimulant's cooldown reduction not applying properly
+- Added a select sound for Nemesis Mercenary
+
 ## 0.1.8
 - Put Technician and all Artifacts behind "Unfinished Content" toggle in the settings due to their instability.
 - Added skins back!
