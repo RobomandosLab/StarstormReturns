@@ -1,6 +1,6 @@
 local sprite_item			= Sprite.new("WhiteFlag", path.combine(PATH, "Sprites/Equipments/whiteFlag.png"), 2, 15, 16)
-local sprite_flag_spawn		= Sprite.new("EfWhiteFlagSpawn", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagSpawn.png"), 13, 32, 45)
-local sprite_flag_idle		= Sprite.new("EfWhiteFlagIdle", path.combine(PATH, "Sprites/Equipments/Effects/whiteFlagIdle.png"), 5, 15, 26)
+local sprite_flag_spawn		= Sprite.new("EfWhiteFlagSpawn", path.combine(PATH, "Sprites/Equipments/effects/whiteFlagSpawn.png"), 13, 32, 45)
+local sprite_flag_idle		= Sprite.new("EfWhiteFlagIdle", path.combine(PATH, "Sprites/Equipments/effects/whiteFlagIdle.png"), 5, 15, 26)
 local sprite_buff			= Sprite.new("BuffPeace", path.combine(PATH, "Sprites/Buffs/peace.png"), 1, 10, 10)
 local sprite_skill			= Sprite.new("SkillPeace", path.combine(PATH, "Sprites/Buffs/peaceLock.png"), 1, 2, 1)
 local sound 				= Sound.new("WhiteFlag", path.combine(PATH, "Sounds/Items/whiteFlag.ogg"))
