@@ -1,28 +1,11 @@
-Global.class_memento = Array.new() -- array with all the memento items
-
 local MementoTier = ItemTier.new("Memento")
-MementoTier.text_color = Color.Item.PURPLE
-MementoTier.pickup_color = Color.Item.PURPLE
-MementoTier.pickup_color_bright = Color.Item.PURPLE
-
+MementoTier.text_color = Color.from_hex(0x2cc0c0)
+MementoTier.pickup_color = Color.from_hex(0x2cc0c0)
+MementoTier.pickup_color_bright = Color.from_hex(0x73ffff)
 
 Callback.add(Callback.ON_PLAYER_INIT, function(actor)
 	actor.memento_inventory = Array.new()
 	actor.memento_slots = 1
-end)
-
-Callback.add(Callback.ON_STEP, function()
-	local actor = Instance.find(Object.find("P"))
-	
-	--print(Global.class_memento[1].sprite_id)
-	
-	if gm.input_check_pressed("aim_left") then
-		Memento.create(1, actor.x + actor.image_xscale * 20, actor.y - 10)
-	end
-	
-	if gm.input_check_pressed("aim_right") then
-		Memento.create(2, actor.x + actor.image_xscale * 20, actor.y - 10)
-	end
 end)
 
 Hook.add_pre(gm.constants.__lf_pPickup_step_collide_item, function(self, other, result, args)     
@@ -113,43 +96,3 @@ Hook.add_pre("gml_Object_pPickup_Draw_0", function(self, other)
 		GM.scribble_draw(Math.round(self.x), Math.round(self.y) + 80, string)
 	end
 end)
-
-Memento = {} -- api class
-
-function Memento.new(identifier) -- rn just using this as a reference for all the data mementos would need to have
-	local size = Global.class_memento:size()
-
-	Global.class_memento:push(Struct.new({
-		identifier = identifier,
-		index = size + 1,
-		sprite_id = 0,
-		on_acquired = Callback.new(identifier.."OnAcquired"),
-		on_removed = Callback.new(identifier.."OnRemoved"),
-	}))
-
-	return Global.class_memento[size + 1]
-end
-
--- really all of these functions probably ought to be reorganized and 
-function Memento.create(index, x, y) -- this should probably be an instance method (also it should do more than just take the index)
-	if not Global.class_memento[index] then return end
-
-	local pickup = Instance.create(x, y, gm.constants.pPickup)
-	pickup.sprite_index = Global.class_memento[index].sprite_id
-	pickup.memento_id = index
-	pickup.tier = MementoTier
-end
-
-function Memento.add(actor, index)
-	if (not Net.online or Net.host) then
-		actor.memento_inventory:push(index)
-		Callback.wrap_type(Global.class_memento[index].on_acquired):call(actor)
-
-		if actor.memento_slots < actor.memento_inventory:size() then
-			local dropped = actor.memento_inventory:get(0)
-			Memento.create(dropped, actor.x, actor.y - 20)
-			Callback.wrap_type(Global.class_memento[dropped].on_removed):call(actor)
-			actor.memento_inventory:delete(0)
-		end
-	end
-end

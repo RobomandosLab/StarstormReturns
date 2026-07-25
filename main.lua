@@ -19,6 +19,8 @@ Settings = {
 
 SettingsFile = TOML.new()
 
+Global.class_memento = Array.new() -- array with all the memento items
+
 ssr_chirrsmas_active = false -- gets set in the library file
 
 local init = function()

@@ -372,5 +372,31 @@ function ssr_table_shuffle(tabl)
 	return tabl
 end
 
+-- give memento command
+Console.new{
+	"memento (identifier)",
+	{
+		"Spawns a memento.",
+		{"(identifier)", "string", "The identifier of the memento (e.g., <y>judderingEgg</c>."},
+	},
+	function(args)
+		if not Util.bool(Global.__run_exists) then
+            Console.print("Not currently in a run.")
+            return
+        end
+		
+		local memento = Memento.find(args[1])
+		
+		if memento == nil then
+			Console.print("Not a valid identifier.")
+			return
+		end
+		
+		local x, y = Global.mouse_x, Global.mouse_y
+		
+		Memento.create(memento.index, x, y)
+	end
+}
+
 -- easy shortcut for checking if chirrsmas is active
 ssr_chirrsmas_active = ((tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 15) or (tonumber(os.date("%m")) == 1 and tonumber(os.date("%d")) <= 15) or Settings.chirrsmas == 1)
