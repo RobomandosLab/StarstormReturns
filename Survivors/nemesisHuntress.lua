@@ -101,3 +101,10 @@ Callback.add(statePrimaryRelease.on_step, function(actor, data)
     GM.actor_set_state_networked(actor, -1) -- temp exits until this state plays an anim
 end)
 
+
+
+-- Proximity Mine
+secondary.cooldown = 4.5 * 60
+secondary.damage = 1.5
+secondary.require_key_press = false
+primary.required_interrupt_priority = ActorState.InterruptPriority.SKILL
