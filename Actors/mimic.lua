@@ -5,21 +5,17 @@ local SOUND_PATH = path.combine(PATH, "Sounds/Actors/Mimic")
 local sprite_mask			= Sprite.new("MimicMask",			path.combine(SPRITE_PATH, "mask.png"), 1, 21, 24)
 local sprite_palette		= Sprite.new("MimicPalette",		path.combine(SPRITE_PATH, "palette.png"))
 
-local sprite_idle			= Sprite.new("MimicIdle",			path.combine(SPRITE_PATH, "idle.png"), 2, 30, 35)
-local sprite_idle2			= Sprite.new("MimicIdle2",			path.combine(SPRITE_PATH, "idle2.png"), 2, 30, 45)
-local sprite_walk			= Sprite.new("MimicWalk",			path.combine(SPRITE_PATH, "walk.png"), 8, 30, 35)
-local sprite_walk2			= Sprite.new("MimicWalk2",			path.combine(SPRITE_PATH, "walk2.png"), 6, 30, 35)
+local sprite_idle			= Sprite.new("MimicIdle",			path.combine(SPRITE_PATH, "idle.png"), 6, 32, 25)
+local sprite_walk			= Sprite.new("MimicWalk",			path.combine(SPRITE_PATH, "walk.png"), 8, 37, 30)
 local sprite_jump			= Sprite.new("MimicJump",			path.combine(SPRITE_PATH, "jump.png"), 1, 19, 28)
 local sprite_jump_peak		= Sprite.new("MimicJumpPeak",		path.combine(SPRITE_PATH, "jumpPeak.png"), 1, 19, 28)
 local sprite_fall			= Sprite.new("MimicFall",			path.combine(SPRITE_PATH, "fall.png"), 1, 19, 28)
 local sprite_death			= Sprite.new("MimicDeath",			path.combine(SPRITE_PATH, "death.png"), 10, 55, 93)
-local sprite_shoot1a		= Sprite.new("MimicShoot1a",		path.combine(SPRITE_PATH, "shoot1a.png"), 10, 30, 45)
-local sprite_shoot1b		= Sprite.new("MimicShoot1b",		path.combine(SPRITE_PATH, "shoot1b.png"), 4, 30, 45)
-local sprite_shoot1c		= Sprite.new("MimicShoot1c",		path.combine(SPRITE_PATH, "shoot1c.png"), 6, 30, 45)
 local sprite_portrait		= Sprite.new("MimicPortrait",		path.combine(SPRITE_PATH, "portrait.png"))
 
-local sprite_inactive_idle	= Sprite.new("MimicInactiveIdle",	path.combine(SPRITE_PATH, "inactiveIdle.png"), 14, 30, 38)
-local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 18, 30, 60)
+local sprite_inactive_idle	= Sprite.new("MimicInactiveIdle",	path.combine(SPRITE_PATH, "inactiveIdle.png"), 1, 28, 32)
+local sprite_inactive_scan	= Sprite.new("MimicInactiveScan",	path.combine(SPRITE_PATH, "inactiveScan.png"), 4, 28, 32)
+local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 25, 28, 70)
 local sprite_vacuum			= Sprite.new("MimicVacuumFX", 		path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
 local sprite_ping 			= Sprite.new("MimicPing", 			path.combine(SPRITE_PATH, "ping.png"), 1, 14, 19)
 
@@ -151,8 +147,8 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 			offset_x = -90
 			offset_y = 30
 			
-			if gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
-				add_x = -(gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20)
+			if gm.string_width(gm.translate("monster.mimic.stolen") .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
+				add_x = -(gm.string_width(gm.translate("monster.mimic.stolen") .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20)
 			end
 		elseif i == 2 then
 			offset_x = 90
@@ -202,7 +198,7 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 		end
 		
 		if mimic_data.prep_timer > 0 then
-			class = "I'M"
+			class = gm.translate("monster.mimic.im")
 		end
 		
 		
@@ -212,16 +208,16 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 		
 		gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
 		
-		local stolen = "STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))
+		local stolen = gm.translate("monster.mimic.stolen") .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))
 		
 		local add_x = 0
 		
-		if gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
-			add_x = gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20
+		if gm.string_width(gm.translate("monster.mimic.stolen") .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
+			add_x = gm.string_width(gm.translate("monster.mimic.stolen") .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20
 		end
 		
 		if mimic_data.prep_timer > 0 then
-			stolen = "FOR"
+			stolen = gm.translate("monster.mimic._for")
 		end
 		
 		if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
@@ -230,10 +226,10 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 		
 		gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
 		
-		local scanning = "SCANNING..."
+		local scanning = gm.translate("monster.mimic.scan")
 		
 		if mimic_data.prep_timer > 0 then
-			scanning = "COMING"
+			scanning = gm.translate("monster.mimic.coming")
 		end
 		
 		if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
@@ -260,7 +256,7 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 			gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
 			
 			if mimic_data.prep_timer > 0 then
-				percent = "YOU"
+				percent = gm.translate("monster.mimic.you")
 			end
 			
 			if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
@@ -355,6 +351,9 @@ Callback.add(mimicInactive.on_step, function(self)
 				if Instance.get_data(self.target).__ssr_mimic_scan_anim then
 					if Instance.get_data(self.target).__ssr_mimic_scan_anim >= 150 and data.prep_timer <= 0 then
 						data.steal_timer = data.steal_timer + 1
+						
+						self.sprite_index = sprite_inactive_scan
+						self.image_index = data.steal_timer / 4
 						
 						if data.steal_timer % 15 == 0 and data.steal_timer < 120 then
 							self.target:sound_play(gm.constants.wUI_SliderTick, 1, 0.7 + 0.1 * data.steal_timer / 30)
