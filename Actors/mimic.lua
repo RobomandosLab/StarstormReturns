@@ -22,7 +22,6 @@ local sprite_inactive_idle	= Sprite.new("MimicInactiveIdle",	path.combine(SPRITE
 local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 18, 30, 60)
 local sprite_vacuum			= Sprite.new("MimicVacuumFX", 		path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
 local sprite_ping 			= Sprite.new("MimicPing", 			path.combine(SPRITE_PATH, "ping.png"), 1, 14, 19)
-local sprite_found_you 		= Sprite.new("MimicFoundYou", 		path.combine(SPRITE_PATH, "found_you.png"), 1, 75, 95)
 
 local sound_spawn			= Sound.new("MimicSpawn",			path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit				= Sound.new("MimicHit",				path.combine(SOUND_PATH, "hit.ogg"))
@@ -60,7 +59,7 @@ mlog.stat_hp = 200
 mlog.stat_damage = 10
 mlog.stat_speed = 2.6
 
-local primary			= Skill.new("mimicZ")
+local primary = Skill.new("mimicZ")
 
 Callback.add(mimic.on_create, function(actor)
 	actor.sprite_palette = sprite_palette
@@ -116,7 +115,177 @@ scan.effect_display = EffectDisplay.func(function(actor_unwrapped)
 	local xx = Math.lerp(actor.x + (600 - 10 * math.min(timer * 2, 240)) * math.sin(math.rad(90 - 0.75 * math.min(timer, 120))), actor.x, (math.min(timer / 120, 1)))
 	local yy = Math.lerp(actor.y - (400 - 10 * math.min(timer * 2, 240)) * math.sin(math.rad(90 - 0.75 * math.min(timer, 120))), actor.y, (math.min(timer / 120, 1)))
 	
-	GM.draw_sprite_ext(sprite_found_you, 0, xx, yy, 1, 1, 0, Color.WHITE, math.min(0.1 * timer, 1))
+	gm.gpu_set_fog(true, Color.Item.RED, 0, 0)
+	GM.draw_sprite_ext(gm.constants.sEfBossKillerCrosshair, timer / 4, xx, yy, 1, 1, 0, Color.WHITE, math.min(0.1 * timer, 1))
+	gm.gpu_set_fog(false, Color.Item.RED, 0, 0)
+	
+	local mimic_data = Instance.get_data(Instance.wrap(data.__ssr_mimic_scan_parent))
+	local item = mimic_data.target_items[1]
+	local steal = mimic_data.steal_timer
+	
+	for i = 0, 2 do
+		local panel_timer = timer - 120 - 10 * i
+		local offset_x = -90
+		local offset_y = -30
+		local add_x = 0
+		local size = 1
+		
+		if i == 0 then
+			offset_x = -90
+			offset_y = -30
+			
+			local class
+		
+			if actor.class then
+				class = gm.translate(Survivor.wrap(actor.class).token_name_upper)
+			elseif actor.name then
+				class = actor.name
+			else
+				class = "???"
+			end
+			
+			if gm.string_width(class) > 60 then
+				add_x = -(gm.string_width(class) - 60 + 20)
+			end
+		elseif i == 1 then
+			offset_x = -90
+			offset_y = 30
+			
+			if gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
+				add_x = -(gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20)
+			end
+		elseif i == 2 then
+			offset_x = 90
+			offset_y = 0
+			size = 2.5
+		end
+		
+		if panel_timer < 0 or (panel_timer >= 3 and panel_timer <= 6) then
+			gm.draw_set_alpha(0)
+		else
+			gm.draw_set_alpha(0.5)
+		end
+		
+		if panel_timer <= 9 then
+			gm.draw_set_colour(Color.WHITE)
+		else
+			gm.draw_set_colour(Color.Item.RED)
+		end
+		
+		gm.draw_roundrect(actor.x + offset_x - 40 + add_x, actor.y + offset_y - 20 * size, actor.x + offset_x + 40, actor.y + offset_y + 20 * size, false)
+		gm.draw_set_colour(Color.RED)
+		gm.draw_roundrect(actor.x + offset_x - 40 + add_x, actor.y + offset_y - 20 * size, actor.x + offset_x + 40, actor.y + offset_y + 20 * size, true)
+		gm.draw_set_alpha(1)
+	end
+	
+	local item_x = actor.x + 90
+	local item_y = actor.y
+	
+	if timer >= 150 then
+		
+		gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
+		
+		local class
+		
+		if actor.class then
+			class = gm.translate(Survivor.wrap(actor.class).token_name_upper)
+		elseif actor.name then
+			class = actor.name
+		else
+			class = "???"
+		end
+		
+		local add_x = 0
+		
+		if gm.string_width(class) > 60 then
+			add_x = gm.string_width(class) - 60 + 20
+		end
+		
+		if mimic_data.prep_timer > 0 then
+			class = "I'M"
+		end
+		
+		
+		if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
+			gm.scribble_draw(actor.x - 90 - (add_x / 2), actor.y - 40, class)
+		end
+		
+		gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
+		
+		local stolen = "STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))
+		
+		local add_x = 0
+		
+		if gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) > 60 then
+			add_x = gm.string_width("STOLEN : " .. string.format("%02d", math.floor(#mimic_data.stolen_items / 2))) - 60 + 20
+		end
+		
+		if mimic_data.prep_timer > 0 then
+			stolen = "FOR"
+		end
+		
+		if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
+			gm.scribble_draw(actor.x - 90 - (add_x / 2), actor.y + 25, stolen)
+		end
+		
+		gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
+		
+		local scanning = "SCANNING..."
+		
+		if mimic_data.prep_timer > 0 then
+			scanning = "COMING"
+		end
+		
+		if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
+			gm.scribble_draw(item_x, item_y - 40, scanning)
+		end
+				
+		if steal <= 120 then
+			gm.draw_set_colour(Color.RED)
+			
+			if item and mimic_data.prep_timer <= 0 then
+				GM.draw_sprite_ext(Item.wrap(item).sprite_id, 0, item_x, item_y, math.sin(math.rad(steal * 5)), 1, 0, Color.BLACK, 1)
+				gm.draw_set_colour(Color.WHITE)
+				
+				local sprite = Item.wrap(item).sprite_id
+				local w = GM.sprite_get_width(sprite)
+				local h = GM.sprite_get_height(sprite)
+				local xo = w - GM.sprite_get_xoffset(sprite)
+				local yo = h - GM.sprite_get_yoffset(sprite)
+				
+				GM.draw_sprite_part_ext(Item.wrap(item).sprite_id, 0, 0, h * (1 - (steal / 120)), w, h, item_x - xo * math.sin(math.rad(steal * 5)), item_y - yo + (h * (1 - (steal / 120))), math.sin(math.rad(steal * 5)), 1, Color.WHITE, 1)
+			end
+			
+			local percent = tostring(math.floor(math.min(100, (steal / 120) * 100))) .. "%"
+			gm.scribble_set_starting_format("fntNormal", Color.WHITE, 1)
+			
+			if mimic_data.prep_timer > 0 then
+				percent = "YOU"
+			end
+			
+			if mimic_data.prep_timer <= 0 or mimic_data.prep_timer % 60 >= 30 then
+				gm.scribble_draw(item_x, item_y + 25, percent)
+			end
+		else
+			if item and mimic_data.prep_timer <= 0 then
+				local size = 1
+				if steal >= 120 and steal <= 130 then
+					gm.gpu_set_fog(true, Color.WHITE, 0, 0)
+					size = 1.2
+				end
+				
+				GM.draw_sprite_ext(Item.wrap(item).sprite_id, 0, item_x, item_y, 1 * size, 1 * size, 0, Color.WHITE, 1)
+				
+				gm.gpu_set_fog(false, Color.WHITE, 0, 0)
+			end
+			
+			gm.scribble_set_starting_format("fntNormal", Color.LIME, 1)
+			gm.scribble_draw(item_x, item_y + 25, string.upper(gm.translate("ui.done")))
+		end
+	end
+	
+	gm.draw_set_alpha(1)
+	gm.draw_set_colour(Color.WHITE)
 	
 end, EffectDisplay.DrawPriority.BODY_POST)
 
@@ -135,28 +304,103 @@ Callback.add(scan.on_step, function(actor)
 		actor:sound_play(gm.constants.wDroneRecycler_Activate, 1, 1)
 	end
 	
-	if data.__ssr_mimic_scan_anim == 2 * 60 then
-		actor:sound_play(gm.constants.wHANDShoot2_1, 1, 0.7)
+	if data.__ssr_mimic_scan_anim >= 120 and data.__ssr_mimic_scan_anim <= 140 and data.__ssr_mimic_scan_anim % 10 == 0 then
+		actor:sound_play(gm.constants.wHANDShoot2_1, 1, 0.6 + 0.2 * math.random())
 	end
+	
+	if not Instance.exists(data.__ssr_mimic_scan_parent) or Instance.wrap(data.__ssr_mimic_scan_parent).active > 0 then
+		if Net.host then
+			actor:buff_remove(scan)
+		end
+	end
+end)
+
+Callback.add(scan.on_remove, function(actor)
+	local data = Instance.get_data(actor)
+	data.__ssr_mimic_scan_anim = nil
 end)
 
 Callback.add(mimicInactive.on_create, function(self)
 	GM.interactable_init_cost(self, 0, 50)
+	
+	local data = Instance.get_data(self)
+	data.stolen_items = {}
+	data.steal_timer = 0
+	data.prep_timer = 0
+	
 	self.sprite_ping = gm.constants.sPing_Chest2
 	self:interactable_init_name()
 end)
 
 Callback.add(mimicInactive.on_step, function(self)
 	if Net.host then
-		if self.active == 0 and not Instance.exists(self.target) then
-			local target = self:collision_circle(self.x, self.y, 2000, gm.constants.oP, false, true)
+		local target
+		
+		if self.active == 0 then
+			if not Instance.exists(self.target) then
+				target = self:collision_circle(self.x, self.y, 2000, gm.constants.oP, false, true)
 
-			if target ~= -4 and Util.bool(target.is_targettable) then
-				self.target = target
+				if target ~= -4 and Util.bool(target.is_targettable) and target.inventory_item_order:size() > 0 then
+					self.target = target
+					
+					local data = Instance.get_data(target)
+					data.__ssr_mimic_scan_parent = self.id
+					target:buff_apply(scan, 60)
+				end
+			end
+			
+			if Instance.exists(self.target) and self.target:buff_count(scan) > 0 then
+				local data = Instance.get_data(self)
 				
-				local data = Instance.get_data(target)
-				data.__ssr_mimic_scan_parent = self.id
-				target:buff_apply(scan, 60)
+				if Instance.get_data(self.target).__ssr_mimic_scan_anim then
+					if Instance.get_data(self.target).__ssr_mimic_scan_anim >= 150 and data.prep_timer <= 0 then
+						data.steal_timer = data.steal_timer + 1
+						
+						if data.steal_timer % 15 == 0 and data.steal_timer < 120 then
+							self.target:sound_play(gm.constants.wUI_SliderTick, 1, 0.7 + 0.1 * data.steal_timer / 30)
+						end
+					end
+				end
+				
+				if not data.target_items and #data.stolen_items < 1 then
+					data.target_items = {}
+					
+					local i = 1
+					for _, item in ipairs(self.target.inventory_item_order) do
+						data.target_items[i] = item
+						data.target_items[i + 1] = self.target.inventory_item_stack[item + 1]
+						i = i + 2
+					end
+				end
+				
+				if #data.target_items < 1 and #data.stolen_items > 1 then
+					data.prep_timer = data.prep_timer + 1
+					
+					if (data.prep_timer - 30) % 60 == 0 then
+						self.target:sound_play(gm.constants.wDroneRecycler_Activate, 1, 1)
+					end
+					
+					if data.prep_timer >= 3 * 60 then
+						self.active = 1
+						self.target:buff_remove(scan)
+					end
+				end
+				
+				if data.target_items then
+					if data.steal_timer == 2 * 60 then
+						self.target:sound_play(gm.constants.wMine, 1, 0.8 + 0.2 * math.random())
+					end
+					
+					if data.steal_timer >= 3 * 60 then
+						data.steal_timer = 0
+						
+						local item = table.remove(data.target_items, 1)
+						local stack = table.remove(data.target_items, 1)
+						
+						table.insert(data.stolen_items, item)
+						table.insert(data.stolen_items, stack)
+					end
+				end
 			end
 		end
 	end
@@ -178,6 +422,13 @@ Callback.add(mimicInactive.on_step, function(self)
 		if self.image_speed == 0 then
 			if Net.host then
 				local actor = mimic:create(self.x, self.y - 25)
+				local data = Instance.get_data(self)
+				
+				for i, thing in ipairs(data.stolen_items) do
+					if i % 2 == 1 and Item.wrap(thing) then
+						actor:item_give(Item.wrap(thing), data.stolen_items[i + 1])
+					end
+				end
 
 				self:instance_destroy_sync() -- tell clients to destroy this object, doesn't actually destroy it on the host
 				self:destroy()
@@ -190,13 +441,8 @@ Callback.add(Callback.ON_STAGE_START, function()
 	if Net.client then return end -- host handles spawning
 	if Global.__gamemode_current >= 2 then return end -- don't spawn mimics in trials or tutorial..
 
-	-- try spawning up to 3 mimics, though more than 1 is extremely unlikely
-	for i = 0, 3 do
-		if math.random() <= 1 then
-			-- function used by the game's director when spawninginteractables.
-			gm._mod_game_getDirector():mapobject_spawn(mimicInactive.value, 1) -- second arg is required tile space
-		else
-			break
-		end
+	if math.random() <= 1 then
+		-- function used by the game's director when spawninginteractables.
+		gm._mod_game_getDirector():mapobject_spawn(mimicInactive.value, 1) -- second arg is required tile space
 	end
 end)
