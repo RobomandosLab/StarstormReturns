@@ -18,27 +18,16 @@ local sprite_inactive_scan	= Sprite.new("MimicInactiveScan",	path.combine(SPRITE
 local sprite_activate		= Sprite.new("MimicActivate",		path.combine(SPRITE_PATH, "spawn.png"), 25, 28, 70)
 local sprite_vacuum			= Sprite.new("MimicVacuumFX", 		path.combine(SPRITE_PATH, "vacuumParticle.png"), 4, 4, 4)
 local sprite_ping 			= Sprite.new("MimicPing", 			path.combine(SPRITE_PATH, "ping.png"), 1, 14, 19)
+local sprite_mine 			= Sprite.new("MimicMineIdle", 		path.combine(SPRITE_PATH, "mine_idle.png"), 2, 12, 16)
+local sprite_mine_air		= Sprite.new("MimicMineAir", 		path.combine(SPRITE_PATH, "mine_air.png"), 4, 31, 31)
+local sprite_mine_mask		= Sprite.new("MimicMineMask", 		path.combine(SPRITE_PATH, "mine_mask.png"), 1, 12, 16)
+
+local sprite_shoot3			= Sprite.new("MimicShoot3", 		path.combine(SPRITE_PATH, "shoot3.png"), 17, 48, 25)
 
 local sound_spawn			= Sound.new("MimicSpawn",			path.combine(SOUND_PATH, "spawn.ogg"))
 local sound_hit				= Sound.new("MimicHit",				path.combine(SOUND_PATH, "hit.ogg"))
 local sound_shoot			= Sound.new("MimicShoot",			path.combine(SOUND_PATH, "shoot.ogg"))
 local sound_death			= Sound.new("MimicDeath",			path.combine(SOUND_PATH, "death.ogg"))
-
-local efGoldSteal = Object.new("EfGoldSteal")
-efGoldSteal:set_sprite(gm.constants.sEfGold1)
-efGoldSteal:set_depth(-279)
-
-local function select_item_to_steal(victim)
-	local inventory = victim.inventory_item_order
-	
-	if #inventory > 0 then
-		local chosen_id = inventory[math.random(#inventory)]
-		local chosen_item = Item.wrap(chosen_id)
-		return chosen_item
-	end
-	
-	return nil
-end
 
 -- mimic
 local mimic = Object.new("Mimic", Object.Parent.ENEMY_CLASSIC)
@@ -56,6 +45,8 @@ mlog.stat_damage = 10
 mlog.stat_speed = 2.6
 
 local primary = Skill.new("mimicZ")
+local secondary = Skill.new("mimicX")
+local utility = Skill.new("mimicC")
 
 Callback.add(mimic.on_create, function(actor)
 	actor.sprite_palette = sprite_palette
@@ -80,20 +71,111 @@ Callback.add(mimic.on_create, function(actor)
 	actor.pHmax_base = 2.4 + math.min(0.2 * GM._mod_game_getDirector().enemy_buff, 3)
 
 	actor.z_range = 200
+	actor.x_range = 600
 	actor:set_default_skill(Skill.Slot.PRIMARY, primary)
+	actor:set_default_skill(Skill.Slot.SECONDARY, secondary)
+	actor:set_default_skill(Skill.Slot.UTILITY, utility)
 
 	actor.monster_log_drop_id = mlog.value
 
 	actor:init_actor_late()
 end)
 
-Callback.add(mimic.on_step, function(actor)
+local stateSecondary = ActorState.new("mimicSecondary")
+
+Callback.add(secondary.on_activate, function(actor, skill, slot)
+	actor:set_state(stateSecondary)
+end)
+
+Callback.add(stateSecondary.on_enter, function(actor, data)
+	actor.image_index = 0
+	data.fired = 0
+end)
+
+local mine = Object.new("MimicMine")
+mine:set_sprite(sprite_mine_air)
+mine:set_depth(10)
+
+Callback.add(mine.on_create, function(self)
+	self.image_speed = 0.25
 	
+	self.parent = -4
+	self.gravity = 0.3
+	self.vspeed = -6
+	self.hspeed = 4
+	
+	self.mask_index = sprite_mine_mask
+	
+	local data = Instance.get_data(self)
+	
+	data.landed = 0
+	data.timer = 0
+	data.arm_time = 0
+end)
+
+Callback.add(mine.on_step, function(self)
+	if not Instance.exists(self.parent) then
+		self:destroy()
+		return
+	end
+	
+	local data = Instance.get_data(self)
+	data.timer = data.timer + 1
+	
+	if data.timer >= 15 * 60 then
+		self:destroy()
+	end
+	
+	if data.landed == 0 then
+		self.hspeed = self.hspeed - 0.05
+		self.sprite_index = sprite_mine_air
+		
+		if self:is_colliding(gm.constants.pBlock, self.x + self.hspeed, self.y + self.vspeed) then
+			self.x = self.xprevious
+			self.y = self.yprevious
+			self:move_contact_solid(-90, -1)
+			data.landed = 1
+			for i = 0, 300 do
+				if self:collision_point(self.x, self.bbox_bottom, gm.constants.pBlock, true, true) ~= -4 then
+					self.y = self.y - 1
+				else
+					break
+				end
+			end
+		end
+	else
+		self.hspeed = self.hspeed * 0.95
+		self.yspeed = 0
+		self.gravity = 0
+		self.speed = 0
+		self.sprite_index = sprite_mine
+	end
+end)
+
+Callback.add(stateSecondary.on_step, function(actor, data)
+	actor:skill_util_fix_hspeed()
+	actor:actor_animation_set(sprite_shoot3, 0.22)
+
+	if data.fired == 0 and actor.image_index >= 9 then
+		data.fired = 1
+		actor:sound_play(sound_shoot, 1, 0.9 + math.random() * 0.2)
+		
+		local inst = mine:create(actor.x, actor.y)
+		inst.parent = actor
+		inst.vspeed = -6
+		inst.hspeed = 4 * actor.image_xscale
+	end
+	
+	actor:skill_util_exit_state_on_anim_end()
 end)
 
 Callback.add(mimic.on_destroy, function(actor)
 	Particle.find("Spark"):create(actor.x, actor.y, 7)
 	actor:screen_shake(4)
+	
+	local pickup = gm.treasure_weights_roll_pickup(2) -- large chest
+	local item = Item.wrap(gm.object_to_item(pickup))
+	local inst = item:create(actor.x, actor.y)
 end)
 
 local mimicInactive = Object.new("MimicInactive", Object.Parent.INTERACTABLE)
