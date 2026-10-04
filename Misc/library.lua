@@ -372,5 +372,9 @@ function ssr_table_shuffle(tabl)
 	return tabl
 end
 
+function ssr_draw_item_sprite(sprite, x, y, scale, alpha)
+    gm.draw_sprite_ext(sprite, 0, x, y, scale or 1, scale or 1, 0, Color.WHITE, alpha or 1)
+end
+
 -- easy shortcut for checking if chirrsmas is active
 ssr_chirrsmas_active = ((tonumber(os.date("%m")) == 12 and tonumber(os.date("%d")) >= 15) or (tonumber(os.date("%m")) == 1 and tonumber(os.date("%d")) <= 15) or Settings.chirrsmas == 1)

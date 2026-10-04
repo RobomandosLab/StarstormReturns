@@ -441,6 +441,78 @@ return {
 			destination = "-",
 			date = "-",
 			story = "-"
+		},
+		visor = {
+			name = "3D Visor",
+			pickup = "Aberrate an enemy on touch. Aberrated enemies refract your attacks as piercing beams.",
+			description = "Permanently <r>aberrate</c> an enemy on contact.\nWhen attacked, <r>aberrated</c> enemies fire <r>two</c> <b>piercing</c> beams in your facing direction for <y>40%</c> <c_stack>(+40% per stack)</c> <y>TOTAL damage</c> each. Recharges every <b>25 seconds</c>.",
+			destination = "33,\nGolden Shore,\nEarth",
+			date = "06/07/2056",
+			story = "Thank you for trusting us, this delivery wouldn't be possible without you or our partners ETECH and AACOM.\nPackage contents:\n-3D Visor (2000s model)\n-One month premium subscription to our online store.\n-Retro care kit (x2)\n\n\nEnjoy!\nAnd remember, if you aren't satisfied, returns are always an option!",
+			priority = "<r>High Priority/Fragile</c>"
+		},
+		metaTrinket = {
+			name = "Metachronic Trinket",
+			pickup = "Teleporters charge faster. Breaks when damaged below half heatlh.",
+			description = "Reduces <b>Teleporter charge time</c> by <y>15</c> <c_stack>(-15 per stack)</c> <y>seconds.</c> <r>This item breaks when falling under 50% health.</c>",
+			destination = "P2592323,\nSagooj,\nEarth",
+			date = "11/11/2056",
+			story = "'Time is the most valuable resource in the universe', my mother used to say. But the more time I spend with this, the more I realize how wrong she was, and how naive I've been.\nMaybe nothing is what we think it is. Our quest for knowledge could be in vain, but there's one thing I can tell you: \nTime echoes your name.",
+			priority = "<g>Priority/Fragile</c>"
+		},
+		metaBroken = {
+			name = "Fractured Trinket",
+			pickup = "Slightly increased temporary item duration. Regenerates next stage.",
+			description = "Extends the duration of <b>Temporary Items</c> by <y>4</c> <c_stack>(+4 per stack)</c> <y>seconds.</c> Becomes <y>Metachronic Trinket</c> at the start of the next stage.",
+			destination = "P2592323,\nSagooj,\nEarth",
+			date = "11/11/2056",
+			story = "'Time is the most valuable resource in the universe', my mother used to say. But the more time I spend with this, the more I realize how wrong she was, and how naive I've been.\nMaybe nothing is what we think it is. Our quest for knowledge could be in vain, but there's one thing I can tell you: \nTime echoes your name.",
+			priority = "<g>Priority/Fragile</c>"
+		},
+		powerBank = {
+			name = "Universal Powerbank",
+			pickup = "Periodically refreshes one of your non-Primary skills on use.",
+			description = "Every <b>12 seconds</c> <c_stack>(-10% per stack)</c>, instantly <b>refresh the cooldown</c> of your next used <b>non-Primary skill</c>.",
+			destination = "placeholder",
+			date = "placeholder",
+			story = "placeholder\nI AM NOT CRAZY!\nI am not crazy.. I KNOW he swapped those numbers, I knew it was 1216! One after Magna Carta, as if I could ever make such a mistake. Never. NEVER! I just– I just couldn’t prove it. He covered his tracks, he got that IDIOT, at the copy shop to lie for him.. You think this is something? You think this is bad? This? This chicanery? He’s done worse! That billboard! Are you telling me that a man just happens to fall like that? No! He orchestrated it! JIMMY! He DEFECATED through a SUNROOF! And I saved him! And I shouldn’t have. I took him into my own firm! What was I thinking?! He’ll never change. He’ll NEVER change! Ever since he was 9, always the same! Couldn’t keep his hands out of the cash drawer! But not our Jimmy! Couldn’t be precious JIMMY! Stealing them blind! And HE gets to be a lawyer?!?! What a sick joke! I should’ve stopped him when I had the chance..! And you, you have to stop him! You-..",
+			priority = "<g>Priority</c>"
+		},
+		nkotasHeritage = {
+			name = "Nkota's Heritage",
+			pickup = "Earn a free chest on level up or activating the teleporter.",
+			description = "On <b>level up</c> or <b>activating the Teleporter</c>, earn a <y>free</c> Common, <g>Uncommon</c>, or <r>Rare</c> Chest <c_stack>(+100% higher quality odds per stack)</c> based on your <b>current level</c>.",
+			destination = "Naaga 23,\nH4D3S,\nEarth",
+			date = "05/05/2056",
+			story = "After Nkota's siblings attempted to get the heritage for themselves, someone stole the article in what seemed to be an act of vengeance.\nIt only fell into my hands after a young man sold it for an adequate amount of money. I am sending it to you as you might be able to help me analyze it.\n\nI am willing to sell it to a museum and give you a cut if it IS the authentic one.",
+			priority = "<r>High Priority/</c><spr NkotasParticle 19><spr NkotasParticle 1><spr NkotasParticle 3><spr NkotasParticle 18><spr NkotasParticle 5><spr NkotasParticle 4>"
+		},
+		droidHead = {
+			name = "Droid Head",
+			pickup = "Spawn a temporary elite drone when slaying elite enemies. Gain a personalized drone to assist.",
+			description = "Killing an elite enemy spawns a <y>security drone</c> of the <b>same elite type</c> that lasts <b>11</c> <c_stack>(+4 seconds per stack)</c> <b>seconds</c>. Grants a <b>personalized attack drone</c> on pickup.",
+			destination = "RoboFix,\nSOL 1,\nMars",
+			date = "20/12/2056",
+			story = "This is the droid head for the model ER-14 that you requested. Fully functional, just requires wiring. These are quite hard to obtain these days, given the whole RaCom controversy.\nDon't forget to disable the security protocols before handling, I don't think you want a hundred backup drones around your shop!\nIf you need any tools or pieces let me know.",
+			priority = "<r>Fragile</c>"
+		},
+		toySoldiers = {
+			name = "Toy Soldiers",
+			pickup = "Calls down a group of Toy Soldiers during the teleporter event.",
+			description = "Calls down a group of Toy Soldiers during the teleporter event. Super wip",
+			destination = "g",
+			date = "four",
+			story = "tuouy storie",
+			priority = "<r>Fra jee lay</c>"
+		},
+		pickle = {
+			name = "Pickle Lighter",
+			pickup = "Pickle?!",
+			description = "Gain a small light radius for 20 seconds. <r>Fears</c> and damages nearby enemies for 30% damage.",
+			destination = "gas station",
+			date = "twenty two",
+			story = "<r>PICKLE NO GOOD</c>",
+			priority = "<r>Volatile</c>"
 		}
 	},
 

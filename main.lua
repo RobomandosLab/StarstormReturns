@@ -1,6 +1,6 @@
 -- starstorm returns
 -- ssr team
-mods["ReturnsAPI-ReturnsAPI"].auto{mp = true, namespace = "ssr"}
+mods["ReturnsAPI-ReturnsAPI"].auto{mp = false, namespace = "ssr"}
 
 --- GLOBALS (Should be in ALL-CAPS for constants, Uppercase Initial for variables)
 PATH = _ENV["!plugins_mod_folder_path"]
