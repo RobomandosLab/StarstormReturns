@@ -23,8 +23,7 @@ Callback.add(Callback.ON_KILL_PROC, function(victim, actor)
 	dorne.xx = math.cos(aa) * 25
 	dorne.yy = 20 + math.sin(aa) * 25
 
-	dorne.parent = actor
-	dorne.master = actor
+	dorne.activator = actor
 	
 	--fx
 	Particle.find("Spark"):create(victim.x, victim.y, 4, Particle.System.DAMAGE_ABOVE)
@@ -53,27 +52,18 @@ local function makedrone(inst)
 	
 	dorne:sound_play(sound, 0.7, 1.2 + math.random() * 0.2)
 	
-	if inst.sprite_drone_idle then
-		dorne.sprite_idle = inst.sprite_drone_idle
-		dorne.sprite_idle_broken = inst.sprite_drone_idle
-	else
-		dorne.sprite_idle = gm.constants.sDronePlayerCommandoIdle
-		dorne.sprite_idle_broken = gm.constants.sDronePlayerCommandoIdle
-	end
+	local idle_dr = inst.sprite_drone_idle or gm.constants.sDronePlayerCommandoIdle
+	local shoot_dr = inst.sprite_drone_shoot or gm.constants.sDronePlayerCommandoShoot
 	
-	if inst.sprite_drone_shoot then
-		dorne.sprite_shoot1 = inst.sprite_drone_shoot
-		dorne.sprite_shoot1_broken = inst.sprite_drone_shoot
-		
-	else
-		dorne.sprite_shoot1 = gm.constants.sDronePlayerCommandoShoot
-		dorne.sprite_shoot1_broken = gm.constants.sDronePlayerCommandoShoot
-		
-	end
+	dorne.sprite_idle = idle_dr
+	dorne.sprite_idle_broken = idle_dr
+	
+	dorne.sprite_shoot1 = shoot_dr
+	dorne.sprite_shoot1_broken = shoot_dr
+
 	dorne.recycle_tier = 101 --playerdrone scrap
 	
-	dorne.parent = inst
-	dorne.master = inst
+	dorne.activator = inst
 	
 	Particle.find("Spark"):create(inst.x, inst.y, 4, Particle.System.DAMAGE_ABOVE)
 	
